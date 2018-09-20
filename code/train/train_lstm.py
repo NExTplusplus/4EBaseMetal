@@ -1,0 +1,80 @@
+from datetime import datetime
+import json
+
+
+if __name__ == '__main__':
+    desc = 'the lstm model'
+    parser = argparse.ArgumentParser(description=desc)
+    parser.add_argument('-data_configure_file', '--data', type=str,
+                        help='configure fileof the features to be read',
+                        default='./lstm_data.conf')
+    parser.add_argument('-l', '--lag', help='lag size', type=int, default=10)
+    parser.add_argument('-u', '--unit', help='number of hidden units in lstm',
+                        type=int, default=8)
+    parser.add_argument('-l2', '--alpha_l2', type=float, default=1e-2,
+                        help='alpha for l2 regularizer')
+    parser.add_argument('-s', '--step', help='steps to make prediction',
+                        type=int, default=1)
+    parser.add_argument('-b', '--batch_size', help='batch size', type=int,
+                        default=1024)
+    parser.add_argument('-e', '--epoch', help='epoch', type=int, default=150)
+    parser.add_argument('-lr', '--learning_rate', help='learning rate',
+                        type=float, default=1e-2)
+    parser.add_argument('-g', '--gpu', type=int, default=0, help='use gpu')
+    parser.add_argument(
+        '-min', '--model_path', help='path to load model',
+        type=str, default='/home/ffl/nus/MM/fintech/tweet_stock/'
+    )
+    parser.add_argument(
+        '-mout', '--model_save_path', type=str, help='path to save model',
+        default='/home/ffl/nus/MM/fintech/tweet_stock/exp/model'
+    )
+    parser.add_argument('-o', '--action', type=str, default='train',
+                        help='train, test, tune')
+    parser.add_argument('-f', '--fix_init', type=int, default=0,
+                        help='use fixed initialization')
+    parser.add_argument('-rl', '--reload', type=int, default=0,
+                        help='use pre-trained parameters')
+    args = parser.parse_args()
+    print(args)
+
+    parameters = {
+        'lag': int(args.lag),
+        'unit': int(args.unit),
+        'alp': float(args.alpha_l2),
+        'lr': float(args.learning_rate)
+    }
+
+    tra_date = datetime.strptime('2007-01-03', '%Y-%m-%d')
+    val_date = datetime.strptime('2015-01-02', '%Y-%m-%d')
+    tes_date = datetime.strptime('2016-01-04', '%Y-%m-%d')
+    split_dates = [tra_date, val_date, tes_date]
+
+    # read data configure file
+    with open(args.data_configure_file) as fin:
+        fname_columns = json.load(fin)
+
+    # load data
+    X_tr, y_tr, X_val, y_val, X_tes, y_tes = load_pure_lstm(
+        fname_columns, 'spot_set', 'log_1d_return', split_dates, args,lag,
+        args.step
+    )
+
+    # initialize the LSTM model
+    pure_LSTM = LSTM(
+        data_path=args.path,
+        model_path=args.model_path,
+        model_save_path=args.model_save_path,
+        parameters=parameters,
+        steps=args.step,
+        epochs=args.epoch, batch_size=args.batch_size, gpu=args.gpu,
+        tra_date=tra_date, val_date=val_date, tes_date=tes_date, att=args.att,
+        hinge=args.hinge_lose, fix_init=args.fix_init, adv=args.adv,
+        reload=args.reload
+    )
+
+
+    if args.action == 'train':
+        pure_LSTM.train(X_tr, y_tr, X_val, y_val)
+    elif args.action == 'test':
+        pure_LSTM.test(X_tes, y_tes)
