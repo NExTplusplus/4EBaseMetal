@@ -9,23 +9,24 @@ sel_col_names [str]: the columns to be returned in the exactly same order
 returns: 
 X (a pandas DataFrame): the data in the input file
 '''
-def read_single_csv(fname, sel_col_names = "All"):
+def read_single_csv(fname, sel_col_names = None):
     X = pd.read_csv(fname, index_col=0)
-    if sel_col_names == "All":
-        return X
-    else:
-        available_col = X.columns
-        choosen_col =[]
-        missing_col = []
-        for col_name in sel_col_names:
-            if col_name in available_col:
-                choosen_col.append(col_name)
-            else:
-                missing_col.append(col_name)
-        if len(missing_col)!=0:
-            print("Available columns are following: "+str(list(available_col)))
-            print("The following columns are missing: " + str(missing_col))
-    return X[choosen_col]
+    return X[sel_col_names]
+    # if sel_col_names == "All":
+    #     return X
+    # else:
+    #     available_col = X.columns
+    #     choosen_col =[]
+    #     missing_col = []
+    #     for col_name in sel_col_names:
+    #         if col_name in available_col:
+    #             choosen_col.append(col_name)
+    #         else:
+    #             missing_col.append(col_name)
+    #     if len(missing_col)!=0:
+    #         print("Available columns are following: "+str(list(available_col)))
+    #         print("The following columns are missing: " + str(missing_col))
+    # return X[choosen_col]
 '''
 
 '''
