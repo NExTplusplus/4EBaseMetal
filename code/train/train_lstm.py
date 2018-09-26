@@ -1,13 +1,22 @@
+import argparse
 from datetime import datetime
 import json
+import os
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
+
+from data.load_rnn import load_pure_lstm
+from model.lstm import LSTM
 
 
 if __name__ == '__main__':
     desc = 'the lstm model'
     parser = argparse.ArgumentParser(description=desc)
-    parser.add_argument('-data_configure_file', '--data', type=str,
-                        help='configure fileof the features to be read',
-                        default='./lstm_data.conf')
+    parser.add_argument(
+        '--data_configure_file', '-c', type=str,
+        help='configure file of the features to be read',
+        default='/home/ffl/nus/MM/fintech/4e_base_metal/exp/lstm/lstm_data.conf'
+    )
     parser.add_argument('-l', '--lag', help='lag size', type=int, default=10)
     parser.add_argument('-u', '--unit', help='number of hidden units in lstm',
                         type=int, default=8)
@@ -45,9 +54,9 @@ if __name__ == '__main__':
         'lr': float(args.learning_rate)
     }
 
-    tra_date = datetime.strptime('2007-01-03', '%Y-%m-%d')
-    val_date = datetime.strptime('2015-01-02', '%Y-%m-%d')
-    tes_date = datetime.strptime('2016-01-04', '%Y-%m-%d')
+    tra_date = '2007-01-03'
+    val_date = '2015-01-02'
+    tes_date = '2016-01-04'
     split_dates = [tra_date, val_date, tes_date]
 
     # read data configure file
@@ -56,7 +65,7 @@ if __name__ == '__main__':
 
     # load data
     X_tr, y_tr, X_val, y_val, X_tes, y_tes = load_pure_lstm(
-        fname_columns, 'spot_set', 'log_1d_return', split_dates, args,lag,
+        fname_columns, 'spot_set', 'log_1d_return', split_dates, args.lag,
         args.step
     )
 

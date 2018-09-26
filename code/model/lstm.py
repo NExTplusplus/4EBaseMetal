@@ -4,8 +4,11 @@ import random
 from sklearn.utils import shuffle
 import tensorflow as tf
 from time import time
+import sys
 
-from base_predictor import BasePredictor
+sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
+
+from model.base_predictor import BasePredictor
 
 class LSTM(BasePredictor):
     def __init__(self, parameters, epochs=50, batch_size=1024, ):

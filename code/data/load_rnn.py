@@ -1,6 +1,11 @@
 import numpy as np
-import pandas as pd
+import os
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 
+from utils.read_data import read_single_csv, merge_data_frame, \
+    process_missing_value
+from utils.normalize_feature import log_1d_return
 
 '''
 parameters:
@@ -36,12 +41,20 @@ def load_pure_lstm(fname_columns, ground_truth, norm_method, split_dates, T, S=1
     print('data shape:')
 
     # pre-process for missing values, e.g., NA
-    time_series = process_missing_value(time_series)
+    time_series, sta_ind = process_missing_value(time_series)
+    data = time_series.values
 
     # normalize data
-    norm_time_series = norm_method(time_series)
+    if norm_method == 'log_1d_return':
+        norm_data = log_1d_return(data)
+        sta_ind += 1
+
+    tra_ind = time_series.index.get_loc(split_dates[0])
+    if tra_ind 
+    val_ind = time_series.index.get_loc(split_dates[1])
+    tes_ind = time_series.index.get_loc(split_dates[2])
 
     # construct the training, validation, and testing
-    X_tr = np.zeros([N, T, D], dtype=float32)
+    X_tr = np.zeros([N, T, D], dtype=np.float32)
     pass
     return
