@@ -1,3 +1,4 @@
+from copy import copy
 import numpy as np
 import os
 import sys
@@ -38,7 +39,7 @@ def load_pure_lstm(fname_columns, gt_column, norm_method, split_dates, T, S=1):
             time_series = merge_data_frame(
                 time_series, read_single_csv(fname, fname_columns[fname])
             )
-    print('data shape:')
+    print('data shape:', time_series.shape)
 
     # # pre-process for missing values, e.g., NA
     # time_series, sta_ind = process_missing_value(time_series)
@@ -67,8 +68,8 @@ def load_pure_lstm(fname_columns, gt_column, norm_method, split_dates, T, S=1):
     # return
 
     # construct ground truth
-    ground_truth = time_series[gt_column]
-    for ind in range(time_series.shape[1] - S):
+    ground_truth = copy(time_series[gt_column])
+    for ind in range(time_series.shape[0] - S):
         if ground_truth.iloc[ind + S] - ground_truth.iloc[ind] > 0:
             ground_truth.iloc[ind] = 1
         else:
@@ -76,26 +77,59 @@ def load_pure_lstm(fname_columns, gt_column, norm_method, split_dates, T, S=1):
 
     # normalize data
     if norm_method == 'log_1d_return':
-        norm_data = log_1d_return(time_series)
+        norm_data = copy(log_1d_return(time_series))
     else:
-        norm_data = time_series
+        norm_data = copy(time_series)
 
-    tra_ind = time_series.index.get_loc(split_dates[0])
+    tra_ind = norm_data.index.get_loc(split_dates[0])
     if tra_ind < T - 1:
         tra_ind = T - 1
-    val_ind = time_series.index.get_loc(split_dates[1])
+    val_ind = norm_data.index.get_loc(split_dates[1])
     assert val_ind >= T - 1, 'without training data'
-    tes_ind = time_series.index.get_loc(split_dates[2])
+    tes_ind = norm_data.index.get_loc(split_dates[2])
 
     # construct the training
     tra_num = 0
-    for ind in range(tra_ind, val_ind):
-        if not norm_data.iloc[ind - T + 1: ind].isnull().values.any():
+    for ind in range(tra_ind + 1, val_ind + 1):
+        if not norm_data.iloc[ind - T: ind].isnull().values.any():
             tra_num += 1
     X_tr = np.zeros([tra_num, T, norm_data.shape[1]], dtype=np.float32)
     y_tr = np.zeros([tra_num, 1], dtype=np.float32)
 
-    for ind in range(tra_ind, val_ind):
-        X_tr[ind - tra_ind] = norm_data[]
-    pass
-    return
+    sample_ind = 0
+    for ind in range(tra_ind + 1, val_ind + 1):
+        if not norm_data.iloc[ind - T: ind].isnull().values.any():
+            X_tr[sample_ind] = norm_data.values[ind - T: ind, :]
+            y_tr[sample_ind, 0] = ground_truth.values[ind - 1]
+            sample_ind += 1
+
+    # construct the validation
+    val_num = 0
+    for ind in range(val_ind + 1, tes_ind + 1):
+        if not norm_data.iloc[ind - T: ind].isnull().values.any():
+            val_num += 1
+    X_va = np.zeros([val_num, T, norm_data.shape[1]], dtype=np.float32)
+    y_va = np.zeros([val_num, 1], dtype=np.float32)
+
+    sample_ind = 0
+    for ind in range(val_ind + 1, tes_ind + 1):
+        if not norm_data.iloc[ind - T: ind].isnull().values.any():
+            X_va[sample_ind] = norm_data.values[ind - T: ind, :]
+            y_va[sample_ind, 0] = ground_truth.values[ind - 1]
+            sample_ind += 1
+
+    # construct the testing
+    tes_num = 0
+    for ind in range(tes_ind + 1, norm_data.shape[0] - S):
+        if not norm_data.iloc[ind - T: ind].isnull().values.any():
+            tes_num += 1
+    X_te = np.zeros([tes_num, T, norm_data.shape[1]], dtype=np.float32)
+    y_te = np.zeros([tes_num, 1], dtype=np.float32)
+
+    sample_ind = 0
+    for ind in range(tes_ind + 1, norm_data.shape[0] - S):
+        if not norm_data.iloc[ind - T: ind].isnull().values.any():
+            X_te[sample_ind] = norm_data.values[ind - T: ind, :]
+            y_te[sample_ind, 0] = ground_truth.values[ind - 1]
+            sample_ind += 1
+    return X_tr, y_tr, X_va, y_va, X_te, y_te

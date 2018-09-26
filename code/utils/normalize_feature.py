@@ -16,3 +16,4 @@ def log_1d_return(X):
     else:
         X.values[1:, :] = np.log(np.true_divide(X.values[1:, :],
                                                 X.values[:-1, :]))
+    return X

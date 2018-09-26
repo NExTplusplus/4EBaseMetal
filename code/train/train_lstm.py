@@ -32,11 +32,11 @@ if __name__ == '__main__':
     parser.add_argument('-g', '--gpu', type=int, default=0, help='use gpu')
     parser.add_argument(
         '-min', '--model_path', help='path to load model',
-        type=str, default='/home/ffl/nus/MM/fintech/tweet_stock/'
+        type=str, default='/home/ffl/nus/MM/fintech/4e_base_metal/exp/lstm/model'
     )
     parser.add_argument(
         '-mout', '--model_save_path', type=str, help='path to save model',
-        default='/home/ffl/nus/MM/fintech/tweet_stock/exp/model'
+        default='/home/ffl/nus/MM/fintech/4e_base_metal/exp/lstm/model'
     )
     parser.add_argument('-o', '--action', type=str, default='train',
                         help='train, test, tune')
@@ -47,12 +47,12 @@ if __name__ == '__main__':
     args = parser.parse_args()
     print(args)
 
-    parameters = {
-        'lag': int(args.lag),
-        'unit': int(args.unit),
-        'alp': float(args.alpha_l2),
-        'lr': float(args.learning_rate)
-    }
+    # parameters = {
+    #     'lag': int(args.lag),
+    #     'unit': int(args.unit),
+    #     'alp': float(args.alpha_l2),
+    #     'lr': float(args.learning_rate)
+    # }
 
     tra_date = '2007-01-03'
     val_date = '2015-01-02'
@@ -65,22 +65,12 @@ if __name__ == '__main__':
 
     # load data
     X_tr, y_tr, X_val, y_val, X_tes, y_tes = load_pure_lstm(
-        fname_columns, 'spot_set', 'log_1d_return', split_dates, args.lag,
+        fname_columns, 'LMCADY', 'log_1d_return', split_dates, args.lag,
         args.step
     )
 
     # initialize the LSTM model
-    pure_LSTM = LSTM(
-        data_path=args.path,
-        model_path=args.model_path,
-        model_save_path=args.model_save_path,
-        parameters=parameters,
-        steps=args.step,
-        epochs=args.epoch, batch_size=args.batch_size, gpu=args.gpu,
-        tra_date=tra_date, val_date=val_date, tes_date=tes_date, att=args.att,
-        hinge=args.hinge_lose, fix_init=args.fix_init, adv=args.adv,
-        reload=args.reload
-    )
+    pure_LSTM = LSTM(parameters=args)
 
 
     if args.action == 'train':
