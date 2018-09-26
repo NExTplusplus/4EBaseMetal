@@ -42,3 +42,6 @@ def process_missing_value(X):
         if X.iloc[i].isnull().values.any():
             sta_ind = i + 1
     return X[sta_ind:], sta_ind
+
+def process_missing_value_v2(X):
+    return X.dropna()
