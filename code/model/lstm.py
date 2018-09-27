@@ -49,15 +49,21 @@ class LSTM(BasePredictor):
                 self.pars.unit
             )
 
-            self.in_lat = tf.layers.dense(
-                self.pv_var, units=self.fea_dim,
-                activation=tf.nn.tanh, name='in_fc',
-                kernel_initializer=tf.glorot_uniform_initializer()
-            )
+            # self.in_lat = tf.layers.dense(
+            #     self.pv_var, units=self.fea_dim,
+            #     activation=tf.nn.tanh, name='in_fc',
+            #     kernel_initializer=tf.glorot_uniform_initializer()
+            # )
+            #
+            # self.outputs, _ = tf.nn.dynamic_rnn(
+            #     # self.outputs, _ = tf.nn.static_rnn(
+            #     self.lstm_cell, self.in_lat, dtype=tf.float32
+            #     # , initial_state=ini_sta
+            # )
 
             self.outputs, _ = tf.nn.dynamic_rnn(
                 # self.outputs, _ = tf.nn.static_rnn(
-                self.lstm_cell, self.in_lat, dtype=tf.float32
+                self.lstm_cell, self.pv_var, dtype=tf.float32
                 # , initial_state=ini_sta
             )
 
@@ -83,6 +89,7 @@ class LSTM(BasePredictor):
             ).minimize(self.obj_func)
 
     def test(self, X_tes, y_tes):
+        self.fea_dim = X_tes.shape[2]
         self.construct_graph()
 
         sess = tf.Session()
