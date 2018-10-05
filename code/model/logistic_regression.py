@@ -13,7 +13,7 @@ class LogReg(BasePredictor):
     self.model = model
 
   def test(self, X_tes, Y_tes):
-    pred = self.max_model.predict(X_tes)
+    pred = self.model.predict(X_tes)
     return accuracy_score(Y_tes, pred)
   
 
