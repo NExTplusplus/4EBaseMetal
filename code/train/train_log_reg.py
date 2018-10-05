@@ -5,7 +5,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 
-from data.load_rnn import load_pure_lstm
+from data.load_rnn import load_pure_log_reg
 from model.logistic_regression import LogReg
 
 if __name__ == '__main__':
@@ -22,14 +22,16 @@ if __name__ == '__main__':
                         type=int, default=1)
     parser.add_argument('-tol', '--tol', help='tolerance',
                         type=float, default=1e-4)
+    parser.add_argument('-verbose', '--verbose', help='verbosity',
+                        type=int, default=1)
     parser.add_argument('-g', '--gpu', type=int, default=0, help='use gpu')
     parser.add_argument(
         '-min', '--model_path', help='path to load model',
-        type=str, default='/home/ffl/nus/MM/fintech/4e_base_metal/exp/lstm/model'
+        type=str, default='/home/ffl/nus/MM/fintech/4e_base_metal/exp/log_reg/model'
     )
     parser.add_argument(
         '-mout', '--model_save_path', type=str, help='path to save model',
-        default='/home/ffl/nus/MM/fintech/4e_base_metal/exp/lstm/model'
+        default='/home/ffl/nus/MM/fintech/4e_base_metal/exp/log_reg/model'
     )
     parser.add_argument('-o', '--action', type=str, default='train',
                         help='train, test, tune')
@@ -50,7 +52,9 @@ if __name__ == '__main__':
     with open(args.data_configure_file) as fin:
         fname_columns = json.load(fin)
 
+    model 
     if args.action == 'train':
+        model = None
         max_acc = 0.0
         for lag in (5, 10, 20, 40):
             # load data
@@ -63,6 +67,11 @@ if __name__ == '__main__':
             pure_LogReg = LogReg(parameters=args)
 
             pure_LogReg.train(X_tr,y_tr)
+
+            acc = pure_LogReg.test(X_val,y_val)
+            if acc > max_acc:
+                model = pure_logReg
+                max_acc = acc
 
 
 

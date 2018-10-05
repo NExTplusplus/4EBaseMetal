@@ -24,9 +24,6 @@ class ARMA_GARCH(BasePredictor):
 
       final_model = arch_model(ts_train,p=p,q=q)
 
-
-    
-    
     self.model = final_model
   
 
