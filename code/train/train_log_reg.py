@@ -14,7 +14,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--data_configure_file', '-c', type=str,
         help='configure file of the features to be read',
-        default='/home/ffl/nus/MM/fintech/4e_base_metal/exp/log_reg/log_reg.conf'
+        default='../../exp/log_reg_data.conf'
     )
     parser.add_argument('-C', '--C', type=float, default=1e-2,
                         help='inverse of regularization')
@@ -27,11 +27,11 @@ if __name__ == '__main__':
     parser.add_argument('-g', '--gpu', type=int, default=0, help='use gpu')
     parser.add_argument(
         '-min', '--model_path', help='path to load model',
-        type=str, default='/home/ffl/nus/MM/fintech/4e_base_metal/exp/log_reg/model'
+        type=str, default='../../exp/log_reg/model'
     )
     parser.add_argument(
         '-mout', '--model_save_path', type=str, help='path to save model',
-        default='/home/ffl/nus/MM/fintech/4e_base_metal/exp/log_reg/model'
+        default='../../exp/log_reg/model'
     )
     parser.add_argument('-o', '--action', type=str, default='train',
                         help='train, test, tune')
@@ -52,25 +52,25 @@ if __name__ == '__main__':
     with open(args.data_configure_file) as fin:
         fname_columns = json.load(fin)
 
-    model 
     if args.action == 'train':
         model = None
         max_acc = 0.0
         for lag in (5, 10, 20, 40):
             # load data
             X_tr, y_tr, X_val, y_val, X_tes, y_tes = load_pure_log_reg(
-                fname_columns, 'LMCADY', 'log_1d_return', split_dates, lag,
+                fname_columns, 'Close.Price', 'log_1d_return', split_dates, lag,
                 args.step
             )
 
             # initialize and train the Logistic Regression model
-            pure_LogReg = LogReg(parameters=args)
+            parameters = {"penalty":"l2", "C":1e-2, "tol":1e-4,"max_iter":50, "verbose" : 5}
+            pure_LogReg = LogReg(parameters={})
 
-            pure_LogReg.train(X_tr,y_tr)
+            pure_LogReg.train(X_tr,y_tr, parameters)
 
             acc = pure_LogReg.test(X_val,y_val)
             if acc > max_acc:
-                model = pure_logReg
+                model = pure_LogReg
                 max_acc = acc
 
 
