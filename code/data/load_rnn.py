@@ -7,6 +7,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 from utils.read_data import read_single_csv, merge_data_frame, \
     process_missing_value
 from utils.normalize_feature import log_1d_return
+from utils.transform_data import flatten
 
 '''
 parameters:
@@ -132,4 +133,12 @@ def load_pure_lstm(fname_columns, gt_column, norm_method, split_dates, T, S=1):
             X_te[sample_ind] = norm_data.values[ind - T: ind, :]
             y_te[sample_ind, 0] = ground_truth.values[ind - 1]
             sample_ind += 1
+    return X_tr, y_tr, X_va, y_va, X_te, y_te
+
+def load_pure_log_reg(fname_columns, gt_column, norm_method, split_dates, T, S=1):
+    X_tr, y_tr, X_va, y_va, X_te, y_te = load_pure_lstm(fname_columns, gt_column, norm_method, split_dates, T, S=1)
+    X_tr = flatten(X_tr)
+    X_va = flatten(X_va)
+    X_te = flatten(X_te)
+
     return X_tr, y_tr, X_va, y_va, X_te, y_te
