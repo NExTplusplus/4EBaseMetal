@@ -9,7 +9,7 @@ from data.load_rnn import load_pure_log_reg
 from model.logistic_regression import LogReg
 
 if __name__ == '__main__':
-    desc = 'the logsitc regression model'
+    desc = 'the logistic regression model'
     parser = argparse.ArgumentParser(description=desc)
     parser.add_argument(
         '--data_configure_file', '-c', type=str,
@@ -63,7 +63,7 @@ if __name__ == '__main__':
             )
 
             # initialize and train the Logistic Regression model
-            parameters = {"penalty":"l2", "C":1e-2, "tol":1e-4,"max_iter":50, "verbose" : 5}
+            parameters = {"penalty":"l2", "C":1e-2, "tol":1e-4,"max_iter":50, "verbose" : 0}
             pure_LogReg = LogReg(parameters={})
 
             pure_LogReg.train(X_tr,y_tr, parameters)
@@ -72,6 +72,8 @@ if __name__ == '__main__':
             if acc > max_acc:
                 model = pure_LogReg
                 max_acc = acc
+            
+        print(max_acc)
 
 
 

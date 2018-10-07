@@ -8,6 +8,7 @@ from utils.read_data import read_single_csv, merge_data_frame, \
     process_missing_value
 from utils.normalize_feature import log_1d_return
 from utils.transform_data import flatten
+from utils.construct_data import construct
 
 '''
 parameters:
@@ -77,7 +78,7 @@ def load_pure_lstm(fname_columns, gt_column, norm_method, split_dates, T, S=1):
             ground_truth.iloc[ind] = 0
 
     # normalize data
-    if norm_method == 'log_1d_return':
+    if norm_method == 'log_1d_return' or norm_method == 'log_nd_return':
         norm_data = copy(log_1d_return(time_series))
     else:
         norm_data = copy(time_series)
@@ -89,50 +90,28 @@ def load_pure_lstm(fname_columns, gt_column, norm_method, split_dates, T, S=1):
     assert val_ind >= T - 1, 'without training data'
     tes_ind = norm_data.index.get_loc(split_dates[2])
 
-    # construct the training
-    tra_num = 0
-    for ind in range(tra_ind + 1, val_ind + 1):
-        if not norm_data.iloc[ind - T: ind].isnull().values.any():
-            tra_num += 1
-    X_tr = np.zeros([tra_num, T, norm_data.shape[1]], dtype=np.float32)
-    y_tr = np.zeros([tra_num, 1], dtype=np.float32)
+    X_tr = None
+    X_va = None
+    X_te = None
+    y_tr = None
+    y_va = None
+    y_te = None
 
-    sample_ind = 0
-    for ind in range(tra_ind + 1, val_ind + 1):
-        if not norm_data.iloc[ind - T: ind].isnull().values.any():
-            X_tr[sample_ind] = norm_data.values[ind - T: ind, :]
-            y_tr[sample_ind, 0] = ground_truth.values[ind - 1]
-            sample_ind += 1
+    if norm_method == 'log_1d_return':
+        # construct the training
+        X_tr,y_tr = construct(norm_data, ground_truth, tra_ind, val_ind, T)
 
-    # construct the validation
-    val_num = 0
-    for ind in range(val_ind + 1, tes_ind + 1):
-        if not norm_data.iloc[ind - T: ind].isnull().values.any():
-            val_num += 1
-    X_va = np.zeros([val_num, T, norm_data.shape[1]], dtype=np.float32)
-    y_va = np.zeros([val_num, 1], dtype=np.float32)
+        # construct the validation
+        X_va,y_va = construct(norm_data, ground_truth, val_ind, tes_ind, T)
+        
+        # construct the testing
+        X_te,y_te = construct(norm_data, ground_truth, tes_ind, norm_data.shape[0]-S-1, T)
 
-    sample_ind = 0
-    for ind in range(val_ind + 1, tes_ind + 1):
-        if not norm_data.iloc[ind - T: ind].isnull().values.any():
-            X_va[sample_ind] = norm_data.values[ind - T: ind, :]
-            y_va[sample_ind, 0] = ground_truth.values[ind - 1]
-            sample_ind += 1
+    elif norm_method == 'log_nd_return':
+        for i in range(1,T+1):
+            
+        
 
-    # construct the testing
-    tes_num = 0
-    for ind in range(tes_ind + 1, norm_data.shape[0] - S):
-        if not norm_data.iloc[ind - T: ind].isnull().values.any():
-            tes_num += 1
-    X_te = np.zeros([tes_num, T, norm_data.shape[1]], dtype=np.float32)
-    y_te = np.zeros([tes_num, 1], dtype=np.float32)
-
-    sample_ind = 0
-    for ind in range(tes_ind + 1, norm_data.shape[0] - S):
-        if not norm_data.iloc[ind - T: ind].isnull().values.any():
-            X_te[sample_ind] = norm_data.values[ind - T: ind, :]
-            y_te[sample_ind, 0] = ground_truth.values[ind - 1]
-            sample_ind += 1
     return X_tr, y_tr, X_va, y_va, X_te, y_te
 
 def load_pure_log_reg(fname_columns, gt_column, norm_method, split_dates, T, S=1):

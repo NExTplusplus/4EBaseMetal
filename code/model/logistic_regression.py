@@ -8,7 +8,7 @@ class LogReg(BasePredictor):
     BasePredictor.__init__(self,parameters)
 
   def train(self, X_tr, Y_tr, parameters):  
-    model = LogisticRegression( C=parameters['C'],penalty=parameters['penalty'],tol = parameters['tol'],solver = "liblinear",
+    model = LogisticRegression( C=parameters['C'],penalty=parameters['penalty'],tol = parameters['tol'],solver = "lbfgs",
                                 max_iter = parameters['max_iter'], verbose = parameters["verbose"], warm_start = True)
     model.fit(X_tr, Y_tr)
 
