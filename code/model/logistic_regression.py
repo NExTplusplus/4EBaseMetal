@@ -21,13 +21,6 @@ class LogReg(BasePredictor):
   def predict(self,X):
     return self.model.predict(X)
 
-  def simulate(self,X_tr,Y_tr, parameters):
-    model = LogisticRegression( C=parameters['C'],penalty=parameters['penalty'],tol = parameters['tol'],solver = "newton-cg",
-                                max_iter = parameters['max_iter'], warm_start = True)
-    print(parameters)
-    model.fit(X_tr, Y_tr)
-
-    return log_loss(Y_tr, model.predict(X_tr))
   
 
 

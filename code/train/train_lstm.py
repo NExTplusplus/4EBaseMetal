@@ -15,7 +15,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--data_configure_file', '-c', type=str,
         help='configure file of the features to be read',
-        default='/home/ffl/nus/MM/fintech/4e_base_metal/exp/lstm/lstm_data.conf'
+        default='../../exp/lstm_data.conf'
     )
     parser.add_argument('-l', '--lag', help='lag size', type=int, default=10)
     parser.add_argument('-u', '--unit', help='number of hidden units in lstm',
@@ -32,11 +32,11 @@ if __name__ == '__main__':
     parser.add_argument('-g', '--gpu', type=int, default=0, help='use gpu')
     parser.add_argument(
         '-min', '--model_path', help='path to load model',
-        type=str, default='/home/ffl/nus/MM/fintech/4e_base_metal/exp/lstm/model'
+        type=str, default='../../exp/lstm/model'
     )
     parser.add_argument(
         '-mout', '--model_save_path', type=str, help='path to save model',
-        default='/home/ffl/nus/MM/fintech/4e_base_metal/exp/lstm/model'
+        default='../../exp/lstm/model'
     )
     parser.add_argument('-o', '--action', type=str, default='train',
                         help='train, test, tune')
