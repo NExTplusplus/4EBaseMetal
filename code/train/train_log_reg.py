@@ -8,6 +8,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 
 from data.load_rnn import load_pure_log_reg
 from model.logistic_regression import LogReg
+from utils._logistic_loss import _logistic_loss
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -76,11 +77,10 @@ if __name__ == '__main__':
             
 
             # initialize and train the Logistic Regression model
-            parameters = {"penalty":"l2", "C":args.C, "tol":args.tol,"max_iter":50, "verbose" : 0}
+            parameters = {"penalty":"l2", "C":args.C, "solver":"liblinear", "tol":args.tol,"max_iter":50, "verbose" : 1}
             pure_LogReg = LogReg(parameters={})
 
             pure_LogReg.train(X_tr,y_tr, parameters)
-
             acc = pure_LogReg.test(X_va,y_va)
             if acc > max_acc:
                 best_lag = lag
