@@ -48,7 +48,7 @@ def load_pure_lstm(fname_columns, gt_column, norm_method, split_dates, T, S=1):
         if ground_truth.iloc[ind + S] - ground_truth.iloc[ind] > 0:
             ground_truth.iloc[ind] = 1
         else:
-            ground_truth.iloc[ind] = 0
+            ground_truth.iloc[ind] = -1
 
     # normalize data
     if norm_method == 'log_1d_return' or norm_method == 'log_nd_return':

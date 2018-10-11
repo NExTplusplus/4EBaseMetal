@@ -3,7 +3,16 @@ import pandas as pd
 
 def construct(time_series, ground_truth, start_ind, end_ind, T, norm_method):
     num = 0
-    
+    '''
+        convert 2d numpy array of time series data into 3d numpy array, with extra dimension for lags, i.e.
+        input of (n_samples, n_features) becomes (n_samples, T, n_features)
+        time_series (2d np.array): financial time series data
+        ground_truth (1d np.array): column which is used as ground truth
+        start_index (string): string which is the date that we wish to begin including from.
+        end_index (string): string which is the date that we wish to include last.
+        T (int): number of lags
+        norm_method (string): normalization method
+    '''
     for ind in range(start_ind + 1, end_ind + 1):
         if not time_series.iloc[ind - T: ind].isnull().values.any():
             num += 1

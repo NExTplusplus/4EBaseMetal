@@ -8,7 +8,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 
 from data.load_rnn import load_pure_log_reg
 from model.logistic_regression import LogReg
-from utils._logistic_loss import _logistic_loss
+from utils.log_reg_functions import objective_function
+
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -65,28 +66,36 @@ if __name__ == '__main__':
         best_lag = 0
         max_acc = 0.0
         te_acc = 0.0
+
         
-        print(fname_columns)
-        print(args.ground_truth)
+        
+        
         for lag in (5, 10, 20, 40):
             # load data
             X_tr, y_tr, X_va, y_va, X_te, y_te = load_pure_log_reg(
-                fname_columns, args.ground_truth, 'log_nd_return', split_dates, T = lag,
+                fname_columns, args.ground_truth, 'log_1d_return', split_dates, T = lag,
                 S = args.step
             )
-            
-
-            # initialize and train the Logistic Regression model
-            parameters = {"penalty":"l2", "C":args.C, "solver":"liblinear", "tol":args.tol,"max_iter":50, "verbose" : 1}
+            temp = None
             pure_LogReg = LogReg(parameters={})
-
-            pure_LogReg.train(X_tr,y_tr, parameters)
+            parameters = {"penalty":"l2", "C":args.C, "solver":"lbfgs", "tol":args.tol,"max_iter":1, "verbose" : 0,"warm_start":True}
+            # initialize and train the Logistic Regression model
+            for j in range(1,6):
+                pure_LogReg.train(X_tr,y_tr, parameters)
+                print("training objective:"+str(pure_LogReg.log_loss(X_tr,y_tr)))
+                print("validation objective:"+str(pure_LogReg.log_loss(X_va,y_va)))
+                print("testing objective:"+str(pure_LogReg.log_loss(X_te,y_te)))
+                print("training objective:"+str(objective_function(pure_LogReg,X_tr,y_tr)))
+                print("validation objective:"+str(objective_function(pure_LogReg,X_va,y_va)))
+                print("testing objective:"+str(objective_function(pure_LogReg,X_te,y_te)))
+                print("\n")
             acc = pure_LogReg.test(X_va,y_va)
             if acc > max_acc:
                 best_lag = lag
                 model = pure_LogReg
                 max_acc = acc
                 te_acc = pure_LogReg.test(X_te,y_te)
+            break
             
         # print(np.shape(X_tr))
         # print(np.shape(X_va))
