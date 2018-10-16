@@ -98,11 +98,11 @@ if __name__ == '__main__':
             # initialize and train the Logistic Regression model
             
             for j in range(10):
-                steps[j] = int(np.round(step*(j+1)))
+                steps[j] = step*(j+1)
                 if j > 0:
-                    parameters["max_iter"] = steps[j] - steps[j-1]
+                    parameters["max_iter"] = int(np.round(steps[j]) - np.round(steps[j-1]))
                 else:
-                    parameters["max_iter"] = steps[j]
+                    parameters["max_iter"] = int(np.round(steps[j]))
 
                 pure_LogReg.train(X_tr,y_tr, parameters)
                 parameters["warm_start"] = True
@@ -119,13 +119,15 @@ if __name__ == '__main__':
             plt.plot(steps,va_loss,"red")
             plt.plot(steps,te_loss,"green")
             plt.title("Loss")
-            plt.savefig("Lag "+str(lag)+" Loss")
+            plt.savefig(os.path.join("Lag",str(lag),str(args.C)+" Loss.png"))
+            plt.close()
             plt.plot(steps,tr_obj, "blue")
             plt.plot(steps,va_obj,"red")
             plt.plot(steps,te_obj,"green")
             plt.title("Objective Function")
-            plt.savefig("Lag "+str(lag)+" Objective Function")
-            
+            plt.savefig(os.path.join("Lag",str(lag),str(args.C)+" OF.png"))
+            plt.close()
+
             if acc > max_acc:
                 best_lag = lag
                 model = pure_LogReg
