@@ -48,7 +48,7 @@ def load_pure_lstm(fname_columns, gt_column, norm_method, split_dates, T, S=1):
         if ground_truth.iloc[ind + S] - ground_truth.iloc[ind] > 0:
             ground_truth.iloc[ind] = 1
         else:
-            ground_truth.iloc[ind] = -1
+            ground_truth.iloc[ind] = 0
 
     # normalize data
     if norm_method == 'log_1d_return' or norm_method == 'log_nd_return':
@@ -79,6 +79,12 @@ def load_pure_lstm(fname_columns, gt_column, norm_method, split_dates, T, S=1):
 
 def load_pure_log_reg(fname_columns, gt_column, norm_method, split_dates, T, S=1):
     X_tr, y_tr, X_va, y_va, X_te, y_te = load_pure_lstm(fname_columns, gt_column, norm_method, split_dates, T, S)
+    neg_y_tr = y_tr - 1
+    neg_y_va = y_va - 1
+    neg_y_te = y_te - 1
+    y_tr = y_tr + neg_y_tr
+    y_va = y_va + neg_y_va
+    y_te = y_te + neg_y_te
     X_tr = flatten(X_tr)
     X_va = flatten(X_va)
     X_te = flatten(X_te)

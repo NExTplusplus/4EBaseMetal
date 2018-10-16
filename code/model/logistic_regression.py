@@ -1,9 +1,6 @@
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, log_loss
 from model.base_predictor import BasePredictor
-import matplotlib.pyplot as plt
-import tkinter
-from sklearn.model_selection import learning_curve, validation_curve
 import numpy as np
  
 class LogReg(BasePredictor):
@@ -40,34 +37,9 @@ class LogReg(BasePredictor):
   def set_params(self,params):
     self.model.set_params(params)
   
-  def plot(self,X,y,ylim= None):
-    plt.figure()
-    if ylim is not None:
-        plt.ylim(*ylim)
-    plt.xlabel("Training examples")
-    plt.ylabel("Score")
-    train_sizes, train_scores, test_scores = learning_curve(self.model,X,y,scoring = "neg_log_loss",train_sizes=np.linspace(.1, 1.0, 5))
-    train_scores_mean = np.mean(train_scores, axis=1)
-    train_scores_std = np.std(train_scores, axis=1)
-    test_scores_mean = np.mean(test_scores, axis=1)
-    test_scores_std = np.std(test_scores, axis=1)
-    plt.grid()
-
-    plt.fill_between(train_sizes, train_scores_mean - train_scores_std,
-                     train_scores_mean + train_scores_std, alpha=0.1,
-                     color="r")
-    plt.fill_between(train_sizes, test_scores_mean - test_scores_std,
-                     test_scores_mean + test_scores_std, alpha=0.1, color="g")
-    plt.plot(train_sizes, train_scores_mean, 'o-', color="r",
-             label="Training score")
-    plt.plot(train_sizes, test_scores_mean, 'o-', color="g",
-             label="Cross-validation score")
-
-    plt.legend(loc="best")
-    return plt
+  def n_iter(self):
+    return self.model.n_iter_[0]
   
-  # def validation_curve(self,X,y):
-  #   validation_curve(self.model,X,y,scoring = "log_loss")
 
   
 
