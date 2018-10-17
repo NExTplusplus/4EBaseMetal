@@ -72,67 +72,76 @@ if __name__ == '__main__':
         te_acc = 0.0
 
         
-        
-        
-        for lag in (5, 10, 20, 40):
-            # load data
-            X_tr, y_tr, X_va, y_va, X_te, y_te = load_pure_log_reg(
-                fname_columns, args.ground_truth, 'log_1d_return', split_dates, T = lag,
-                S = args.step
-            )
+        for horizon in (1,3,5,10,21,63):
+            for C in (0.1,1.0,10.0):
+                for tol in (1e-4,1e-6,1e-8):
+                    for lag in (5, 10, 20, 40):
+                        # load data
+                        X_tr, y_tr, X_va, y_va, X_te, y_te = load_pure_log_reg(
+                            fname_columns, args.ground_truth, 'log_1d_return', split_dates, T = lag,
+                            S = horizon
+                        )
 
-            pure_LogReg = LogReg(parameters={})
-            parameters = {"penalty":"l2", "C":args.C, "solver":"lbfgs", "tol":args.tol,"max_iter":args.max_iter, "verbose" : 0,"warm_start":False}
-            pure_LogReg.train(X_tr,y_tr, parameters)
-            n_iter = pure_LogReg.n_iter()
-            step = n_iter/10.0
+                        pure_LogReg = LogReg(parameters={})
+                        check = True
+                        while check:
+                            max_iter = args.max_iter
+                            parameters = {"penalty":"l2", "C":C, "solver":"lbfgs", "tol":tol,"max_iter":max_iter, "verbose" : 0,"warm_start":False}
+                            pure_LogReg.train(X_tr,y_tr, parameters)
+                            n_iter = pure_LogReg.n_iter()
+                            if n_iter == max_iter:
+                                max_iter += 50
+                            else:
+                                check = False
+                        step = n_iter/10.0
 
-            steps = np.zeros(10)
-            tr_obj = np.zeros(10)
-            va_obj = np.zeros(10)
-            te_obj = np.zeros(10)
-            tr_loss = np.zeros(10)
-            va_loss = np.zeros(10)
-            te_loss = np.zeros(10)
+                        steps = np.zeros(10)
+                        tr_obj = np.zeros(10)
+                        va_obj = np.zeros(10)
+                        te_obj = np.zeros(10)
+                        tr_loss = np.zeros(10)
+                        va_loss = np.zeros(10)
+                        te_loss = np.zeros(10)
 
-            # initialize and train the Logistic Regression model
-            
-            for j in range(10):
-                steps[j] = step*(j+1)
-                if j > 0:
-                    parameters["max_iter"] = int(np.round(steps[j]) - np.round(steps[j-1]))
-                else:
-                    parameters["max_iter"] = int(np.round(steps[j]))
+                        # initialize and train the Logistic Regression model
+                        
+                        for j in range(10):
+                            steps[j] = step*(j+1)
+                            if j > 0:
+                                parameters["max_iter"] = int(np.round(steps[j]) - np.round(steps[j-1]))
+                            else:
+                                parameters["max_iter"] = int(np.round(steps[j]))
 
-                pure_LogReg.train(X_tr,y_tr, parameters)
-                parameters["warm_start"] = True
+                            pure_LogReg.train(X_tr,y_tr, parameters)
+                            parameters["warm_start"] = True
 
-                tr_loss[j] = pure_LogReg.log_loss(X_tr,y_tr)
-                va_loss[j] = pure_LogReg.log_loss(X_va,y_va)
-                te_loss[j] = pure_LogReg.log_loss(X_te,y_te)
-                tr_obj[j] = objective_function(pure_LogReg,X_tr,y_tr)
-                va_obj[j] = objective_function(pure_LogReg,X_va,y_va)
-                te_obj[j] = objective_function(pure_LogReg,X_te,y_te)
-            
-            acc = pure_LogReg.test(X_va,y_va)
-            plt.plot(steps,tr_loss,"blue")
-            plt.plot(steps,va_loss,"red")
-            plt.plot(steps,te_loss,"green")
-            plt.title("Loss")
-            plt.savefig(os.path.join("Lag",str(lag),str(args.C)+" Loss.png"))
-            plt.close()
-            plt.plot(steps,tr_obj, "blue")
-            plt.plot(steps,va_obj,"red")
-            plt.plot(steps,te_obj,"green")
-            plt.title("Objective Function")
-            plt.savefig(os.path.join("Lag",str(lag),str(args.C)+" OF.png"))
-            plt.close()
+                            tr_loss[j] = pure_LogReg.log_loss(X_tr,y_tr)
+                            va_loss[j] = pure_LogReg.log_loss(X_va,y_va)
+                            # te_loss[j] = pure_LogReg.log_loss(X_te,y_te)
+                            tr_obj[j] = objective_function(pure_LogReg,X_tr,y_tr)
+                            va_obj[j] = objective_function(pure_LogReg,X_va,y_va)
+                            # te_obj[j] = objective_function(pure_LogReg,X_te,y_te)
+                        
+                        acc = pure_LogReg.test(X_va,y_va)
+                        plt.plot(steps,tr_loss,"blue")
+                        plt.plot(steps,va_loss,"red")
+                        # plt.plot(steps,te_loss,"green")
+                        plt.title("Loss")
+                        plt.savefig(os.path.join("Experiment","Forecast "+str(horizon),"Lag "+str(lag),"C "+str(C),str(tol)+" Loss.png"))
+                        plt.close()
+                        plt.plot(steps,tr_obj, "blue")
+                        plt.plot(steps,va_obj,"red")
+                        # plt.plot(steps,te_obj,"green")
+                        plt.title("Objective Function")
+                        # print(os.path.join("Experiment","Forecast "+str(step),"Lag "+str(lag),"C "+str(C),str(tol)+" OF.png"))
+                        plt.savefig(os.path.join("Experiment","Forecast "+str(horizon),"Lag "+str(lag),"C "+str(C),str(tol)+" OF.png"))
+                        plt.close()
 
-            if acc > max_acc:
-                best_lag = lag
-                model = pure_LogReg
-                max_acc = acc
-                te_acc = pure_LogReg.test(X_te,y_te)
+                        if acc > max_acc:
+                            best_lag = lag
+                            model = pure_LogReg
+                            max_acc = acc
+                            te_acc = pure_LogReg.test(X_te,y_te)
 
             
         
