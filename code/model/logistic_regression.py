@@ -1,20 +1,46 @@
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, log_loss
 from model.base_predictor import BasePredictor
-
+import numpy as np
+ 
 class LogReg(BasePredictor):
   def __init__(self,parameters):
     BasePredictor.__init__(self,parameters)
+    self.model = None
 
-  def train(self, X_tr, Y_tr):  
-    model = LogisticRegression(parameters)
-    model.fit(X_tr, Y_tr)
+  def train(self, X_tr, Y_tr, parameters):  
 
-    self.model = model
+    if self.model == None:
+      self.model = LogisticRegression(  C=parameters['C'],penalty=parameters['penalty'],tol = parameters['tol'],solver = parameters["solver"],
+                                        max_iter = parameters['max_iter'], verbose = parameters["verbose"], warm_start = parameters["warm_start"])
+    else:
+      self.model.set_params(**parameters)
+    self.model.fit(X_tr, Y_tr)
+
+  def log_loss(self,X,y_true):
+    return log_loss(y_true,self.model.predict_proba(X))
+
 
   def test(self, X_tes, Y_tes):
     pred = self.model.predict(X_tes)
     return accuracy_score(Y_tes, pred)
+
+  def predict(self,X):
+    return self.model.predict(X)
+
+  def coef(self):
+    return self.model.coef_
+
+  def intercept_(self):
+    return self.model.intercept_
+
+  def set_params(self,params):
+    self.model.set_params(params)
+  
+  def n_iter(self):
+    return self.model.n_iter_[0]
+  
+
   
 
 
