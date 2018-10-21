@@ -108,3 +108,12 @@ def normalize_3mspot_spread (X,spot_col,len_update = 30 ,version="v1"):
         return 
             
     return df_X.dropna()
+
+# This function will normalize OI 
+# "X" is the dataframe we want to process and spot_col is the name of the spot price column
+# OI_col is the col name of the open interest
+def normalize_OI (X,OI_col):
+    df_X = X.copy()
+    OI = np.log(X[OI_col])
+    df_X['normalized_OI'] = OI - OI.shift(1)
+    return df_X.dropna()
