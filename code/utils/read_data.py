@@ -46,3 +46,21 @@ def process_missing_value(X):
 
 def process_missing_value_v2(X):
     return X.dropna()
+
+# See "Deal with NA value" in google drive/ data cleaning file for more explanations
+# "X" is the dataframe we want to process and "cons_data" is number of consecutive complede data we need to have 
+def process_missing_value_v3(X,cons_data):
+    count = 0
+    sta_ind = 0
+    for i in range(X.shape[0]):
+        if not X.iloc[i].isnull().values.any():
+            count= count +1
+            if sta_ind!=0:
+                sta_ind = i
+        else:
+            count = 0
+            sta_ind =0
+        if count == cons_data:
+            break
+        
+    return X[sta_ind:].dropna()
