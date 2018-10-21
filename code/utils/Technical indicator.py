@@ -1,159 +1,6 @@
 
-# coding: utf-8
-
-# In[23]:
-
-
-DATA_PATH_OHLC = "C:/Users/User/Desktop/Next++/Data/LME/LMECopper3M.csv"
-DATA_PATH_SPOT = "C:/Users/User/Desktop/Next++/Data/LME/LMCADY.csv"    
-DATA_PATH_OI = "C:/Users/User/Desktop/Next++/Data/LME/LMCADS03_OI.csv" 
-
-import statsmodels.api as sm
 import pandas as pd
 import numpy as np
-ohlc = pd.read_csv(DATA_PATH_OHLC,index_col=0)
-spot = pd.read_csv(DATA_PATH_SPOT,index_col=0)
-oi = pd.read_csv(DATA_PATH_OI,index_col=0)
-all_data = pd.concat([ohlc, spot,oi], axis=1, sort=True)
-
-
-# In[24]:
-
-
-# See "Deal with NA value" in google drive/ data cleaning file for more explanations
-# "X" is the dataframe we want to process and "cons_data" is number of consecutive complede data we need to have 
-def process_missing_value_v3(X,cons_data):
-    count = 0
-    sta_ind = 0
-    for i in range(X.shape[0]):
-        if not X.iloc[i].isnull().values.any():
-            count= count +1
-            if sta_ind!=0:
-                sta_ind = i
-        else:
-            count = 0
-            sta_ind =0
-        if count == cons_data:
-            break
-        
-    return X[sta_ind:].dropna()
-
-
-# In[83]:
-
-
-# See "Volume normalization methods" in google drive/ data cleaning file/volume normalization for more explanations
-# "X" is the dataframe we want to process and "OI_name" is the name of the column contained open interest
-# version can be v1,v2,v3 or v4 as stated in the file. v1,v2 and v3 will require Open Interest column ("OI_name")
-# and for v3 and v4 length of moving average is required
-def normalze_volume (X,OI_name,len_ma,version="v1"):
-    df_X = X.copy()
-    if version == "v1":
-        if OI_name not in X.columns:
-            print("Open Interest Column missing in dataframe")
-            return
-        else:
-            df_X["volume_v1"] = X['Volume']/X[OI_name]
-    elif version == "v2":
-        if OI_name not in X.columns:
-            print("Open Interest Column missing in dataframe")
-            return
-        else:
-            turn_over = np.log(X['Volume']/X[OI_name])
-            df_X["volume_v2"] = turn_over - turn_over.shift(1)
-    elif version =="v3":
-        if OI_name not in X.columns:
-            print("Open Interest Column missing in dataframe")
-            return
-        else:
-            turn_over = np.log(X['Volume']/X[OI_name])
-            turn_over_ma = turn_over.shift(len_ma)
-            ma_total = 0
-            for i in range (len_ma):
-                ma_total += turn_over.iloc[i]
-            turn_over_ma.iloc[len_ma] = ma_total/len_ma
-            for i in range(len_ma,len(turn_over)-1):
-                turn_over_ma.iloc[i+1]= (turn_over.iloc[i]+ (len_ma-1)*turn_over_ma.iloc[i])/len_ma
-            df_X["volume_v3"]=turn_over-turn_over_ma
-    elif version =="v4":
-        volume_col =X['Volume'].copy()
-        volume_col_ma = volume_col.shift(len_ma)
-        ma_total = 0
-        for i in range (len_ma):
-            ma_total += volume_col.iloc[i]
-        volume_col_ma.iloc[len_ma] = ma_total/len_ma
-        for i in range(len_ma,len(volume_col)-1):
-            volume_col_ma.iloc[i+1]= (volume_col.iloc[i]+ (len_ma-1)*volume_col_ma.iloc[i])/len_ma
-        df_X["volume_v4"]=volume_col/volume_col_ma -1
-    else:
-        print("wrong version")
-        return 
-            
-    return df_X.dropna()
-    
-
-
-# In[101]:
-
-
-# See "spread normalization methods" in google drive/ data cleaning file/spread normalization for more explanations
-# "X" is the dataframe we want to process and spot_col is the name of the spot price column
-# len_update is for v2, it is after how many days we should update the relationship between spot price and 3month forward price
-# version can be v1 or v2 as stated in the file.
-def normalize_3mspot_spread (X,spot_col,len_update = 30 ,version="v1"):
-    df_X = X.copy()
-    if version == "v1":
-        if spot_col not in X.columns:
-            print("Spot Price Column missing in dataframe")
-            return
-        else:
-            df_X["spread_v1"] = np.log(X['Close.Price'])- np.log(X[spot_col])
-    elif version == "v2":
-        if spot_col not in X.columns:
-            print("Spot Price Column missing in dataframe")
-            return
-        else:
-            three_m = np.log(X['Close.Price'])
-            spot = np.log(X[spot_col])
-            relationship = spot.shift(len_update)
-            model = sm.OLS(three_m[0:len_update],spot[0:len_update])
-            results = model.fit()
-            beta = results.params[0]
-            for i in range(len_update,len(three_m),len_update):
-                last_beta = beta
-                index_update = i+len_update
-                if index_update>(len(three_m)-1):
-                    index_update = len(three_m)-1
-                relationship[i:index_update] = three_m[i:index_update] - beta*spot[i:index_update]
-                model = sm.OLS(three_m[i:index_update],spot[i:index_update])
-                results = model.fit()
-                beta = results.params[0]
-                last_index = i
-            relationship[last_index:len(three_m)] = three_m[last_index:len(three_m)]  - last_beta*spot[last_index:len(three_m)] 
-            df_X["spread_v2"]=relationship
-            
-    else:
-        print("wrong version")
-        return 
-            
-    return df_X.dropna()
-
-
-# In[153]:
-
-
-# This function will normalize OI 
-# "X" is the dataframe we want to process and spot_col is the name of the spot price column
-# OI_col is the col name of the open interest
-def normalize_OI (X,OI_col):
-    df_X = X.copy()
-    OI = np.log(X[OI_col])
-    df_X['normalized_OI'] = OI - OI.shift(1)
-    return df_X.dropna()
-
-
-# In[149]:
-
 
 # This function will calculate Price Volume Trend as mentioned in google drive/ technical indicator for more explanations
 # "X" is the dataframe we want to process
@@ -215,10 +62,6 @@ def pvt (X,version = "v1"):
         return 
     return df_X.dropna()
 
-
-# In[154]:
-
-
 # This function will calculate divergence between Price Volume Trend and percentage price change 
 # as mentioned in google drive/ technical indicator for more explanations
 # "X" is the dataframe we want to process
@@ -270,9 +113,6 @@ def divergence_pvt (X,version = "v1"):
     return df_X.dropna()
 
 
-# In[157]:
-
-
 # This function will calculate accumulation/distribution as mentioned in google drive/ technical indicator for more explanations
 # "X" is the dataframe we want to process
 # version can be v1,v2,v3,v4 or v5 as stated in the file.
@@ -321,10 +161,6 @@ def ad (X,version = "v1"):
     
     
     return df_X.dropna()
-
-
-# In[158]:
-
 
 # This function will calculate divergence between accumulation/distribution and percentage price change 
 # as mentioned in google drive/ technical indicator for more explanations
