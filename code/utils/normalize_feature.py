@@ -24,7 +24,7 @@ def log_1d_return(X):
 # "X" is the dataframe we want to process and "OI_name" is the name of the column contained open interest
 # version can be v1,v2,v3 or v4 as stated in the file. v1,v2 and v3 will require Open Interest column ("OI_name")
 # and for v3 and v4 length of moving average is required
-def normalze_volume (X,OI_name,len_ma,version="v1"):
+def normalize_volume (X,OI_name,len_ma,version="v1"):
     df_X = X.copy()
     if version == "v1":
         if OI_name not in X.columns:
@@ -127,7 +127,7 @@ def normalize_OI (X,OI_col):
 # shfe_col is the name of the column for shfe contract
 # exchange is the name of the column for exchange rate
 
-def normalize_3mspot_spread (X,lme_col,shfe_col,exchange,len_update = 30 ,version="v1"):
+def normalize_3mspot_spread_ex (X,lme_col,shfe_col,exchange,len_update = 30 ,version="v1"):
     df_X = X.copy()
     shfe_usd = X[shfe_col]*X[exchange]
     if version == "v1":

@@ -64,6 +64,9 @@ if __name__ == '__main__':
     # read data configure file
     with open(args.data_configure_file) as fin:
         fname_columns = json.load(fin)
+    print(fname_columns)
+    # print(fname_columns[0])
+    # print(fname_columns[fname_columns[0]])
 
 
     if args.action == 'train':

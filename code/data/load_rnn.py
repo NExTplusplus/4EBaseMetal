@@ -5,8 +5,9 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 
 from utils.read_data import read_single_csv, merge_data_frame, \
-    process_missing_value
-from utils.normalize_feature import log_1d_return
+    process_missing_value_v3
+from utils.normalize_feature import log_1d_return, normalize_volume, normalize_3mspot_spread, \
+    normalize_OI, normalize_3mspot_spread_ex
 from utils.transform_data import flatten
 from utils.construct_data import construct
 
@@ -43,6 +44,7 @@ def load_pure_lstm(fname_columns, gt_column, norm_method, split_dates, T, S=1):
             )
 
     ground_truth = copy(time_series[gt_column])
+
     for ind in range(time_series.shape[0] - S):
         #print(S)
         if ground_truth.iloc[ind + S] - ground_truth.iloc[ind] > 0:
