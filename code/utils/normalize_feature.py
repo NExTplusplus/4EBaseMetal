@@ -119,3 +119,48 @@ def normalize_OI (X,OI_col):
     OI = np.log(X[OI_col])
     df_X['normalized_OI'] = OI - OI.shift(1)
     return df_X.dropna()
+
+# See "spread normalization methods" in google drive/ data cleaning file/spread normalization for more explanations
+# "X" is the dataframe we want to process and lme_col is the name of the spot price column/ 3month forward contract from lme
+# len_update is for v2, it is after how many days we should update the relationship between spot price and 3month forward price
+# version can be v1 or v2 as stated in the file.
+# shfe_col is the name of the column for shfe contract
+# exchange is the name of the column for exchange rate
+
+def normalize_3mspot_spread (X,lme_col,shfe_col,exchange,len_update = 30 ,version="v1"):
+    df_X = X.copy()
+    shfe_usd = X[shfe_col]*X[exchange]
+    if version == "v1":
+        if lme_col not in X.columns:
+            print("LME Price Column missing in dataframe")
+            return
+        else:
+            df_X["spread_shfe_v1"] = np.log(X[lme_col])- np.log(shfe_usd)
+    elif version == "v2":
+        if lme_col not in X.columns:
+            print("LME Price Column missing in dataframe")
+            return
+        else:
+            lme = np.log(X[lme_col])
+            relationship = lme.shift(len_update)
+            model = sm.OLS(lme[0:len_update],shfe_usd[0:len_update])
+            results = model.fit()
+            beta = results.params[0]
+            for i in range(len_update,len(lme),len_update):
+                last_beta = beta
+                index_update = i+len_update
+                if index_update>(len(lme)-1):
+                    index_update = len(lme)-1
+                relationship[i:index_update] = lme[i:index_update] - beta*shfe_usd[i:index_update]
+                model = sm.OLS(lme[i:index_update],shfe_usd[i:index_update])
+                results = model.fit()
+                beta = results.params[0]
+                last_index = i
+            relationship[last_index:len(lme)] = lme[last_index:len(lme)]  - last_beta*shfe_usd[last_index:len(lme)] 
+            df_X["spread_shfe_v2"]=relationship
+            
+    else:
+        print("wrong version")
+        return 
+            
+    return df_X.dropna()
