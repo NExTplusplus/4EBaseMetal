@@ -11,14 +11,21 @@ returns:
 X_norm (2d numpy array): note that the dimension of X_norm is different from
     that of X since it less one row (cannot calculate return for the 1st day).
 '''
-def log_1d_return(X):
+def log_1d_return(X,cols):
     # assert type(X) == np.ndarray, 'only 2d numpy array is accepted'
-    if type(X) == np.ndarray:
-        return np.log(np.true_divide(X[1:, :], X[:-1, :]))
-    else:
-        X.values[1:, :] = np.log(np.true_divide(X.values[1:, :],
-                                                X.values[:-1, :]))
+    for col in cols:
+        if type(X[col]) == np.ndarray:
+            X[col] = np.log(np.true_divide(X[col][1:], X[col][:-1]))
+        else:
+            X[col].values[1:] = np.log(np.true_divide(X[col].values[1:],
+                                                X[col].values[:-1]))
+    # if type(X) == np.ndarray:
+    #     return np.log(np.true_divide(X[1:, :], X[:-1, :]))
+    # else:
+    #     X.values[1:, :] = np.log(np.true_divide(X.values[1:, :],
+    #                                             X.values[:-1, :]))
     return X
+
 
 # See "Volume normalization methods" in google drive/ data cleaning file/volume normalization for more explanations
 # "X" is the dataframe we want to process and "OI_name" is the name of the column contained open interest
