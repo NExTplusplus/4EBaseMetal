@@ -28,30 +28,19 @@ def log_1d_return(X,cols):
 
 
 # See "Volume normalization methods" in google drive/ data cleaning file/volume normalization for more explanations
-# "X" is the dataframe we want to process and "OI_name" is the name of the column contained open interest
+# "volume" is the volume colume we want to process and "OI" is the OI column contained open interest
 # version can be v1,v2,v3 or v4 as stated in the file. v1,v2 and v3 will require Open Interest column ("OI_name")
 # and for v3 and v4 length of moving average is required
-def normalize_volume (X,OI_name,len_ma,version="v1"):
-    df_X = X.copy()
+
+def normalze_volume (volume,OI=None,len_ma=None,version="v1"):
+
     if version == "v1":
-        if OI_name not in X.columns:
-            print("Open Interest Column missing in dataframe")
-            return
-        else:
-            df_X["volume_v1"] = X['Volume']/X[OI_name]
+            return volume/OI
     elif version == "v2":
-        if OI_name not in X.columns:
-            print("Open Interest Column missing in dataframe")
-            return
-        else:
-            turn_over = np.log(X['Volume']/X[OI_name])
-            df_X["volume_v2"] = turn_over - turn_over.shift(1)
+            turn_over = np.log(volume/OI)
+            return turn_over - turn_over.shift(1)
     elif version =="v3":
-        if OI_name not in X.columns:
-            print("Open Interest Column missing in dataframe")
-            return
-        else:
-            turn_over = np.log(X['Volume']/X[OI_name])
+            turn_over = np.log(volume/OI)
             turn_over_ma = turn_over.shift(len_ma)
             ma_total = 0
             for i in range (len_ma):
@@ -59,42 +48,31 @@ def normalize_volume (X,OI_name,len_ma,version="v1"):
             turn_over_ma.iloc[len_ma] = ma_total/len_ma
             for i in range(len_ma,len(turn_over)-1):
                 turn_over_ma.iloc[i+1]= (turn_over.iloc[i]+ (len_ma-1)*turn_over_ma.iloc[i])/len_ma
-            df_X["volume_v3"]=turn_over-turn_over_ma
+            return turn_over-turn_over_ma
     elif version =="v4":
-        volume_col =X['Volume'].copy()
-        volume_col_ma = volume_col.shift(len_ma)
+        volume_col_ma = volume.shift(len_ma)
         ma_total = 0
         for i in range (len_ma):
             ma_total += volume_col.iloc[i]
         volume_col_ma.iloc[len_ma] = ma_total/len_ma
         for i in range(len_ma,len(volume_col)-1):
             volume_col_ma.iloc[i+1]= (volume_col.iloc[i]+ (len_ma-1)*volume_col_ma.iloc[i])/len_ma
-        df_X["volume_v4"]=volume_col/volume_col_ma -1
+        return volume/volume_col_ma -1
     else:
         print("wrong version")
         return 
-            
-    return df_X.dropna()
     
 # See "spread normalization methods" in google drive/ data cleaning file/spread normalization for more explanations
-# "X" is the dataframe we want to process and spot_col is the name of the spot price column
+# "close is the close price column and spot_col is the spot price column
 # len_update is for v2, it is after how many days we should update the relationship between spot price and 3month forward price
 # version can be v1 or v2 as stated in the file.
-def normalize_3mspot_spread (X,spot_col,len_update = 30 ,version="v1"):
-    df_X = X.copy()
+
+def normalize_3mspot_spread (close,spot_col,len_update = 30 ,version="v1"):
     if version == "v1":
-        if spot_col not in X.columns:
-            print("Spot Price Column missing in dataframe")
-            return
-        else:
-            df_X["spread_v1"] = np.log(X['Close.Price'])- np.log(X[spot_col])
+            return np.log(close)- np.log(spot_col)
     elif version == "v2":
-        if spot_col not in X.columns:
-            print("Spot Price Column missing in dataframe")
-            return
-        else:
-            three_m = np.log(X['Close.Price'])
-            spot = np.log(X[spot_col])
+            three_m = np.log(close)
+            spot = np.log(spot_col)
             relationship = spot.shift(len_update)
             model = sm.OLS(three_m[0:len_update],spot[0:len_update])
             results = model.fit()
@@ -110,45 +88,25 @@ def normalize_3mspot_spread (X,spot_col,len_update = 30 ,version="v1"):
                 beta = results.params[0]
                 last_index = i
             relationship[last_index:len(three_m)] = three_m[last_index:len(three_m)]  - last_beta*spot[last_index:len(three_m)] 
-            df_X["spread_v2"]=relationship
+            return relationship
             
     else:
         print("wrong version")
         return 
-            
-    return df_X.dropna()
-
-# This function will normalize OI 
-# "X" is the dataframe we want to process and spot_col is the name of the spot price column
-# OI_col is the col name of the open interest
-def normalize_OI (X,OI_col):
-    df_X = X.copy()
-    OI = np.log(X[OI_col])
-    df_X['normalized_OI'] = OI - OI.shift(1)
-    return df_X.dropna()
 
 # See "spread normalization methods" in google drive/ data cleaning file/spread normalization for more explanations
-# "X" is the dataframe we want to process and lme_col is the name of the spot price column/ 3month forward contract from lme
+# lme_col is the spot price column/ 3month forward contract from lme
 # len_update is for v2, it is after how many days we should update the relationship between spot price and 3month forward price
 # version can be v1 or v2 as stated in the file.
-# shfe_col is the name of the column for shfe contract
-# exchange is the name of the column for exchange rate
+# shfe_col is the column for shfe contract
+# exchange is the column for exchange rate
 
-def normalize_3mspot_spread_ex (X,lme_col,shfe_col,exchange,len_update = 30 ,version="v1"):
-    df_X = X.copy()
-    shfe_usd = X[shfe_col]*X[exchange]
+def normalize_3mspot_spread (lme_col,shfe_col,exchange,len_update = 30 ,version="v1"):
+    shfe_usd = shfe_col*exchange
     if version == "v1":
-        if lme_col not in X.columns:
-            print("LME Price Column missing in dataframe")
-            return
-        else:
-            df_X["spread_shfe_v1"] = np.log(X[lme_col])- np.log(shfe_usd)
+            return np.log(lme_col)- np.log(shfe_usd)
     elif version == "v2":
-        if lme_col not in X.columns:
-            print("LME Price Column missing in dataframe")
-            return
-        else:
-            lme = np.log(X[lme_col])
+            lme = np.log(lme_col)
             relationship = lme.shift(len_update)
             model = sm.OLS(lme[0:len_update],shfe_usd[0:len_update])
             results = model.fit()
@@ -164,10 +122,8 @@ def normalize_3mspot_spread_ex (X,lme_col,shfe_col,exchange,len_update = 30 ,ver
                 beta = results.params[0]
                 last_index = i
             relationship[last_index:len(lme)] = lme[last_index:len(lme)]  - last_beta*shfe_usd[last_index:len(lme)] 
-            df_X["spread_shfe_v2"]=relationship
+            return relationship
             
     else:
         print("wrong version")
         return 
-            
-    return df_X.dropna()
