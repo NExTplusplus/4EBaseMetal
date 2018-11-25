@@ -127,3 +127,9 @@ def normalize_3mspot_spread (lme_col,shfe_col,exchange,len_update = 30 ,version=
     else:
         print("wrong version")
         return 
+
+# This function will normalize OI 
+# OI_col is the col the open interest
+def normalize_OI (OI_col):
+    OI = np.log(OI_col)
+    return OI - OI.shift(1)
