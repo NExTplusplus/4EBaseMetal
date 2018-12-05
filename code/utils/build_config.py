@@ -9,8 +9,8 @@ lead = ["LME/LMPBDY.csv","LME/LMPBDS03_OI.csv","LME/LMELead3M.csv","SHFE/Generic
 nick = ["LME/LMNIDY.csv","LME/LMNIDS03_OI.csv","LME/LMENickel3M.csv","SHFE/Generic/XII.csv"]
 univ = ["Indices/SHSZ300 Index.csv","Indices/HSI Index.csv","Indices/SHCOMP Index.csv",
         "Indices/Lagged/DXY Curncy_lag1.csv","Indices/Lagged/SPX Index_lag1.csv","Indices/Lagged/VIX Index_lag1.csv",
-        "COMEX/Generic/GC.csv","COMEX/Generic/PL.csv","COMEX/Generic/PA.csv","SHFE/Generic/RT.csv","DCE/BB/ACcl.csv",
-        "DCE/BB/AKcl.csv","DCE/BB/AEcl.csv","DCE/Generic/AE.csv","DCE/Generic/AK.csv","DCE/Generic/AC.csv"]
+        "COMEX/Generic/GC.csv","COMEX/Generic/PL.csv","COMEX/Generic/PA.csv","SHFE/Generic/RT.csv",
+        "DCE/Generic/AE.csv","DCE/Generic/AK.csv","DCE/Generic/AC.csv"]
 associated = [alum,copp,tin,zinc,lead,nick]
 metals = ["al_","cu_","tn_","zn_","pb_","nc_"]
 

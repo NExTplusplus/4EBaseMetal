@@ -32,7 +32,7 @@ def log_1d_return(X,cols):
 # version can be v1,v2,v3 or v4 as stated in the file. v1,v2 and v3 will require Open Interest column ("OI_name")
 # and for v3 and v4 length of moving average is required
 
-def normalze_volume (volume,OI=None,len_ma=None,version="v1"):
+def normalize_volume (volume,OI=None,len_ma=None,version="v1"):
 
     if version == "v1":
             return volume/OI
@@ -101,7 +101,7 @@ def normalize_3mspot_spread (close,spot_col,len_update = 30 ,version="v1"):
 # shfe_col is the column for shfe contract
 # exchange is the column for exchange rate
 
-def normalize_3mspot_spread (lme_col,shfe_col,exchange,len_update = 30 ,version="v1"):
+def normalize_3mspot_spread_ex (lme_col,shfe_col,exchange,len_update = 30 ,version="v1"):
     shfe_usd = shfe_col*exchange
     if version == "v1":
             return np.log(lme_col)- np.log(shfe_usd)
