@@ -1,0 +1,116 @@
+import argparse
+import time
+import datetime
+import sys
+import pickle
+from random import randint
+import pandas as pd
+import random as rd
+import numpy as np
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import *
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.proxy import Proxy, ProxyType
+from bs4 import BeautifulSoup
+
+
+# This function require the url_col extracted by code in Data Crawling folder and chrome_driver_path is the chrome driver path. 
+# The output will be the html data for each url webpage. 
+
+def htfc_save(chrome_driver_path,url_col):
+    print('initialize')
+    driver = webdriver.Chrome(chrome_driver_path)
+    print('Processing')
+    html_list =[]
+    i=0
+    try:
+        for url in url_col:
+            if pd.isnull(url):
+                continue
+            i+=1
+            print('current link: ' + str(i))
+            driver.get(url)
+            time.sleep(rd.randrange(3, 6))
+            html_list.append(BeautifulSoup(driver.page_source, "html.parser"))
+    except Exception as e: 
+        print(e)
+        i-=1
+    
+    if i == len(url_col):
+        print('Completed')
+    
+    return pd.Series(html_list[:i])
+        
+# Drop the html data that is in pdf format
+def drop_pdf(df):
+    drop_row =[]
+    index = 0
+    for url in df['url']:
+        if url[-3:]== 'pdf':
+            drop_row.append(index)
+        index+=1
+    return df.drop(drop_row).reset_index()
+   
+# Function to extract exact time that the news is published as well as author/news source data from html data    
+def extract_header(string):
+    soup = BeautifulSoup(string,"html.parser")
+    mydivs = soup.findAll("div", {"class": "wz_source"})
+    if len(mydivs)!=0:
+        title = mydivs[0]
+        header = title.findAll("p")
+        if len(header)>=8:
+            time = header[1].text
+            author = header[6].text
+            source = header[7].text
+            return (author,source,time)
+    return (np.nan,np.nan,np.nan)
+
+# Function to extract content information from html data   
+def extract_content(string):
+    soup = BeautifulSoup(string,"html.parser")
+    mydivs = soup.findAll('div',{'class':"wz_content"})
+    content = []
+    if len(mydivs)!=0:
+        paragraph = mydivs[0].findAll("p")
+        for i in paragraph[:-1]:
+            content.append(i.text)
+    return content
+    
+def extract_exact(list1):
+    return pd.to_datetime(list1[2],infer_datetime_format=True)
+    
+def extract_author(list1):
+    return list1[0]
+    
+def extract_source(list1):
+    return list1[1]
+
+# Sample 
+df_htfc= pd.read_excel('url_file')
+df_htfc = df_htfc.dropna()
+df_htfc = df_htfc.reset_index()
+result = html_save('/home/liangchen/4e/Data Crawling/chromedriver', df_htfc['url'])
+
+# Append html data into master data set
+df_htfc['html'] = result
+
+#Drop the pdf format
+df_htfc = drop_pdf(df_htfc)
+
+# Extract Content
+df_htfc['content']= df_htfc.html.apply(extract_content)
+
+# Extract exact time, author and source
+df_htfc['buffer'] = df_htfc.html.apply(extract_header)
+df_htfc['exact'] = df_htfc['buffer'].apply(extract_exact)
+df_htfc['author'] = df_htfc['buffer'].apply(extract_author)
+df_htfc['source'] = df_htfc['buffer'].apply(extract_source)
+df_htfc = df_htfc.drop(['level_0','index','buffer'],axis=1)
+
+# Drop html column 
+df_htfc = df_htfc.drop(['html'],axis=1)
