@@ -89,20 +89,20 @@ if __name__ == '__main__':
                                     len_ma = 5
                                     len_update = 30
                                     tol = 1e-4
-                                    start_time = time.time()
+                                    # start_time = time.time()
                                     # load data
-                                    X_tr, y_tr, X_va, y_va, X_te, y_te = load_pure_log_reg(
+                                    X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params= load_pure_log_reg(
                                         f, args.ground_truth, 'log_1d_return', split_dates, T = lag,
-                                        S = horizon, OI_name = args.open_interest,shfe_col = "Close", exchange = args.exchange,lme_col = args.ground_truth,
-                                        len_ma = len_ma, len_update = len_update, Volume_norm_v = norm_volume, spread_ex_v = norm_ex, spread_v = norm_3m_spread,
+                                        S = horizon,
+                                        vol_norm = norm_volume, ex_spread_norm = norm_ex, spot_spread_norm = norm_3m_spread,
                                         inc = True
-                                    )                    
+                                    )                  
                         
 
                                     pure_LogReg = LogReg(parameters={})
                                     # check = True
                                     max_iter = args.max_iter
-                                    parameters = {"penalty":"l2", "C":C, "solver":"lbfgs", "tol":tol,"max_iter":3*len(f)*max_iter, "verbose" : 5,"warm_start":False}
+                                    parameters = {"penalty":"l2", "C":C, "solver":"lbfgs", "tol":tol,"max_iter":4*len(f)*max_iter, "verbose" : 0,"warm_start":False}
                                     pure_LogReg.train(X_tr,y_tr.flatten(), parameters)
                                     n_iter = pure_LogReg.n_iter()
                                     # if n_iter == max_iter:
@@ -178,12 +178,15 @@ if __name__ == '__main__':
                                     out.write(str(norm_ex)+",")
                                     out.write(str(n_iter)+",")
                                     out.write(str(acc)+",")
-                                    out.write(str(t_acc)+",")
-                                    out.write("\n"+str(time.time()-start_time)+"\n" ) 
-                                    if args.open_interest is None:
+                                    out.write(str(t_acc)+",\n")
+                                    if norm_params["nVol"] is False:
                                         break
-                                if args.exchange is None:
+                                if norm_params["nEx"] is False:
                                     break       
+
+                    #         break
+                    #     break
+                    # break
                     out.write(str(horizon)+",")
                     out.write(str(best_C)+",")
                     out.write(str(best_lag)+",")

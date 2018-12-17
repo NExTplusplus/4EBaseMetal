@@ -1,0 +1,72 @@
+import argparse
+import time
+import datetime
+import sys
+import pickle
+from random import randint
+import pandas as pd
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import *
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.proxy import Proxy, ProxyType
+
+
+# This is the main data crawling function, chrome_driver_path is the path to the chrome driver Start_page is which page to start
+
+def crawl_page_links_shmet(chrome_driver_path，start_page):
+    driver = webdriver.Chrome(chrome_driver_path)
+    print('init driver')
+    current_website_link = "http://www.shmet.com/cms/f-1.html?pageIndex="+str(start_page)
+    driver.get(current_website_link)
+    title_list =[]
+    url_list =[]
+    date_list = []
+    tag_list = []
+    current_length = 0
+    print('load page')
+    time.sleep(5)
+    print('processing')
+    page_n = start_page
+    try:
+        while True:
+            
+            links = driver.find_elements_by_xpath("//div[@class='tn-list-item-row tn-list-item-heading']/h5/a")
+            dates = driver.find_elements_by_xpath("//div[@class='tn-list-item-row tn-list-info']/em")
+            tags = driver.find_elements_by_xpath("//p[@class='tn-tags']")
+            print('page %s:'%page_n , len(dates))
+            for cur_link,cur_date,curr_tag in zip(links,dates,tags):
+                current_length+=1
+                url_list.append(cur_link.get_attribute(u'href'))
+                title_list.append(cur_link.text)
+                date_list.append(pd.to_datetime(cur_date.text[:-6],infer_datetime_format=True))
+                tag_list.append(curr_tag.text.split("\n"))
+            
+            next_link = driver.find_elements_by_xpath("//div[@class='tn-pagination-btn']/a")[-1].get_attribute('href')
+            if next_link == current_website_link or next_link==None :
+                driver.close()
+                break
+            else:
+                current_website_link = next_link
+                driver.get(current_website_link)
+            page_n+=1
+            time.sleep(5)
+    except Exception as e: 
+        print(e)
+        current_length -=1
+        result = pd.DataFrame({'url': url_list[:current_length],'title': title_list[:current_length],'date':date_list[:current_length],'tag':tag_list[:current_length]})
+        print(current_length)
+        print('Program Died')
+        return result
+    
+    result = pd.DataFrame({'url': url_list,'title': title_list,'date':date_list,'tag':tag_list})
+    print("Completed")
+    return result
+
+#Sample
+shmet_df= crawl_page_links_shmet('C:/Users/User/AppData/Local/chromedriver_win32/chromedriver.exe'，2)
+

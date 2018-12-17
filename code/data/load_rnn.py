@@ -9,7 +9,7 @@ from utils.read_data import read_single_csv, merge_data_frame, \
 from utils.normalize_feature import log_1d_return, normalize_volume, normalize_3mspot_spread, \
     normalize_OI, normalize_3mspot_spread_ex
 from utils.transform_data import flatten
-from utils.construct_data import construct
+from utils.construct_data import construct,normalize,technical_indication
 
 '''
 parameters:
@@ -31,68 +31,33 @@ y_val (2d numpy array):
 X_tes (3d numpy array):
 y_tes (2d numpy array):
 '''
-def load_pure_lstm(fname_columns, gt_column, norm_method, split_dates, T, S=1, OI_name = None, len_ma = None, len_update = None, lme_col = None, shfe_col = None,\
-                    exchange = None, Volume_norm_v ="v1", spread_ex_v = "v1", spread_v = "v1",inc = True):
+def load_pure_lstm(fname_columns, gt_column, norm_method, split_dates, T, S=1, 
+                    vol_norm ="v1", ex_spread_norm = "v1", spot_spread_norm = "v1",inc = True):
     # read data from files
     time_series = None
 
-
     for fname in fname_columns:
-        # print('read columns:', fname_columns[fname], 'from:', fname)
+        print('read columns:', fname_columns[fname], 'from:', fname)
         if time_series is None:
             time_series = read_single_csv(fname, fname_columns[fname])
         else:
             time_series = merge_data_frame(
                 time_series, read_single_csv(fname, fname_columns[fname])
             )
-    
-    time_series =process_missing_value_v3(time_series,10)
-    org_columns = time_series.columns.values.tolist()    
-    # print(OI_name)
-    if "Close.Price" in org_columns:
-        # print(6)
-        temp = normalize_3mspot_spread(time_series,gt_column,len_update, spread_v)
-        if temp is not None:
-            # print(7)
-            time_series = temp
-    if OI_name is not None:
-        # print(1)
-        temp = normalize_OI(time_series,OI_name)
-        if temp is not None:
-            # print(2)
-            time_series = temp
-        temp = normalize_volume(time_series,OI_name,len_ma, Volume_norm_v)
-        if temp is not None:
-            # print(3)
-            time_series = temp
-        time_series.drop(["Volume",OI_name],axis = 1, errors = "ignore")
-        
-    if lme_col is not None and shfe_col is not None and exchange is not None:
-        # print(4)
-        temp = normalize_3mspot_spread_ex (time_series,lme_col,shfe_col,exchange,len_update, spread_ex_v)
-        if temp is not None:
-            # print(5)
-            time_series = temp
-        time_series.drop([shfe_col,exchange],axis = 1, errors = "ignore")
-
-    # print("o")
-    
-    
-
-        
+    time_series = process_missing_value_v3(time_series,10)
+    org_cols = time_series.columns.values.tolist()
+    print("Normalizing")
+    norm_params = normalize(time_series,vol_norm = vol_norm,spot_spread_norm=spot_spread_norm,ex_spread_norm=ex_spread_norm)
+    time_series = copy(norm_params["val"])
+    del norm_params["val"]
+    time_series = technical_indication(time_series)
+    cols = time_series.columns.values.tolist()
+    for col in cols:
+        if "_Volume" in col or "_OI" in col or "CNYUSD" in col:
+            time_series.drop(col,errors = "ignore")
+            org_cols.remove(col)
+ 
     ground_truth = copy(time_series[gt_column])
-    # print(time_series.columns.values.tolist())
-    # time_series = time_series.drop(["Volume",OI_name,shfe_col,exchange],axis = 1, errors = "ignore")
-    
-    # for i in ["Volume",OI_name,shfe_col,exchange]:
-    #     if i is None:
-    #         pass
-    #     if i in org_columns:
-    #         org_columns.remove(i)
-    #         time_series.drop([i],axis = 1, errors = "ignore")
-
-    # print(org_columns)
-    # print(time_series.columns.values.tolist())
 
     for ind in range(time_series.shape[0] - S):
         #print(S)
@@ -100,12 +65,16 @@ def load_pure_lstm(fname_columns, gt_column, norm_method, split_dates, T, S=1, O
             ground_truth.iloc[ind] = 1
         else:
             ground_truth.iloc[ind] = 0
+            
+    norm_data = copy(log_1d_return(time_series,org_cols))
+    
+    norm_data = process_missing_value_v3(norm_data,10)
 
     # normalize data
-    if norm_method == 'log_1d_return' or norm_method == 'log_nd_return':
-        norm_data = copy(log_1d_return(time_series,org_columns))
-    else:
-        norm_data = copy(time_series)
+    # if norm_method == 'log_1d_return' or norm_method == 'log_nd_return':
+    #     norm_data = copy(log_1d_return(time_series,org_columns))
+    # else:
+    #     norm_data = copy(time_series)
     tra_ind = 0
     if tra_ind < T - 1:
         tra_ind = T - 1
@@ -125,16 +94,15 @@ def load_pure_lstm(fname_columns, gt_column, norm_method, split_dates, T, S=1, O
         
 
             
-    return X_tr, y_tr, X_va, y_va, X_te, y_te
+    return X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params
 
 def load_pure_log_reg(fname_columns, gt_column, norm_method, split_dates, T, S=1, OI_name = None, len_ma = None, 
-                        len_update = None, lme_col = None, shfe_col = None, exchange = None, Volume_norm_v ="v1", 
-                        spread_ex_v = "v1", spread_v = "v1", inc = True
+                        len_update = None, lme_col = None, shfe_col = None, exchange = None, vol_norm ="v1", 
+                        ex_spread_norm = "v1", spot_spread_norm = "v1", inc = True
                         ):
-    X_tr, y_tr, X_va, y_va, X_te, y_te = load_pure_lstm(fname_columns, gt_column, norm_method, split_dates, T, S = S,
-                                                        OI_name = OI_name, len_ma = len_ma,len_update = len_update,lme_col = lme_col,
-                                                        shfe_col = shfe_col,exchange = exchange,Volume_norm_v = Volume_norm_v, 
-                                                        spread_ex_v = spread_ex_v,spread_v = spread_v, inc = True
+    X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params = load_pure_lstm(fname_columns, gt_column, norm_method, split_dates, T, S = S,
+                                                        vol_norm = vol_norm, ex_spread_norm = ex_spread_norm,
+                                                        spot_spread_norm = spot_spread_norm, inc = True
                                                         )
     neg_y_tr = y_tr - 1
     neg_y_va = y_va - 1
@@ -146,4 +114,4 @@ def load_pure_log_reg(fname_columns, gt_column, norm_method, split_dates, T, S=1
     X_va = flatten(X_va)
     X_te = flatten(X_te)
 
-    return X_tr, y_tr, X_va, y_va, X_te, y_te
+    return X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params

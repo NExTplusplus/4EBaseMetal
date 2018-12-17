@@ -1,0 +1,79 @@
+import argparse
+import time
+import datetime
+import sys
+import pickle
+from random import randint
+import pandas as pd
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import *
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.proxy import Proxy, ProxyType
+
+# This is the main data crawling function, chrome_driver_path is the path to the chrome driver. Start is which page to start
+def crawl_page_links_htfc(Chrome_driver_path,start):
+    driver = webdriver.Chrome(Chrome_driver_path)
+    print('init driver')
+    current_website_link = 'https://www.htfc.com/main/yjzx/yjbg/index.shtml'
+    driver.get(current_website_link)
+    title_list =[]
+    url_list =[]
+    date_list =[]
+    current_length = 0
+    print('load page')
+    time.sleep(5)
+    page_n = start
+    print('processing')
+    try:
+        driver.find_elements_by_xpath("//li[@id='2']")[0].click()
+        time.sleep(5)
+        
+        page_search= driver.find_elements_by_xpath("//span[@class='page_skip']/input")
+        page_click= driver.find_elements_by_xpath("//span[@class='page_skip']/a")
+        
+        page_search[0].send_keys(str(start))
+        page_click[0].click()
+        time.sleep(5)
+        while True:
+            
+            links = driver.find_elements_by_xpath("//ul[@class='business_list']/li/a")
+            dates = driver.find_elements_by_xpath("//ul[@class='business_list']/li/span")
+            
+            print('page %s:'%page_n , len(dates))
+            for cur_link,cur_date in zip(links,dates):
+                current_length +=1
+                url_list.append(cur_link.get_attribute(u'href'))
+                title = cur_link.text
+                title_list.append(title)
+                date_list.append(pd.to_datetime(cur_date.text,infer_datetime_format=True))
+            
+            if page_n==1:
+                next_link = driver.find_elements_by_xpath("//div[@class='next_page']/a")[-2]
+            else:
+                next_link = driver.find_elements_by_xpath("//div[@class='next_page']/a")[-1]
+            if next_link.text != u'\u4e0b\u4e00\u9875' :
+                driver.close()
+                break
+            else:
+                next_link.click()
+            page_n+=1
+            time.sleep(5)
+    except Exception as e: 
+        print(e)
+        current_length -=1
+        result = pd.DataFrame({'url': url_list[:current_length],'title': title_list[:current_length],'date':date_list[:current_length]})
+        print(current_length)
+        print('Program Died')
+        return result
+    
+    result = pd.DataFrame({'url': url_list,'title': title_list,'date':date_list})
+    print("Completed")
+    return result
+
+# Sample 
+df_htfc = crawl_page_links_htfc('/home/liangchen/4e/Data Crawling/chromedriver',0)
