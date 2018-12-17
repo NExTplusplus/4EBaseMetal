@@ -94,7 +94,7 @@ def convert_date(day,month,year):
     return pd.Series(date_list)
 
 # Sample
-df_hexun = crawl_page_links_hexun()
+df_hexun = crawl_page_links_hexun('/home/liangchen/4e/Data Crawling/chromedriver')
 df_hexun['day'] =df_hexun['date'].apply(add_day)
 df_hexun['month'] =df_hexun['date'].apply(add_month)
 df_hexun['year'] = add_year(df_hexun.month)
