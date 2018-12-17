@@ -60,6 +60,6 @@ def delete_date(string):
     
     
 #Sample 
-cifco_df = crawl_page_links_cifco()
+cifco_df = crawl_page_links_cifco('/home/liangchen/4e/Data Crawling/chromedriver')
 cifco_df['date'] = cifco_df['title'].apply(add_date)
 cifco_df['title'] = cifco_df['title'].apply(delete_date)
