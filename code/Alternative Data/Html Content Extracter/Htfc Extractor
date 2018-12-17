@@ -94,7 +94,7 @@ def extract_source(list1):
 df_htfc= pd.read_excel('url_file')
 df_htfc = df_htfc.dropna()
 df_htfc = df_htfc.reset_index()
-result = html_save('/home/liangchen/4e/Data Crawling/chromedriver', df_htfc['url'])
+result = htfc_save('/home/liangchen/4e/Data Crawling/chromedriver', df_htfc['url'])
 
 # Append html data into master data set
 df_htfc['html'] = result
