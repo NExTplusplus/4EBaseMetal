@@ -1,0 +1,64 @@
+import argparse
+import time
+import datetime
+import sys
+import pickle
+from random import randint
+import pandas as pd
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import *
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.proxy import Proxy, ProxyType
+
+def crawl_page_links_hexun():
+    driver = webdriver.Chrome('C:/Users/User/AppData/Local/chromedriver_win32/chromedriver.exe')
+    print('init driver')
+    current_website_link = "http://futures.hexun.com/industrynews/"
+    driver.get(current_website_link)
+    title_list =[]
+    url_list =[]
+    date_list =[]
+    current_length = 0
+    print('load page')
+    time.sleep(5)
+    print('processing')
+    page_n = 1
+    try:
+        while True:
+            
+            links = driver.find_elements_by_xpath("//div[@class='temp01']/ul/li/a")
+            dates = driver.find_elements_by_xpath("//div[@class='temp01']/ul/li/span")
+            print('page %s:'%page_n , len(dates))
+            for cur_link,cur_date in zip(links,dates):
+                current_length +=1
+                url_list.append(cur_link.get_attribute(u'href'))
+                title = cur_link.text
+                date = cur_date.text[1:6]
+                title_list.append(title)
+                date_list.append(date)
+            
+            next_link = driver.find_elements_by_xpath("//li[@class='next']")
+            if len(next_link)==0 :
+                driver.close()
+                break
+            else:
+                current_website_link = next_link
+                current_website_link[0].click()
+            page_n+=1
+            time.sleep(2)
+    except Exception as e: 
+        print(e)
+        current_length -=1
+        result = pd.DataFrame({'url': url_list[:current_length],'title': title_list[:current_length],'date':date_list[:current_length]})
+        print(current_length)
+        print('Program Died')
+        return result
+    
+    result = pd.DataFrame({'url': url_list,'title': title_list,'date':date_list})
+    print("Completed")
+    return result
