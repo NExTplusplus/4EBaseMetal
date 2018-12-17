@@ -1,0 +1,65 @@
+import argparse
+import time
+import datetime
+import sys
+import pickle
+from random import randint
+import pandas as pd
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import *
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.proxy import Proxy, ProxyType
+
+
+
+# This is the main data crawling function, chrome_driver_path is the path to the chrome driver
+def crawl_page_links_cifco(Chrome_driver_path):
+    driver = webdriver.Chrome(Chrome_driver_path)
+    print('init driver')
+    current_website_link = "http://www.cifco.net/index.php?m=Archives&c=IndexArctype&a=index&t_id=39"
+    driver.get(current_website_link)
+    title_list =[]
+    url_list =[]
+    current_length = 0
+    print('load page')
+    time.sleep(5)
+    print('processing')
+    try:
+        while True:
+            links = driver.find_elements_by_xpath("//div[@class='fr']/ul[@class = 'public-index-56 clearfix']/li/a")
+            print('Total links: ', len(links))
+            for cur_link in links:
+                current_length+=1
+                print('This is line: ', current_length)
+                url_list.append(cur_link.get_attribute(u'href'))
+                title_list.append(cur_link.text)
+            print("Completed")
+            driver.close()
+            break
+    except Exception as e: 
+        print(e)
+        current_length-=1
+        result = pd.DataFrame({'url': url_list[:current_length],'title': title_list[:current_length]})
+        print('Program Died')
+        return result
+    result = pd.DataFrame({'url': url_list,'title': title_list})
+    return result
+    
+# Change date to datetime type
+def add_date(string):
+   return pd.to_datetime(string[-10:],infer_datetime_format=True)
+
+# Delete date from title
+def delete_date(string):
+    return string[:-11]
+    
+    
+#Sample 
+cifco_df = crawl_page_links_cifco()
+cifco_df['date'] = cifco_df['title'].apply(add_date)
+cifco_df['title'] = cifco_df['title'].apply(delete_date)
