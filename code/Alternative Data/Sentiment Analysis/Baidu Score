@@ -1,0 +1,35 @@
+import pandas as pd
+import numpy as np
+from aip import AipNlp  
+
+# Login Baidu
+APP_ID = '15146529'
+API_KEY = 'Dlgz79CkU4ZrbvM0dtpFnNwL'
+SECRET_KEY = 'ND85LorrONMANcNeLavqF149Lcic0SB0'
+client = AipNlp(APP_ID, API_KEY, SECRET_KEY)
+
+# inputs is series of words data, clean_words is the list of character we need to clean 
+def calculate_sentiment(inputs,clean_words = None):
+    index = 0
+    result =[]
+    existing_clean_words = [u'\xc1',u'\u2022',u'\ufeff']
+    if clean_words:
+        existing_clean_words += clean_words
+    try:
+        for title in inputs:
+            for char in existing_clean_words:
+                title = title.replace(char,"")
+            output = client.sentimentClassify(title.encode('utf-8'))
+            result.append(output['items'][0])
+            index+=1
+    except Exception as e: 
+        print(e)
+    
+    if index == len(inputs):
+        print("Completed")
+    else:
+        print("Function stopped at index: " , index)
+    return pd.Series(result)
+    
+# Sample
+sentiment_ni = calculate_sentiment(df_ni['title'])
