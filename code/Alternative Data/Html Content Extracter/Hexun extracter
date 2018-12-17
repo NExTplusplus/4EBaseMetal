@@ -1,0 +1,86 @@
+import argparse
+import time
+import datetime
+import sys
+import pickle
+from random import randint
+import pandas as pd
+import random as rd
+import numpy as np
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import *
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.proxy import Proxy, ProxyType
+from bs4 import BeautifulSoup
+
+
+# This function require the url_col extracted by code in Data Crawling folder and chrome_driver_path is the chrome driver path. 
+# The output will be the html data for each url webpage. 
+
+def html_save(chrome_driver_path,url_col):
+    print('initialize')
+    driver = webdriver.Chrome(chrome_driver_path)
+    print('Processing')
+    html_list =[]
+    i=0
+    try:
+        for url in url_col:
+            i+=1
+            print('current link: ' + str(i))
+            driver.get(url)
+            time.sleep(rd.randrange(3, 6))
+            html_list.append(BeautifulSoup(driver.page_source, "html.parser"))
+    except Exception as e: 
+        print(e)
+        i-=1
+        
+    if i == len(url_col):
+        print('Completed')
+    return pd.Series(html_list[:i])
+    
+# Function to extract exact time that the news is published as well as author/news source data from html data    
+def extract_header(string):
+    soup = BeautifulSoup(string,"html.parser")
+    mydivs = soup.findAll("div", {"class": "tip fl"})
+    if len(mydivs)!=0:
+        title = mydivs[0]
+        if len(title.findAll("span"))!=0:
+            time = title.findAll("span")[0].text
+        else:
+            time = np.nan
+        
+        if len(title.findAll("a"))!=0:
+            source = title.findAll("a")[0].text
+        else:
+            source = np.nan
+        return (time,source)
+    return (np.nan,np.nan)
+
+# Function to extract content information from html data   
+def extract_content(string):
+    soup = BeautifulSoup(string,"html.parser")
+    mydivs = soup.findAll('div',{'class':"art_contextBox"})
+    content = []
+    if len(mydivs)!=0:
+        paragraph = mydivs[0].findAll("p")
+        for i in paragraph:
+            content.append(i.text)
+    return content
+
+
+# Sample 
+df_hexun = pd.read_excel('url_file')
+result = html_save('/home/liangchen/4e/Data Crawling/chromedriver', df_hexun['url'])
+# Extract Content
+df_hexun['content'] = result.apply(extract_content)
+buffer1 = df_html['0'].apply(extract_header)
+
+# Extract time
+df_hexun['exact'] = buffer1.apply(lambda x: x[0])
+# Extract news source/ author
+df_hexun['Source'] = buffer1.apply(lambda x: x[1])
