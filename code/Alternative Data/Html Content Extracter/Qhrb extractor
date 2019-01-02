@@ -1,0 +1,84 @@
+import argparse
+import time
+import datetime
+import sys
+import pickle
+from random import randint
+import pandas as pd
+import random as rd
+import numpy as np
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import *
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.proxy import Proxy, ProxyType
+from bs4 import BeautifulSoup
+
+
+# This function require the url_col extracted by code in Data Crawling folder and chrome_driver_path is the chrome driver path. 
+# The output will be the html data for each url webpage. 
+
+def qhrb_save(chrome_driver_path.url_col):
+    print('initialize')
+    driver = webdriver.Chrome(chrome_driver_path)
+    print('Processing')
+    html_list =[]
+    i=0
+    try:
+        for url in url_col:
+            i+=1
+            print('current link: ' + str(i))
+            driver.get(url)
+            time.sleep(4.5)
+            html_list.append(BeautifulSoup(driver.page_source, "html.parser"))
+    except Exception as e: 
+        print(e)
+        i-=1
+    return pd.Series(html_list[:i])
+        
+        
+   
+# Function to extract exact time that the news is published as well as author/news source data from html data    
+def extract_header(string):
+    soup = BeautifulSoup(string, "html.parser")
+    mydivs = soup.findAll("div", {"class": "article-infos"})
+    result =[]
+    for p in mydivs[0].findAll("span"):
+        result.append(p.text)
+    return (result[0],result[2])
+        
+
+# Function to extract content information from html data   
+def extract_content(string):
+    soup = BeautifulSoup(string, "html.parser")
+    mydivs = soup.findAll("div", {"class": "article-content fontSizeSmall BSHARE_POP"})
+    result =[]
+    for p in mydivs[0].findAll("p"):
+        result.append(p.text)
+    return result
+        
+def extract_time(list1):
+    return pd.to_datetime(list1[0],infer_datetime_format=True)
+    
+def extract_author(list1):
+    return list1[1]
+
+# Sample 
+df_qhrb= pd.read_excel('url_file')
+df_qhrb = df_qhrb.dropna()
+df_qhrb = df_qhrb.reset_index()
+result = qhrb_save('/home/liangchen/4e/Data Crawling/chromedriver', df_qhrb['url'])
+
+
+# Extract Content
+df_qhrb['content']= result.apply(extract_content)
+
+# Extract exact time and author
+df_qhrb['buffer']= result.apply(extract_header)
+df_qhrb['exact'] = df_qhrb['buffer'].apply(extract_time)
+df_qhrb['author'] = df_qhrb['buffer'].apply(extract_author)
+df_qhrb = df_qhrb.drop(['buffer'],axis=1)
