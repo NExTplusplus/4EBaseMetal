@@ -32,6 +32,89 @@ def construct(time_series, ground_truth, start_ind, end_ind, T, norm_method):
             sample_ind += 1
 
     return X,y
+def construct_keras_data(time_series, ground_truth_index, sequence_length):
+    """
+    data process
+    
+    Arguments:
+    time_series -- DataFrame of raw data
+    ground_truth_index -- index of ground truth in the dataframe, use to form ground truth label
+    sequence_length -- An integer of how many days should be looked at in a row
+    
+    Returns:
+    X_train -- A tensor of shape (N, S, F) that will be inputed into the model to train it
+    Y_train -- A tensor of shape (N,) that will be inputed into the model to train it--spot price
+    X_test -- A tensor of shape (N, S, F) that will be used to test the model's proficiency
+    Y_test -- A tensor of shape (N,) that will be used to check the model's predictions
+    Y_daybefore -- A tensor of shape (267,) that represents the spot price ,the day before each Y_test value
+    unnormalized_bases -- A tensor of shape (267,) that will be used to get the true prices from the normalized ones
+    window_size -- An integer that represents how many days of X values the model can look at at once
+    """
+
+    #raw_data
+    val_date = '2015-01-02'
+    tes_date = '2016-01-04'
+    val_ind = time_series.index.get_loc(val_date)
+    tes_ind = time_series.index.get_loc(tes_date)
+    raw_data = time_series.values
+    #Convert the file to a list
+    data = raw_data.tolist()
+    
+    #Convert the data to a 3D array (a x b x c) 
+    #Where a is the number of days, b is the window size, and c is the number of features in the data file
+    result = []
+    for index in range(len(data) - sequence_length + 1):
+        result.append(data[index: index + sequence_length])
+
+    #Normalizing data by going through each window
+    #Every value in the window is divided by the first value in the window, and then 1 is subtracted
+    d0 = np.array(result)
+    dr = np.zeros_like(d0)
+    dr[:,1:,:] = d0[:,1:,:] / d0[:,0:1,:] - 1
+    #Keeping the unnormalized prices for Y_test
+    #Useful when graphing spot price over time later
+    #The first value in the window
+    end = int(dr.shape[0] + 1)
+    unnormalized_bases_val = d0[val_ind:tes_ind, 0:1, ground_truth_index]
+    unnormalized_bases_tes = d0[tes_ind:end, 0:1, ground_truth_index]
+    #print(unnormalized_bases_tes)
+    #sys.stdin.readline()
+    #Splitting data set into training validating and testing data
+    split_line = val_ind
+    training_data = dr[:int(split_line), :]
+
+    #Shuffle the data
+    #np.random.shuffle(training_data)
+    
+    #Training Data
+    X_train = training_data[:, :-1]
+    Y_train = training_data[:, -1,:]
+    Y_train = Y_train[:, ground_truth_index]
+    #print(X_train)
+    #print(Y_train)
+    #sys.stdin.readline()
+    #Validating Data
+    X_val = dr[val_ind:tes_ind,:-1]
+    Y_val = dr[val_ind:tes_ind,-1]
+    Y_val = Y_val[:, ground_truth_index]
+
+    #Testing data
+    X_test = dr[tes_ind:, :-1]
+    Y_test = dr[tes_ind:, -1]
+    Y_test = Y_test[:, ground_truth_index]
+
+    #Get the day before Y_test's price
+    Y_daybefore_val = dr[val_ind:tes_ind, -2, :]
+    Y_daybefore_val = Y_daybefore_val[:, ground_truth_index]
+    Y_daybefore_tes = dr[tes_ind:, -2, :]
+    Y_daybefore_tes = Y_daybefore_tes[:, ground_truth_index]
+    
+    #Get window size and sequence length
+    sequence_length = sequence_length
+    window_size = sequence_length - 1 #because the last value is reserved as the y value
+    
+    return X_train, Y_train, X_val, Y_val, X_test, Y_test, Y_daybefore_val, Y_daybefore_tes, unnormalized_bases_val, unnormalized_bases_tes, window_size
+
 
 def normalize(X,vol_norm ="v1", vol_len = None, spot_spread_norm = "v1", 
                 spot_spread_len = 30, ex_spread_norm = "v1",ex_spread_len = 30):

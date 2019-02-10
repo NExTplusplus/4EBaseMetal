@@ -9,7 +9,7 @@ from utils.read_data import read_single_csv, merge_data_frame, \
 from utils.normalize_feature import log_1d_return, normalize_volume, normalize_3mspot_spread, \
     normalize_OI, normalize_3mspot_spread_ex
 from utils.transform_data import flatten
-from utils.construct_data import construct,normalize,technical_indication
+from utils.construct_data import construct,normalize,technical_indication,construct_keras_data
 
 '''
 parameters:
@@ -21,7 +21,7 @@ split_dates ([datetime]): start date for training, validation, and testing.
 T (int): the lag size/sequence length.
 S (int): the number of days towards the expected day of the selected time 
     horizon, e.g., S = 3 means the time horizon of 3-day, default value is 1.
-
+using_frame (str): a flag to distinguish data process for keras model
 returns:
 X_tr (3d numpy array): N_t * T * D, N_t is the number of training samples, D is
     the dimension of temporal features.
@@ -31,8 +31,8 @@ y_val (2d numpy array):
 X_tes (3d numpy array):
 y_tes (2d numpy array):
 '''
-def load_pure_lstm(fname_columns, gt_column, norm_method, split_dates, T, S=1, 
-                    vol_norm ="v1", ex_spread_norm = "v1", spot_spread_norm = "v1",inc = True):
+def load_pure_lstm(fname_columns, gt_column, norm_method, split_dates, T, S=1,
+    vol_norm ="v1", ex_spread_norm = "v1", spot_spread_norm = "v1",inc = True, using_frame = "others"):
     # read data from files
     time_series = None
 
@@ -56,7 +56,15 @@ def load_pure_lstm(fname_columns, gt_column, norm_method, split_dates, T, S=1,
         if "_Volume" in col or "_OI" in col or "CNYUSD" in col:
             time_series.drop(col,errors = "ignore")
             org_cols.remove(col)
- 
+
+    
+    if using_frame == "keras":
+        for col in cols:
+            if "Spot" in col:
+                ground_truth_index = cols.index(col)
+        X_train, Y_train, X_val, Y_val, X_test, Y_test, Y_daybefore_val, Y_daybefore_tes, unnormalized_bases_val, unnormalized_bases_tes, window_size = construct_keras_data(time_series, ground_truth_index, T+1) 
+        return X_train, Y_train, X_val, Y_val, X_test, Y_test, Y_daybefore_val, Y_daybefore_tes, unnormalized_bases_val, unnormalized_bases_tes, window_size
+    
     ground_truth = copy(time_series[gt_column])
 
     for ind in range(time_series.shape[0] - S):
