@@ -15,13 +15,13 @@ if __name__ == "__main__":
     default='../../exp/config.conf'
   )
   parser.add_argument(
-    '-m', '-metal', type=str,
+    '-m', '--metal', type=str,
     help='metal to be chosen',
     default='../../exp/al_1.csv'
   )
-  # parser.add_argument(
-  #   '-h','--horizon',type = int, help='step ahead to prenum_appt', default = 1
-  # )
+  parser.add_argument(
+    '-s','--steps',type = int, help='step ahead to predict', default = 1
+  )
   parser.add_argument(
     '-n','--varcount',type = int, help='number of variables', default =1 
   )
@@ -37,11 +37,12 @@ if __name__ == "__main__":
     results = m.readlines()
     results = [result.split(",")[7] for result in results]
 
-  with open("../../exp/"+args.output+"_h1"+"_n"+str(args.varcount)+".conf","w") as out:
+  with open("../../exp/"+args.output+"_h"+str(args.steps)+"_n"+str(args.varcount)+"_list.conf","w") as out:
     out.write("[\n\t")
     col_app = dict()
-    num = -1
+    num = 1
     for f in fname_column:
+      print(f)
       num += 1
       if results[num].strip() != "TRUE":
         continue

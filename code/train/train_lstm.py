@@ -64,9 +64,8 @@ if __name__ == '__main__':
         fname_columns = json.load(fin)
 
     # load data
-    X_tr, y_tr, X_val, y_val, X_tes, y_tes = load_pure_lstm(
-        fname_columns, 'LMCADY', 'log_1d_return', split_dates, args.lag,
-        args.step
+    X_tr, y_tr, X_val, y_val, X_tes, y_tes, norm_params = load_pure_lstm(
+        fname_columns, 'LME_Co_Spot', 'log_1d_return', split_dates, args.lag
     )
 
     # initialize the LSTM model

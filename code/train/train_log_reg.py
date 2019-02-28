@@ -29,8 +29,8 @@ if __name__ == '__main__':
                         help='steps in the future to be predicted')
     parser.add_argument('-gt', '--ground_truth', help='ground truth column',
                          type=str, default="LMCADY")
-    parser.add_argument('-tol', '--tol', help='tolerance',
-                        type=float, default=1e-4)
+    parser.add_argument('-max_iter','--max_iter',type=int,default=100,
+                        help='max number of iterations')
     parser.add_argument(
         '-min', '--model_path', help='path to load model',
         type=str, default='../../exp/log_reg/model'
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     with open(args.data_configure_file) as fin:
         fname_columns = json.load(fin)
 
-    with open(args.output+"_h"+args.steps+".csv","w") as out:
+    with open(args.output+".csv","w") as out:
         out.write("C,Lag,Volume,Spread,Exchange,Validation,Testing,\n")
         if args.action == 'train':
             comparison = None
