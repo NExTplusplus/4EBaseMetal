@@ -143,7 +143,7 @@ class Crawler_machine:
                 
                 
                     df_input = pd.DataFrame(new_input)
-                    df_input.to_sql(name='html', con=data_base_conn, if_exists='append',index=False)
+                    df_input.to_sql(name='html', con=self.conn_html, if_exists='append',index=False)
                     crawled_data+=1
                 
                 
@@ -209,8 +209,7 @@ class Crawler_machine:
         
         
         pre_click = False
-        keyword_filter = ['铜','铅','锌','镍','铝','锡','有色']
-        data_base_conn = self.conn_html
+        keyword_filter = ['铜','铅','锌','镍','铝','锡','有色'] 
         exclude_list=[]
         
         if website_link == 'http://www.dlqh.com/page-1-4.php':
@@ -613,8 +612,6 @@ class Crawler_machine:
         self.raw_crawl_func(driver,crawl_type,analyst_company, news_type,website_link,
                             keyword_report,xpath = xpath,tag_element = tag_element,
                             keyword_next_page =keyword_next_page,keyword_filter=keyword_filter,exclude_list=exclude_list)
-
-
 
 
 ###############################################################################################################################33
