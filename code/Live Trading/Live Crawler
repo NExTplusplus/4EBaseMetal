@@ -136,7 +136,7 @@ class Crawler_machine:
                     temp = link.get_attribute("href")
                     driver.switch_to.window(driver.window_handles[1])
                     driver.get(temp)              
-                    driver.implicitly_wait(2)
+                    time.sleep(5)
                     
                     new_input['html'] = [str(BeautifulSoup(driver.page_source, "html.parser"))]
                     driver.switch_to.window(driver.window_handles[0])
@@ -153,10 +153,13 @@ class Crawler_machine:
             
             
                 if keyword_next_page and crawl_type == 'auto_link_crawl':
+                    
                     next_page_link = driver.find_elements_by_partial_link_text(keyword_next_page)
+                
                     # Check whether there is next page to go
                     if next_page_link:
                         page_link_check = next_page_link[0].get_attribute("href")
+                        
                         if ('void' in page_link_check) or (page_link_check == None):
                             break
                         elif page_link_check == current_website_link:
@@ -576,6 +579,7 @@ class Crawler_machine:
             tag_element = None
             keyword_next_page = "下一页" 
             crawl_type = 'auto_click_crawl'
+
         elif website_link == 'http://www.shcifco.com/html/yanjiuzhongxin/shishikuaixun/panzhongshidian/':
             analyst_company = '上海中期'
             news_type = 'After Market'
@@ -585,7 +589,16 @@ class Crawler_machine:
             keyword_next_page = "下一页" 
             crawl_type = 'auto_link_crawl'
             keyword_filter = 'All'
-
+        
+        elif website_link == 'http://www.gtaxqh.com/html/RESEARCH_SERVICES/zhlcb/mrsp/':
+            analyst_company = '国投安信'
+            news_type = 'After Market'
+            keyword_report = '货每日收评'
+            xpath = None
+            tag_element = None
+            keyword_next_page = "下一页" 
+            crawl_type = 'auto_link_crawl'
+            keyword_filter = 'All'
         else:
             print('Website not in the class, please add under crawl function')
             return
@@ -613,7 +626,6 @@ class Crawler_machine:
                             keyword_report,xpath = xpath,tag_element = tag_element,
                             keyword_next_page =keyword_next_page,keyword_filter=keyword_filter,exclude_list=exclude_list)
 
-
 ###############################################################################################################################33
 #Report Source Link
 
@@ -625,7 +637,6 @@ website_link_lst.append('http://www.xzfutures.com/deeconomic.html')
 website_link_lst.append('http://www.xzfutures.com/deeconomic_cid_119.html')
 website_link_lst.append('https://www.mfc.com.cn/research.html')
 website_link_lst.append('http://www.gzjkqh.com/czjy/list_36.aspx')
-website_link_lst.append('http://www.dfhjqh.com/Article/lists/category/178/p/1.html')
 website_link_lst.append('http://www.shqhgs.com/lists/Dailystudy/p/1.html')
 website_link_lst.append('http://www.zcqh.com/zcyj_z.php?name=%E6%AF%8F%E6%97%A5%E6%97%A9%E6%8A%A5&page=1')
 website_link_lst.append('http://www.tqfutures.com/zpts/list_14.html')
