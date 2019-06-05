@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 from copy import copy
-from utils.normalize_feature import normalize_3mspot_spread,normalize_3mspot_spread_ex,normalize_OI,normalize_volume
-from utils.Technical_indicator import ad, divergence_ad, pvt, divergence_pvt
+from normalize_feature import normalize_3mspot_spread,normalize_3mspot_spread_ex,normalize_OI,normalize_volume
+from Technical_indicator import ad, divergence_ad, pvt, divergence_pvt
 
 def construct(time_series, ground_truth, start_ind, end_ind, T, h, norm_method):
     num = 0
