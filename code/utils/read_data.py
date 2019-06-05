@@ -64,15 +64,14 @@ def process_missing_value_v3(X,cons_data):
     sta_ind = 0
     for i in range(X.shape[0]):
         if not X.iloc[i].isnull().values.any():
-            count= count +1
-            if sta_ind!=0:
+            count= count + 1
+            if sta_ind==0:
                 sta_ind = i
         else:
             count = 0
-            sta_ind =0
+            sta_ind = 0
         if count == cons_data:
             break
-        
     return X[sta_ind:].dropna()
 
 def identify_col(col_name):

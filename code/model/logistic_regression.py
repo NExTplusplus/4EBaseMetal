@@ -1,6 +1,7 @@
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, log_loss
 from model.base_predictor import BasePredictor
+from joblib import dump
 import numpy as np
  
 class LogReg(BasePredictor):
@@ -16,6 +17,11 @@ class LogReg(BasePredictor):
     else:
       self.model.set_params(**parameters)
     self.model.fit(X_tr, Y_tr)
+
+  def save(self,name):
+    dump(self.model,name)
+    # return None
+    
 
   def log_loss(self,X,y_true):
     return log_loss(y_true,self.model.predict_proba(X))

@@ -7,6 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tkinter
 import time
+from joblib import dump
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 
 from data.load_rnn import load_pure_log_reg
@@ -56,10 +57,13 @@ if __name__ == '__main__':
         fname_columns = json.load(fin)
 
     with open(args.output+".csv","w") as out:
-        out.write("C,Lag,Volume,Spread,Exchange,Validation,Testing,\n")
+        out.write("C,Lag,Volume,Spread,Exchange,Validation,Training,Testing,\n")
         if args.action == 'train':
             comparison = None
+            n = 0
             for f in fname_columns:
+                n+=1
+                print(f)
                 horizon = args.steps
                 best_C  = 0
                 model = None
@@ -93,15 +97,6 @@ if __name__ == '__main__':
                                 parameters = {"penalty":"l2", "C":C, "solver":"lbfgs", "tol":tol,"max_iter":4*len(f)*max_iter, "verbose" : 0,"warm_start":False}
                                 pure_LogReg.train(X_tr,y_tr.flatten(), parameters)
                                 n_iter = pure_LogReg.n_iter()
-                                # if n_iter == max_iter:
-                                #     max_iter += 100
-                                # else:
-                                #     check = False
-                                # print(n_iter)
-                                # step = n_iter/10.0
-                                # print(n_iter)
-
-                                # print(time.time()-start_time)
                                 
 
                                 # steps = np.zeros(10)
@@ -153,6 +148,7 @@ if __name__ == '__main__':
                                     best_lag = lag
                                     model = pure_LogReg
                                     max_acc = acc
+                                    tr_acc = pure_LogReg.test(X_tr,y_tr.flatten())
                                     te_acc = pure_LogReg.test(X_te,y_te.flatten())
                                     best_nv = norm_volume
                                     best_ns = norm_3m_spread
@@ -175,13 +171,34 @@ if __name__ == '__main__':
                 #         break
                 #     break
                 # break
+                X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params= load_pure_log_reg(
+                    f, args.ground_truth, 'log_1d_return', split_dates, T = best_lag,
+                    S = horizon,
+                    vol_norm = best_nv, ex_spread_norm = best_ne, spot_spread_norm = best_ns,
+                    inc = True
+                )
+                model.save("4EBaseMetal/exp/log_reg/"+args.ground_truth+"_h"+str(args.steps)+"_n"+str(n)+".joblib")
                 out.write(str(best_C)+",")
                 out.write(str(best_lag)+",")
                 out.write(str(best_nv)+",")
                 out.write(str(best_ns)+",")
                 out.write(str(best_ne)+",")
                 out.write(str(max_acc)+",")
+                out.write(str(tr_acc)+",")
                 out.write(str(te_acc)+",")
+                prediction = model.predict(X_va).reshape(X_va.shape[0],1)
+                total_no = prediction.shape[0]
+                no_true = sum(np.equal(prediction,y_va))
+                no_TT = sum(np.multiply(prediction+1,y_va+1))/4
+                no_FF = sum(np.multiply(prediction - 1,y_va - 1))/4
+                no_TF = -sum(np.multiply(prediction + 1,y_va - 1))/4
+                no_FT = -sum(np.multiply(prediction - 1,y_va + 1))/4
+                
+                print("Overall Accuracy:%d",no_true/total_no )
+                print("TT:%d", no_TT)
+                print("TF:%d", no_TF)
+                print("FT:%d", no_FT)
+                print("FF:%d", no_FF)
                 if comparison == None:
                     comparison = max_acc
                 else:
@@ -192,7 +209,7 @@ if __name__ == '__main__':
                 out.write("\n")
                     
         out.close()
-                    
+        
 
                 
 
