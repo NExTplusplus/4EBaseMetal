@@ -1,0 +1,306 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy.stats import norm
+import sqlalchemy as sq
+
+class Score:
+    def __init__(self,conn_accur,build_db_accur = False,build_db_sent = False):
+        
+        # This is the parameter to discrete the sentiment score
+        # default tier_class is 3 (cannot change) 
+        # default tier range is [mean-1std,mean+1std]
+        self.snt_tier = 3
+        self.snt_tier_lst = [0.309,0.691]
+        
+        # default mean and std for raw sentiment score is based on 10438 recommendations from 2008 - 2016
+        self.raw_snt_mean = 4.456197929505496
+        self.raw_snt_std = 20.421561681977067
+        
+        
+        # default mean and std for adjusted sentiment score is based on 10438 recommendations from 2008 - 2016
+        self.adjusted_snt_mean = {}
+        self.adjusted_snt_std = {} 
+        
+        self.adjusted_snt_mean['1d'] = 0.5970621007055215
+        self.adjusted_snt_std['1d'] = 8.414777764276467
+
+        
+        self.adjusted_snt_mean['3d'] = -1.3903934034969327
+        self.adjusted_snt_std['3d'] = 8.639183559227595
+        
+
+        self.adjusted_snt_mean['5d'] = 0.12424428895705525
+        self.adjusted_snt_std['5d']= 8.89325631926181
+        
+        self.adjusted_snt_mean['7d'] = -0.2639188717791406
+        self.adjusted_snt_std['7d'] = 9.311861941713998
+        
+
+        
+
+        self.adjusted_snt_mean['10d'] = -0.4306721228527607
+        self.adjusted_snt_std['10d'] = 9.69384406444057
+        
+        
+        self.adjusted_snt_mean['15d'] = 0.2675713929447853
+        self.adjusted_snt_std['15d'] = 10.070878860043765
+        
+        self.adjusted_snt_mean['20d'] = 0.5740284171779138
+        self.adjusted_snt_std['20d']= 10.039971650746566
+
+        
+        # Record the connection of the database, set up the database in required format if build_db = True
+        self.conn_accur = conn_accur
+        if build_db_accur:
+            self.build_accur_db()
+        if build_db_sent:
+            self.build_sent_db
+            
+    def build_sent_db(self): 
+        # Function: Set up a database to store adjusted sentiment with the following setting. 
+        # Note that: All functions in this class will follow this setting, pls set up ur database accordingly to avoid error
+        self.conn_accur.execute("CREATE TABLE `Alternative_DB`.`score` (`id` INT NOT NULL AUTO_INCREMENT,`date` DATETIME NOT NULL,`score` FLOAT NULL,`discrete_score` INT NULL,`horizon` INT NOT NULL,PRIMARY KEY (`id`));")
+    
+    
+    def build_accur_db(self):
+        # Function: Set up a database to store accuracy with the following setting. 
+        # Note that: All functions in this class will follow this setting, pls set up ur database accordingly to avoid error
+        self.conn_accur.execute('CREATE TABLE `Alternative_DB`.`accur`(`url` VARCHAR(750) NOT NULL,`id` INT NOT NULL AUTO_INCREMENT,`date` DATETIME NOT NULL,`company` VARCHAR(45) NULL,`score` FLOAT,`discrete_score` INT,`accur_same_pos` FLOAT NULL,`accur_same_neg` FLOAT NULL,`accur_neu` FLOAT NULL,`accur_rev_pos` FLOAT NULL,`accur_rev_neg` FLOAT NULL,`prec_horizon` INT NOT NULL,PRIMARY KEY (`url`,`prec_horizon`),KEY(`id`));')            
+    
+    def discrete(self,target,num_tier,tier_lst,mean,std):
+        tier_point =[]
+        for i in tier_lst:
+            tier_point.append(norm.ppf(i, loc=mean, scale=std))
+        
+        decided = 0
+        
+        for i in range(num_tier-1):
+            if target<=tier_point[i]:
+                decided = 1
+                break
+        
+        if decided ==0:
+            return num_tier-1
+        else:
+            return i
+    
+    def update_tier_lst(self,num_lst):
+        # Function: this function will update the range of tier classes
+        # Input : num_lst is a list with len size == self.tier-1
+        if len(num_lst)!= (self.snt_tier-1):
+            raise Exception('len(num_lst) does not match (tier class -1)')
+        else:
+            self.snt_tier_lst = sorted(num_lst)
+            print('updated')
+            
+    def update(self,update_target,score_type,window_size = 'All',prec_horizon = None):
+        # Function: this functino will update self.mean
+        # Input: update_target can only be mean or std window_size is number of recommendations to use in order to calculate overall sentiment mean, Defult is use all
+        #        score_type can only be raw or adjusted, if use adjusted must key in prec_horizon (int)
+        
+        
+        # Check all the potential input errors
+        if update_target!='std' and update_target!= 'mean':
+            raise Exception('update_target can only be mean or std')
+            
+        if score_type != 'adjusted' and score_type != 'raw':
+            raise Exception('score_type can only be raw or adjusted')
+        
+        if score_type == 'adjusted' and prec_horizon == None:
+            raise Exception('adjusted score_type must key in int into prec_horizon')
+            
+        if window_size == 'All':
+            if score_type == 'adjusted':
+                result = pd.read_sql('Select score From score where horizon = {}'.format(prec_horizon), self.conn_accur)
+            elif score_type == 'raw':
+                result = pd.read_sql('Select score From accur', self.conn_accur)
+                
+        elif type(window_size) != int:
+            raise Exception('window_size should be an int type')
+            
+        else:
+            if score_type == 'adjusted':
+                query = 'select score from score where horizon = {} order by id desc limit '.format(prec_horizon)+str(window_size)+';'
+            elif score_type == 'raw':
+                query = 'select score from accur order by id desc limit '+str(window_size)+';'
+                
+            result = pd.read_sql(query, self.conn_accur)
+
+            
+                
+        if score_type == 'adjusted':
+            
+            key = '{}d'.format(prec_horizon)
+            
+            if key not in self.adjusted_snt_mean:
+                raise Exception('The prediction horizon is not included')
+            
+            else:
+                if update_target== 'mean':
+                    self.adjusted_snt_mean[key] = result['score'].mean()
+                
+                elif update_target== 'std':
+                    self.adjusted_snt_std[key] = result['score'].std()
+
+        elif score_type =='raw':
+            if update_target== 'mean':
+                self.raw_snt_mean = result['score'].mean()
+                
+            elif update_target== 'std':
+                self.raw_snt_std = result['score'].std()
+        
+        print('updated')
+
+            
+    def cal_score(self,com,score,date,accur_horizon,prec_horizon,threshold = 8,update = True):
+        # Function: This function will calcualte the current sentiment score 
+        # Input: com,score are list or series with equal len size. date is datetime, accur_horizon is int
+        # com is company name,score is sentiment score by those  accur_horizon is how many days to consider the accuracy of the institution  
+        # prec_horizon is how far are we predicting, update to database by default is true
+        # Check if database exist, threshold is min of recommenadtions must have
+        result = self.conn_accur.execute("SHOW TABLES LIKE 'score';")
+        date = pd.to_datetime(date).strftime('%Y-%m-%d')
+        
+        if  not result.first():
+            raise Exception('Database not exist, please use build_sent_db function')
+        
+        num = 0
+        realibility_lst = []
+        score_lst = []
+        
+        for cur_com,cur_score in zip(com,score):
+            
+            
+            
+            
+            dis_score = self.discrete(cur_score,self.snt_tier,self.snt_tier_lst,self.raw_snt_mean,self.raw_snt_std)-1 
+            query_history = "Select * From accur where company = '{}' and prec_horizon = {} and date< '{}' and discrete_score ={} ORDER BY id desc LIMIT {};  ".format(cur_com, prec_horizon,date,dis_score,accur_horizon)
+            df_history = pd.read_sql(query_history,self.conn_accur)
+
+            if len(df_history)< accur_horizon:
+                continue
+            
+            num+=1
+            realibility_same = 0
+            realibility_rev = 0
+            
+            if dis_score == 0:
+                realibility_same = df_history['accur_neu'].sum()/df_history['accur_neu'].count()
+                
+            elif dis_score>0:
+                realibility_same = df_history['accur_same_pos'].sum()/df_history['accur_same_pos'].count()
+                realibility_rev = df_history['accur_rev_pos'].sum()/df_history['accur_rev_pos'].count()
+            
+            else:
+                realibility_same = df_history['accur_same_neg'].sum()/df_history['accur_same_neg'].count()
+                realibility_rev = df_history['accur_rev_neg'].sum()/df_history['accur_rev_neg'].count()
+              
+            
+            if realibility_same>=realibility_rev:
+                realibility_lst.append(np.exp(realibility_same))
+                score_lst.append(cur_score)
+            else:
+                realibility_lst.append(np.exp(realibility_rev))
+                score_lst.append(-cur_score)
+                    
+        if num>threshold:
+            total_real = np.sum(realibility_lst)
+            final_score = 0
+
+            for cur_real,cur_score in zip(realibility_lst,score_lst):
+                final_score += cur_score*cur_real
+            
+            final_score = final_score/total_real
+            
+            key = '{}d'.format(prec_horizon)
+            if key not in self.adjusted_snt_mean:
+                raise Exception('The prediction horizon is not included')
+            else:
+                mean = self.adjusted_snt_mean[key]
+                std = self.adjusted_snt_std[key]
+                
+            final_discrete_score = self.discrete(final_score,self.snt_tier,self.snt_tier_lst,mean,std)-1 
+        else:
+            #print('Does not have enough recommendation')
+            final_score = np.nan
+            return final_score
+        
+        col_name = '(date, score, discrete_score,horizon)'
+        if update:
+            query = 'Insert INTO score '+ col_name + ' VALUES ' + "('{}',{},{},{})".format(date,final_score,final_discrete_score,prec_horizon)
+            self.conn_accur.execute(query) 
+        #print("Recomendation for {}: ".format(date),final_score,final_discrete_score)
+        return final_discrete_score
+    
+    def update_accur(self,url,date,com,horizon,score,target):
+        # Function: This function will update the score and accuracy in the database
+        # Input: date,com,horizon,score and target are list or series with equal len size.
+        # com is company name, horizon is how many days are we predicting, score is sentiment score 
+        # target is discreted n days return ratio 
+        
+        # Check if database exist
+        result = self.conn_accur.execute("SHOW TABLES LIKE 'accur';")
+        
+        if  not result.first():
+            raise Exception('Database not exist, please use build_accur_db function')
+        
+        
+        col_name = '(url,date, company,score, discrete_score, accur_same_pos, accur_same_neg,accur_neu, accur_rev_pos, accur_rev_neg,prec_horizon)'
+        
+        for cur_url,cur_date, cur_com, cur_horizon, cur_score,cur_target in zip(url,date,com,horizon,score,target):
+            
+            col_value = []
+            col_value.append(cur_url)
+            
+            cur_date = pd.to_datetime(cur_date).floor('D')
+            col_value.append(cur_date)
+            col_value.append(cur_com)
+            col_value.append(cur_score)
+            
+            dis_score = self.discrete(cur_score,self.snt_tier,self.snt_tier_lst,self.raw_snt_mean,self.raw_snt_std)-1
+            col_value.append(dis_score)
+            
+            accur_value = [None]*5
+            
+            if dis_score == 0:
+                if dis_score == cur_target:
+                    accur_value[2] = True
+                else:
+                    accur_value[2] = False
+                    
+            elif dis_score<0:
+                
+                if dis_score == cur_target:
+                    accur_value[1] = True
+                    accur_value[4] = False
+                elif dis_score == -cur_target:
+                    accur_value[4] = True
+                    accur_value[1] = False
+                else:
+                    accur_value[1] = False
+                    accur_value[4] = False
+            
+            elif dis_score>0:
+                
+                if dis_score == cur_target:
+                    accur_value[0] = True
+                    accur_value[3] = False
+                elif dis_score == -cur_target:
+                    accur_value[3] = True
+                    accur_value[0] = False
+                else:
+                    accur_value[0] = False
+                    accur_value[3] = False
+            
+            for value in accur_value:
+                col_value.append(value)
+            
+            col_value.append(cur_horizon)
+            query = 'Insert INTO accur '+ col_name + ' VALUES ' + str(tuple(col_value)).replace('None','Null')+';'
+            self.conn_accur.execute(query)
+            
+        #print('updated') 
+    
+    
