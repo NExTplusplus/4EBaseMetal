@@ -1,0 +1,59 @@
+import argparse
+import time
+import datetime
+import sys
+import pickle
+from random import randint
+import pandas as pd
+import random as rd
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import *
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.proxy import Proxy, ProxyType
+from bs4 import BeautifulSoup
+
+
+# This function require the url_col extracted by code in Data Crawling folder and chrome_driver_path is the chrome driver path. 
+# The output will be the html data for each url webpage. 
+
+def jrj_save(chrome_driver_path,url_col):
+    print('initialize')
+    driver = webdriver.Chrome(chrome_driver_path)
+    print('Processing')
+    html_list =[]
+    i=0
+    try:
+        for url in url_col:
+            i+=1
+            print('current link: ' + str(i))
+            driver.get(url)
+            time.sleep(rd.randrange(3, 6))
+            html_list.append(BeautifulSoup(driver.page_source, "html.parser"))
+    except Exception as e: 
+        print(e)
+        i-=1
+    
+    if i == len(url_col):
+        print('Completed')
+    
+    return pd.Series(html_list[:i])
+
+
+# Dataframe is the total dataframe contains all the information, col is the column that we would like to do the checking
+# metal is the list metals we are interested in 
+def selection(dataframe,col,metal):
+    result = dataframe.copy()
+    metal_mentioned = result[col].apply(lambda x: any(f in x for f in metal))
+    return result[metal_mentioned].reset_index(drop=True)
+
+# Sample 
+df_jrj = pd.read_csv('/home/liangchen/4e/Data Crawling/Raw Url Data/Result/jrj.csv')
+df_jrj = df_jrj.dropna()
+metal = ['镍','铜','金','银','铝','锌','铅','锡','美','中','息']
+df_jrj = selection(df_jrj,'title',metal)
+result = jrj_save('/home/liangchen/4e/Data Crawling/chromedriver', df_jrj['url'])
