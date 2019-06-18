@@ -32,7 +32,7 @@ def log_1d_return(X,cols):
 # version can be v1,v2,v3 or v4 as stated in the file. v1,v2 and v3 will require Open Interest column ("OI_name")
 # and for v3 and v4 length of moving average is required
 
-def normalize_volume (volume,OI=None,len_ma=None,version="v1"):
+def normalize_volume(volume,OI=None,len_ma=None,version="v1"):
 
     if version == "v1":
             return volume/OI
@@ -50,14 +50,14 @@ def normalize_volume (volume,OI=None,len_ma=None,version="v1"):
                 turn_over_ma.iloc[i+1]= (turn_over.iloc[i]+ (len_ma-1)*turn_over_ma.iloc[i])/len_ma
             return turn_over-turn_over_ma
     elif version =="v4":
-        volume_col_ma = volume.shift(len_ma)
+        volume_ma = volume.shift(len_ma)
         ma_total = 0
         for i in range (len_ma):
-            ma_total += volume_col.iloc[i]
-        volume_col_ma.iloc[len_ma] = ma_total/len_ma
-        for i in range(len_ma,len(volume_col)-1):
-            volume_col_ma.iloc[i+1]= (volume_col.iloc[i]+ (len_ma-1)*volume_col_ma.iloc[i])/len_ma
-        return volume/volume_col_ma -1
+            ma_total += volume.iloc[i]
+        volume_ma.iloc[len_ma] = ma_total/len_ma
+        for i in range(len_ma,len(volume)-1):
+            volume_ma.iloc[i+1]= (volume.iloc[i]+ (len_ma-1)*volume_ma.iloc[i])/len_ma
+        return volume/volume_ma -1
     else:
         print("wrong version")
         return 
@@ -131,5 +131,7 @@ def normalize_3mspot_spread_ex (lme_col,shfe_col,exchange,len_update = 30 ,versi
 # This function will normalize OI 
 # OI_col is the col the open interest
 def normalize_OI (OI_col):
+
     OI = np.log(OI_col)
+    
     return OI - OI.shift(1)

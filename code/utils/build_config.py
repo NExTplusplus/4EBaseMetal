@@ -49,18 +49,25 @@ if __name__ == "__main__":
     lines = [line.strip() for line in lines]
     combinations = itertools.combinations(lines,args.var_count)
     
-  with open("../../exp/ground_truth.conf") as gt:
+  with open("4EBaseMetal/exp/ground_truth.conf") as gt:
     ground_truth = json.load(gt)
 
   for g in ground_truth:
     if ground_truth[g][0] != args.ground_truth:
       continue
-    with open("../../exp/"+args.ground_truth+"_h"+str(args.steps)+"_n"+str(args.var_count)+"_config.conf","w") as out:
+    with open("4EBaseMetal/exp/"+args.ground_truth+"_h"+str(args.steps)+"_n"+str(args.var_count)+"_config.conf","w") as out:
       temp = copy.copy(combinations)
       out.write("[\n\t{\n\t\t\""+g+"\":[\""+args.ground_truth+"\"]\n\t},\n\t")
       count = len(list(combinations))
       for j in temp:
         count -= 1
+        done = False
+        for i in j:
+          if i[-8:-2] == args.ground_truth:
+            done = True
+            break
+        if done:
+          continue
         out.write('{\n\t\t\"'+g+"\":[\""+args.ground_truth+'\"],\n\t\t') 
         for k in read_combination(j):
           if k[-8:-2] == args.ground_truth:
