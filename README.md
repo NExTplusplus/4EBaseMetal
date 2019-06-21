@@ -1,3 +1,8 @@
+## Synchronization
+
+* For everything under this repository, we need to keep them synchronized across our personal computer, SoC cluster, and 4E jupyter notebook server. We use git pull and push to do the synchronize. **NO** scp and upload!
+* Send a message to our Wechat group when **push**.
+
 ## Naming and Placing Rules
 
 * Keep this repository with the **newest** code.
@@ -10,11 +15,12 @@
 
 ### 1st level
 
-We mainly have three folders: **code, exp, and notebooks**. New 1st level folders could be created after a discussion. Please follow the following description to put your code:
+We mainly have four folders: **code, data, exp, and notebooks**. New 1st level folders could be created after a discussion. Please follow the following description to put your code:
 
 | Folder | Description |
 | :-----: | :-----: |
 | code | all python/R codes in script file, e.g., the code to load financial data. |
+| data | data files used to train and test model. |
 | exp | experiment logs, e.g., the log (loss, accuracy, etc.) to tune a LR model |
 | notebooks | we prepare notebooks for two reasons: efficient development or deployment (to 4E) |
 
