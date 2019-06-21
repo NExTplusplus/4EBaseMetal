@@ -1,0 +1,2 @@
+This file is for description of the data. An expected format is "file_name/folder_name\t(Tab)Description, including what kind operation are applied, the aim of the operation, the meaning of the processed data, and the original data"
+e.g., raw_data    The raw data downloaded from the FTP server of 4E.
