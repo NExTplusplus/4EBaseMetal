@@ -20,9 +20,9 @@ We mainly have four folders: **code, data, exp, and notebooks**. New 1st level f
 | Folder | Description |
 | :-----: | :-----: |
 | code | all python/R codes in script file, e.g., the code to load financial data. |
-| data | data files used to train and test model. |
-| exp | experiment logs, e.g., the log (loss, accuracy, etc.) to tune a LR model |
-| notebooks | we prepare notebooks for two reasons: efficient development or deployment (to 4E) |
+| data | data files used to train and test model so that 4E can re-produce the model training on their server. |
+| exp | trained models and auxillary files (e.g., configure file) to test a trained model, train a model, and select hyper-parameters. |
+| notebooks | we prepare notebooks for two reasons: efficient development or deployment (to 4E). Notebooks are **NOT** compulsory as long as they can understand our code and re-run model training and hyper-parameter tuning. |
 
 ### 2nd level
 
