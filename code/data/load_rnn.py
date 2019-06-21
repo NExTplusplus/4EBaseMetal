@@ -2,6 +2,7 @@ from copy import copy
 import numpy as np
 import os
 import sys
+import pandas as pd
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 
 from utils.read_data import read_single_csv, merge_data_frame, \
@@ -35,14 +36,16 @@ def save_data(fname,time_series,columns, ground_truth = None):
     col_name = ""
     for col in columns:
         col_name = col_name + " " + col
-    with open(fname+"/"+fname+col_name+".csv","w") as out:
-        for i in time_series.index:
-            row = time_series.iloc[time_series.index.get_loc(i)]
-            out.write(i+",")
+    with open(fname+"/"+fname+".csv","w") as out:
+        out.write(col_name.replace(" ",","))
+        out.write(",\n")
+        for i in range(len(time_series)):
+            row = time_series.iloc[i]
+            out.write(time_series.index[i]+",")
             for v in row:
                 out.write(str(v)+",")
             if ground_truth is not None:
-                out.write(str(ground_truth.iloc[ground_truth.index.get_loc(i)]))
+                out.write(str(ground_truth[i]))
             out.write("\n")
 
 def load_pure_lstm(fname_columns, norm_method, split_dates, T, gt_column = None, S=1,
@@ -60,27 +63,28 @@ def load_pure_lstm(fname_columns, norm_method, split_dates, T, gt_column = None,
             ) 
 
     columns = time_series.columns
-    
-    
+
+    save_data("i1",time_series,columns)
     time_series = process_missing_value_v3(time_series,10)
-    
+    save_data("i2",time_series,columns)
     
     org_cols = time_series.columns.values.tolist()
     print("Normalizing")
     norm_params = normalize(time_series,vol_norm = vol_norm,spot_spread_norm=spot_spread_norm,ex_spread_norm=ex_spread_norm)
     time_series = copy(norm_params["val"])
-    
-        
+    save_data("i3",time_series,time_series.columns.values.tolist())
+    # print(org_cols)    
     del norm_params["val"]
     time_series = technical_indication(time_series)
-    
-    for col in org_cols:
+    save_data("i4",time_series,time_series.columns.values.tolist())
+    for col in copy(org_cols):
+        # print(col)
         if "_Volume" in col or "_OI" in col or "CNYUSD" in col:
             time_series = time_series.drop(col,axis = 1)
             org_cols.remove(col)
 
     columns = time_series.columns
-
+    save_data("i5",time_series,time_series.columns.values.tolist())
     
     # if using_frame == "keras":
     #     for col in cols:
@@ -94,6 +98,7 @@ def load_pure_lstm(fname_columns, norm_method, split_dates, T, gt_column = None,
     cols = norm_data.columns.values.tolist()
     if gt_column is None:
         all_metals = []
+        gt_column = 'self'
         for col in cols:
             if "_Spot" in col:
                 temp = copy(norm_data)
@@ -102,19 +107,19 @@ def load_pure_lstm(fname_columns, norm_method, split_dates, T, gt_column = None,
                 all_metals.append(temp)
         norm_data = all_metals
     else:
+        norm_data.insert(0,gt_column,norm_data.pop(gt_column),allow_duplicates = True)
         norm_data = [norm_data]
-
+    
     ground_truth = []
     for data_set in norm_data:
         if gt_column is None:
-            to_be_predicted = copy(data_set['self'])
-        else:
-            to_be_predicted = copy(data_set[gt_column])
+            gt_column = 'self'
+        to_be_predicted = copy(data_set[gt_column])
         if S > 1:
             for i in range(S-1):
                 to_be_predicted = to_be_predicted + data_set[gt_column].shift(-i-1)
         ground_truth.append((to_be_predicted > 0).shift(-1))
-
+    save_data("i6",pd.concat(norm_data),norm_data[0].columns.values.tolist(),np.concatenate(ground_truth))
     tra_ind = 0
     if tra_ind < T - 1:
         tra_ind = T - 1
@@ -162,15 +167,18 @@ def load_pure_log_reg(fname_columns, norm_method, split_dates, T, gt_column =Non
                                                         )
     for ind in range(len(X_tr)):
         neg_y_tr = y_tr[ind] - 1
-        neg_y_va = y_va[ind] - 1
-        neg_y_te = y_te[ind] - 1
         y_tr[ind] = y_tr[ind] + neg_y_tr
-        y_va[ind] = y_va[ind] + neg_y_va
-        y_te[ind] = y_te[ind] + neg_y_te
-        
         X_tr[ind] = flatten(X_tr[ind])
+        
+        
+        neg_y_va = y_va[ind] - 1
+        y_va[ind] = y_va[ind] + neg_y_va
         X_va[ind] = flatten(X_va[ind])
-        X_te[ind] = flatten(X_te[ind])
+        
+        if X_te is not None:
+            neg_y_te = y_te[ind] - 1
+            y_te[ind] = y_te[ind] + neg_y_te
+            X_te[ind] = flatten(X_te[ind])
     
     # print(y_te[:-1])
 
