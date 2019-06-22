@@ -148,7 +148,7 @@ if __name__ == '__main__':
                             # plt.close()
 
                             acc = pure_LogReg.test(X_va,y_va.flatten())
-                            if ground_truth is not None:
+                            if args.ground_truth is not None:
                                 pure_LogReg.save(os.path.join(sys.path[0],"..","exp",str(horizon)+"d",args.ground_truth[4:6],"logistic_regression","v"+str(args.version),"n"+str(n)+".joblib"))
                             else:
                                 pure_LogReg.save(os.path.join(sys.path[0],"..","exp",str(horizon)+"d","All","logistic_regression","v"+str(args.version),"n"+str(n)+".joblib"))
