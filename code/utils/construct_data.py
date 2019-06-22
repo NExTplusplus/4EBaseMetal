@@ -135,6 +135,7 @@ def normalize(X,vol_norm ="v1", vol_len = 10, spot_spread_norm = "v1",
         ex = True
     
     for col in cols:
+        print(col)
         if "OI" in col:
             print("Normalizing OI:"+"=>".join((col,col[:-2]+"nOI")))
             X[col[:-2]+"nOI"] = normalize_OI(copy(X[col]))
@@ -143,7 +144,7 @@ def normalize(X,vol_norm ="v1", vol_len = 10, spot_spread_norm = "v1",
             if vol_norm == "v4":
                 ans["nVol"] = True
                 # print("Normalizing Volume:"+"=>".join((col,setting+"OI")))
-                X[setting+"nVolume"] = normalize_volume(copy(X[col]),OI=copy(X[setting+"OI"]),len_ma = vol_len,version = vol_norm)
+                X[setting+"nVolume"] = normalize_volume(copy(X[col]),OI=None,len_ma = vol_len,version = vol_norm)
             elif setting+"OI" in cols:
                 ans["nVol"] = True
                 # print("Normalizing Volume:"+"=>".join((col,setting+"OI")))
