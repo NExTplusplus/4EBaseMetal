@@ -13,7 +13,34 @@ import statistics
 
 from data.load_rnn import load_pure_log_reg
 
-
+if __name__ == '__main__':
+    desc = 'the logistic regression model'
+    parser = argparse.ArgumentParser(description=desc)
+    parser.add_argument(
+        '--data_configure_file', '-c', type=str,
+        help='configure file of the features to be read',
+        default='../../exp/log_reg_data.conf'
+    )
+    parser.add_argument('-s','--steps',type=int,default=1,
+                        help='steps in the future to be predicted')
+    parser.add_argument('-gt', '--ground_truth', help='ground truth column',
+                         type=str, default="LMCADY")
+    parser.add_argument('-max_iter','--max_iter',type=int,default=100,
+                        help='max number of iterations')
+    parser.add_argument(
+        '-min', '--model_path', help='path to load model',
+        type=str, default='../../exp/log_reg/model'
+    )
+    parser.add_argument(
+        '-v','--version', help='version', type = int, default = 1
+    )
+    parser.add_argument(
+        '-mout', '--model_save_path', type=str, help='path to save model',
+        default='../../exp/log_reg/model'
+    )
+    parser.add_argument ('-out','--output',type = str, help='output file', default ="../../../Results/results")
+    parser.add_argument('-o', '--action', type=str, default='train',
+                        help='train, test, tune')
 
 
 sys.path.insert(0,os.path.abspath(os.path.join(sys.path[0],'..')))

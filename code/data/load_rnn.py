@@ -3,8 +3,6 @@ import numpy as np
 import os
 import sys
 import pandas as pd
-sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
-
 from utils.read_data import read_single_csv, merge_data_frame, \
     process_missing_value_v3
 from utils.normalize_feature import log_1d_return, normalize_volume, normalize_3mspot_spread, \
@@ -36,7 +34,7 @@ def save_data(fname,time_series,columns, ground_truth = None):
     col_name = ""
     for col in columns:
         col_name = col_name + " " + col
-    with open(fname+"/"+fname+".csv","w") as out:
+    with open(fname,"w") as out:
         out.write(col_name.replace(" ",","))
         out.write(",\n")
         for i in range(len(time_series)):
@@ -48,11 +46,12 @@ def save_data(fname,time_series,columns, ground_truth = None):
                 out.write(str(ground_truth[i]))
             out.write("\n")
 
-def load_pure_lstm(fname_columns, norm_method, split_dates, T, gt_column = None, S=1,
-    vol_norm ="v1", ex_spread_norm = "v1", spot_spread_norm = "v1"):
+def load_pure_lstm(fname_columns, norm_method, split_dates, T, gt_column = None, S = 1,
+    vol_norm ="v1", ex_spread_norm = "v1", spot_spread_norm = "v1",
+    len_ma = 5, len_update = 30, version = 1
+    ):
     # read data from files
     time_series = None
-    al = ""
     for fname in fname_columns:
         print('read columns:', fname_columns[fname], 'from:', fname)
         if time_series is None:
@@ -64,27 +63,32 @@ def load_pure_lstm(fname_columns, norm_method, split_dates, T, gt_column = None,
 
     columns = time_series.columns
 
-    save_data("i1",time_series,columns)
+    # save_data("i1",time_series,columns)
     time_series = process_missing_value_v3(time_series,10)
-    save_data("i2",time_series,columns)
+    # save_data("i2",time_series,columns)
     
     org_cols = time_series.columns.values.tolist()
     print("Normalizing")
-    norm_params = normalize(time_series,vol_norm = vol_norm,spot_spread_norm=spot_spread_norm,ex_spread_norm=ex_spread_norm)
+    norm_params = normalize(time_series,vol_norm = vol_norm, vol_len = len_ma,
+                            spot_spread_norm = spot_spread_norm, ex_spread_norm = ex_spread_norm,
+                            spot_spread_len= len_update, ex_spread_len = len_update 
+                            )
     time_series = copy(norm_params["val"])
-    save_data("i3",time_series,time_series.columns.values.tolist())
-    # print(org_cols)    
+
+    # save_data("i3",time_series,time_series.columns.values.tolist())
+    
     del norm_params["val"]
     time_series = technical_indication(time_series)
-    save_data("i4",time_series,time_series.columns.values.tolist())
+    
+    # save_data("i4",time_series,time_series.columns.values.tolist())
+    
     for col in copy(org_cols):
         # print(col)
         if "_Volume" in col or "_OI" in col or "CNYUSD" in col:
             time_series = time_series.drop(col,axis = 1)
             org_cols.remove(col)
-
-    columns = time_series.columns
-    save_data("i5",time_series,time_series.columns.values.tolist())
+    
+    # save_data("i5",time_series,time_series.columns.values.tolist())
     
     # if using_frame == "keras":
     #     for col in cols:
@@ -110,16 +114,22 @@ def load_pure_lstm(fname_columns, norm_method, split_dates, T, gt_column = None,
         norm_data.insert(0,gt_column,norm_data.pop(gt_column),allow_duplicates = True)
         norm_data = [norm_data]
     
+    if version == 1 or version == 2:
+        for i in range(len(norm_data)):
+            norm_data[i] = pd.DataFrame(norm_data[i][gt_column])
+    print(norm_data[0].columns)
+    
     ground_truth = []
     for data_set in norm_data:
-        if gt_column is None:
-            gt_column = 'self'
         to_be_predicted = copy(data_set[gt_column])
         if S > 1:
             for i in range(S-1):
                 to_be_predicted = to_be_predicted + data_set[gt_column].shift(-i-1)
         ground_truth.append((to_be_predicted > 0).shift(-1))
-    save_data("i6",pd.concat(norm_data),norm_data[0].columns.values.tolist(),np.concatenate(ground_truth))
+
+
+    # save_data("i6",pd.concat(norm_data),norm_data[0].columns.values.tolist(),np.concatenate(ground_truth))
+
     tra_ind = 0
     if tra_ind < T - 1:
         tra_ind = T - 1
@@ -139,6 +149,7 @@ def load_pure_lstm(fname_columns, norm_method, split_dates, T, gt_column = None,
         temp = construct(norm_data[ind], ground_truth[ind], tra_ind, val_ind, T, S, norm_method)
         X_tr.append(temp[0])
         y_tr.append(temp[1])
+
         # construct the validation
         temp = construct(norm_data[ind], ground_truth[ind], val_ind, tes_ind, T, S, norm_method)
         X_va.append(temp[0])
@@ -157,13 +168,13 @@ def load_pure_lstm(fname_columns, norm_method, split_dates, T, gt_column = None,
     
     return X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params
 
-def load_pure_log_reg(fname_columns, norm_method, split_dates, T, gt_column =None, S=1, OI_name = None, len_ma = None, 
-                        len_update = None, lme_col = None, shfe_col = None, exchange = None, vol_norm ="v1", 
-                        ex_spread_norm = "v1", spot_spread_norm = "v1"
+def load_pure_log_reg(fname_columns, norm_method, split_dates, T, gt_column = None, S=1, 
+                        vol_norm ="v1", ex_spread_norm = "v1", spot_spread_norm = "v1",
+                        len_ma = 5, len_update = 30, version = 1
                         ):
     X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params = load_pure_lstm(fname_columns, norm_method, split_dates, T, gt_column = gt_column, S = S,
-                                                        vol_norm = vol_norm, ex_spread_norm = ex_spread_norm,
-                                                        spot_spread_norm = spot_spread_norm
+                                                        vol_norm = vol_norm, ex_spread_norm = ex_spread_norm, spot_spread_norm = spot_spread_norm,
+                                                        len_ma = len_ma, len_update = len_update, version = version
                                                         )
     for ind in range(len(X_tr)):
         neg_y_tr = y_tr[ind] - 1

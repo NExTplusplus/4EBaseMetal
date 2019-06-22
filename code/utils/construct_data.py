@@ -175,7 +175,7 @@ def technical_indication(X):
     cols = X.columns.values.tolist()
     for col in cols:
         if "Close" in col:
-            setting = col[:5]
+            setting = col[:-5]
             if setting+"Volume" in cols:
                 print("+".join((col,setting+"Volume"))+"=>"+"+".join((setting+"PVT",setting+"divPVT")))
                 X[setting+"PVT"] = pvt(copy(X[col]),copy(X[setting+"Volume"]))
