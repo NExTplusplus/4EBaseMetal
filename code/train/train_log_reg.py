@@ -74,8 +74,9 @@ if __name__ == '__main__':
                 # best_ns = ""
                 # best_ne = ""
                 for lag in [5,10, 20, 30]:
-                    for C in (0.01,0.1,1,10,100):
+                    for C in [0.01,0.1,1,10,100]:
                         for norm_volume in ["v1","v2","v4"]:
+                            print(C)
                             n+=1
                             print(n)
                             norm_3m_spread = "v1"
@@ -149,9 +150,9 @@ if __name__ == '__main__':
 
                             acc = pure_LogReg.test(X_va,y_va.flatten())
                             if args.ground_truth is not None:
-                                pure_LogReg.save(os.path.join(sys.path[0],"..","exp",str(horizon)+"d",args.ground_truth[4:6],"logistic_regression","v"+str(args.version),"n"+str(n)+".joblib"))
+                                pure_LogReg.save(os.path.join(sys.path[0],args.model_save_path,"exp",str(horizon)+"d",args.ground_truth[4:6],"logistic_regression","v"+str(args.version),"n"+str(n)+".joblib"))
                             else:
-                                pure_LogReg.save(os.path.join(sys.path[0],"..","exp",str(horizon)+"d","All","logistic_regression","v"+str(args.version),"n"+str(n)+".joblib"))
+                                pure_LogReg.save(os.path.join(sys.path[0],args.model_save_path,"exp",str(horizon)+"d","All","logistic_regression","v"+str(args.version),"n"+str(n)+".joblib"))
                             out.write(str(C)+",")
                             out.write(str(lag)+",")
                             out.write(str(norm_volume)+",")
@@ -159,15 +160,13 @@ if __name__ == '__main__':
                             out.write(str(norm_ex)+",")
                             out.write(str(acc)+",")
                             out.write(str(pure_LogReg.test(X_tr,y_tr.flatten()))+",")
-                            if X_te is not None:
-                                X_te = np.concatenate(X_te)
-                                y_te = np.concatenate(y_te)
-                                out.write(str(pure_LogReg.test(X_te,y_te.flatten()))+",")
+                            # if X_te is not None:
+                            #     X_te = np.concatenate(X_te)
+                            #     y_te = np.concatenate(y_te)
+                            #     out.write(str(pure_LogReg.test(X_te,y_te.flatten()))+",")
                             out.write("\n")
                             if norm_params["nVol"] is False:
-                                break
-                        if norm_params["nEx"] is False:
-                            break       
+                                break  
 
                 #     break
                 # break
