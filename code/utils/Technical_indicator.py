@@ -41,4 +41,7 @@ def ad (close,low,opened,high,volume):
 def divergence_ad (close,ad):
     percentage_change = (close/close.shift(1))-1
     ad_change = (ad/ad.shift(1))-1
+    for i in range(len(ad_change)):
+        if np.isinf(ad_change[i]):
+            ad_change[i] = np.nan
     return percentage_change-ad_change

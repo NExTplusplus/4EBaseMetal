@@ -1,6 +1,9 @@
 import numpy as np
 import pandas as pd
 from copy import copy
+import os
+import sys
+sys.path.insert(0,os.path.abspath(os.path.join(sys.path[0],"..")))
 from utils.normalize_feature import normalize_3mspot_spread,normalize_3mspot_spread_ex,normalize_OI,normalize_volume
 from utils.Technical_indicator import ad, divergence_ad, pvt, divergence_pvt
 
@@ -181,10 +184,10 @@ def technical_indication(X):
                 print("+".join((col,setting+"Volume"))+"=>"+"+".join((setting+"PVT",setting+"divPVT")))
                 X[setting+"PVT"] = pvt(copy(X[col]),copy(X[setting+"Volume"]))
                 X[setting+"divPVT"] = divergence_pvt(copy(X[col]),copy(X[setting+"PVT"]))
-            if set([setting+"Volume",setting+"Open",setting+"High",setting+"Low"]).issubset(cols):
-                print("+".join((col,setting+"Volume",setting+"Open",setting+"High",setting+"Low"))+"=>"+"+".join((setting+"AD",setting+"divAD")))
-                X[setting+"AD"] = ad(copy(X[col]),copy(X[setting+"Low"]),copy(X[setting+"Open"]),copy(X[setting+"High"]),copy(X[setting+"Volume"]))
-                X[setting+"divAD"] = divergence_ad(copy(X[col]),copy(X[setting+"AD"]))
+            # if set([setting+"Volume",setting+"Open",setting+"High",setting+"Low"]).issubset(cols):
+            #     print("+".join((col,setting+"Volume",setting+"Open",setting+"High",setting+"Low"))+"=>"+"+".join((setting+"AD",setting+"divAD")))
+            #     X[setting+"AD"] = ad(copy(X[col]),copy(X[setting+"Low"]),copy(X[setting+"Open"]),copy(X[setting+"High"]),copy(X[setting+"Volume"]))
+            #     X[setting+"divAD"] = divergence_ad(copy(X[col]),copy(X[setting+"AD"]))
             
     return X
 

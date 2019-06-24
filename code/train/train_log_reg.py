@@ -55,7 +55,7 @@ if __name__ == '__main__':
     split_dates = [tra_date, val_date, tes_date]
 
     # read data configure file
-    with open(os.path.join(sys.path[0],"..",args.data_configure_file)) as fin:
+    with open(os.path.join(sys.path[0],args.data_configure_file)) as fin:
         fname_columns = json.load(fin)
 
     with open(args.output,"w") as out:
@@ -89,7 +89,7 @@ if __name__ == '__main__':
                             X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params= load_pure_log_reg(
                                 f, 'log_1d_return', split_dates, gt_column = args.ground_truth, T = lag, S = horizon,
                                 vol_norm = norm_volume, ex_spread_norm = norm_ex, spot_spread_norm = norm_3m_spread,
-                                len_ma = len_ma, len_update = len_update
+                                len_ma = len_ma, len_update = len_update, version = args.version
                             )
                             # print(X_tr[0])              
                             X_tr = np.concatenate(X_tr)

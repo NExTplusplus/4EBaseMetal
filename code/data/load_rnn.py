@@ -34,7 +34,7 @@ def save_data(fname,time_series,columns, ground_truth = None):
     col_name = ""
     for col in columns:
         col_name = col_name + " " + col
-    with open(fname,"w") as out:
+    with open("../../"+fname+".csv","w") as out:
         out.write(col_name.replace(" ",","))
         out.write(",\n")
         for i in range(len(time_series)):
@@ -82,11 +82,11 @@ def load_pure_lstm(fname_columns, norm_method, split_dates, T, gt_column = None,
     
     # save_data("i4",time_series,time_series.columns.values.tolist())
     
-    for col in copy(org_cols):
-        # print(col)
-        if "_Volume" in col or "_OI" in col or "CNYUSD" in col:
+    for col in copy(time_series.columns):
+        if "_Volume" in col or "_OI" in col or "CNYUSD" in col or "_PVT" in col:
             time_series = time_series.drop(col,axis = 1)
-            org_cols.remove(col)
+            if col in org_cols:
+                org_cols.remove(col)
     
     # save_data("i5",time_series,time_series.columns.values.tolist())
     
@@ -117,7 +117,7 @@ def load_pure_lstm(fname_columns, norm_method, split_dates, T, gt_column = None,
     if version == 1 or version == 2:
         for i in range(len(norm_data)):
             norm_data[i] = pd.DataFrame(norm_data[i][gt_column])
-    print(norm_data[0].columns)
+    # print(norm_data[0].columns)
     
     ground_truth = []
     for data_set in norm_data:

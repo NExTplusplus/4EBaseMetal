@@ -116,6 +116,8 @@ def normalize_3mspot_spread_ex (lme_col,shfe_col,exchange,len_update = 30 ,versi
                 index_update = i+len_update
                 if index_update>(len(lme)-1):
                     index_update = len(lme)-1
+                if (lme[i:index_update].empty) or shfe_usd[i:index_update].empty:
+                    break
                 relationship[i:index_update] = lme[i:index_update] - beta*shfe_usd[i:index_update]
                 model = sm.OLS(lme[i:index_update],shfe_usd[i:index_update])
                 results = model.fit()
