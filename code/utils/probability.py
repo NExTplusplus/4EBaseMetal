@@ -62,7 +62,6 @@ if __name__ == '__main__':
     if args.ground_truth == "All":
         gt = "All"
 
-    sys.path.insert(0,os.path.abspath(os.path.join(sys.path[0],'..')))
     directory = os.listdir(os.path.abspath(os.path.join(sys.path[0],"..","..","mingwei","NExT","4EBaseMetal","exp",str(args.steps)+"d",gt,"logistic_regression","v"+str(args.version))))
 
     tra_date = '2005-01-10'

@@ -76,7 +76,6 @@ if __name__ == '__main__':
                 for lag in [5,10, 20, 30]:
                     for C in [0.01,0.1,1,10,100]:
                         for norm_volume in ["v1","v2","v4"]:
-                            print(C)
                             n+=1
                             print(n)
                             norm_3m_spread = "v1"

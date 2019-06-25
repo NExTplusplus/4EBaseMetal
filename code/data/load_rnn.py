@@ -127,7 +127,6 @@ def load_pure_lstm(fname_columns, norm_method, split_dates, T, gt_column = None,
                 to_be_predicted = to_be_predicted + data_set[gt_column].shift(-i-1)
         ground_truth.append((to_be_predicted > 0).shift(-1))
 
-
     # save_data("i6",pd.concat(norm_data),norm_data[0].columns.values.tolist(),np.concatenate(ground_truth))
 
     tra_ind = 0
