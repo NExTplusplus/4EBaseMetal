@@ -30,7 +30,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '-min', '--model_path', help='path to load model',
         type=str, default='../../exp/log_reg/model'
-    )
+    )   
     parser.add_argument(
         '-v','--version', help='version', type = int, default = 1
     )
@@ -141,7 +141,7 @@ if __name__ == '__main__':
                 bot_no_TF = -sum(np.multiply(bot_pred + 1,bot_true - 1))/4
                 bot_no_FT = -sum(np.multiply(bot_pred - 1,bot_true + 1))/4
                 out.write(",Total,Top,Bot\n")
-                out.write(",".join(["Acc",str(no_true/len(pred)),str(top_no_true/len(top_pred)),str(bot_no_true/len(top_pred))]))
+                out.write(",".join(["Acc",str(no_true/len(pred)),str(top_no_true/len(top_pred)),str(bot_no_true/len(bot_pred))]))
                 out.write("\n")
                 out.write(",".join(["TT",str(no_TT),str(top_no_TT),str(bot_no_TT)]))
                 out.write("\n")

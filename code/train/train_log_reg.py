@@ -54,6 +54,8 @@ if __name__ == '__main__':
     tes_date = '2016-12-16'
     split_dates = [tra_date, val_date, tes_date]
 
+    os.chdir(os.path.abspath(sys.path[0]))
+
     # read data configure file
     with open(os.path.join(sys.path[0],args.data_configure_file)) as fin:
         fname_columns = json.load(fin)
