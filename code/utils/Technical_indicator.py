@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from copy import copy
 
 # This function will calculate Price Volume Trend as mentioned in google drive/ technical indicator for more explanations
 # close is the column for closing price and volume is the column for volume.
@@ -16,10 +17,26 @@ def pvt (close,volume):
 # as mentioned in google drive/ technical indicator for more explanations
 # close is the column for closing price and pvt is the column for pvt.
 # It is encourged to use different version of pvts to try the result
-def divergence_pvt (close,pvt):
+def divergence_pvt (close,pvt,train_end,strength = 0.01, both = 0):
     percentage_change = (close/close.shift(1))-1
     pvt_change = (pvt/pvt.shift(1))-1
-    return percentage_change-pvt_change
+    divPT = percentage_change-pvt_change
+    temp = sorted(copy(divPT[:train_end]))
+    mx = temp[-1]
+    mn = temp[0]
+    if both == 1:
+        mx = temp[int(np.floor((1-strength)*len(temp)))]
+    elif both == 2:
+        mn = temp[int(np.ceil(strength*len(temp)))]
+    elif both == 3:
+        mx = temp[int(np.floor((1-strength)*len(temp)))]
+        mn = temp[int(np.ceil(strength*len(temp)))]
+    for i in range(len(divPT)):
+        if divPT[i] > mx:
+            divPT[i] = mx
+        elif divPT[i] < mn:
+            divPT[i] = mn    
+    return divPT
 
 # This function will calculate accumulation/distribution as mentioned in google drive/ technical indicator for more explanations
 # "X" is the dataframe we want to process

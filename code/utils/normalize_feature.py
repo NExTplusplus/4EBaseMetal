@@ -32,13 +32,15 @@ def log_1d_return(X,cols):
 # version can be v1,v2,v3 or v4 as stated in the file. v1,v2 and v3 will require Open Interest column ("OI_name")
 # and for v3 and v4 length of moving average is required
 
-def normalize_volume(volume,OI=None,len_ma=None,version="v1"):
+def normalize_volume(volume,OI=None,len_ma=None,version="v1", train_end=0 ,strength = 0.01,both = 0):
 
     if version == "v1":
-            return volume/OI
+        nVol = volume/OI
+
+
     elif version == "v2":
             turn_over = np.log(volume/OI)
-            return turn_over - turn_over.shift(1)
+            nVol = turn_over - turn_over.shift(1)
     elif version =="v3":
             turn_over = np.log(volume/OI)
             turn_over_ma = turn_over.shift(len_ma)
@@ -48,7 +50,7 @@ def normalize_volume(volume,OI=None,len_ma=None,version="v1"):
             turn_over_ma.iloc[len_ma] = ma_total/len_ma
             for i in range(len_ma,len(turn_over)-1):
                 turn_over_ma.iloc[i+1]= (turn_over.iloc[i]+ (len_ma-1)*turn_over_ma.iloc[i])/len_ma
-            return turn_over-turn_over_ma
+            nVol = turn_over-turn_over_ma
     elif version =="v4":
         volume_ma = volume.shift(len_ma)
         ma_total = 0
@@ -57,10 +59,26 @@ def normalize_volume(volume,OI=None,len_ma=None,version="v1"):
         volume_ma.iloc[len_ma] = ma_total/len_ma
         for i in range(len_ma,len(volume)-1):
             volume_ma.iloc[i+1]= (volume.iloc[i]+ (len_ma-1)*volume_ma.iloc[i])/len_ma
-        return volume/volume_ma -1
+        nVol = volume/volume_ma -1
     else:
         print("wrong version")
         return 
+    temp = sorted(copy(nVol[:train_end]))    
+    mx = temp[-1]
+    mn = temp[0]
+    if both == 1:
+        mx = temp[int(np.floor((1-strength)*len(temp)))]
+    elif both == 2:
+        mn = temp[int(np.ceil(strength*len(temp)))]
+    elif both == 3:
+        mx = temp[int(np.floor((1-strength)*len(temp)))]
+        mn = temp[int(np.ceil(strength*len(temp)))]
+    for i in range(len(nVol)):
+        if nVol[i] > mx:
+            nVol[i] = mx
+        elif nVol[i] < mn:
+            nVol[i] = mn
+    return nVol
     
 # See "spread normalization methods" in google drive/ data cleaning file/spread normalization for more explanations
 # "close is the close price column and spot_col is the spot price column
@@ -104,28 +122,28 @@ def normalize_3mspot_spread (close,spot_col,len_update = 30 ,version="v1"):
 def normalize_3mspot_spread_ex (lme_col,shfe_col,exchange,len_update = 30 ,version="v1"):
     shfe_usd = shfe_col*exchange
     if version == "v1":
-            return np.log(lme_col)- np.log(shfe_usd)
+        return np.log(lme_col)- np.log(shfe_usd)
     elif version == "v2":
-            lme = np.log(lme_col)
-            relationship = lme.shift(len_update)
-            model = sm.OLS(lme[0:len_update],shfe_usd[0:len_update])
+        lme = np.log(lme_col)
+        relationship = lme.shift(len_update)
+        model = sm.OLS(lme[0:len_update],shfe_usd[0:len_update])
+        results = model.fit()
+        beta = results.params[0]
+        for i in range(len_update,len(lme),len_update):
+            last_beta = beta
+            index_update = i+len_update
+            if index_update>(len(lme)-1):
+                index_update = len(lme)-1
+            if (lme[i:index_update].empty) or shfe_usd[i:index_update].empty:
+                break
+            relationship[i:index_update] = lme[i:index_update] - beta*shfe_usd[i:index_update]
+            model = sm.OLS(lme[i:index_update],shfe_usd[i:index_update])
             results = model.fit()
             beta = results.params[0]
-            for i in range(len_update,len(lme),len_update):
-                last_beta = beta
-                index_update = i+len_update
-                if index_update>(len(lme)-1):
-                    index_update = len(lme)-1
-                if (lme[i:index_update].empty) or shfe_usd[i:index_update].empty:
-                    break
-                relationship[i:index_update] = lme[i:index_update] - beta*shfe_usd[i:index_update]
-                model = sm.OLS(lme[i:index_update],shfe_usd[i:index_update])
-                results = model.fit()
-                beta = results.params[0]
-                last_index = i
-            relationship[last_index:len(lme)] = lme[last_index:len(lme)]  - last_beta*shfe_usd[last_index:len(lme)] 
-            return relationship
-            
+            last_index = i
+        relationship[last_index:len(lme)] = lme[last_index:len(lme)]  - last_beta*shfe_usd[last_index:len(lme)] 
+        return relationship
+
     else:
         print("wrong version")
         return 

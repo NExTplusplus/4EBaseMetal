@@ -48,37 +48,38 @@ def save_data(fname,time_series,columns, ground_truth = None):
 
 def load_pure_lstm(fname_columns, norm_method, split_dates, T, gt_column = None, S = 1,
     vol_norm ="v1", ex_spread_norm = "v1", spot_spread_norm = "v1",
-    len_ma = 5, len_update = 30, version = 1
+    len_ma = 5, len_update = 30, version = 1, norm_strength = 0.01, norm_both = 0, tech_strength = 0.01, tech_both = 0
     ):
     # read data from files
     time_series = None
     for fname in fname_columns:
         print('read columns:', fname_columns[fname], 'from:', fname)
         if time_series is None:
-            time_series = read_single_csv(fname, fname_columns[fname])
+            time_series = read_single_csv(fname, fname_columns[fname])  
         else:
             time_series = merge_data_frame(
                 time_series, read_single_csv(fname, fname_columns[fname])
-            ) 
+            )
 
     columns = time_series.columns
 
     # save_data("i1",time_series,columns)
     time_series = process_missing_value_v3(time_series,10)
     # save_data("i2",time_series,columns)
-    
+    train_end = time_series.index.get_loc(split_dates[1])
     org_cols = time_series.columns.values.tolist()
     print("Normalizing")
     norm_params = normalize(time_series,vol_norm = vol_norm, vol_len = len_ma,
                             spot_spread_norm = spot_spread_norm, ex_spread_norm = ex_spread_norm,
-                            spot_spread_len= len_update, ex_spread_len = len_update 
+                            spot_spread_len= len_update, ex_spread_len = len_update, train_end = train_end,
+                            strength = norm_strength, both = norm_both
                             )
     time_series = copy(norm_params["val"])
 
     # save_data("i3",time_series,time_series.columns.values.tolist())
     
     del norm_params["val"]
-    time_series = technical_indication(time_series)
+    time_series = technical_indication(time_series, train_end, strength = tech_strength, both = tech_both)
     
     # save_data("i4",time_series,time_series.columns.values.tolist())
     
@@ -88,7 +89,7 @@ def load_pure_lstm(fname_columns, norm_method, split_dates, T, gt_column = None,
             if col in org_cols:
                 org_cols.remove(col)
     
-    # save_data("i5",time_series,time_series.columns.values.tolist())
+    # save_data("i5_"+str(vol_norm),time_series,time_series.columns.values.tolist())
     
     # if using_frame == "keras":
     #     for col in cols:
@@ -127,7 +128,7 @@ def load_pure_lstm(fname_columns, norm_method, split_dates, T, gt_column = None,
                 to_be_predicted = to_be_predicted + data_set[gt_column].shift(-i-1)
         ground_truth.append((to_be_predicted > 0).shift(-1))
 
-    # save_data("i6",pd.concat(norm_data),norm_data[0].columns.values.tolist(),np.concatenate(ground_truth))
+    # save_data("i6_"+str(vol_norm),pd.concat(norm_data),norm_data[0].columns.values.tolist(),np.concatenate(ground_truth))
 
     tra_ind = 0
     if tra_ind < T - 1:
@@ -169,11 +170,13 @@ def load_pure_lstm(fname_columns, norm_method, split_dates, T, gt_column = None,
 
 def load_pure_log_reg(fname_columns, norm_method, split_dates, T, gt_column = None, S=1, 
                         vol_norm ="v1", ex_spread_norm = "v1", spot_spread_norm = "v1",
-                        len_ma = 5, len_update = 30, version = 1
+                        len_ma = 5, len_update = 30, version = 1,
+                        norm_strength = 0.01, norm_both = 0, tech_strength = 0.01, tech_both = 0
                         ):
     X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params = load_pure_lstm(fname_columns, norm_method, split_dates, T, gt_column = gt_column, S = S,
                                                         vol_norm = vol_norm, ex_spread_norm = ex_spread_norm, spot_spread_norm = spot_spread_norm,
-                                                        len_ma = len_ma, len_update = len_update, version = version
+                                                        len_ma = len_ma, len_update = len_update, version = version,
+                                                        norm_strength = norm_strength, norm_both = norm_both, tech_strength = tech_strength, tech_both = tech_both
                                                         )
     for ind in range(len(X_tr)):
         neg_y_tr = y_tr[ind] - 1

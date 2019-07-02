@@ -129,7 +129,8 @@ def construct_keras_data(time_series, ground_truth_index, sequence_length):
 
 
 def normalize(X,vol_norm ="v1", vol_len = 10, spot_spread_norm = "v1", 
-                spot_spread_len = 30, ex_spread_norm = "v1",ex_spread_len = 30):
+                spot_spread_len = 30, ex_spread_norm = "v1",ex_spread_len = 30,
+                train_end = 0, strength = 0.01, both = 0):
     ans = {"val":None, "nVol":False,"nSpread":False,"nEx":False}
     cols = X.columns.values.tolist()
     ex = False
@@ -138,20 +139,19 @@ def normalize(X,vol_norm ="v1", vol_len = 10, spot_spread_norm = "v1",
         ex = True
     
     for col in cols:
-        print(col)
         if "OI" in col:
             print("Normalizing OI:"+"=>".join((col,col[:-2]+"nOI")))
             X[col[:-2]+"nOI"] = normalize_OI(copy(X[col]))
         if "Volume" in col:
             setting = col[:-6]
-            if vol_norm == "v4":
+            # if vol_norm == "v4":
+            #     ans["nVol"] = True
+            #     # print("Normalizing Volume:"+"=>".join((col,setting+"OI")))
+            #     X[setting+"nVolume"] = normalize_volume(copy(X[col]),OI=None,len_ma = vol_len,version = vol_norm)
+            if setting+"OI" in cols:
                 ans["nVol"] = True
                 # print("Normalizing Volume:"+"=>".join((col,setting+"OI")))
-                X[setting+"nVolume"] = normalize_volume(copy(X[col]),OI=None,len_ma = vol_len,version = vol_norm)
-            elif setting+"OI" in cols:
-                ans["nVol"] = True
-                # print("Normalizing Volume:"+"=>".join((col,setting+"OI")))
-                X[setting+"nVolume"] = normalize_volume(copy(X[col]),OI=copy(X[setting+"OI"]),len_ma = vol_len,version = vol_norm)
+                X[setting+"nVolume"] = normalize_volume(copy(X[col]),OI=copy(X[setting+"OI"]),len_ma = vol_len,version = vol_norm, train_end = train_end, strength = strength, both = both)
         if "Close" in col:
             setting = col[:-5]
             if setting+"Spot" in cols:
@@ -175,7 +175,7 @@ def normalize(X,vol_norm ="v1", vol_len = 10, spot_spread_norm = "v1",
     ans["val"] = X
     return ans
 
-def technical_indication(X):
+def technical_indication(X,train_end,strength = 0.01, both = True):
     cols = X.columns.values.tolist()
     for col in cols:
         if "Close" in col:
@@ -183,12 +183,16 @@ def technical_indication(X):
             if setting+"Volume" in cols:
                 print("+".join((col,setting+"Volume"))+"=>"+"+".join((setting+"PVT",setting+"divPVT")))
                 X[setting+"PVT"] = pvt(copy(X[col]),copy(X[setting+"Volume"]))
-                X[setting+"divPVT"] = divergence_pvt(copy(X[col]),copy(X[setting+"PVT"]))
+                X[setting+"divPVT"] = divergence_pvt(copy(X[col]),copy(X[setting+"PVT"]),train_end, strength = strength, both = both)
             # if set([setting+"Volume",setting+"Open",setting+"High",setting+"Low"]).issubset(cols):
             #     print("+".join((col,setting+"Volume",setting+"Open",setting+"High",setting+"Low"))+"=>"+"+".join((setting+"AD",setting+"divAD")))
             #     X[setting+"AD"] = ad(copy(X[col]),copy(X[setting+"Low"]),copy(X[setting+"Open"]),copy(X[setting+"High"]),copy(X[setting+"Volume"]))
             #     X[setting+"divAD"] = divergence_ad(copy(X[col]),copy(X[setting+"AD"]))
             
     return X
+
+        
+
+
 
         

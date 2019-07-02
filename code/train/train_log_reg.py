@@ -1,14 +1,17 @@
-import argparse
-from datetime import datetime
-import json
+'''
+    
+'''
 import os
 import sys
+
+
+import json
+import argparse
 import numpy as np
 import matplotlib.pyplot as plt
-import tkinter
-import time
-from joblib import dump
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
+
+
 from data.load_rnn import load_pure_log_reg
 from model.logistic_regression import LogReg
 from utils.log_reg_functions import objective_function, loss_function
@@ -49,7 +52,7 @@ if __name__ == '__main__':
     if args.ground_truth =='None':
         args.ground_truth = None
 
-    tra_date = '2005-01-10'
+    tra_date = '2004-05-31'
     val_date = '2016-06-01'
     tes_date = '2016-12-16'
     split_dates = [tra_date, val_date, tes_date]
@@ -75,11 +78,10 @@ if __name__ == '__main__':
                 # best_nv = ""
                 # best_ns = ""
                 # best_ne = ""
-                for lag in [5,10, 20, 30]:
+                for lag in [5,10,20,30]:
                     for C in [0.01,0.1,1,10,100]:
-                        for norm_volume in ["v1","v2","v4"]:
+                        for norm_volume in ["v1","v2"]:
                             n+=1
-                            print(n)
                             norm_3m_spread = "v1"
                             norm_ex = "v2"
                             len_ma = 5
@@ -90,7 +92,8 @@ if __name__ == '__main__':
                             X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params= load_pure_log_reg(
                                 f, 'log_1d_return', split_dates, gt_column = args.ground_truth, T = lag, S = horizon,
                                 vol_norm = norm_volume, ex_spread_norm = norm_ex, spot_spread_norm = norm_3m_spread,
-                                len_ma = len_ma, len_update = len_update, version = args.version
+                                len_ma = len_ma, len_update = len_update, version = args.version,
+                                norm_both = 3, tech_both = 3, norm_strength = 0.01, tech_strength = 0.01
                             )
                             # print(X_tr[0])              
                             X_tr = np.concatenate(X_tr)
