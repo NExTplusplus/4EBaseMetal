@@ -8,7 +8,7 @@ from utils.read_data import read_single_csv, merge_data_frame, \
 from utils.normalize_feature import log_1d_return, normalize_volume, normalize_3mspot_spread, \
     normalize_OI, normalize_3mspot_spread_ex
 from utils.transform_data import flatten
-from utils.construct_data import construct,normalize,technical_indication,construct_keras_data
+from utils.construct_data import construct,normalize,technical_indication,construct_keras_data, rescale
 
 '''
 parameters:
@@ -100,6 +100,7 @@ def load_pure_lstm(fname_columns, norm_method, split_dates, T, gt_column = None,
             
     norm_data = copy(log_1d_return(time_series,org_cols))
     norm_data = process_missing_value_v3(norm_data,10)
+    norm_data = rescale(norm_data)
     cols = norm_data.columns.values.tolist()
     if gt_column is None:
         all_metals = []
@@ -128,7 +129,7 @@ def load_pure_lstm(fname_columns, norm_method, split_dates, T, gt_column = None,
                 to_be_predicted = to_be_predicted + data_set[gt_column].shift(-i-1)
         ground_truth.append((to_be_predicted > 0).shift(-1))
 
-    # save_data("i6_"+str(vol_norm),pd.concat(norm_data),norm_data[0].columns.values.tolist(),np.concatenate(ground_truth))
+    save_data("i6_"+str(vol_norm),pd.concat(norm_data),norm_data[0].columns.values.tolist(),np.concatenate(ground_truth))
 
     tra_ind = 0
     if tra_ind < T - 1:

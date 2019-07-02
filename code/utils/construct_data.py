@@ -191,7 +191,23 @@ def technical_indication(X,train_end,strength = 0.01, both = True):
             
     return X
 
-        
+def rescale(X):
+    X_copy = copy(X)
+    X_copy = X_copy.applymap(np.abs)
+    average = X_copy.apply(np.mean,axis = 0)
+
+    for i in range(len(average)):
+        mean = average[i]
+    
+        while mean < 1:
+            mean = mean * 10
+            X[X.columns[i]] = X[X.columns[i]] * 10
+
+    return X
+
+
+
+                    
 
 
 
