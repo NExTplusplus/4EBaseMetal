@@ -14,6 +14,6 @@ with open(os.path.join(sys.path[0],"..","..","i6_v2.csv")) as f:
   df = df.iloc[start_loc:end_loc,:]
   for col in df.columns:
     plots = sns.distplot(df[col],kde = False)
-    plt.savefig(os.path.join(sys.path[0],"..","..","mingwei","NExT","Plots","v2","Normalized_"+col))
+    plt.savefig(os.path.join(sys.path[0],"..","..","mingwei","NExT","Plots","v3","Normalized_"+col))
     plt.close()
     

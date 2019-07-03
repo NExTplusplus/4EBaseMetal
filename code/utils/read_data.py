@@ -35,7 +35,6 @@ def read_single_csv(fname, sel_col_names = None):
     #         print("Available columns are following: "+str(list(available_col)))
     #         print("The following columns are missing: " + str(missing_col))
     # return X[choosen_col]
-    print(col_name)
     return ans
 '''
 
@@ -100,28 +99,46 @@ def identify_exchange(fpath):
     return ""
 
 def identify_metal(fpath):
-    folders = fpath.split("/")
-    f = folders[-1].strip(".csv")
-    if f[0:3] == "LME":
-        return f[3:5]
-    if f[0:2] == "LM":
-        f = f[2:4]
-    if f in ["AA","AH"]:
-        return "Al"
-    elif f in ["HG","CU","CA"]:
-        return "Co"
-    elif f in ["XII","NI"]:
-        return "Ni"
-    elif f in ["ZNA","ZS"]:
-        return "Zi"
-    elif f in ["XOO","SN"]:
-        return "Ti"
-    elif f in ["PBL","PB"]:
-        return "Le"
-    elif " Index" in f or " Curncy" in f:
-        return "" 
-    else:
-        return f
+	folders = fpath.split("/")
+	f = folders[-1].strip(".csv")
+	if f[0:3] == "LME":
+		return f[3:5]
+	if f[0:2] == "LM":
+		f = f[2:4]
+	if f in ["AA","AH"]:
+		return "Al"
+	elif f in ["HG_lag1","CU","CA"]:
+		return "Co"
+	elif f in ["XII","NI"]:
+		return "Ni"
+	elif f in ["ZNA","ZS"]:
+		return "Zi"
+	elif f in ["XOO","SN"]:
+		return "Ti"
+	elif f in ["PBL","PB"]:
+		return "Le"
+	elif " Index" in f or " Curncy" in f:
+		return "" 
+	else:
+		return f
+
+def read_data(config,source,start_date):
+    if source == "NExT":
+        data = []
+        LME_dates = None
+        dates = []
+        for fname in config:
+            df = read_single_csv(fname,sel_col_names = config[fname])
+            df = df.loc[start_date:]
+            data.append(df)
+            if "LME" in fname:
+                dates.append(df.index)
+        for date in dates:
+            if LME_dates is None:
+                LME_dates = date
+            else:
+                LME_dates.union(date)
+        return data, LME_dates.tolist()
 
 
 

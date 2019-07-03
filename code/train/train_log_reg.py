@@ -80,7 +80,7 @@ if __name__ == '__main__':
                 # best_ne = ""
                 for lag in [5,10,20,30]:
                     for C in [0.01,0.1,1,10,100]:
-                        for norm_volume in ["v1","v2"]:
+                        for norm_volume in ["v2"]:
                             n+=1
                             norm_3m_spread = "v1"
                             norm_ex = "v2"
@@ -93,7 +93,7 @@ if __name__ == '__main__':
                                 f, 'log_1d_return', split_dates, gt_column = args.ground_truth, T = lag, S = horizon,
                                 vol_norm = norm_volume, ex_spread_norm = norm_ex, spot_spread_norm = norm_3m_spread,
                                 len_ma = len_ma, len_update = len_update, version = args.version,
-                                norm_both = 3, tech_both = 3, norm_strength = 0.01, tech_strength = 0.01
+                                norm_both = 3, tech_both = 3, norm_strength = 0.05, tech_strength = 0.05
                             )
                             # print(X_tr[0])              
                             X_tr = np.concatenate(X_tr)

@@ -17,20 +17,20 @@ def pvt (close,volume):
 # as mentioned in google drive/ technical indicator for more explanations
 # close is the column for closing price and pvt is the column for pvt.
 # It is encourged to use different version of pvts to try the result
-def divergence_pvt (close,pvt,train_end,strength = 0.01, both = 0):
+def divergence_pvt (close,pvt,train_end,params):
     percentage_change = (close/close.shift(1))-1
     pvt_change = (pvt/pvt.shift(1))-1
     divPT = percentage_change-pvt_change
     temp = sorted(copy(divPT[:train_end]))
     mx = temp[-1]
     mn = temp[0]
-    if both == 1:
-        mx = temp[int(np.floor((1-strength)*len(temp)))]
-    elif both == 2:
-        mn = temp[int(np.ceil(strength*len(temp)))]
-    elif both == 3:
-        mx = temp[int(np.floor((1-strength)*len(temp)))]
-        mn = temp[int(np.ceil(strength*len(temp)))]
+    if params['both'] == 1:
+        mx = temp[int(np.floor((1-params['strength'])*len(temp)))]
+    elif params['both'] == 2:
+        mn = temp[int(np.ceil(params['strength']*len(temp)))]
+    elif params['both'] == 3:
+        mx = temp[int(np.floor((1-params['strength'])*len(temp)))]
+        mn = temp[int(np.ceil(params['strength']*len(temp)))]
     for i in range(len(divPT)):
         if divPT[i] > mx:
             divPT[i] = mx
