@@ -177,7 +177,7 @@ def normalize(X,train_end, params):
             
     return X, ans
 
-def technical_indication(X,train_end,nrom):
+def technical_indication(X,train_end,params):
     cols = X.columns.values.tolist()
     for col in cols:
         if "Close" in col:
@@ -186,7 +186,7 @@ def technical_indication(X,train_end,nrom):
                 print("+".join((col,setting+"Volume"))+"=>"+"+".join((setting+"PVT",setting+"divPVT")))
                 X[setting+"PVT"] = pvt(copy(X[col]),copy(X[setting+"Volume"]))
                 X[setting+"divPVT"] = divergence_pvt(copy(X[col]),copy(X[setting+"PVT"]),train_end, 
-                                                            strength = params['strength'], both = params['both'])
+                                                            params = params)
             # if set([setting+"Volume",setting+"Open",setting+"High",setting+"Low"]).issubset(cols):
             #     print("+".join((col,setting+"Volume",setting+"Open",setting+"High",setting+"Low"))+"=>"+"+".join((setting+"AD",setting+"divAD")))
             #     X[setting+"AD"] = ad(copy(X[col]),copy(X[setting+"Low"]),copy(X[setting+"Open"]),copy(X[setting+"High"]),copy(X[setting+"Volume"]))
@@ -211,36 +211,24 @@ def rescale(X):
 
     return X
 
-def labelling(X, ground_truth_columns):
+def labelling(X,horizon, ground_truth_columns):
     assert ground_truth_columns != []
     ans = []
     for ground_truth in ground_truth_columns:
         labels = copy(X[ground_truth])
         labels = labels.shift(-horizon) - labels
-        labels = labels.apply(np.sign)
+        labels = labels > 0
         labels = labels.rename("Label")
         ans.append(labels)
     return ans
 
 def deal_with_outlier(data):
-    data['datetime']=pd.to_datetime(data.index)
-    data['datetime']=data['datetime'].apply(lambda x:x.strftime('%Y-%m-%d'))
     #deal with the big value
     column_list = []
     for column in data.columns:
-        column_name_list = column.split('_')
-        if len(column_name_list)==3 and column_name_list[2]=="OI":
-            column_list.append("_".join(column_name_list))
-        elif len(column_name_list)==4 and column_name_list[3]=="OI":
-            column_list.append("_".join(column_name_list))
-    year_list=[]
-    for time in data.index:
-        time = datetime.strptime(time, '%Y-%m-%d')
-        year_list.append(time.year)
-    year_list = list(set(year_list))
-    for item in copy(year_list):
-        if item <2004:
-            year_list.remove(item)
+        if "_OI" in column:
+            column_list.append(column)
+    year_list = list(range(int(data.index[0].split("-")[0]),int(data.index[-1].split("-")[0])))
     month_list = ['01','02','03','04','05','06','07','08','09','10','11','12']
     for column_name in column_list:   
         for year in year_list:
@@ -249,46 +237,61 @@ def deal_with_outlier(data):
                 end_time = str(year)+'-'+month+'-'+'31'
                 value_dict = {}
                 value_list=[]
-                for item in data[(data['datetime']>=start_time)&(data['datetime']<=end_time)]['datetime']:
-                    value = list(data[data['datetime']==item][column_name])[0]
-                    if not np.isnan(value):
-                        value_dict[value]=item
-                        value_list.append(value)
-                if len(value_list)>0:
-                    max_item = max(value_list)
-                    data[data['datetime']==value_dict[max_item]][column_name]=np.mean(value_list)
+                temp = copy(data.loc[(data.index >= start_time)&(data.index <= end_time)])
+                if len(temp) == 0 or len(temp[column_name].dropna()) == 0:
+                    continue
+                average = np.mean(temp[column_name].dropna())
+                data.at[temp[column_name].idxmax(),column_name] = average
+                
+                
+
+                
+                # for item in data[(data['datetime']>=start_time)&(data['datetime']<=end_time)]['datetime']:
+                #     value = list(data[data['datetime']==item][column_name])[0]
+                #     if not np.isnan(value):
+                #         value_dict[value]=item
+                #         value_list.append(value)
+                # if len(value_list)>0:
+                #     max_item = max(value_list)
+                #     data[data['datetime']==value_dict[max_item]][column_name]=np.mean(value_list)
     #deal with the minor value in OI
     for column_name in column_list:
-        value_list=[]
-        value_dict={}
-        for item in data['datetime']:
-            value = list(data[data['datetime']==item][column_name])[0]
-            value_list.append((item,value))
-        value_list = sorted(value_list,key=lambda x:x[1],reverse=False)
-        for i in range(20):
-            d = datetime.strptime(value_list[i][0], '%Y-%m-%d')
-            year = d.year
-            month = d.month
-            start_time = str(year)+'-'+str(month)+'-'+'01'
-            end_time = str(year)+'-'+str(month)+'-'+'31'
-            month_value_list = list(data[(data['datetime']>=start_time)&(data['datetime']<=end_time)][column_name])
-            data[data['datetime']==value_list[i][0]][column_name]=np.mean(month_value_list)
+        temp = data[column_name]
+        nsmallest = temp.nsmallest(n = 20).index
+        for ind in nsmallest:
+            start_time = ind[:-2]+'01'
+            end_time = ind[:-2]+'31'
+            data.at[ind,column_name] = np.mean(data.loc[(data.index >= start_time)&(data.index <= end_time)][column_name])
+        # value_list=[]
+        # value_dict={}
+        # for item in data['datetime']:
+        #     value = list(data[data['datetime']==item][column_name])[0]
+        #     value_list.append((item,value))
+        # value_list = sorted(value_list,key=lambda x:x[1],reverse=False)
+        # for i in range(20):
+        #     d = datetime.strptime(value_list[i][0], '%Y-%m-%d')
+        #     year = d.year
+        #     month = d.month
+        #     start_time = str(year)+'-'+str(month)+'-'+'01'
+        #     end_time = str(year)+'-'+str(month)+'-'+'31'
+        #     month_value_list = list(data[(data['datetime']>=start_time)&(data['datetime']<=end_time)][column_name])
+        #     data[data['datetime']==value_list[i][0]][column_name]=np.mean(month_value_list)
     #missing value interpolate
-    column_list = list(data.columns)
-    column_list.remove('datetime')
-    for column in column_list:
-        value_nan_list=[]
-        for i,item in enumerate(data[column]):
-            if math.isnan(item):
-                value_nan_list.append(i)
-            else:
-                if len(value_nan_list)!=0:
-                    start_item = data[column][value_nan_list[0]-1]
-                    end_item = data[column][value_nan_list[len(value_nan_list)-1]+1]
-                    step = float(end_item-start_item)/len(value_nan_list)
-                    for j,nan_item in enumerate(value_nan_list):
-                        data[column][nan_item]=start_item+step*(j+1)
-                    value_nan_list=[]
+    data = data.interpolate(axis = 0)
+    # for column in data.columns:
+    #     print(column)
+    #     value_nan_list=[]
+    #     for i,item in enumerate(data[column]):
+    #         if np.isnan(item):
+    #             value_nan_list.append(i)
+    #         else:
+    #             if len(value_nan_list)!=0:
+    #                 start_item = data[column][value_nan_list[0]-1]
+    #                 end_item = data[column][value_nan_list[len(value_nan_list)-1]+1]
+    #                 step = float(end_item-start_item)/len(value_nan_list)
+    #                 for j,nan_item in enumerate(value_nan_list):
+    #                     data[column][nan_item]=start_item+step*(j+1)
+    #                 value_nan_list=[]
     return data
         
 
