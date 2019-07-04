@@ -140,7 +140,7 @@ def normalize(X,train_end, params):
     for col in cols:
         if "OI" in col:
             print("Normalizing OI:"+"=>".join((col,col[:-2]+"nOI")))
-            X[col[:-2]+"nOI"] = normalize_OI(copy(X[col]))
+            X[col[:-2]+"nOI"] = normalize_OI(copy(X[col]),train_end,strength = params['strength'], both = params['both'])
         if "Volume" in col:
             setting = col[:-6]
             # if vol_norm == "v4":

@@ -150,8 +150,23 @@ def normalize_3mspot_spread_ex (lme_col,shfe_col,exchange,len_update = 30 ,versi
 
 # This function will normalize OI 
 # OI_col is the col the open interest
-def normalize_OI (OI_col):
+def normalize_OI (OI_col, train_end, strength, both):
 
     OI = np.log(OI_col)
-    
-    return OI - OI.shift(1)
+    nOI = OI-OI.shift(1)
+    temp = sorted(copy(nOI[:train_end]))    
+    mx = temp[-1]
+    mn = temp[0]
+    if both == 1:
+        mx = temp[int(np.floor((1-strength)*len(temp)))]
+    elif both == 2:
+        mn = temp[int(np.ceil(strength*len(temp)))]
+    elif both == 3:
+        mx = temp[int(np.floor((1-strength)*len(temp)))]
+        mn = temp[int(np.ceil(strength*len(temp)))]
+    for i in range(len(nOI)):
+        if nOI[i] > mx:
+            nOI[i] = mx
+        elif nOI[i] < mn:
+            nOI[i] = mn
+    return nOI
