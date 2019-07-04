@@ -7,6 +7,8 @@ from datetime import datetime
 sys.path.insert(0,os.path.abspath(os.path.join(sys.path[0],"..")))
 from utils.normalize_feature import normalize_3mspot_spread,normalize_3mspot_spread_ex,normalize_OI,normalize_volume
 from utils.Technical_indicator import ad, divergence_ad, pvt, divergence_pvt
+from numba import jit
+
 
 def construct(time_series, ground_truth, start_ind, end_ind, T, h, norm_method):
     num = 0

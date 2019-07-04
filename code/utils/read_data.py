@@ -123,6 +123,9 @@ def identify_metal(fpath):
 	else:
 		return f
 def m2ar(matrix,lag = False):
+    from rpy2.robjects.packages import importr
+    rbase = importr('base')
+    rzoo = importr('zoo')
     arr = np.array(matrix)
     '''Get index'''
     idx = rbase.as_character(rzoo.index(matrix))
@@ -156,10 +159,7 @@ def read_data_NExT(config,start_date):
 
 def read_data_4E(start_date):
     import rpy2.robjects as robjects
-    from rpy2.robjects.packages import importr
     robjects.r('.sourceAlfunction()')
-    rbase = importr('base')
-    rzoo = importr('zoo')
     LME = robjects.r('''merge(getSecurity("LMCADY Comdty", start = "'''+start_date+'''"), getSecurity("LMAHDY Comdty", start = "'''+start_date+'''"),
                             getSecurity("LMPBDY Comdty", start = "'''+start_date+'''"), getSecurity("LMZSDY Comdty", start = "'''+start_date+'''"), 
                             getSecurity("LMNIDY Comdty", start = "'''+start_date+'''"), getSecurity("LMSNDY Comdty", start = "'''+start_date+'''"), 
@@ -204,8 +204,6 @@ def read_data_4E(start_date):
 
     SHFE.colnames = robjects.vectors.StrVector(["SHFE_Al_Open","SHFE_Al_High","SHFE_Al_Low","SHFE_Al_Close","SHFE_Al_Volume","SHFE_Al_OI",
                                             "SHFE_Co_Open","SHFE_Co_High","SHFE_Co_Low","SHFE_Co_Close","SHFE_Co_Volume","SHFE_Co_OI",
-                                            "SHFE_Le_Open","SHFE_Le_High","SHFE_Le_Low","SHFE_Le_Close","SHFE_Le_Volume",
-                                                "SHFE_Zi_Open","SHFE_Zi_High","SHFE_Zi_Low","SHFE_Zi_Close","SHFE_Zi_Volume",
                                                 "SHFE_RT_Open","SHFE_RT_High","SHFE_RT_Low","SHFE_RT_Close","SHFE_RT_Volume", "CNYUSD"                                                    
                                             ]) 
 
@@ -239,8 +237,8 @@ def read_data_4E(start_date):
     SPX = m2ar(SPX,lag = True)
     VIX = m2ar(VIX,lag = True)
     index = m2ar(index)
-
-    dates = copy(LME.index)
+    LME_temp = copy(LME.loc['2004-11-12':])
+    dates = LME.index
 
     data = LME.join([DCE,SHFE,index,COMEX_HG,COMEX_GC,COMEX_SI,COMEX_PA,COMEX_PL,DXY,SX5E,UKX,SPX,VIX], how = "outer")
     return data, dates

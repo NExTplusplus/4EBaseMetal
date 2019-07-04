@@ -42,10 +42,11 @@ def load_data_v5(config, horizon, ground_truth_columns, lags, source, split_date
     if source =="NExT":
         from utils.read_data import read_data_NExT
         data_list, LME_dates = read_data_NExT(config, split_dates[0])
+        time_series = pd.concat(data_list, axis = 1, sort = True)
     elif source == "4E":
         from utils.read_data import read_data_4E
-        data_list, LME_dates = read_data_4E(split_dates[0])
-    time_series = pd.concat(data_list, axis = 1, sort = True)
+        time_series, LME_dates = read_data_4E(split_dates[0])
+    
 
     
     '''
@@ -79,6 +80,7 @@ def load_data_v5(config, horizon, ground_truth_columns, lags, source, split_date
     time_series = log_1d_return(time_series,org_cols)
     time_series = rescale(time_series)
     complete_time_series = []
+    time_series = time_series[sorted(time_series.columns)]
     all_cols = time_series.columns
     if len(ground_truth_columns) > 1:
         for ground_truth in ground_truth_columns:
@@ -98,7 +100,7 @@ def load_data_v5(config, horizon, ground_truth_columns, lags, source, split_date
     '''
     for ind in range(len(time_series)):
         time_series[ind] = pd.concat([time_series[ind], labels[ind]], axis = 1)
-        save_data("i6",time_series[ind],time_series[ind].columns.values.tolist())
+        # save_data("i6",time_series[ind],time_series[ind].columns.values.tolist())
 
         time_series[ind] = process_missing_value_v3(time_series[ind],0)
     

@@ -12,6 +12,8 @@ from copy import copy
 import statistics
 sys.path.insert(0,os.path.abspath(os.path.join(sys.path[0],"..")))
 from data.load_rnn import load_pure_log_reg
+from data.load_data_v5 import load_data_v5
+from utils.transform_data import flatten
 
 if __name__ == '__main__':
     desc = 'the logistic regression model'
@@ -64,9 +66,9 @@ if __name__ == '__main__':
 
     directory = os.listdir(os.path.abspath(os.path.join(sys.path[0],"..","..","mingwei","NExT","4EBaseMetal","exp",str(args.steps)+"d",gt,"logistic_regression","v"+str(args.version))))
 
-    tra_date = '2005-01-10'
+    tra_date = '2003-11-12'
     val_date = '2016-06-01'
-    tes_date = '2016-12-16'
+    tes_date = '2016-12-23'
     split_dates = [tra_date, val_date, tes_date]
     len_ma = 5
     len_update = 30
@@ -89,12 +91,33 @@ if __name__ == '__main__':
             norm_3m_spread = rel_line[3]
             norm_ex = rel_line[4]
 
-            X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params= load_pure_log_reg(
-                fname_columns, 'log_1d_return', split_dates, gt_column = "LME_"+gt+"_Spot", T = lag, S = args.steps,
-                vol_norm = norm_volume, ex_spread_norm = norm_ex, spot_spread_norm = norm_3m_spread,
-                len_ma = 5, len_update = 30, version = args.version
-            )
 
+            norm_params = {'vol_norm':norm_volume, 'ex_spread_norm':norm_ex,'spot_spread_norm': norm_3m_spread, 
+                            'len_ma':5, 'len_update':30, 'both':3,'strength':0.01
+                            }
+            tech_params = {'strength':0.01,'both':3}
+            # start_time = time.time()
+            # load data
+            X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params = load_data_v5(fname_columns, args.steps, ["LME_"+gt+"_Spot"], lag, 
+                                                                            "NExT", split_dates, 
+                                                                            norm_params, tech_params)
+            for ind in range(len(X_tr)):
+                neg_y_tr = y_tr[ind] - 1
+                y_tr[ind] = y_tr[ind] + neg_y_tr
+                X_tr[ind] = flatten(X_tr[ind])
+                
+                
+                neg_y_va = y_va[ind] - 1
+                y_va[ind] = y_va[ind] + neg_y_va
+                X_va[ind] = flatten(X_va[ind])
+                
+                if X_te is not None:
+                    neg_y_te = y_te[ind] - 1
+                    y_te[ind] = y_te[ind] + neg_y_te
+                    X_te[ind] = flatten(X_te[ind])
+            # print(X_tr[0])              
+            X_tr = np.concatenate(X_tr)
+            y_tr = np.concatenate(y_tr).flatten()
             X_va = np.concatenate(X_va)
             y_va = np.concatenate(y_va).flatten()
 
