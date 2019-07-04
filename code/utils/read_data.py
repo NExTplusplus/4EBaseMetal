@@ -1,6 +1,5 @@
 import pandas as pd
 from copy import copy
-from numba import jit
 
 '''
 parameters:
@@ -11,7 +10,7 @@ returns:
 X (a pandas DataFrame): the data in the input file
 '''
 
-@jit
+
 def read_single_csv(fname, sel_col_names = None):
     ans = pd.DataFrame()
     X = pd.read_csv(fname, index_col=0)
@@ -44,7 +43,7 @@ def read_single_csv(fname, sel_col_names = None):
 
 '''
 
-@jit
+
 def merge_data_frame(X, Y):
     return pd.concat([X, Y], axis=1, sort=True)
 
@@ -53,7 +52,7 @@ def merge_data_frame(X, Y):
 
 '''
 
-@jit
+
 def process_missing_value(X):
     sta_ind = 0
     for i in range(X.shape[0]):
@@ -61,14 +60,14 @@ def process_missing_value(X):
             sta_ind = i + 1
     return X[sta_ind:], sta_ind
 
-@jit
+
 def process_missing_value_v2(X):
     return X.dropna()
 
 # See "Deal with NA value" in google drive/ data cleaning file for more explanations
 # "X" is the dataframe we want to process and "cons_data" is number of consecutive complede data we need to have 
 
-@jit
+
 def process_missing_value_v3(X,cons_data):
     count = 0
     sta_ind = 0
@@ -84,7 +83,7 @@ def process_missing_value_v3(X,cons_data):
             break
     return X[sta_ind:].dropna()
 
-@jit
+
 def identify_col(col_name):
     col_name = str.strip(col_name)
     if col_name in ["Open","Open.Price"]:
@@ -101,7 +100,7 @@ def identify_col(col_name):
     else:
         return col_name
 
-@jit
+
 def identify_exchange(fpath):
     folders = fpath.split("/")
     if folders[-1] == "CNYUSD Curncy.csv":
@@ -111,7 +110,7 @@ def identify_exchange(fpath):
             return f
     return ""
 
-@jit
+
 def identify_metal(fpath):
 	folders = fpath.split("/")
 	f = folders[-1].strip(".csv")
@@ -136,7 +135,7 @@ def identify_metal(fpath):
 	else:
 		return f
 
-@jit
+
 def m2ar(matrix,lag = False):
     from rpy2.robjects.packages import importr
     rbase = importr('base')
@@ -153,7 +152,7 @@ def m2ar(matrix,lag = False):
     time_series.columns = matrix.colnames
     return time_series
 
-@jit
+
 def read_data_NExT(config,start_date):
 
     data = []
@@ -173,7 +172,7 @@ def read_data_NExT(config,start_date):
             LME_dates.union(date)
     return data, LME_dates.tolist()
 
-@Jit
+
 def read_data_4E(start_date):
     import rpy2.robjects as robjects
     robjects.r('.sourceAlfunction()')
