@@ -4,7 +4,6 @@ import os
 import sys
 import pandas as pd
 import json
-sys.path.insert(0,os.path.abspath(os.path.join(sys.path[0],"..")))
 from utils.read_data import  process_missing_value_v3
 from utils.normalize_feature import log_1d_return, normalize_volume, normalize_3mspot_spread, normalize_OI, normalize_3mspot_spread_ex
 from utils.transform_data import flatten
@@ -152,19 +151,4 @@ def load_data_v5(config, horizon, ground_truth_columns, lags, source, split_date
     
     return X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params
 
-
-with open(os.path.join(sys.path[0],"exp","3d","Co","logistic_regression","v5","LMCADY_v5.conf")) as fin:
-    fname_columns = json.load(fin)
-
-tra_date = '2003-11-12'
-val_date = '2016-06-01'
-tes_date = '2016-12-16'
-split_dates = [tra_date, val_date, tes_date]
-norm_params = {'vol_norm': "v2", "ex_spread_norm":"v2", "spot_spread_norm":"v1","len_ma":5, "len_update": 30, "both" : 3, "strength" : 0.01}
-tech_params = {'strength':0.01,'both':3}
-
-for f in fname_columns:
-    X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params= load_data_v5(
-                                    f, 3, ["LME_Co_Spot"],5,"NExT", split_dates, norm_params, tech_params
-                                )
 
