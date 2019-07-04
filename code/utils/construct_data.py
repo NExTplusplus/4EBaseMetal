@@ -7,7 +7,9 @@ from datetime import datetime
 sys.path.insert(0,os.path.abspath(os.path.join(sys.path[0],"..")))
 from utils.normalize_feature import normalize_3mspot_spread,normalize_3mspot_spread_ex,normalize_OI,normalize_volume
 from utils.Technical_indicator import ad, divergence_ad, pvt, divergence_pvt
+from numba import jit
 
+@jit
 def construct(time_series, ground_truth, start_ind, end_ind, T, h, norm_method):
     num = 0
     '''
@@ -41,6 +43,8 @@ def construct(time_series, ground_truth, start_ind, end_ind, T, h, norm_method):
             sample_ind += 1
     
     return X,y
+
+@jit
 def construct_keras_data(time_series, ground_truth_index, sequence_length):
     """
     data process
@@ -124,7 +128,7 @@ def construct_keras_data(time_series, ground_truth_index, sequence_length):
     
     return X_train, Y_train, X_val, Y_val, X_test, Y_test, Y_daybefore_val, Y_daybefore_tes, unnormalized_bases_val, unnormalized_bases_tes, window_size
 
-
+@jit
 def normalize(X,train_end, params):
     ans = {"nVol":False,"nSpread":False,"nEx":False}
 
@@ -177,6 +181,7 @@ def normalize(X,train_end, params):
             
     return X, ans
 
+@jit
 def technical_indication(X,train_end,params):
     cols = X.columns.values.tolist()
     for col in cols:
@@ -194,6 +199,7 @@ def technical_indication(X,train_end,params):
             
     return X
 
+@jit
 def rescale(X):
     X_copy = copy(X)
     X_copy = X_copy.applymap(np.abs)
@@ -211,6 +217,7 @@ def rescale(X):
 
     return X
 
+@jit
 def labelling(X,horizon, ground_truth_columns):
     assert ground_truth_columns != []
     ans = []
@@ -222,6 +229,7 @@ def labelling(X,horizon, ground_truth_columns):
         ans.append(labels)
     return ans
 
+@jit
 def deal_with_outlier(data):
     #deal with the big value
     column_list = []
