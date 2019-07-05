@@ -4,10 +4,11 @@ import os
 import sys
 import pandas as pd
 import json
+sys.path.insert(0,os.path.abspath(os.path.join(sys.path[0],"..")))
 from utils.read_data import  process_missing_value_v3
 from utils.normalize_feature import log_1d_return, normalize_volume, normalize_3mspot_spread, normalize_OI, normalize_3mspot_spread_ex
 from utils.transform_data import flatten
-from utils.construct_data import construct,normalize,technical_indication,construct_keras_data,rescale,labelling,deal_with_outlier
+from utils.construct_data import construct,normalize,technical_indication,construct_keras_data,gaussian_scaling,labelling,deal_with_outlier
 
 def save_data(fname,time_series,columns, ground_truth = None):
     col_name = ""
@@ -79,7 +80,7 @@ def load_data_v5(config, horizon, ground_truth_columns, lags, source, split_date
                 org_cols.remove(col)
     time_series = log_1d_return(time_series,org_cols)
     time_series = process_missing_value_v3(time_series,1)
-    time_series = rescale(time_series)
+    time_series = gaussian_scaling(time_series,time_series.index.get_loc(split_dates[1]))
     complete_time_series = []
     time_series = time_series[sorted(time_series.columns)]
     
@@ -151,4 +152,6 @@ def load_data_v5(config, horizon, ground_truth_columns, lags, source, split_date
     
     return X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params
 
+with open(os.path.join(sys.path[0],"exp","3d","Co","logistic_regression","v5","LMCADY_v5.conf")) as fin:
+    fname_columns = json.load(fin)
 

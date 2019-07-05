@@ -254,7 +254,7 @@ def read_data_4E(start_date):
     VIX = m2ar(VIX,lag = True)
     index = m2ar(index)
     LME_temp = copy(LME.loc['2004-11-12':])
-    dates = LME.index
+    dates = LME_temp.index
 
     data = LME.join([DCE,SHFE,index,COMEX_HG,COMEX_GC,COMEX_SI,COMEX_PA,COMEX_PL,DXY,SX5E,UKX,SPX,VIX], how = "outer")
     return data, dates

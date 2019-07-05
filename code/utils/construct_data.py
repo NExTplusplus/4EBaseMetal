@@ -7,6 +7,7 @@ from datetime import datetime
 sys.path.insert(0,os.path.abspath(os.path.join(sys.path[0],"..")))
 from utils.normalize_feature import normalize_3mspot_spread,normalize_3mspot_spread_ex,normalize_OI,normalize_volume
 from utils.Technical_indicator import ad, divergence_ad, pvt, divergence_pvt
+from sklearn import preprocessing
 
 
 def construct(time_series, ground_truth, start_ind, end_ind, T, h, norm_method):
@@ -30,10 +31,6 @@ def construct(time_series, ground_truth, start_ind, end_ind, T, h, norm_method):
     sample_ind = 0
     for ind in range(start_ind, end_ind):
         if not time_series.iloc[ind - T + 1 : ind + 1].isnull().values.any():
-            to_be_compared = 0
-            for i in range(h):
-                to_be_compared += time_series.iloc[ind+1+i,0]
-            assert ((to_be_compared > 0) == ground_truth.values[ind]) 
             if norm_method == "log_1d_return":
                 X[sample_ind] = time_series.values[ind - T + 1: ind + 1, :]
             elif norm_method == "log_nd_return":
@@ -300,6 +297,13 @@ def deal_with_outlier(data):
     #                     data[column][nan_item]=start_item+step*(j+1)
     #                 value_nan_list=[]
     return data
+
+def gaussian_scaling(X,train_end):
+    scaler = preprocessing.StandardScaler()
+    scaler.fit(X.iloc[:train_end,].values)
+    X = pd.DataFrame(scaler.transform(X), index = X.index, columns = X.columns)
+    return X
+
         
 
 
