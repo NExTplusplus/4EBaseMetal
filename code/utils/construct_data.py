@@ -86,23 +86,15 @@ def construct_keras_data(time_series, ground_truth_index, sequence_length):
     end = int(dr.shape[0] + 1)
     unnormalized_bases_val = d0[val_ind:tes_ind, 0:1, ground_truth_index]
     unnormalized_bases_tes = d0[tes_ind:end, 0:1, ground_truth_index]
-    #print(unnormalized_bases_tes)
-    #sys.stdin.readline()
     #Splitting data set into training validating and testing data
     split_line = val_ind
     training_data = dr[:int(split_line), :]
 
-    #Shuffle the data
-    #np.random.shuffle(training_data)
     
     #Training Data
     X_train = training_data[:, :-1]
     Y_train = training_data[:, -1,:]
     Y_train = Y_train[:, ground_truth_index]
-    #print(X_train)
-    #print(Y_train)
-    #sys.stdin.readline()
-    #Validating Data
     X_val = dr[val_ind:tes_ind,:-1]
     Y_val = dr[val_ind:tes_ind,-1]
     Y_val = Y_val[:, ground_truth_index]
@@ -140,10 +132,6 @@ def normalize(X,train_end, params):
             X[col[:-2]+"nOI"] = normalize_OI(copy(X[col]),train_end,strength = params['strength'], both = params['both'])
         if "Volume" in col:
             setting = col[:-6]
-            # if vol_norm == "v4":
-            #     ans["nVol"] = True
-            #     # print("Normalizing Volume:"+"=>".join((col,setting+"OI")))
-            #     X[setting+"nVolume"] = normalize_volume(copy(X[col]),OI=None,len_ma = vol_len,version = vol_norm)
             if setting+"OI" in cols:
                 ans["nVol"] = True
                 print("Normalizing Volume:"+"=>".join((col,setting+"OI")))
@@ -188,10 +176,6 @@ def technical_indication(X,train_end,params):
                 X[setting+"PVT"] = pvt(copy(X[col]),copy(X[setting+"Volume"]))
                 X[setting+"divPVT"] = divergence_pvt(copy(X[col]),copy(X[setting+"PVT"]),train_end, 
                                                             params = params)
-            # if set([setting+"Volume",setting+"Open",setting+"High",setting+"Low"]).issubset(cols):
-            #     print("+".join((col,setting+"Volume",setting+"Open",setting+"High",setting+"Low"))+"=>"+"+".join((setting+"AD",setting+"divAD")))
-            #     X[setting+"AD"] = ad(copy(X[col]),copy(X[setting+"Low"]),copy(X[setting+"Open"]),copy(X[setting+"High"]),copy(X[setting+"Volume"]))
-            #     X[setting+"divAD"] = divergence_ad(copy(X[col]),copy(X[setting+"AD"]))
             
     return X
 
@@ -247,17 +231,6 @@ def deal_with_outlier(data):
                 average = np.mean(temp[column_name].dropna())
                 data.at[temp[column_name].idxmax(),column_name] = average
                 
-                
-
-                
-                # for item in data[(data['datetime']>=start_time)&(data['datetime']<=end_time)]['datetime']:
-                #     value = list(data[data['datetime']==item][column_name])[0]
-                #     if not np.isnan(value):
-                #         value_dict[value]=item
-                #         value_list.append(value)
-                # if len(value_list)>0:
-                #     max_item = max(value_list)
-                #     data[data['datetime']==value_dict[max_item]][column_name]=np.mean(value_list)
     #deal with the minor value in OI
     for column_name in column_list:
         temp = data[column_name]
@@ -266,36 +239,9 @@ def deal_with_outlier(data):
             start_time = ind[:-2]+'01'
             end_time = ind[:-2]+'31'
             data.at[ind,column_name] = np.mean(data.loc[(data.index >= start_time)&(data.index <= end_time)][column_name])
-        # value_list=[]
-        # value_dict={}
-        # for item in data['datetime']:
-        #     value = list(data[data['datetime']==item][column_name])[0]
-        #     value_list.append((item,value))
-        # value_list = sorted(value_list,key=lambda x:x[1],reverse=False)
-        # for i in range(20):
-        #     d = datetime.strptime(value_list[i][0], '%Y-%m-%d')
-        #     year = d.year
-        #     month = d.month
-        #     start_time = str(year)+'-'+str(month)+'-'+'01'
-        #     end_time = str(year)+'-'+str(month)+'-'+'31'
-        #     month_value_list = list(data[(data['datetime']>=start_time)&(data['datetime']<=end_time)][column_name])
-        #     data[data['datetime']==value_list[i][0]][column_name]=np.mean(month_value_list)
     #missing value interpolate
     data = data.interpolate(axis = 0)
-    # for column in data.columns:
-    #     print(column)
-    #     value_nan_list=[]
-    #     for i,item in enumerate(data[column]):
-    #         if np.isnan(item):
-    #             value_nan_list.append(i)
-    #         else:
-    #             if len(value_nan_list)!=0:
-    #                 start_item = data[column][value_nan_list[0]-1]
-    #                 end_item = data[column][value_nan_list[len(value_nan_list)-1]+1]
-    #                 step = float(end_item-start_item)/len(value_nan_list)
-    #                 for j,nan_item in enumerate(value_nan_list):
-    #                     data[column][nan_item]=start_item+step*(j+1)
-    #                 value_nan_list=[]
+
     return data
 
 def gaussian_scaling(X,train_end):
