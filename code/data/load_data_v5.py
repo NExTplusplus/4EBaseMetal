@@ -106,7 +106,7 @@ def load_data_v5(config, horizon, ground_truth_columns, lags, source, split_date
     for ind in range(len(time_series)):
         time_series[ind] = pd.concat([time_series[ind], labels[ind]], axis = 1)
         time_series[ind] = process_missing_value_v3(time_series[ind],1)
-    save_data("i6",time_series[0],time_series[0].columns.values.tolist())
+    #save_data("i6",time_series[0],time_series[0].columns.values.tolist())
 
     '''
     create 3d array with dimensions (n_samples, lags, n_features)
