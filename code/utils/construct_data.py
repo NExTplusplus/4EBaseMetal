@@ -210,7 +210,7 @@ def labelling(X,horizon, ground_truth_columns):
     return ans
 
 
-def deal_with_outlier(data):
+def deal_with_abnormal_value(data):
     #deal with the big value
     column_list = []
     for column in data.columns:
