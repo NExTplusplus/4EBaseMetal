@@ -279,12 +279,13 @@ def read_data_v5_4E(start_date):
                                             "DCE_AC_Open","DCE_AC_High","DCE_AC_Low","DCE_AC_Close","DCE_AC_Volume","DCE_AC_OI"
                                             ])
 
-    SHFE = robjects.r('''merge(getGenOHLCV("AAcl", start = "'''+start_date+'''"), getGenOHLCV("CUcl",start = "'''+start_date+'''"),
-                            getGenOHLCV("RTcl", start = "'''+start_date+'''")[,1:5],getDataAl("CNYUSD Curncy", start = "'''+start_date+'''"))
+    SHFE = robjects.r('''merge(getGenOHLCV("AAcl", start = "'''+start_date+'''"), getGenOHLCV("CUcl",start = "'''+start_date+'''")[,1:3],
+    			getGenOHLCV("CUcl",start = "'''+start_date+'''")[,5:6],getGenOHLCV("RTcl", start = "'''+start_date+'''")[,1:5],
+			getDataAl("CNYUSD Curncy", start = "'''+start_date+'''"))
                         ''')
 
     SHFE.colnames = robjects.vectors.StrVector(["SHFE_Al_Open","SHFE_Al_High","SHFE_Al_Low","SHFE_Al_Close","SHFE_Al_Volume","SHFE_Al_OI",
-                                            "SHFE_Co_Open","SHFE_Co_High","SHFE_Co_Low","SHFE_Co_Close","SHFE_Co_Volume","SHFE_Co_OI",
+                                            "SHFE_Co_Open","SHFE_Co_High","SHFE_Co_Low","SHFE_Co_Volume","SHFE_Co_OI",
                                                 "SHFE_RT_Open","SHFE_RT_High","SHFE_RT_Low","SHFE_RT_Close","SHFE_RT_Volume", "CNYUSD"                                                    
                                             ]) 
 
