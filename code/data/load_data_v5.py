@@ -45,8 +45,8 @@ def load_data_v5(config, horizon, ground_truth_columns, lags, source, split_date
         data_list, LME_dates = read_data_NExT(config, split_dates[0])
         time_series = pd.concat(data_list, axis = 1, sort = True)
     elif source == "4E":
-        from utils.read_data import read_data_4E
-        time_series, LME_dates = read_data_4E(split_dates[0])
+        from utils.read_data import read_data_v5_4E
+        time_series, LME_dates = read_data_v5_4E(split_dates[0])
     
 
     
