@@ -70,6 +70,7 @@ def load_data_v5(config, horizon, ground_truth_columns, lags, source, split_date
     
     all_cols = []
     if len(ground_truth_columns) > 1:
+        print("mistake")
         # for ground_truth in ground_truth_columns:
         #     temp = copy(time_series)
         #     temp['self'] = copy(temp[ground_truth])
