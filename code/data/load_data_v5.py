@@ -29,18 +29,18 @@ def load_data_v5(config, horizon, ground_truth_columns, lags, source, split_date
     """
     input: config: A file to define which file we load and which column we use.
            split_dates: define the time that we use to define the range of the data.
-           horizon: (int) The number of days we need to forecast.
+           horizon: (int) The time horizon.
            ground_truth_columns: (str)The column name that we want to predict.
            lags: (int)the length of the data to the logistic regression.
            source: (str)An identifier of the source of data, takes in only two values ["4E", "NExT"]. Based on the source, the function will read data differently
-           norm_params: (dictionary)contains the param we need to normalize OI, Volume and Spread.
+           norm_params: (dictionary)contains the param we need to normalize OI, Volume ,and Spread.
                         'vol_norm': Version of volume normalization
                         'len_ma': length of period to compute moving average
                         'len_update': length of period to update moving average
                         'spot_spread_norm': Version of 3 months to spot spread normalization
                         'strength': Strength of thresholding for OI and Volume
                         'both': Sides of thresholding (0 for no thresholding, 1 for left, 2 for right, 3 for both sides) for OI and Volume
-                        'ex_spread_norm': Version of cross exchange spread normalization
+                        'ex_spread_norm': Version of the cross exchange spread normalization
            tech_params: (dictionary)contains the param we need to create technical indicators.
                         'strength': Strength of thresholding for divPVT 
                         'both': Sides of thresholding (0 for no thresholding, 1 for left, 2 for right, 3 for both sides)
