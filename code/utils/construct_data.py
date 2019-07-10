@@ -244,7 +244,7 @@ def deal_with_abnormal_value(data):
 
     return data
 
-def gaussian_scaling(X,train_end):
+def scaling(X,train_end):
     scaler = preprocessing.StandardScaler()
     scaler.fit(X.iloc[:train_end,].values)
     X = pd.DataFrame(scaler.transform(X), index = X.index, columns = X.columns)
