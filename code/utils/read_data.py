@@ -118,7 +118,7 @@ def identify_exchange(fpath):
 		Input
 		fpath(str)		: filepath of csv file
 		Output
-		exchange(str)	: Name of exchange on which asset is being traded
+		exchange(str)		: Name of exchange on which asset is being traded
 	'''
     folders = fpath.split("/")
     if folders[-1] == "CNYUSD Curncy.csv":
@@ -179,7 +179,7 @@ def m2ar(matrix,lag = False):
 		convert from rmatrix to pandas DataFrame (4E server only)
 		Input
 		matrix(rmatrix)		: rmatrix that holds data with index of date
-		lag(bool)			: Boolean to decide whether lagging is required 
+		lag(bool)		: Boolean to decide whether lagging is required 
 		Output
 		time_series(df)		: Pandas DataFrame similar to output of read_single_csv
 	'''
@@ -206,7 +206,7 @@ def read_data_NExT(config,start_date):
 		config(dict)		: Dictionary with (fpath of csv, columns to read from csv) as key value pair
 		start_date(str)		: Date that we start considering data
 		Output
-		data(df)			: A single Pandas Dataframe that holds all listed columns from their respective exchanges and for their respective metals
+		data(df)		: A single Pandas Dataframe that holds all listed columns from their respective exchanges and for their respective metals
 		LME_dates(list)		: list of dates on which LME has trading operations
 	'''
 
@@ -236,8 +236,8 @@ def read_data_v5_4E(start_date):
 		Input
 		start_date(str)		: Date that we start considering data
 		Output
-		data(df)			: A single Pandas Dataframe that holds all listed columns from their respective exchanges and for their respective metals
-		dates(list)			: list of dates on which LME has trading operations
+		data(df)		: A single Pandas Dataframe that holds all listed columns from their respective exchanges and for their respective metals
+		dates(list)		: list of dates on which LME has trading operations
 	'''
     import rpy2.robjects as robjects
     robjects.r('.sourceAlfunction()')
