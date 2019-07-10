@@ -29,8 +29,13 @@ def load_data_v5(config, horizon, ground_truth_columns, lags, source, split_date
     """
     input: config: A file to define which file we load and which column we use.
            split_dates: define the time that we use to define the range of the data.
-    output:data_list: A list contains the data from the file or Database.
-           LME_dates: A list contains the LME's date.
+           horizon: (int) The number of days we need to forecast.
+           ground_truth_columns: (str)The column name that we want to predict.
+           lags: (int)the length of the data to the logistic regression.
+           source: (str)An identifier of the source of data, takes in only two values ["4E", "NExT"]. Based on the source, the function will read data differently
+           norm_params: (dictionary)contains the param we need to train the model.
+           tech_params: (dictionary)contains the param we need to train the model.
+    output:
     """
     if source =="NExT":
         from utils.read_data import read_data_NExT
