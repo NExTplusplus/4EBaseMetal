@@ -117,10 +117,14 @@ def construct_keras_data(time_series, ground_truth_index, sequence_length):
     return X_train, Y_train, X_val, Y_val, X_test, Y_test, Y_daybefore_val, Y_daybefore_tes, unnormalized_bases_val, unnormalized_bases_tes, window_size
 
 #we use this function to make the data normalization
-def normalize_without_return(X,train_end, params):
+def normalize_without_1d_return(timeseries,train_end, params):
+    """
+    timeseries: the data we get from the dataframe
+    
+    """
     ans = {"nVol":False,"nSpread":False,"nEx":False}
-
-    cols = X.columns.values.tolist()
+    
+    cols = timeseries.columns.values.tolist()
     ex = False
     if "CNYUSD" in cols:
         print("Considering Exchange Rate")
@@ -129,13 +133,13 @@ def normalize_without_return(X,train_end, params):
     for col in cols:
         if "OI" in col:
             print("Normalizing OI:"+"=>".join((col,col[:-2]+"nOI")))
-            X[col[:-2]+"nOI"] = normalize_OI(copy(X[col]),train_end,strength = params['strength'], both = params['both'])
+            timeseries[col[:-2]+"nOI"] = normalize_OI(copy(timeseries[col]),train_end,strength = params['strength'], both = params['both'])
         if "Volume" in col:
             setting = col[:-6]
             if setting+"OI" in cols:
                 ans["nVol"] = True
                 print("Normalizing Volume:"+"=>".join((col,setting+"OI")))
-                X[setting+"nVolume"] = normalize_volume(copy(X[col]), train_end = train_end, OI = copy(X[setting+"OI"]),
+                timeseries[setting+"nVolume"] = normalize_volume(copy(timeseries[col]), train_end = train_end, OI = copy(timeseries[setting+"OI"]),
                                                         len_ma = params['len_ma'],version = params['vol_norm'], 
                                                         strength = params['strength'], both = params['both'])
         if "Close" in col:
@@ -143,7 +147,7 @@ def normalize_without_return(X,train_end, params):
             if setting+"Spot" in cols:
                 ans["nSpread"] = True
                 print("Normalizing Spread:"+"=>".join((col,setting+"Spot")))
-                X[setting+"n3MSpread"] = normalize_3mspot_spread(copy(X[col]),copy(X[setting+"Spot"]),
+                timeseries[setting+"n3MSpread"] = normalize_3mspot_spread(copy(timeseries[col]),copy(timeseries[setting+"Spot"]),
                                                                 len_update=params['len_update'],
                                                                 version = params['spot_spread_norm'])
         if "SHFE" in col and "Close" in col and ex:
@@ -151,19 +155,19 @@ def normalize_without_return(X,train_end, params):
             if "_".join(("LME",metal,"Spot")) in cols:
                 ans["nEx"] = True
                 print("+".join((col,"_".join(("LME",metal,"Spot"))))+"=>"+"_".join(("SHFE",metal,"nEx3MSpread")))
-                X["_".join(("SHFE",metal,"nEx3MSpread"))] = normalize_3mspot_spread_ex(copy(X["_".join(("LME",metal,"Spot"))]),
-                                                                                    copy(X[col]),copy(X["CNYUSD"]),
+                timeseries["_".join(("SHFE",metal,"nEx3MSpread"))] = normalize_3mspot_spread_ex(copy(timeseries["_".join(("LME",metal,"Spot"))]),
+                                                                                    copy(timeseries[col]),copy(timeseries["CNYUSD"]),
                                                                                     len_update=params['len_update'],
                                                                                     version = params['ex_spread_norm'])
             if "_".join(("LME",metal,"Close")) in cols:
                 ans["nEx"] = True
                 print("+".join((col,"_".join(("LME",metal,"Close"))))+"=>"+"_".join(("SHFE",metal,"nEx3MSpread")))
-                X["_".join(("SHFE",metal,"nExSpread"))] = normalize_3mspot_spread_ex(copy(X["_".join(("LME",metal,"Close"))]),
-                                                                                    copy(X[col]),copy(X["CNYUSD"]),
+                timeseries["_".join(("SHFE",metal,"nExSpread"))] = normalize_3mspot_spread_ex(copy(timeseries["_".join(("LME",metal,"Close"))]),
+                                                                                    copy(timeseries[col]),copy(timeseries["CNYUSD"]),
                                                                                     len_update=params['len_update'],
                                                                                     version = params['ex_spread_norm'])
             
-    return X, ans
+    return timeseries, ans
 
 #this function is to build the technical indicator which is called PVT
 def technical_indication(X,train_end,params):
