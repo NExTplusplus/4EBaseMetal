@@ -27,19 +27,6 @@ def save_data(fname,time_series,columns, ground_truth = None):
             out.write("\n")
 def load_data_v5(config, horizon, ground_truth_columns, lags, source, split_dates, norm_params, tech_params):
     
-    '''
-    Load data into individual dataframes and merge them into a single dataframe
-    
-    the read_data function has two inputs and two outputs:
-    Input
-    config(dict) 	: A dictionary with keys of filepaths relative to 4EBaseMetal folder
-                      and values of a list of columns to be read from a stated path
-    source(str)		: An identifier of the source of data, takes in only two values ["4E","NExT"]
-                      Based on the source, the function will read data differently
-    Output
-    data_list(list)	: A list of datasets, each representing a file and its respective columns (if source is NExT)
-    LME_dates(list)	: A list of dates(string) where LME has trading operations
-    '''
     if source =="NExT":
         from utils.read_data import read_data_NExT
         data_list, LME_dates = read_data_NExT(config, split_dates[0])
@@ -58,8 +45,6 @@ def load_data_v5(config, horizon, ground_truth_columns, lags, source, split_date
     Handle NA values that belong to Class 3 (missing data)
     '''
     time_series = deal_with_abnormal_value(time_series)
-    # time_series = process_missing_value_v3(time_series,0)
-    # save_data("i4",time_series,time_series.columns)
     '''
     Extract the rows with dates where LME has trading operations
     and generate labels
