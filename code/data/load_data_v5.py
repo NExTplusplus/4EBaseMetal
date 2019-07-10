@@ -45,12 +45,11 @@ def load_data_v5(config, horizon, ground_truth_columns, lags, source, split_date
                         'strength': Strength of thresholding for divPVT 
                         'both': Sides of thresholding (0 for no thresholding, 1 for left, 2 for right, 3 for both sides)
     output:
-           data: we use to feed into the model
-           norm_check: we use this to check whether any column specific normalization is triggered. 
-           It is a dict with 3 key value pairs
-           nVol (boolean) : check True if volume is normalized
-           nSpread(boolean) : check True if Spread is produced
-           nEx(boolean) : check True if Cross Exchange Spread is produced
+           data: (array)An array contains the data that we use to feed into the model
+           norm_check: (dictionary)we use this to check whether any column specific normalization is triggered. It is a dictionary with 3 key-value pairs
+                        nVol (boolean) : check True if volume is normalized
+                        spread(boolean): check True if Spread is produced
+                        nEx(boolean): check True if Cross Exchange Spread is produced
            
     """
     if source =="NExT":
