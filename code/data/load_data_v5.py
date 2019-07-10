@@ -33,9 +33,25 @@ def load_data_v5(config, horizon, ground_truth_columns, lags, source, split_date
            ground_truth_columns: (str)The column name that we want to predict.
            lags: (int)the length of the data to the logistic regression.
            source: (str)An identifier of the source of data, takes in only two values ["4E", "NExT"]. Based on the source, the function will read data differently
-           norm_params: (dictionary)contains the param we need to train the model.
-           tech_params: (dictionary)contains the param we need to train the model.
+           norm_params: (dictionary)contains the param we need to normalize OI, Volume and Spread.
+                        'vol_norm': Version of volume normalization
+                        'len_ma': length of period to compute moving average
+                        'len_update': length of period to update moving average
+                        'spot_spread_norm': Version of 3 months to spot spread normalization
+                        'strength': Strength of thresholding for OI and Volume
+                        'both': Sides of thresholding (0 for no thresholding, 1 for left, 2 for right, 3 for both sides) for OI and Volume
+                        'ex_spread_norm': Version of cross exchange spread normalization
+           tech_params: (dictionary)contains the param we need to create technical indicators.
+                        'strength': Strength of thresholding for divPVT 
+                        'both': Sides of thresholding (0 for no thresholding, 1 for left, 2 for right, 3 for both sides)
     output:
+           data: we use to feed into the model
+           norm_check: we use this to check whether any column specific normalization is triggered. 
+           It is a dict with 3 key value pairs
+           nVol (boolean) : check True if volume is normalized
+           nSpread(boolean) : check True if Spread is produced
+           nEx(boolean) : check True if Cross Exchange Spread is produced
+           
     """
     if source =="NExT":
         from utils.read_data import read_data_NExT
