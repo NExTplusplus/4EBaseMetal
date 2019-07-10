@@ -26,7 +26,12 @@ def save_data(fname,time_series,columns, ground_truth = None):
                 out.write(str(ground_truth[i]))
             out.write("\n")
 def load_data_v5(config, horizon, ground_truth_columns, lags, source, split_dates, norm_params, tech_params):
-    
+    """
+    input: config: A file to define which file we load and which column we use.
+           split_dates: define the time that we use to define the range of the data.
+    output:data_list: A list contains the data from the file or Database.
+           LME_dates: A list contains the LME's date.
+    """
     if source =="NExT":
         from utils.read_data import read_data_NExT
         data_list, LME_dates = read_data_NExT(config, split_dates[0])
@@ -34,15 +39,9 @@ def load_data_v5(config, horizon, ground_truth_columns, lags, source, split_date
     elif source == "4E":
         from utils.read_data import read_data_v5_4E
         time_series, LME_dates = read_data_v5_4E(split_dates[0])
-    
-
-    
-    '''
-    Handle data errors in the data
-    '''
 
     '''
-    Handle NA values that belong to Class 3 (missing data)
+    deal with the abnormal data which we found in the data. 
     '''
     time_series = deal_with_abnormal_value(time_series)
     '''
