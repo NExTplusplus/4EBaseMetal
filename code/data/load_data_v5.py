@@ -8,7 +8,7 @@ import json
 from utils.read_data import  process_missing_value_v3
 from utils.normalize_feature import log_1d_return, normalize_volume, normalize_3mspot_spread, normalize_OI, normalize_3mspot_spread_ex
 from utils.transform_data import flatten
-from utils.construct_data import construct,normalize,technical_indication,construct_keras_data,gaussian_scaling,labelling,deal_with_outlier
+from utils.construct_data import construct,normalize,technical_indication,construct_keras_data,gaussian_scaling,labelling,deal_with_abnormal_value
 
 def save_data(fname,time_series,columns, ground_truth = None):
     col_name = ""
@@ -57,7 +57,7 @@ def load_data_v5(config, horizon, ground_truth_columns, lags, source, split_date
     '''
     Handle NA values that belong to Class 3 (missing data)
     '''
-    time_series = deal_with_outlier(time_series)
+    time_series = deal_with_abnormal_value(time_series)
     # time_series = process_missing_value_v3(time_series,0)
     # save_data("i4",time_series,time_series.columns)
     '''
