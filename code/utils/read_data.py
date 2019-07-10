@@ -173,7 +173,7 @@ def read_data_NExT(config,start_date):
     return data, LME_dates.tolist()
 
 
-def read_data_4E(start_date):
+def read_data_v5_4E(start_date):
     import rpy2.robjects as robjects
     robjects.r('.sourceAlfunction()')
     LME = robjects.r('''merge(getSecurity("LMCADY Comdty", start = "'''+start_date+'''"), getSecurity("LMAHDY Comdty", start = "'''+start_date+'''"),
