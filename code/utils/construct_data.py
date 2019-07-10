@@ -119,8 +119,9 @@ def construct_keras_data(time_series, ground_truth_index, sequence_length):
 #we use this function to make the data normalization
 def normalize_without_1d_return(timeseries,train_end, params):
     """
-    timeseries: the data we get from the dataframe
-    
+    timeseries: the dataframe we get from the data source
+    train_end: string which we use to define the range we use to train
+    params: A dictionary we use to feed the parameter
     """
     ans = {"nVol":False,"nSpread":False,"nEx":False}
     
@@ -131,9 +132,11 @@ def normalize_without_1d_return(timeseries,train_end, params):
         ex = True
     #normalize the data based on the specific column
     for col in cols:
+        #use the normalize_OI function to deal with the OI
         if "OI" in col:
             print("Normalizing OI:"+"=>".join((col,col[:-2]+"nOI")))
             timeseries[col[:-2]+"nOI"] = normalize_OI(copy(timeseries[col]),train_end,strength = params['strength'], both = params['both'])
+        #use the normalize_volume function to deal with the volume
         if "Volume" in col:
             setting = col[:-6]
             if setting+"OI" in cols:
@@ -142,6 +145,7 @@ def normalize_without_1d_return(timeseries,train_end, params):
                 timeseries[setting+"nVolume"] = normalize_volume(copy(timeseries[col]), train_end = train_end, OI = copy(timeseries[setting+"OI"]),
                                                         len_ma = params['len_ma'],version = params['vol_norm'], 
                                                         strength = params['strength'], both = params['both'])
+        #use the normalize_3mspot_spread function to create 3 month close to spot spread
         if "Close" in col:
             setting = col[:-5]
             if setting+"Spot" in cols:
@@ -150,6 +154,7 @@ def normalize_without_1d_return(timeseries,train_end, params):
                 timeseries[setting+"n3MSpread"] = normalize_3mspot_spread(copy(timeseries[col]),copy(timeseries[setting+"Spot"]),
                                                                 len_update=params['len_update'],
                                                                 version = params['spot_spread_norm'])
+        #use the normalize_3mspot_spread_ex function to create cross exchange spread
         if "SHFE" in col and "Close" in col and ex:
             metal = col.split("_")[1]
             if "_".join(("LME",metal,"Spot")) in cols:
@@ -171,6 +176,11 @@ def normalize_without_1d_return(timeseries,train_end, params):
 
 #this function is to build the technical indicator which is called PVT
 def technical_indication(X,train_end,params):
+    """
+    X: which equals the timeseries
+    train_end: string which we use to define the range we use to train
+    params: A dictionary we use to feed the parameter
+    """
     cols = X.columns.values.tolist()
     for col in cols:
         if "Close" in col:
@@ -183,26 +193,13 @@ def technical_indication(X,train_end,params):
             
     return X
 
-
-def rescale(X):
-    X_copy = copy(X)
-    X_copy = X_copy.applymap(np.abs)
-    average = X_copy.apply(np.mean,axis = 0)
-
-    for i in range(len(average)):
-        mean = average[i]
-    
-        while mean < 0.1:
-            mean = mean * 10
-            X[X.columns[i]] = X[X.columns[i]] * 10
-        while mean > 1:
-            mean = mean * 0.1
-            X[X.columns[i]] = X[X.columns[i]] * 0.1
-
-    return X
-
 #the function is to labelling the target and rename the result
 def labelling(X,horizon, ground_truth_columns):
+    """
+    X: which equals the timeseries
+    horizon: the time hoizon
+    ground_truth_columns: the column we predict
+    """
     assert ground_truth_columns != []
     ans = []
     for ground_truth in ground_truth_columns:
@@ -249,6 +246,10 @@ def deal_with_abnormal_value(data):
     return data
 #this function is to scale the data use the standardscaler
 def scaling(X,train_end):
+    """
+    X:which equals the timeseries
+    train_end:string which we choose to define the time range
+    """
     scaler = preprocessing.StandardScaler()
     scaler.fit(X.iloc[:train_end,].values)
     X = pd.DataFrame(scaler.transform(X), index = X.index, columns = X.columns)
