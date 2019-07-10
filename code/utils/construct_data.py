@@ -27,7 +27,7 @@ def construct(time_series, ground_truth, start_ind, end_ind, T, h, norm_method):
             num += 1
     X = np.zeros([num, T, time_series.shape[1]], dtype=np.float32)
     y = np.zeros([num, 1], dtype=np.float32)
-
+    #construct the data by the time index
     sample_ind = 0
     for ind in range(start_ind, end_ind):
         if not time_series.iloc[ind - T + 1 : ind + 1].isnull().values.any():
@@ -116,7 +116,7 @@ def construct_keras_data(time_series, ground_truth_index, sequence_length):
     
     return X_train, Y_train, X_val, Y_val, X_test, Y_test, Y_daybefore_val, Y_daybefore_tes, unnormalized_bases_val, unnormalized_bases_tes, window_size
 
-
+#we use this function to make the data normalization
 def normalize(X,train_end, params):
     ans = {"nVol":False,"nSpread":False,"nEx":False}
 
@@ -125,7 +125,7 @@ def normalize(X,train_end, params):
     if "CNYUSD" in cols:
         print("Considering Exchange Rate")
         ex = True
-    
+    #normalize the data based on the specific column
     for col in cols:
         if "OI" in col:
             print("Normalizing OI:"+"=>".join((col,col[:-2]+"nOI")))
@@ -165,7 +165,7 @@ def normalize(X,train_end, params):
             
     return X, ans
 
-
+#this function is to build the technical indicator which is called PVT
 def technical_indication(X,train_end,params):
     cols = X.columns.values.tolist()
     for col in cols:
@@ -197,7 +197,7 @@ def rescale(X):
 
     return X
 
-
+#the function is to labelling the target and rename the result
 def labelling(X,horizon, ground_truth_columns):
     assert ground_truth_columns != []
     ans = []
@@ -209,7 +209,7 @@ def labelling(X,horizon, ground_truth_columns):
         ans.append(labels)
     return ans
 
-
+#the function is to deal with the abnormal data
 def deal_with_abnormal_value(data):
     #deal with the big value
     column_list = []
@@ -243,7 +243,7 @@ def deal_with_abnormal_value(data):
     data = data.interpolate(axis = 0)
 
     return data
-
+#this function is to scale the data use the standardscaler
 def scaling(X,train_end):
     scaler = preprocessing.StandardScaler()
     scaler.fit(X.iloc[:train_end,].values)
