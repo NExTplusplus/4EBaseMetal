@@ -85,23 +85,41 @@ def process_missing_value_v3(X,cons_data):
 
 
 def identify_col(col_name):
+	'''
+		Identify the feature on the level of OHLCV,OI (not including exchange and metal) and standardize the name of said feature across all exchange and metals
+		Input
+		col_name(str)	: the name of the column
+		Output
+		col_name(str)	: the name of the column that is standardized across all exchange and metals
+	'''
     col_name = str.strip(col_name)
     if col_name in ["Open","Open.Price"]:
+		# column represent Open Price
         return "Open"
     elif col_name in ["High","High.Price"]:
+		# column represent High Price
         return "High"
     elif col_name in ["Low","Low.Price"]:
+		# column represent Low Price
         return "Low"
     elif col_name in ["Close","Close.Price"]:
+		# column represent Close Price
         return "Close"
     elif col_name in ["Open.Interest","Open Interest"] or col_name[6:] == "03":
-        print(col_name)
+        # column represent Open Interest
         return "OI"
     else:
         return col_name
 
 
 def identify_exchange(fpath):
+	'''
+		Identify the exchange on which the asset is being traded
+		Input
+		fpath(str)		: filepath of csv file
+		Output
+		exchange(str)	: Name of exchange on which asset is being traded
+	'''
     folders = fpath.split("/")
     if folders[-1] == "CNYUSD Curncy.csv":
         return ""
@@ -112,22 +130,42 @@ def identify_exchange(fpath):
 
 
 def identify_metal(fpath):
+	'''
+		Identify the metal which is being referred to for the 6 metals.
+		Input
+		fpath(str)		: filepath of csv file
+		Output
+		metal(str)		: returns a short form of each of the metals
+						  Copper => Co
+						  Aluminium => Al
+						  Nickel => Ni
+						  Zinc => Zi
+						  Tin => Ti
+						  Lead = Le
+	'''
 	folders = fpath.split("/")
 	f = folders[-1].strip(".csv")
+	# consider special case of LME
 	if f[0:3] == "LME":
 		return f[3:5]
 	if f[0:2] == "LM":
 		f = f[2:4]
+	# Aluminium case
 	if f in ["AA","AH"]:
 		return "Al"
+	# Copper
 	elif f in ["HG_lag1","CU","CA"]:
 		return "Co"
+	# Nickel
 	elif f in ["XII","NI"]:
 		return "Ni"
+	#Zinc
 	elif f in ["ZNA","ZS"]:
 		return "Zi"
+	#Tin
 	elif f in ["XOO","SN"]:
 		return "Ti"
+	#Lead
 	elif f in ["PBL","PB"]:
 		return "Le"
 	elif " Index" in f or " Curncy" in f:
@@ -137,6 +175,14 @@ def identify_metal(fpath):
 
 
 def m2ar(matrix,lag = False):
+	'''
+		convert from rmatrix to pandas DataFrame (4E server only)
+		Input
+		matrix(rmatrix)		: rmatrix that holds data with index of date
+		lag(bool)			: Boolean to decide whether lagging is required 
+		Output
+		time_series(df)		: Pandas DataFrame similar to output of read_single_csv
+	'''
     from rpy2.robjects.packages import importr
     rbase = importr('base')
     rzoo = importr('zoo')
@@ -154,6 +200,15 @@ def m2ar(matrix,lag = False):
 
 
 def read_data_NExT(config,start_date):
+	'''
+		Method to read data from csv files to pandas DataFrame
+		Input
+		config(dict)		: Dictionary with (fpath of csv, columns to read from csv) as key value pair
+		start_date(str)		: Date that we start considering data
+		Output
+		data(df)			: A single Pandas Dataframe that holds all listed columns from their respective exchanges and for their respective metals
+		LME_dates(list)		: list of dates on which LME has trading operations
+	'''
 
     data = []
     LME_dates = None
@@ -163,17 +218,27 @@ def read_data_NExT(config,start_date):
         df = df.loc[start_date:]
         temp = copy(df.loc["2004-11-12":])
         data.append(df)
+		# put in dates all dates that LME has operations (even if only there are metals that are not traded)
         if "LME" in fname:
             dates.append(temp.index)
     for date in dates:
         if LME_dates is None:
             LME_dates = date
         else:
-            LME_dates.union(date)
+			# Union of all LME dates
+            LME_dates = LME_dates.union(date)
     return data, LME_dates.tolist()
 
 
 def read_data_v5_4E(start_date):
+	'''
+		Method to read data from 4E database
+		Input
+		start_date(str)		: Date that we start considering data
+		Output
+		data(df)			: A single Pandas Dataframe that holds all listed columns from their respective exchanges and for their respective metals
+		dates(list)			: list of dates on which LME has trading operations
+	'''
     import rpy2.robjects as robjects
     robjects.r('.sourceAlfunction()')
     LME = robjects.r('''merge(getSecurity("LMCADY Comdty", start = "'''+start_date+'''"), getSecurity("LMAHDY Comdty", start = "'''+start_date+'''"),
