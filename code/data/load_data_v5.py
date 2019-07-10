@@ -70,13 +70,13 @@ def load_data_v5(config, horizon, ground_truth_columns, lags, source, split_date
     
     all_cols = []
     if len(ground_truth_columns) > 1:
-        for ground_truth in ground_truth_columns:
-            temp = copy(time_series)
-            temp['self'] = copy(temp[ground_truth])
-            temp.insert(0,'self',temp.pop('self'),allow_duplicates = True)
-            complete_time_series.append(temp)
-            all_cols.append(temp.columns)
-        time_series = complete_time_series
+        # for ground_truth in ground_truth_columns:
+        #     temp = copy(time_series)
+        #     temp['self'] = copy(temp[ground_truth])
+        #     temp.insert(0,'self',temp.pop('self'),allow_duplicates = True)
+        #     complete_time_series.append(temp)
+        #     all_cols.append(temp.columns)
+        # time_series = complete_time_series
     else:
         time_series.insert(0,ground_truth_columns[0],time_series.pop(ground_truth_columns[0]),allow_duplicates = True)
         time_series = [time_series]
