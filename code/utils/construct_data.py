@@ -117,7 +117,7 @@ def construct_keras_data(time_series, ground_truth_index, sequence_length):
     return X_train, Y_train, X_val, Y_val, X_test, Y_test, Y_daybefore_val, Y_daybefore_tes, unnormalized_bases_val, unnormalized_bases_tes, window_size
 
 #we use this function to make the data normalization
-def normalize(X,train_end, params):
+def normalize_without_return(X,train_end, params):
     ans = {"nVol":False,"nSpread":False,"nEx":False}
 
     cols = X.columns.values.tolist()
