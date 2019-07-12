@@ -217,7 +217,7 @@ def deal_with_abnormal_value(data):
     for column in data.columns:
         if "_OI" in column:
             column_list.append(column)
-    year_list = list(range(int(data.index[0].split("-")[0]),int(data.index[-1].split("-")[0])))
+    year_list = list(range(int(data.index[0].split("-")[0]),int(data.index[-1].split("-")[0])+1))
     month_list = ['01','02','03','04','05','06','07','08','09','10','11','12']
     for column_name in column_list:   
         for year in year_list:

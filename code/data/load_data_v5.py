@@ -75,8 +75,8 @@ def load_data_v5(config, horizon, ground_truth_columns, lags, source, split_date
     Normalize, create technical indicators, handle outliers and rescale data
     '''
     org_cols = time_series.columns.values.tolist()
-    time_series, norm_params = normalize_without_1d_return(time_series, split_dates[1], params = norm_params)
-    time_series = technical_indication(time_series, split_dates[1], params = tech_params)
+    time_series, norm_params = normalize_without_1d_return(time_series, time_series.index.get_loc(split_dates[1]), params = norm_params)
+    time_series = technical_indication(time_series, time_series.index.get_loc(split_dates[1]), params = tech_params)
     for col in copy(time_series.columns):
         if "_Volume" in col or "_OI" in col or "CNYUSD" in col or "_PVT" in col:
             time_series = time_series.drop(col,axis = 1)

@@ -122,9 +122,10 @@ def normalize_3mspot_spread (close,spot_col,len_update = 30 ,version="v1"):
 def normalize_3mspot_spread_ex (lme_col,shfe_col,exchange,len_update = 30 ,version="v1"):
     shfe_usd = shfe_col*exchange
     if version == "v1":
-        return np.log(lme_col)- np.log(shfe_usd)
+        return np.log(lme_col) - np.log(shfe_usd)
     elif version == "v2":
         lme = np.log(lme_col)
+        shfe_usd = np.log(shfe_usd)
         relationship = lme.shift(len_update)
         model = sm.OLS(lme[0:len_update],shfe_usd[0:len_update])
         results = model.fit()
