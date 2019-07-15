@@ -11,7 +11,6 @@ import joblib
 from copy import copy
 import statistics
 sys.path.insert(0,os.path.abspath(os.path.join(sys.path[0],"..")))
-from data.load_rnn import load_pure_log_reg
 from data.load_data_v5 import load_data_v5
 from utils.transform_data import flatten
 
@@ -30,15 +29,7 @@ if __name__ == '__main__':
     parser.add_argument('-max_iter','--max_iter',type=int,default=100,
                         help='max number of iterations')
     parser.add_argument(
-        '-min', '--model_path', help='path to load model',
-        type=str, default='../../exp/log_reg/model'
-    )   
-    parser.add_argument(
         '-v','--version', help='version', type = int, default = 1
-    )
-    parser.add_argument(
-        '-mout', '--model_save_path', type=str, help='path to save model',
-        default='../../exp/log_reg/model'
     )
     parser.add_argument ('-out','--output',type = str, help='output file', default ="../../../Results/results")
     parser.add_argument('-o', '--action', type=str, default='train',
@@ -64,7 +55,7 @@ if __name__ == '__main__':
     if args.ground_truth == "All":
         gt = "All"
 
-    directory = os.listdir(os.path.abspath(os.path.join(sys.path[0],"..","..","mingwei","NExT","4EBaseMetal","exp",str(args.steps)+"d",gt,"logistic_regression","v"+str(args.version))))
+    directory = os.listdir(os.path.abspath(os.path.join(sys.path[0],"exp",str(args.steps)+"d",gt,"logistic_regression","v"+str(args.version))))
 
     tra_date = '2003-11-12'
     val_date = '2016-06-01'
@@ -75,15 +66,15 @@ if __name__ == '__main__':
     tol = 1e-7
 
 
-    with open(os.path.join(sys.path[0],"..","..","mingwei","NExT","4EBaseMetal","exp",str(args.steps)+"d",gt,"logistic_regression","v"+str(args.version),args.ground_truth+"_v"+str(args.version)+".conf")) as fin:
+    with open(os.path.join(sys.path[0],"exp",str(args.steps)+"d",gt,"logistic_regression","v"+str(args.version),args.ground_truth+"_v"+str(args.version)+".conf")) as fin:
         fname_columns = json.load(fin)[0]
 
-    for n in range(60):
+    for n in range(len(directory)):
         print(n)
         if "n"+str(n+1)+".joblib" not in directory:
             continue
-        model = joblib.load(os.path.abspath(os.path.join(sys.path[0],"..","..","mingwei","NExT","4EBaseMetal","exp",str(args.steps)+"d",gt,"logistic_regression","v"+str(args.version),"n"+str(n+1)+".joblib")))
-        with open(os.path.abspath(os.path.join(sys.path[0],"..","..","mingwei","NExT","Results",args.ground_truth+"_h"+str(args.steps)+"_v"+str(args.version)+".csv"))) as f:
+        model = joblib.load(os.path.abspath(os.path.join(sys.path[0],"exp",str(args.steps)+"d",gt,"logistic_regression","v"+str(args.version),"n"+str(n+1)+".joblib")))
+        with open(os.path.abspath(os.path.join(sys.path[0],"..","Results",args.ground_truth+"_h"+str(args.steps)+"_v"+str(args.version)+".csv"))) as f:
             lines = f.readlines()
             rel_line = lines[n+1].split(",")
             lag = int(rel_line[1])
@@ -123,7 +114,7 @@ if __name__ == '__main__':
 
             # print(model.predict_proba(X_tr))
 
-            with open(os.path.abspath(os.path.join(sys.path[0],"..","..","mingwei","NExT","Results",args.ground_truth+"_h"+str(args.steps)+"_v"+str(args.version)+"_n"+str(n+1)+"_probs.csv")),"w") as out:
+            with open(os.path.abspath(os.path.join(sys.path[0],"..","Results",args.ground_truth+"_h"+str(args.steps)+"_v"+str(args.version)+"_n"+str(n+1)+"_probs.csv")),"w") as out:
                 out.write("Negative Prob,Positive Prob,Prob Diff,Pred,TrueVal\n")
                 prob = model.predict_proba(X_va)
                 prob_diff = [abs(p[1]-p[0]) for p in prob]
