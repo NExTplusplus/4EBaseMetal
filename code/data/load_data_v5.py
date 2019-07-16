@@ -146,7 +146,7 @@ def load_data_v5(config, horizon, ground_truth_columns, lags, source, split_date
 
         # construct the testing
         if tes_ind < time_series[ind].shape[0]-horizon-1:
-            temp = construct(time_series[ind][all_cols[ind]], time_series[ind]["Label"], tes_ind, time_series[ind].shape[0]-horizon-1, lags, horizon, 'log_1d_return')
+            temp = construct(time_series[ind][all_cols[ind]], time_series[ind]["Label"], tes_ind, time_series[ind].shape[0]-1, lags, horizon, 'log_1d_return')
             X_te.append(temp[0])
             y_te.append(temp[1])
         else:
