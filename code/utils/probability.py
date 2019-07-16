@@ -74,7 +74,7 @@ if __name__ == '__main__':
         if "n"+str(n+1)+".joblib" not in directory:
             continue
         model = joblib.load(os.path.abspath(os.path.join(sys.path[0],"exp",str(args.steps)+"d",gt,"logistic_regression","v"+str(args.version),"n"+str(n+1)+".joblib")))
-        with open(os.path.abspath(os.path.join(sys.path[0],"..","Results",args.ground_truth+"_h"+str(args.steps)+"_v"+str(args.version)+".csv"))) as f:
+        with open(os.path.abspath(os.path.join(sys.path[0],"Results",args.ground_truth+"_h"+str(args.steps)+"_v"+str(args.version)+".csv"))) as f:
             lines = f.readlines()
             rel_line = lines[n+1].split(",")
             lag = int(rel_line[1])
@@ -114,7 +114,7 @@ if __name__ == '__main__':
 
             # print(model.predict_proba(X_tr))
 
-            with open(os.path.abspath(os.path.join(sys.path[0],"..","Results",args.ground_truth+"_h"+str(args.steps)+"_v"+str(args.version)+"_n"+str(n+1)+"_probs.csv")),"w") as out:
+            with open(os.path.abspath(os.path.join(sys.path[0],"Results",args.ground_truth+"_h"+str(args.steps)+"_v"+str(args.version)+"_n"+str(n+1)+"_probs.csv")),"w") as out:
                 out.write("Negative Prob,Positive Prob,Prob Diff,Pred,TrueVal\n")
                 prob = model.predict_proba(X_va)
                 prob_diff = [abs(p[1]-p[0]) for p in prob]
