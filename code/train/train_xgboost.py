@@ -69,8 +69,7 @@ if __name__ == '__main__':
                 # best_ns = ""
                 # best_ne = ""
                 for lag in [5,10, 20, 30]:
-                    for C in [0.01,0.1,1,10,100]:
-                        for norm_volume in ["v1","v2","v4"]:
+                    for norm_volume in ["v1","v2","v4"]:
                             n+=1
                             norm_3m_spread = "v1"
                             norm_ex = "v2"
