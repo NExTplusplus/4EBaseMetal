@@ -62,7 +62,7 @@ if __name__ == '__main__':
                 lag=20
                 norm_volume = "v1"
                 norm_3m_spread = "v1"
-                norm_ex = "v2"
+                norm_ex = "v1"
                 len_ma = 5
                 len_update = 30
                 tol = 1e-7
