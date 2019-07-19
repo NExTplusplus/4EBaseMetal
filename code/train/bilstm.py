@@ -114,7 +114,7 @@ class MultiHeadAttention(nn.Module):
 
 class bilstm(nn.Module):
     def __init__(self,input_dim=123,hidden_dim=16,output_dim=1,num_layers=2,dropout=0.5):
-        super(Net,self).__init__()
+        super(bilstm,self).__init__()
         self.input_dim=input_dim
         self.hidden_dim=hidden_dim
         self.output_dim=output_dim
