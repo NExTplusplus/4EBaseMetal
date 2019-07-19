@@ -100,7 +100,7 @@ if __name__ == '__main__':
                         xlf.fit(train_X, train_Y, eval_metric='error',verbose=True,eval_set=[(validation_X, validation_Y)], early_stopping_rounds = 10)
                         y_pred = xlf.predict(validation_X, ntree_limit=xlf.best_ntree_limit)
 
-                        auc_score = accuracy_score(validation_Y[100:], y_pred[100:])
+                        auc_score = accuracy_score(validation_Y[len(validation)-10:], y_pred[len(validation)-10:])
                         print("accuracy is {}".format(auc_score))
                         print("lag is {}".format(lag))
                         print('norm_volume is {}'.format(norm_volume))
