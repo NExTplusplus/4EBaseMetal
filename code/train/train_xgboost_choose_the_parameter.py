@@ -7,9 +7,7 @@ sys.path.insert(0,os.path.abspath(os.path.join(sys.path[0],'..')))
 import time
 import argparse
 import json
-from data.load_rnn import load_pure_log_reg
-from model.logistic_regression import LogReg
-from utils.log_reg_functions import objective_function, loss_function
+from data.load_data_v5 import load_data_v5
 import xgboost as xgb
 
 if __name__ == '__main__':
@@ -34,6 +32,9 @@ if __name__ == '__main__':
         '-v','--version', help='version', type = int, default = 5
     )
     parser.add_argument(
+        '-sou','--source', help='source of data', type = str, default = "4E"
+    )
+    parser.add_argument(
         '-mout', '--model_save_path', type=str, help='path to save model',
         default='../../exp/3d/Co/Xgboost/'
     )
@@ -52,7 +53,7 @@ if __name__ == '__main__':
     # read data configure file
     with open(os.path.join(sys.path[0],args.data_configure_file)) as fin:
         fname_columns = json.load(fin)
-
+    args.ground_truth = args.ground_truth.split(",")
     if args.action == 'train':
             comparison = None
             n = 0
