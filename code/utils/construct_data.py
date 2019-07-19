@@ -192,8 +192,26 @@ def technical_indication(X,train_end,params):
                                                             params = params)
             
     return X
+#the function is to generate experimental labelling
+def labelling_ex1(X,horizon,ground_truth_columns,lag):
+    '''
+    X: timeseries
+    horizon: the time horizon
+    ground_truth_columns: the columns we predict
+    lag: number of days before current period that the ground truth is based on
+    '''
+    assert ground_truth_columns != []
+    ans = []
+    for ground_truth in ground_truth_columns:
+        labels = copy(X[ground_truth])
+        labels = labels.shift(-horizon) - labels.shift(lag)
+        labels = labels[lag:]
+        labels = labels > 0
+        labels = labels.rename("Label")
+        ans.append(labels)
+    return ans
 
-#the function is to labelling the target and rename the result
+#the function is to label the target and rename the result
 def labelling(X,horizon, ground_truth_columns):
     """
     X: which equals the timeseries
