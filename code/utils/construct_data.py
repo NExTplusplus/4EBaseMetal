@@ -211,6 +211,15 @@ def labelling_ex1(X,horizon,ground_truth_columns,lag):
         ans.append(labels)
     return ans
 
+def labelling_ex2(X,horizon,ground_truth_columns):
+    assert ground_truth_columns != []
+    ans = []
+    for ground_truth in ground_truth_columns:
+        labels = copy(X[ground_truth])
+    return X
+
+
+
 #the function is to label the target and rename the result
 def labelling(X,horizon, ground_truth_columns):
     """

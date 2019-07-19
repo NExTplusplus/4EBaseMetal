@@ -115,7 +115,7 @@ if __name__ == '__main__':
                                 pure_LogReg = LogReg(parameters={})
 
                                 max_iter = args.max_iter
-                                parameters = {"penalty":"l2", "C":C, "solver":"lbfgs", "tol":tol,"max_iter":6*4*len(f)*max_iter, "verbose" : 0,"warm_start": False, "n_job": -1}
+                                parameters = {"penalty":"l2", "C":C, "solver":"lbfgs", "tol":tol,"max_iter":6*4*len(f)*max_iter, "verbose" : 0,"warm_start": False, "n_jobs": -1}
                                 pure_LogReg.train(X_tr,y_tr.flatten(), parameters)
                                 n_iter = pure_LogReg.n_iter()
                                 
