@@ -15,6 +15,8 @@ from torch.autograd import Variable
 
 torch.manual_seed(0)
 
+EPOCH = 50
+batch_size = 256
 class MultiHeadAttention(nn.Module):
     def __init__(self,
                  query_dim=123,
@@ -173,10 +175,8 @@ for f in fname_columns:
             test_X = list(X_va[0])
             test_Y = list(y_va[0])
             # Hyper Parameters
-            EPOCH = 50           
-            BATCH_SIZE = 256     
-            INPUT_SIZE = 28     
-            LR = 0.01           
+            EPOCH = 50
+            batch_size = 256           
             net = bilstm(input_dim=123,hidden_dim=64,output_dim=1,num_layers=2)
             optimizer = torch.optim.SGD(net.parameters(), lr=0.2)
             loss_func = torch.nn.CrossEntropyLoss()
