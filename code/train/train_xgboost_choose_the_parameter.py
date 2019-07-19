@@ -124,8 +124,9 @@ if __name__ == '__main__':
                                     start_ind, end_ind = find_zoom("2018-01-01::2018-12-31",split_dates[0])
                                     auc_score = roc_auc_score(test_Y[start_ind:end_ind+1], y_pred[start_ind:end_ind+1])
                                     print("accuracy is {}".format(auc_score))
-                                    print('Test error using softmax={}'.format(error_rate))
-                                    print("lag is {}".format(lag))
-                                    print("C is {}".format(C))
-                                    print('norm_volume is {}'.format(norm_volume)
+                                    print("max_depth is {}".format(max_depth))
+                                    print("learning_rate is {}".format(learning_rate))
+                                    print("gamma is {}".format(gamma))
+                                    print('min_child_weight is {}'.format(min_child_weight))
+                                    print('subsample is {}'.format(subsample))
 
