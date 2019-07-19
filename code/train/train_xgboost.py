@@ -72,6 +72,7 @@ if __name__ == '__main__':
                         y_tr = np.concatenate(y_tr)
                         X_va = np.concatenate(X_va)
                         y_va = np.concatenate(y_va)
+                        train = np.append(X_tr,y_tr,axis=1)
                         X_va=X_va.reshape(len(X_va),lag*123)
                         validation = np.append(X_va,y_va,axis=1)
                         train_X = train[:,:len(train[0])-2]
