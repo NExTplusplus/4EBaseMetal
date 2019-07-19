@@ -61,47 +61,36 @@ if __name__ == '__main__':
                 horizon = args.steps
                 lag=20
                 norm_volume = "v1"
-                # best_C  = 0
-                # model = None
-                # best_lag = 0
-                # max_acc = 0.0
-                # te_acc = 0.0
-                # best_nv = ""
-                # best_ns = ""
-                # best_ne = ""
+                norm_3m_spread = "v1"
+                norm_ex = "v2"
+                len_ma = 5
+                len_update = 30
+                tol = 1e-7
+                norm_params = {'vol_norm':norm_volume, 'ex_spread_norm':norm_ex,'spot_spread_norm': norm_3m_spread, 
+                               'len_ma':len_ma, 'len_update':len_update, 'both':3,'strength':0.01
+                                }
+                tech_params = {'strength':0.01,'both':3}
+                X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params = load_data_v5(f, horizon, args.ground_truth, lag, 
+                                                                              args.source, split_dates, 
+                                                                              norm_params, tech_params)
+                                     
+                X_tr = np.concatenate(X_tr)
+                X_tr=X_tr.reshape(len(X_tr),lag*123)
+                y_tr = np.concatenate(y_tr)
+                X_va = np.concatenate(X_va)
+                y_va = np.concatenate(y_va)
+                train = np.append(X_tr,y_tr,axis=1)
+                X_va=X_va.reshape(len(X_va),lag*123)
+                validation = np.append(X_va,y_va,axis=1)
+                train_X = train[:,:len(train[0])-2]
+                train_Y = train[:,len(train[0])-1]
+                validation_X = validation[:,:len(validation[0])-2]
+                validation_Y = validation[:,len(validation[0])-1]
                 for max_depth in [4,5,6]:
                     for learning_rate in [0.7,0.8,0.9]:
                         for gamma in [0.7,0.8,0.9]:
                             for min_child_weight in [3,4,5]:
                                 for subsample in [0.7,0.85,0.9]:
-                                    n+=1
-                                    norm_3m_spread = "v1"
-                                    norm_ex = "v2"
-                                    len_ma = 5
-                                    len_update = 30
-                                    tol = 1e-7
-                                    # start_time = time.time()
-                                    # load data
-                                    norm_params = {'vol_norm':norm_volume, 'ex_spread_norm':norm_ex,'spot_spread_norm': norm_3m_spread, 
-                                                'len_ma':len_ma, 'len_update':len_update, 'both':3,'strength':0.01
-                                                }
-                                    tech_params = {'strength':0.01,'both':3}
-                                    X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params = load_data_v5(f, horizon, args.ground_truth, lag, 
-                                                                                                args.source, split_dates, 
-                                                                                                norm_params, tech_params)
-                                     
-                                    X_tr = np.concatenate(X_tr)
-                                    X_tr=X_tr.reshape(len(X_tr),lag*123)
-                                    y_tr = np.concatenate(y_tr)
-                                    X_va = np.concatenate(X_va)
-                                    y_va = np.concatenate(y_va)
-                                    train = np.append(X_tr,y_tr,axis=1)
-                                    X_va=X_va.reshape(len(X_va),lag*123)
-                                    validation = np.append(X_va,y_va,axis=1)
-                                    train_X = train[:,:len(train[0])-2]
-                                    train_Y = train[:,len(train[0])-1]
-                                    validation_X = validation[:,:len(validation[0])-2]
-                                    validation_Y = validation[:,len(validation[0])-1]
                                     # train the model and test the model
                                     from sklearn.metrics import roc_auc_score
                                     xlf = xgb.XGBClassifier(max_depth=max_depth,
