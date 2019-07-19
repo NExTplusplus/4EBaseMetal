@@ -110,10 +110,8 @@ if __name__ == '__main__':
                                         seed=1440,
                                         missing=None)
                                     xlf.fit(train_X, train_Y, eval_metric='error',verbose=True,eval_set=[(validation_X, validation_Y)], early_stopping_rounds = 5)
-                                    y_pred = xlf.predict(test_X, ntree_limit=xlf.best_ntree_limit)
-
-                                    start_ind, end_ind = find_zoom("2018-01-01::2018-12-31",split_dates[0])
-                                    auc_score = roc_auc_score(test_Y[start_ind:end_ind+1], y_pred[start_ind:end_ind+1])
+                                    y_pred = xlf.predict(validation_X, ntree_limit=xlf.best_ntree_limit)
+                                    auc_score = roc_auc_score(validation_Y, y_pred)
                                     print("accuracy is {}".format(auc_score))
                                     print("max_depth is {}".format(max_depth))
                                     print("learning_rate is {}".format(learning_rate))
