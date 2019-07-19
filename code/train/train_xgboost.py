@@ -96,4 +96,4 @@ if __name__ == '__main__':
                         print("accuracy is {}".format(auc_score))
                         print('Test error using softmax={}'.format(error_rate))
                         print("lag is {}".format(lag))
-                        print('norm_volume is {}'.format(norm_volume)
+                        print('norm_volume is {}'.format(norm_volume))
