@@ -7,9 +7,7 @@ sys.path.insert(0,os.path.abspath(os.path.join(sys.path[0],'..')))
 import time
 import argparse
 import json
-from data.load_rnn import load_pure_log_reg
-from model.logistic_regression import LogReg
-from utils.log_reg_functions import objective_function, loss_function
+from data.load_data_v5 import load_data_v5 
 import xgboost as xgb
 
 if __name__ == '__main__':
@@ -29,6 +27,9 @@ if __name__ == '__main__':
     )
     parser.add_argument('-o', '--action', type=str, default='train',
                         help='train, test, tune')
+    parser.add_argument(
+        '-sou','--source', help='source of data', type = str, default = "4E"
+    )
     args = parser.parse_args()
     if args.ground_truth =='None':
         args.ground_truth = None
@@ -44,7 +45,7 @@ if __name__ == '__main__':
     # read data configure file
     with open(os.path.join(sys.path[0],args.data_configure_file)) as fin:
         fname_columns = json.load(fin)
-
+    args.ground_truth = args.ground_truth.split(",")
     if args.action == 'train':
         comparison = None
         n = 0
@@ -58,21 +59,28 @@ if __name__ == '__main__':
                         len_ma = 5
                         len_update = 30
                         tol = 1e-7
+                        norm_params = {'vol_norm':norm_volume, 'ex_spread_norm':norm_ex,'spot_spread_norm': norm_3m_spread, 
+                                                'len_ma':len_ma, 'len_update':len_update, 'both':3,'strength':0.01
+                                                }
+                        tech_params = {'strength':0.01,'both':3}
                         X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params = load_data_v5(f, horizon, args.ground_truth, lag, 
                                                                                                 args.source, split_dates, 
                                                                                                 norm_params, tech_params)
                                      
                         X_tr = np.concatenate(X_tr)
+                        X_tr=X_tr.reshape(len(X_tr),lag*123)
                         y_tr = np.concatenate(y_tr)
                         X_va = np.concatenate(X_va)
                         y_va = np.concatenate(y_va)
+                        train = np.append(X_tr,y_tr,axis=1)
+                        X_va=X_va.reshape(len(X_va),lag*123)
                         validation = np.append(X_va,y_va,axis=1)
                         train_X = train[:,:len(train[0])-2]
                         train_Y = train[:,len(train[0])-1]
                         validation_X = validation[:,:len(validation[0])-2]
                         validation_Y = validation[:,len(validation[0])-1]
                         # train the model and test the model
-                        from sklearn.metrics import roc_auc_score
+                        from sklearn.metrics import accuracy_score
                         xlf = xgb.XGBClassifier(max_depth=4,
                             learning_rate=0.8,
                             n_estimators=500,
@@ -92,8 +100,7 @@ if __name__ == '__main__':
                         xlf.fit(train_X, train_Y, eval_metric='error',verbose=True,eval_set=[(validation_X, validation_Y)], early_stopping_rounds = 10)
                         y_pred = xlf.predict(validation_X, ntree_limit=xlf.best_ntree_limit)
 
-                        auc_score = roc_auc_score(validation_Y, y_pred)
+                        auc_score = accuracy_score(validation_Y[100:], y_pred[100:])
                         print("accuracy is {}".format(auc_score))
-                        print('Test error using softmax={}'.format(error_rate))
                         print("lag is {}".format(lag))
-                        print('norm_volume is {}'.format(norm_volume)
+                        print('norm_volume is {}'.format(norm_volume))
