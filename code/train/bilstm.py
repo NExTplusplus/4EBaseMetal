@@ -21,7 +21,7 @@ class MultiHeadAttention(nn.Module):
                  key_dim=123,
                  num_units=123,
                  dropout_p=0.1,
-                 h=8,
+                 h=3,
                  is_masked=False):
         super(MultiHeadAttention, self).__init__()
 
