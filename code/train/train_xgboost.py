@@ -80,7 +80,7 @@ if __name__ == '__main__':
                         validation_X = validation[:,:len(validation[0])-2]
                         validation_Y = validation[:,len(validation[0])-1]
                         # train the model and test the model
-                        from sklearn.metrics import roc_auc_score
+                        from sklearn.metrics import accuracy_score
                         xlf = xgb.XGBClassifier(max_depth=4,
                             learning_rate=0.8,
                             n_estimators=500,
@@ -100,7 +100,7 @@ if __name__ == '__main__':
                         xlf.fit(train_X, train_Y, eval_metric='error',verbose=True,eval_set=[(validation_X, validation_Y)], early_stopping_rounds = 10)
                         y_pred = xlf.predict(validation_X, ntree_limit=xlf.best_ntree_limit)
 
-                        auc_score = roc_auc_score(validation_Y, y_pred)
+                        auc_score = accuracy_score(validation_Y, y_pred)
                         print("accuracy is {}".format(auc_score))
                         print("lag is {}".format(lag))
                         print('norm_volume is {}'.format(norm_volume))
