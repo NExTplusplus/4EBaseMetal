@@ -59,6 +59,10 @@ if __name__ == '__main__':
                         len_ma = 5
                         len_update = 30
                         tol = 1e-7
+                        norm_params = {'vol_norm':norm_volume, 'ex_spread_norm':norm_ex,'spot_spread_norm': norm_3m_spread, 
+                                                'len_ma':len_ma, 'len_update':len_update, 'both':3,'strength':0.01
+                                                }
+                        tech_params = {'strength':0.01,'both':3}
                         X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params = load_data_v5(f, horizon, args.ground_truth, lag, 
                                                                                                 args.source, split_dates, 
                                                                                                 norm_params, tech_params)
