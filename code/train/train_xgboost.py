@@ -97,10 +97,10 @@ if __name__ == '__main__':
                             scale_pos_weight=1,
                             seed=1440,
                             missing=None)
-                        xlf.fit(train_X, train_Y, eval_metric='error',verbose=True,eval_set=[(validation_X[:len(validation_X)-10], validation_Y[:len(validation_Y)-10])], early_stopping_rounds = 10)
-                        y_pred = xlf.predict(validation_X[len(validation_X)-10:], ntree_limit=xlf.best_ntree_limit)
+                        xlf.fit(train_X, train_Y, eval_metric='error',verbose=True,eval_set=[(validation_X, validation_Y)], early_stopping_rounds = 10)
+                        y_pred = xlf.predict(validation_X, ntree_limit=xlf.best_ntree_limit)
 
-                        auc_score = accuracy_score(validation_Y[len(validation_Y)-10:], y_pred)
+                        auc_score = accuracy_score(validation_Y, y_pred)
                         print("accuracy is {}".format(auc_score))
                         print("lag is {}".format(lag))
                         print('norm_volume is {}'.format(norm_volume))
