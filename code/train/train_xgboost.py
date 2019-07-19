@@ -33,9 +33,9 @@ if __name__ == '__main__':
     if args.ground_truth =='None':
         args.ground_truth = None
 
-    tra_date = '2005-01-10'
+    tra_date = '2003-11-12'
     val_date = '2016-06-01'
-    tes_date = '2016-12-16'
+    tes_date = '2016-12-23'
     split_dates = [tra_date, val_date, tes_date]
 
 
