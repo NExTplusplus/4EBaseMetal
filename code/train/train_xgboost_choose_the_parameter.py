@@ -87,18 +87,15 @@ if __name__ == '__main__':
                                                                                                 norm_params, tech_params)
                                      
                                     X_tr = np.concatenate(X_tr)
+                                    X_tr=X_tr.reshape(len(X_tr),lag*123)
                                     y_tr = np.concatenate(y_tr)
                                     X_va = np.concatenate(X_va)
                                     y_va = np.concatenate(y_va)
-                                    X_test = X_te[0].reshape(len(X_te[0]),3690)
-                                    Y_test = y_te[0]
                                     train = np.append(X_tr,y_tr,axis=1)
-                                    test = np.append(X_test,Y_test,axis=1)
+                                    X_va=X_va.reshape(len(X_va),lag*123)
                                     validation = np.append(X_va,y_va,axis=1)
                                     train_X = train[:,:len(train[0])-2]
                                     train_Y = train[:,len(train[0])-1]
-                                    test_X = test[:,:len(test[0])-2]
-                                    test_Y = test[:,len(test[0])-1]
                                     validation_X = validation[:,:len(validation[0])-2]
                                     validation_Y = validation[:,len(validation[0])-1]
                                     # train the model and test the model
