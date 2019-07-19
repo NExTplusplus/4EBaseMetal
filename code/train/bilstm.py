@@ -177,7 +177,7 @@ for f in fname_columns:
             BATCH_SIZE = 256     
             INPUT_SIZE = 28     
             LR = 0.01           
-            net = bilstm(input_dim=123,hidden_size=64,output_dim=1,num_layers=2)
+            net = bilstm(input_dim=123,hidden_dim=64,output_dim=1,num_layers=2)
             optimizer = torch.optim.SGD(net.parameters(), lr=0.2)
             loss_func = torch.nn.CrossEntropyLoss()
 
