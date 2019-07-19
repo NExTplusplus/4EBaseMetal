@@ -45,7 +45,7 @@ if __name__ == '__main__':
     # read data configure file
     with open(os.path.join(sys.path[0],args.data_configure_file)) as fin:
         fname_columns = json.load(fin)
-
+    args.ground_truth = args.ground_truth.split(",")
     if args.action == 'train':
         comparison = None
         n = 0
