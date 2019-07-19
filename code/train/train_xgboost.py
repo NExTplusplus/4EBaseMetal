@@ -27,6 +27,9 @@ if __name__ == '__main__':
     )
     parser.add_argument('-o', '--action', type=str, default='train',
                         help='train, test, tune')
+    parser.add_argument(
+        '-sou','--source', help='source of data', type = str, default = "4E"
+    )
     args = parser.parse_args()
     if args.ground_truth =='None':
         args.ground_truth = None
