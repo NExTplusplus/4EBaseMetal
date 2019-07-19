@@ -68,9 +68,11 @@ if __name__ == '__main__':
                                                                                                 norm_params, tech_params)
                                      
                         X_tr = np.concatenate(X_tr)
+                        X_tr=X_tr.reshape(len(X_tr),lag*123)
                         y_tr = np.concatenate(y_tr)
                         X_va = np.concatenate(X_va)
                         y_va = np.concatenate(y_va)
+                        X_va=X_va.reshape(len(X_va),lag*123)
                         validation = np.append(X_va,y_va,axis=1)
                         train_X = train[:,:len(train[0])-2]
                         train_Y = train[:,len(train[0])-1]
