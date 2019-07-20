@@ -203,8 +203,8 @@ for f in fname_columns:
                 print('current epoch:', epoch)
                 batch_len=256
                 while batch_len<len(train_X)-1:
-                    train_X_repredict=train_X[batch_len-10:batch_len]
-                    train_Y_repredict=train_Y[batch_len-10:batch_len]
+                    train_X_repredict=train_X[batch_len-batch_size:batch_len]
+                    train_Y_repredict=train_Y[batch_len-batch_size:batch_len]
                     train_X_tensor=torch.from_numpy(train_X_repredict)
                     train_Y_tensor=torch.from_numpy(train_Y_repredict)
                     #print("trian_Y is {}".format(train_Y_tensor))
