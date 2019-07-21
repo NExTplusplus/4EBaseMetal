@@ -63,6 +63,7 @@ if __name__ == '__main__':
     tes_date = '2016-12-23'
     split_dates = [tra_date, val_date, tes_date]
     args.ground_truth = args.ground_truth.split(",")
+    best_val_accuracy = 0
     for f in fname_columns:
         for lag in [5,10,20,30]:
             for norm_volume in ["v2","v1"]:
@@ -101,8 +102,6 @@ if __name__ == '__main__':
                             loss_func = torch.nn.BCEWithLogitsLoss()
                             val_X_tensor = torch.from_numpy(validation_X)
                             val_Y_tensor = torch.from_numpy(validation_Y)
-                            pre_accuracy = 0
-                            best_val_accuracy = 0
                             for epoch in range(EPOCH):
                                 print('current epoch:', epoch)
                                 batch_len=256
@@ -131,7 +130,7 @@ if __name__ == '__main__':
                                 if best_val_accuracy < val_accuracy:
                                     best_val_accuracy = val_accuracy
                                     torch.save(pre_net,os.path.join(sys.path[0],args.model_save_path)+'best'+".pkl")
-                                    print("save the model when the validation accuracy is {}".format(pre_accuracy))
+                                    print("save the model when the validation accuracy is {}".format(val_accuracy))
                                 '''if accuracy_score(val_output_sigmoid,validation_Y)>=pre_accuracy:
                                     pre_accuracy=accuracy_score(val_output_sigmoid,validation_Y)
                                     pre_net = net
