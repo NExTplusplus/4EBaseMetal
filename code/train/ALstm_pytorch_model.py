@@ -144,6 +144,16 @@ class attention(nn.Module):
         return layer
 
     def forward(self, inputs):
+       """
+        Args:
+            input_dim: (int) the feature length
+            hidden_dim: (int) the hidden layer length
+            num_layers:(int) the number of the layer
+            lag: (int) the time length we trace
+            dropout: (int) the dropout rate
+        Returns:
+            the prediction percentage:(torch.Tensor) [batch, seq_len, 1]
+        """
         net_inputs = inputs
         net_inputs = self.encoders(net_inputs, net_inputs)
         return net_inputs
@@ -180,6 +190,16 @@ class bilstm(nn.Module):
                 torch.zeros(self.num_layers*self.bi_num,batch_size,self.hidden_dim).to(self.device))
     
     def forward(self,x):
+        """
+        Args:
+            input_dim: (int) the feature length
+            hidden_dim: (int) the hidden layer length
+            num_layers:(int) the number of the layer
+            lag: (int) the time length we trace
+            dropout: (int) the dropout rate
+        Returns:
+            the prediction percentage:(torch.Tensor) [batch, seq_len, 1]
+        """
         # train the bilstm layer
         output, (hn,cn) = self.layer(x)
         # train the selfattention layer
