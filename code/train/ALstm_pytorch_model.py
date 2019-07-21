@@ -28,7 +28,13 @@ class MultiHeadAttention(nn.Module):
                  h=8,
                  is_masked=False):
         super(MultiHeadAttention, self).__init__()
-
+        """
+        Args:
+            query (torch.Tensor): [batch, seq_len, embed_dim]
+            keys (torch.Tensor): [batch, seq_len, embed_dim]
+        Returns:
+            torch.Tensor: [batch, seq_len, embed_dim]
+        """
         if query_dim != key_dim:
             raise ValueError("query_dim and key_dim must be the same")
         if num_units % h != 0:
