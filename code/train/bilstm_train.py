@@ -102,6 +102,7 @@ if __name__ == '__main__':
                             val_X_tensor = torch.from_numpy(validation_X)
                             val_Y_tensor = torch.from_numpy(validation_Y)
                             pre_accuracy = 0
+                            best_val_accuracy = 0
                             for epoch in range(EPOCH):
                                 print('current epoch:', epoch)
                                 batch_len=256
@@ -126,13 +127,19 @@ if __name__ == '__main__':
                                 val_output_sigmoid[val_output_sigmoid<0.5]=0
                                 print("the validation accuracy is {}".format(accuracy_score(val_output_sigmoid,validation_Y)))
                                 # contrast the validation result if the validation is teh best we will save it.
-                                if accuracy_score(val_output_sigmoid,validation_Y)>=pre_accuracy:
+                                pre_net=net
+                                if best_val_accuracy < val_accuracy:
+                                    best_val_accuracy = val_accuracy
+                                    torch.save(pre_net,os.path.join(sys.path[0],args.model_save_path)+'best'+".pkl")
+                                    print("save the model when the validation accuracy is {}".format(pre_accuracy))
+                                '''if accuracy_score(val_output_sigmoid,validation_Y)>=pre_accuracy:
                                     pre_accuracy=accuracy_score(val_output_sigmoid,validation_Y)
                                     pre_net = net
                                 else:
                                     torch.save(pre_net,os.path.join(sys.path[0],args.model_save_path)+"_"+str(lag)+"_"+norm_volume+"_"+str(hidden)+"_"+str(drop)+"_"+str(h)+".pkl")
                                     print("save the model when the validation accuracy is {}".format(pre_accuracy))
                                     break
+                                '''
 
 
 
