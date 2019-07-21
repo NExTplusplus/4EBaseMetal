@@ -101,7 +101,7 @@ if __name__ == '__main__':
                             loss_func = torch.nn.BCEWithLogitsLoss()
                             val_X_tensor = torch.from_numpy(validation_X)
                             val_Y_tensor = torch.from_numpy(validation_Y)
-                            pre_accuracy = 1
+                            pre_accuracy = 0
                             for epoch in range(EPOCH):
                                 print('current epoch:', epoch)
                                 batch_len=256
@@ -126,7 +126,7 @@ if __name__ == '__main__':
                                 val_output_sigmoid[val_output_sigmoid<0.5]=0
                                 print("the validation accuracy is {}".format(accuracy_score(val_output_sigmoid,validation_Y)))
                                 # contrast the validation result if the validation is teh best we will save it.
-                                if accuracy_score(val_output_sigmoid,validation_Y)<=pre_accuracy:
+                                if accuracy_score(val_output_sigmoid,validation_Y)>=pre_accuracy:
                                     pre_accuracy=accuracy_score(val_output_sigmoid,validation_Y)
                                     pre_net = net
                                 else:
