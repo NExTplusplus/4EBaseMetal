@@ -12,7 +12,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
-from ALstm_pytorch_model import MultiHeadAttention, attention, bilstm
+from model.ALstm_pytorch_model import MultiHeadAttention, attention, bilstm
 from sklearn.metrics import accuracy_score
 torch.manual_seed(0)
 
