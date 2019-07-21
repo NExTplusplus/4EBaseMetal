@@ -30,8 +30,11 @@ class MultiHeadAttention(nn.Module):
         super(MultiHeadAttention, self).__init__()
         """
         Args:
-            query (torch.Tensor): [batch, seq_len, embed_dim]
-            keys (torch.Tensor): [batch, seq_len, embed_dim]
+            query_dim: (int) the query dimension
+            key_dim: (int) the key dimension
+            num_units:(int) the number of the units
+            h: (int) the head we match
+            dropout: (int) the dropout rate
         Returns:
             torch.Tensor: [batch, seq_len, embed_dim]
         """
