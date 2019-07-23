@@ -239,8 +239,8 @@ def read_data_v5_4E(start_date):
         data(df)			: A single Pandas Dataframe that holds all listed columns from their respective exchanges and for their respective metals
         dates(list)			: list of dates on which LME has trading operations
     '''
-    # import rpy2.robjects as robjects
-    # robjects.r('.sourceAlfunction()')
+    import rpy2.robjects as robjects
+    robjects.r('.sourceAlfunction()')
     LME = robjects.r('''merge(getSecurity("LMCADY Comdty", start = "'''+start_date+'''"), getSecurity("LMAHDY Comdty", start = "'''+start_date+'''"),
                             getSecurity("LMPBDY Comdty", start = "'''+start_date+'''"), getSecurity("LMZSDY Comdty", start = "'''+start_date+'''"), 
                             getSecurity("LMNIDY Comdty", start = "'''+start_date+'''"), getSecurity("LMSNDY Comdty", start = "'''+start_date+'''"), 

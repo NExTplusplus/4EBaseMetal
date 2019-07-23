@@ -61,10 +61,6 @@ if __name__ == '__main__':
     tes_date = '2016-12-23'
     split_dates = [tra_date, val_date, tes_date]
 
-    if args.source == "4E":
-        import rpy2.robjects as robjects
-        robjects.r('.sourceAlfunction()')
-
     os.chdir(os.path.abspath(sys.path[0]))
 
     # read data configure file
