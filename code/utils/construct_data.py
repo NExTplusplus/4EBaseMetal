@@ -8,6 +8,7 @@ sys.path.insert(0,os.path.abspath(os.path.join(sys.path[0],"..")))
 from utils.normalize_feature import normalize_3mspot_spread,normalize_3mspot_spread_ex,normalize_OI,normalize_volume
 from utils.Technical_indicator import ad, divergence_ad, pvt, divergence_pvt
 from sklearn import preprocessing
+import scipy.stats as sct
 
 
 def construct(time_series, ground_truth, start_ind, end_ind, T, h, norm_method):
@@ -116,6 +117,42 @@ def construct_keras_data(time_series, ground_truth_index, sequence_length):
     
     return X_train, Y_train, X_val, Y_val, X_test, Y_test, Y_daybefore_val, Y_daybefore_tes, unnormalized_bases_val, unnormalized_bases_tes, window_size
 
+def construct_ex2(time_series, ground_truth, start_ind, end_ind, T, h, norm_method):
+    num = 0
+    '''
+        convert 2d numpy array of time series data into 3d numpy array, with extra dimension for lags, i.e.
+        input of (n_samples, n_features) becomes (n_samples, T, n_features)
+        time_series (2d np.array): financial time series data
+        ground_truth (1d np.array): column which is used as ground truth
+        start_index (string): string which is the date that we wish to begin including from.
+        end_index (string): string which is the date that we wish to include last.
+        T (int): number of lags
+        norm_method (string): normalization method
+    '''
+    for ind in range(start_ind, end_ind):
+        if not time_series.iloc[ind - T + 1: ind + 1].isnull().values.any():
+            num += 1
+    X = np.zeros([num, T, time_series.shape[1]], dtype=np.float32)
+    y = np.zeros([num, 1], dtype=np.float32)
+    #construct the data by the time index
+    sample_ind = 0
+    for ind in range(start_ind, end_ind):
+        if not time_series.iloc[ind - T + 1 : ind + 1].isnull().values.any():
+            if norm_method == "log_1d_return":
+                X[sample_ind] = time_series.values[ind - T + 1: ind + 1, :]
+            elif norm_method == "log_nd_return":
+                X[sample_ind] = np.flipud(np.add.accumulate(np.flipud(time_series.values[ind - T + 1: ind + 1, :])))
+            y[sample_ind, 0] = ground_truth.values[ind]
+            sample_ind += 1
+    
+    indices_to_keep = y.nonzero()[0]
+    y = y[indices_to_keep,:]
+    X = X[indices_to_keep,:]
+    print(len(y))
+
+    
+    return X,y
+
 #we use this function to make the data normalization
 def normalize_without_1d_return(timeseries,train_end, params):
     """
@@ -211,12 +248,26 @@ def labelling_ex1(X,horizon,ground_truth_columns,lag):
         ans.append(labels)
     return ans
 
-def labelling_ex2(X,horizon,ground_truth_columns):
+def labelling_ex2(X,horizon,ground_truth_columns,val_end):
     assert ground_truth_columns != []
     ans = []
     for ground_truth in ground_truth_columns:
         labels = copy(X[ground_truth])
-    return X
+        labels = np.log( labels.shift(-horizon) / labels )
+        mean = np.mean(labels[:val_end])
+        std = np.std(labels[:val_end])
+        threshold_1 = sct.norm.ppf(q=0.309,loc=mean,scale=std)
+        threshold_2 = sct.norm.ppf(q=0.691,loc=mean,scale=std)
+        labels[(labels <= threshold_1)&(labels.index <= labels.index[val_end])] = -1
+        labels[(labels <= threshold_2)&(labels > threshold_1)&(labels.index <= labels.index[val_end])] = 0
+        labels[(labels > threshold_2)&(labels.index <= labels.index[val_end])] = 1
+        labels[labels.index >= labels.index[val_end]] = labels[labels.index >= labels.index[val_end]] > 0
+
+        labels = labels.rename("Label")
+        ans.append(labels)
+    
+    return ans
+
 
 
 
@@ -224,7 +275,7 @@ def labelling_ex2(X,horizon,ground_truth_columns):
 def labelling(X,horizon, ground_truth_columns):
     """
     X: which equals the timeseries
-    horizon: the time hoizon
+    horizon: the time horizon
     ground_truth_columns: the column we predict
     """
     assert ground_truth_columns != []

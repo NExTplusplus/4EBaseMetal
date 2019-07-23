@@ -8,7 +8,7 @@ import json
 from utils.read_data import  process_missing_value_v3
 from utils.normalize_feature import log_1d_return, normalize_volume, normalize_3mspot_spread, normalize_OI, normalize_3mspot_spread_ex
 from utils.transform_data import flatten
-from utils.construct_data import construct,normalize_without_1d_return,technical_indication,construct_keras_data,scaling,labelling,deal_with_abnormal_value
+from utils.construct_data import construct_ex2,normalize_without_1d_return,technical_indication,construct_keras_data,scaling,labelling_ex2,deal_with_abnormal_value
 
 def save_data(fname,time_series,columns, ground_truth = None):
     col_name = ""
@@ -25,7 +25,7 @@ def save_data(fname,time_series,columns, ground_truth = None):
             if ground_truth is not None:
                 out.write(str(ground_truth[i]))
             out.write("\n")
-def load_data_v5(config, horizon, ground_truth_columns, lags, source, split_dates, norm_params, tech_params):
+def load_data_v5_ex2(config, horizon, ground_truth_columns, lags, source, split_dates, norm_params, tech_params):
     """
     input: config: A file to define which file we load and which column we use.
            split_dates: define the time that we use to define the range of the data.
@@ -69,7 +69,7 @@ def load_data_v5(config, horizon, ground_truth_columns, lags, source, split_date
     and generate labels
     '''
     time_series = time_series.loc[LME_dates]
-    labels = labelling(time_series, horizon, ground_truth_columns)
+    labels = labelling_ex2(time_series, horizon, ground_truth_columns,time_series.index.get_loc(split_dates[1],method = 'ffill'))
 
     '''
     Normalize, create technical indicators, handle outliers and rescale data
@@ -135,18 +135,18 @@ def load_data_v5(config, horizon, ground_truth_columns, lags, source, split_date
     # print(len(time_series))
     for ind in range(len(time_series)):
         # construct the training
-        temp = construct(time_series[ind][all_cols[ind]], time_series[ind]["Label"], tra_ind, val_ind, lags, horizon, 'log_1d_return')
+        temp = construct_ex2(time_series[ind][all_cols[ind]], time_series[ind]["Label"], tra_ind, val_ind, lags, horizon, 'log_1d_return')
         X_tr.append(temp[0])
         y_tr.append(temp[1])
 
         # construct the validation
-        temp = construct(time_series[ind][all_cols[ind]], time_series[ind]["Label"], val_ind, tes_ind, lags, horizon, 'log_1d_return')
+        temp = construct_ex2(time_series[ind][all_cols[ind]], time_series[ind]["Label"], val_ind, tes_ind, lags, horizon, 'log_1d_return')
         X_va.append(temp[0])
         y_va.append(temp[1])
 
         # construct the testing
         if tes_ind < time_series[ind].shape[0]-horizon-1:
-            temp = construct(time_series[ind][all_cols[ind]], time_series[ind]["Label"], tes_ind, time_series[ind].shape[0]-1, lags, horizon, 'log_1d_return')
+            temp = construct_ex2(time_series[ind][all_cols[ind]], time_series[ind]["Label"], tes_ind, time_series[ind].shape[0]-1, lags, horizon, 'log_1d_return')
             X_te.append(temp[0])
             y_te.append(temp[1])
         else:
