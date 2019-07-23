@@ -27,7 +27,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--data_configure_file', '-c', type=str,
         help='configure file of the features to be read',
-        default='log_reg_data.conf'
+        default='4EBaseMetal/exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf'
     )
     parser.add_argument('-s','--steps',type=int,default=1,
                         help='steps in the future to be predicted')
