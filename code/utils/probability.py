@@ -26,14 +26,9 @@ if __name__ == '__main__':
                         help='steps in the future to be predicted')
     parser.add_argument('-gt', '--ground_truth', help='ground truth column',
                          type=str, default="LMCADY")
-    parser.add_argument('-max_iter','--max_iter',type=int,default=100,
-                        help='max number of iterations')
     parser.add_argument(
         '-v','--version', help='version', type = int, default = 1
     )
-    parser.add_argument ('-out','--output',type = str, help='output file', default ="../../../Results/results")
-    parser.add_argument('-o', '--action', type=str, default='train',
-                        help='train, test, tune')
     args = parser.parse_args()
     if args.ground_truth =='None':
         args.ground_truth = None
