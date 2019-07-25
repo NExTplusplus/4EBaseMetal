@@ -1,0 +1,5 @@
+In this folder, we put:
+
+1. The trained model parameters that will be deployed to 4E.
+2. The auxiliary files that will be used to train the model (for re-production).
+3. The auxiliary files that will be used to run the hyper-parameter tuning scripts.

@@ -1,0 +1,2 @@
+In each folder (e.g. v1), we save the files related to the corresponding version (e.g., 1st) of the model.
+Note that, for the 2nd, 4th, and 6th versions of a model (e.g., logistic regression), 6 metals share the save model paramters, so the model parameters will be saved under the corresponding version folder under copper.
