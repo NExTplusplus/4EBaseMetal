@@ -93,18 +93,10 @@ if __name__ == '__main__':
                                                                                     args.source, split_dates, 
                                                                                     norm_params, tech_params)
                     for ind in range(len(X_tr)):
-                        neg_y_tr = y_tr[ind] - 1
-                        y_tr[ind] = y_tr[ind] + neg_y_tr
                         X_tr[ind] = flatten(X_tr[ind])
-                        
-                        
-                        neg_y_va = y_va[ind] - 1
-                        y_va[ind] = y_va[ind] + neg_y_va
                         X_va[ind] = flatten(X_va[ind])
                         
                         if X_te is not None:
-                            neg_y_te = y_te[ind] - 1
-                            y_te[ind] = y_te[ind] + neg_y_te
                             X_te[ind] = flatten(X_te[ind])
                     # print(X_tr[0])              
                     X_tr = np.concatenate(X_tr)

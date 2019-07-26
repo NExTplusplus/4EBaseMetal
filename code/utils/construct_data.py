@@ -323,6 +323,32 @@ def deal_with_abnormal_value(data):
     data = data.interpolate(axis = 0)
 
     return data
+
+def deal_with_abnormal_value_exp3(data):
+    #deal with the big value
+    column_list = []
+    for column in data.columns:
+        if "_OI" in column:
+            column_list.append(column)
+    year_list = list(range(int(data.index[0].split("-")[0]),int(data.index[-1].split("-")[0])+1))
+    month_list = ['01','02','03','04','05','06','07','08','09','10','11','12']
+    for column_name in column_list:   
+        for year in year_list:
+            for month in month_list:
+                start_time = str(year)+'-'+month+'-'+'01'
+                end_time = str(year)+'-'+month+'-'+'31'
+                value_dict = {}
+                value_list=[]
+                temp = copy(data.loc[(data.index >= start_time)&(data.index <= end_time)])
+                if len(temp) == 0 or len(temp[column_name].dropna()) == 0:
+                    continue
+                average = np.mean(temp[column_name].dropna())
+                data.at[temp[column_name].idxmax(),column_name] = average
+                
+    #missing value interpolate
+    data = data.interpolate(axis = 0)
+
+    return data
 #this function is to scale the data use the standardscaler
 def scaling(X,train_end):
     """
