@@ -9,6 +9,8 @@ import json
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
+from copy import copy
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 
 
@@ -74,44 +76,52 @@ if __name__ == '__main__':
             comparison = None
             n = 0
             for f in fname_columns:
+                if args.source =="NExT":
+                    from utils.read_data import read_data_NExT
+                    data_list, LME_dates = read_data_NExT(f, "2003-11-12")
+                    time_series = pd.concat(data_list, axis = 1, sort = True)
+                elif args.source == "4E":
+                    from utils.read_data import read_data_v5_4E
+                    time_series, LME_dates = read_data_v5_4E("2003-11-12")
                 horizon = args.steps
                 for lag in [5,10,20,30]:
-                    for C in [0.00001,0.0001,0.001,0.01]:
-                        for norm_volume in ["v1","v2"]:
-                            for norm_ex in ["v1"]:
+                    for norm_volume in ["v1","v2"]:
+                        for norm_ex in ["v1"]:
+                            norm_3m_spread = "v1"
+                            len_ma = 5
+                            len_update = 30
+                            tol = 1e-7
+                            norm_params = {'vol_norm':norm_volume, 'ex_spread_norm':norm_ex,'spot_spread_norm': norm_3m_spread, 
+                                            'len_ma':len_ma, 'len_update':len_update, 'both':3,'strength':0.01
+                                            }
+                            tech_params = {'strength':0.01,'both':3}
+                            # start_time = time.time()
+                            # load data
+                            ts = time_series.loc[split_dates[0]:]
+                            X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params = load_data_v5(copy(ts), horizon, args.ground_truth,  
+                                                                                            lag, LME_dates, split_dates, 
+                                                                                            norm_params, tech_params)
+                            for ind in range(len(X_tr)):
+                                neg_y_tr = y_tr[ind] - 1
+                                y_tr[ind] = y_tr[ind] + neg_y_tr
+                                X_tr[ind] = flatten(X_tr[ind])
+                                
+                                
+                                neg_y_va = y_va[ind] - 1
+                                y_va[ind] = y_va[ind] + neg_y_va
+                                X_va[ind] = flatten(X_va[ind])
+                                
+                                if X_te is not None:
+                                    neg_y_te = y_te[ind] - 1
+                                    y_te[ind] = y_te[ind] + neg_y_te
+                                    X_te[ind] = flatten(X_te[ind])
+                            # print(X_tr[0])              
+                            X_tr = np.concatenate(X_tr)
+                            y_tr = np.concatenate(y_tr)
+                            X_va = np.concatenate(X_va)
+                            y_va = np.concatenate(y_va)
+                            for C in [0.00001,0.0001,0.001,0.01]:
                                 n+=1
-                                norm_3m_spread = "v1"
-                                len_ma = 5
-                                len_update = 30
-                                tol = 1e-7
-                                norm_params = {'vol_norm':norm_volume, 'ex_spread_norm':norm_ex,'spot_spread_norm': norm_3m_spread, 
-                                                'len_ma':len_ma, 'len_update':len_update, 'both':3,'strength':0.01
-                                                }
-                                tech_params = {'strength':0.01,'both':3}
-                                # start_time = time.time()
-                                # load data
-                                X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params = load_data_v5(f, horizon, args.ground_truth, lag, 
-                                                                                                args.source, split_dates, 
-                                                                                                norm_params, tech_params)
-                                for ind in range(len(X_tr)):
-                                    neg_y_tr = y_tr[ind] - 1
-                                    y_tr[ind] = y_tr[ind] + neg_y_tr
-                                    X_tr[ind] = flatten(X_tr[ind])
-                                    
-                                    
-                                    neg_y_va = y_va[ind] - 1
-                                    y_va[ind] = y_va[ind] + neg_y_va
-                                    X_va[ind] = flatten(X_va[ind])
-                                    
-                                    if X_te is not None:
-                                        neg_y_te = y_te[ind] - 1
-                                        y_te[ind] = y_te[ind] + neg_y_te
-                                        X_te[ind] = flatten(X_te[ind])
-                                # print(X_tr[0])              
-                                X_tr = np.concatenate(X_tr)
-                                y_tr = np.concatenate(y_tr)
-                                X_va = np.concatenate(X_va)
-                                y_va = np.concatenate(y_va)
                                 pure_LogReg = LogReg(parameters={})
 
                                 max_iter = args.max_iter
