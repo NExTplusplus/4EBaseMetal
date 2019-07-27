@@ -690,12 +690,14 @@ website_link_lst.append('http://www.gtaxqh.com/html/RESEARCH_SERVICES/zhlcb/mrsp
 website_link_lst.append('http://www.shcifco.com/html/yanjiuzhongxin/shishikuaixun/panzhongshidian/')
 
 ##############################################################################################################33
-#Example
+#the command we need to run the cralwer
 
 engine = sq.create_engine("mysql+pymysql://root:next++4e@localhost/Alternative_DB?host=localhost?port=3306")
 conn = engine.connect()
 webdriver_link = '/home/liangchen/4e/Alternative Data/chromedriver'
 wait_time = 2.5
-website_link = 'http://www.shcifco.com/html/yanjiuzhongxin/shishikuaixun/panzhongshidian/'
 crawler = Crawler_machine(conn)
-crawler.crawl(wait_time,website_link,webdriver_link)
+for website_link in website_link_lst:
+    crawler.crawl(wait_time,website_link,webdriver_link)
+
+
