@@ -102,10 +102,12 @@ class html_extracter:
         return func
 
 #########################################################################################################################33
-Example
+#Example
 
 engine = sq.create_engine("mysql+pymysql://root:next++4e@localhost/Alternative_DB?host=localhost?port=3306")
 conn = engine.connect()
 extracter = html_extracter(conn)
 df_crawl = pd.read_sql('Select * from html',conn)
-extracter.extract(df_crawl,'2019-05-28')
+date_list = ['2019-05-28']
+for date in date_list:
+    extracter.extract(df_crawl,'2019-05-28')
