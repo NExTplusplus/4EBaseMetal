@@ -60,6 +60,7 @@ class Crawler_machine:
         driver.execute_script("window.open('');")
         driver.switch_to.window(driver.window_handles[0])
         
+        driver.max_window()
         type_lst = ['manual_num_crawl', 'auto_click_crawl', 'auto_link_crawl','same_page_click']
         if crawl_type not in type_lst:
             driver.quit()
