@@ -24,7 +24,10 @@ class html_extracter:
         # Function: This function will extract content from html
         # Inputs: df_news is the crawled report dataframe gotten from live crawler, date is today date
         # function_content is the fucntion to extract content from specific html style
-        
+        '''
+        df_news:(html)the html we need to extract the information from the html
+        date:(string)the date we need to deal with the html
+        '''
         
         # Check whether table in database has been created 
         result = self.conn_extracter.execute("SHOW TABLES LIKE 'content';")
