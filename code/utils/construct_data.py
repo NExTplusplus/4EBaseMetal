@@ -223,10 +223,10 @@ def technical_indication(X,train_end,params):
         if "Close" in col:
             setting = col[:-5]
             if setting+"Volume" in cols:
-                print("+".join((col,setting+"Volume"))+"=>"+"+".join((setting+"PVT",setting+"NART",setting+"VSD",
-                      setting+"Bollinger",setting+"EMA",setting+"PPO",setting+"VBM",setting+"SAR")))
-                X[setting+"PVT"] = pvt(X.index,copy(X[col]),copy(X[setting+"Volume"]))
-                X[setting+"NART"] = natr(X[setting+"High"],X[setting+"Low"],X[setting+"Close"],10)
+                print("+".join((col,setting+"Volume"))+"=>"+"+".join((setting+"PVT",setting+"divPVT")))
+                X[setting+"PVT"] = pvt(copy(X[col]),copy(X[setting+"Volume"]))
+                X[setting+"divPVT"] = divergence_pvt(copy(X[col]),copy(X[setting+"PVT"]),train_end, 
+                                                            params = params)
             
     return X
 #the function is to generate experimental labelling
@@ -386,14 +386,3 @@ def rolling_half_year(start_date,end_date,length):
         del split_dates[-1]
     
     return split_dates
-
-
-
-
-
-
-                    
-
-
-
-        
