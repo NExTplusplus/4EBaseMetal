@@ -261,7 +261,8 @@ def labelling_ex2(X,horizon,ground_truth_columns,val_end):
         labels[(labels <= threshold_1)&(labels.index <= labels.index[val_end])] = -1
         labels[(labels <= threshold_2)&(labels > threshold_1)&(labels.index <= labels.index[val_end])] = 0
         labels[(labels > threshold_2)&(labels.index <= labels.index[val_end])] = 1
-        labels[labels.index >= labels.index[val_end]] = labels[labels.index >= labels.index[val_end]] > 0
+        labels[(labels >= 0)&(labels.index >= labels.index[val_end])] = 1
+        labels[(labels < 0)&(labels.index >= labels.index[val_end])] = -1
 
         labels = labels.rename("Label")
         ans.append(labels)
@@ -322,6 +323,32 @@ def deal_with_abnormal_value(data):
     data = data.interpolate(axis = 0)
 
     return data
+
+def deal_with_abnormal_value_exp3(data):
+    #deal with the big value
+    column_list = []
+    for column in data.columns:
+        if "_OI" in column:
+            column_list.append(column)
+    year_list = list(range(int(data.index[0].split("-")[0]),int(data.index[-1].split("-")[0])+1))
+    month_list = ['01','02','03','04','05','06','07','08','09','10','11','12']
+    for column_name in column_list:   
+        for year in year_list:
+            for month in month_list:
+                start_time = str(year)+'-'+month+'-'+'01'
+                end_time = str(year)+'-'+month+'-'+'31'
+                value_dict = {}
+                value_list=[]
+                temp = copy(data.loc[(data.index >= start_time)&(data.index <= end_time)])
+                if len(temp) == 0 or len(temp[column_name].dropna()) == 0:
+                    continue
+                average = np.mean(temp[column_name].dropna())
+                data.at[temp[column_name].idxmax(),column_name] = average
+                
+    #missing value interpolate
+    data = data.interpolate(axis = 0)
+
+    return data
 #this function is to scale the data use the standardscaler
 def scaling(X,train_end):
     """
@@ -333,7 +360,35 @@ def scaling(X,train_end):
     X = pd.DataFrame(scaler.transform(X), index = X.index, columns = X.columns)
     return X
 
-        
+
+def rolling_half_year(start_date,end_date,length):
+    '''
+        creates the split dates array which rolls forward every 6 months
+        Input
+        start_date(str) : date to start creating split_dates
+        end_date(str)   : date to stop creating split_dates
+        length(int)     : number of years for training set
+        Output
+        split_dates(list)   : list of list. Each list holds 3 dates, train start, val start, and test start.
+    '''
+    start_year = start_date.split("-")[0]
+    end_year = end_date.split("-")[0]
+    split_dates = []
+
+    for year in range(int(start_year),int(end_year)+1):
+        split_dates.append([str(year)+"-01-01",str(int(year)+length)+"-01-01",str(int(year)+length)+"-07-01"])
+        split_dates.append([str(year)+"-07-01",str(int(year)+length)+"-07-01",str(int(year)+length+1)+"-01-01"])
+    
+    while split_dates[0][0] < start_date:
+        del split_dates[0]
+    
+    while split_dates[-1][2] > end_date:
+        del split_dates[-1]
+    
+    return split_dates
+
+
+
 
 
 

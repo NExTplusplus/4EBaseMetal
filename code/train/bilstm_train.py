@@ -126,10 +126,10 @@ if __name__ == '__main__':
                                 val_output_sigmoid[val_output_sigmoid<0.5]=0
                                 print("the validation accuracy is {}".format(accuracy_score(val_output_sigmoid,validation_Y)))
                                 # contrast the validation result if the validation is teh best we will save it.
-                                pre_net=net
-                                if best_val_accuracy < val_accuracy:
-                                    best_val_accuracy = val_accuracy
-                                    torch.save(pre_net,os.path.join(sys.path[0],args.model_save_path)+'best'+".pkl")
+                                #pre_net=net
+                                #if best_val_accuracy < val_accuracy:
+                                #    best_val_accuracy = val_accuracy
+                                #    torch.save(pre_net,os.path.join(sys.path[0],args.model_save_path)+'best'+".pkl")
                                     print("save the model when the validation accuracy is {}".format(val_accuracy))
                                 '''if accuracy_score(val_output_sigmoid,validation_Y)>=pre_accuracy:
                                     pre_accuracy=accuracy_score(val_output_sigmoid,validation_Y)
