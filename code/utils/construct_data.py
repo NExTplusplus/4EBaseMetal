@@ -386,14 +386,3 @@ def rolling_half_year(start_date,end_date,length):
         del split_dates[-1]
     
     return split_dates
-
-
-
-
-
-
-                    
-
-
-
-        

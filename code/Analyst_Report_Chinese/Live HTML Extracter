@@ -24,7 +24,10 @@ class html_extracter:
         # Function: This function will extract content from html
         # Inputs: df_news is the crawled report dataframe gotten from live crawler, date is today date
         # function_content is the fucntion to extract content from specific html style
-        
+        '''
+        df_news:(html)the html we need to extract the information from the html
+        date:(string)the date we need to deal with the html
+        '''
         
         # Check whether table in database has been created 
         result = self.conn_extracter.execute("SHOW TABLES LIKE 'content';")
@@ -102,10 +105,12 @@ class html_extracter:
         return func
 
 #########################################################################################################################33
-Example
+#Example
 
 engine = sq.create_engine("mysql+pymysql://root:next++4e@localhost/Alternative_DB?host=localhost?port=3306")
 conn = engine.connect()
 extracter = html_extracter(conn)
 df_crawl = pd.read_sql('Select * from html',conn)
-extracter.extract(df_crawl,'2019-05-28')
+date_list = ['2019-05-28']
+for date in date_list:
+    extracter.extract(df_crawl,'2019-05-28')
