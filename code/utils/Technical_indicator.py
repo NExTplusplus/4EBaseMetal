@@ -14,48 +14,50 @@ def pvt (idx,Close,Volume):
     
     return pvt
 
-def divergence_pvt_OI(idx,Close,OI,train_end,params):
+#def divergence_pvt_OI(idx,Close,OI,train_end,params):
+#    
+#    pvt = np.log(Close/Close.shift(1))*OI
+#    pvt = pd.Series(index = idx[1:],data = accumulate(pvt.dropna()))
+#
+#    divPT = pvt/pvt.shift(1) - Close/Close.shift(1)
+#    temp = sorted(copy(divPT[:train_end]))
+#    mx = temp[-1]
+#    mn = temp[0]
+#    if params['both'] == 1:
+#        mx = temp[int(np.floor((1-params['strength'])*len(temp)))]
+#    elif params['both'] == 2:
+#        mn = temp[int(np.ceil(params['strength']*len(temp)))]
+#    elif params['both'] == 3:
+#        mx = temp[int(np.floor((1-params['strength'])*len(temp)))]
+#        mn = temp[int(np.ceil(params['strength']*len(temp)))]
+#    divPT = divPT.apply(lambda x: min(x,mx))
+#    divPT = divPT.apply(lambda x: max(x,mn))
+
+def divergence_pvt(close,volume,train_end,params):
     
-    pvt = np.log(Close/Close.shift(1))*OI
-    pvt = pd.Series(index = idx[1:],data = accumulate(pvt.dropna()))
-
-    divPT = pvt/pvt.shift(1) - Close/Close.shift(1)
+    pvt = close.shift(1)
+    pvt.iloc[1] = ((close.iloc[1]/close.iloc[0])-1)*volume.iloc[1]
+    for i in range(2,len(close)):
+    	pvt.iloc[i] = ((close.iloc[i]/close.iloc[i-1])-1)*volume.iloc[i] + pvt.iloc[i-1]  
+    
+    percentage_change = (close/close.shift(1))-1
+    pvt_change = (pvt/pvt.shift(1))-1
+    divPT = percentage_change-pvt_change
     temp = sorted(copy(divPT[:train_end]))
     mx = temp[-1]
     mn = temp[0]
     if params['both'] == 1:
-        mx = temp[int(np.floor((1-params['strength'])*len(temp)))]
+    	mx = temp[int(np.floor((1-params['strength'])*len(temp)))]
     elif params['both'] == 2:
-        mn = temp[int(np.ceil(params['strength']*len(temp)))]
+    	mn = temp[int(np.ceil(params['strength']*len(temp)))]
     elif params['both'] == 3:
-        mx = temp[int(np.floor((1-params['strength'])*len(temp)))]
-        mn = temp[int(np.ceil(params['strength']*len(temp)))]
-    divPT = divPT.apply(lambda x: min(x,mx))
-    divPT = divPT.apply(lambda x: max(x,mn))
-
-def divergence_pvt_volume(idx,Close,Volume,train_end,params):
-    pvt = np.log(Close/Close.shift(1))*Volume
-    pvt = pd.Series(index = idx[1:],data = accumulate(pvt.dropna()))
-
-    divPT = pvt/pvt.shift(1) - Close/Close.shift(1)
-    temp = sorted(copy(divPT[:train_end]))
-    mx = temp[-1]
-    mn = temp[0]
-    if params['both'] == 1:
-        mx = temp[int(np.floor((1-params['strength'])*len(temp)))]
-    elif params['both'] == 2:
-        mn = temp[int(np.ceil(params['strength']*len(temp)))]
-    elif params['both'] == 3:
-        mx = temp[int(np.floor((1-params['strength'])*len(temp)))]
-        mn = temp[int(np.ceil(params['strength']*len(temp)))]
-#    for i in range(len(divPT)):
-#        if divPT[i] > mx:
-#            divPT[i] = mx
-#        elif divPT[i] < mn:
-#            divPT[i] = mn  
-    divPT = divPT.apply(lambda x: min(x,mx))
-    divPT = divPT.apply(lambda x: max(x,mn))
-            
+    	mx = temp[int(np.floor((1-params['strength'])*len(temp)))]
+    	mn = temp[int(np.ceil(params['strength']*len(temp)))]
+    for i in range(len(divPT)):
+    	if divPT[i] > mx:
+    		divPT[i] = mx
+    	elif divPT[i] < mn:
+    		divPT[i] = mn    
     return divPT
 #This function will calculate the Normalized Average True Range
 #High is a series of high price per day, so on so as

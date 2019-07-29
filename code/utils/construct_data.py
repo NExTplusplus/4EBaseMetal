@@ -230,19 +230,16 @@ def technical_indication(X,train_end,params):
             if "Close" in col and setting+"Volume" in cols:
                 print("+".join((col,setting+"Volume"))+"=>"+"+".join((setting+"PVT",setting+"divPVT")))
                 X[setting+"PVT"] = pvt(copy(X[col]),copy(X[setting+"Volume"]))
-                X[setting+"divPVT_Vol"] = divergence_pvt(copy(X.index),copy(X[col]),copy(X[setting+"Volume"]),train_end, 
+                X[setting+"divPVT"] = divergence_pvt(copy(X[col]),copy(X[setting+"Volume"]),train_end, 
                                                             params = params)
-            if "Close" in col and setting+"OI" in cols:
-                X[setting+"divPVT_OI"] = divergence_pvt(copy(X.index),copy(X[col]),copy(X[setting+"OI"]),train_end, 
-                                                            params = params)
-                
-            if 'Close' in col and setting+'High' in col and setting+'Low' in col:
+            
+            if 'Close' in col and setting+'High' in cols and setting+'Low' in cols:
                 X[setting+'NATR'] = natr(X[setting+"High"],X[setting+"Low"],X[col],params['Win_NATR'])
                 X[setting+'VBM'] = vbm(X[setting+"High"],X[setting+"Low"],X[col],params['Win_VBM'])
                 X[setting+'SAR'] = sar(X[setting+"High"],X[setting+"Low"],X[col],params['acc_initial'],params['acc_maximum'])
         
         if setting+"Open" in col:
-            if 'High' in col and 'Low' in col:
+            if 'High' in cols and 'Low' in cols:
                 for i in range(len(params['Win_VSD'])):
                     X[setting+"VSD"+str(params['Win_VSD'][i])] = vsd(X[setting+"High"],X[setting+"Low"],X[col],params['Win_VSD'][i])
             
