@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import talib as ta
 from itertools import accumulate
-
+from copy import copy
 # This function will calculate Price Volume Trend as mentioned in google drive/ technical indicator for more explanations
 # close is the column for closing price and volume is the column for volume.
 # When price adjusted volume on up days outpaces that on down day, then PVT rises, vice versa.
@@ -13,6 +13,50 @@ def pvt (idx,Close,Volume):
     pvt = (pvt>pvt.shift(1))*1
     
     return pvt
+
+def divergence_pvt_OI(idx,Close,OI,train_end,params):
+    
+    pvt = np.log(Close/Close.shift(1))*OI
+    pvt = pd.Series(index = idx[1:],data = accumulate(pvt.dropna()))
+
+    divPT = pvt/pvt.shift(1) - Close/Close.shift(1)
+    temp = sorted(copy(divPT[:train_end]))
+    mx = temp[-1]
+    mn = temp[0]
+    if params['both'] == 1:
+        mx = temp[int(np.floor((1-params['strength'])*len(temp)))]
+    elif params['both'] == 2:
+        mn = temp[int(np.ceil(params['strength']*len(temp)))]
+    elif params['both'] == 3:
+        mx = temp[int(np.floor((1-params['strength'])*len(temp)))]
+        mn = temp[int(np.ceil(params['strength']*len(temp)))]
+    divPT = divPT.apply(lambda x: min(x,mx))
+    divPT = divPT.apply(lambda x: max(x,mn))
+
+def divergence_pvt_volume(idx,Close,Volume,train_end,params):
+    pvt = np.log(Close/Close.shift(1))*Volume
+    pvt = pd.Series(index = idx[1:],data = accumulate(pvt.dropna()))
+
+    divPT = pvt/pvt.shift(1) - Close/Close.shift(1)
+    temp = sorted(copy(divPT[:train_end]))
+    mx = temp[-1]
+    mn = temp[0]
+    if params['both'] == 1:
+        mx = temp[int(np.floor((1-params['strength'])*len(temp)))]
+    elif params['both'] == 2:
+        mn = temp[int(np.ceil(params['strength']*len(temp)))]
+    elif params['both'] == 3:
+        mx = temp[int(np.floor((1-params['strength'])*len(temp)))]
+        mn = temp[int(np.ceil(params['strength']*len(temp)))]
+#    for i in range(len(divPT)):
+#        if divPT[i] > mx:
+#            divPT[i] = mx
+#        elif divPT[i] < mn:
+#            divPT[i] = mn  
+    divPT = divPT.apply(lambda x: min(x,mx))
+    divPT = divPT.apply(lambda x: max(x,mn))
+            
+    return divPT
 #This function will calculate the Normalized Average True Range
 #High is a series of high price per day, so on so as
 #NART is a measure of volatilty normalized by close price, more comparable across securities.
@@ -69,7 +113,7 @@ def ppo(Close,fast = 12,slow = 26):
     
     return ppo
 
-#This function will calculate the Volatility Based Momentum, a volatility-adjusted meeasure of momentun.
+#This function will calculate the Volatility Based Momentum, a volatility-adjusted measure of momentum.
 ##Close is a series of close price,so on so as. Window is an integer
 def vbm(High,Low,Close,window):
     atr = ta.ATR(High,Low,Close,timeperiod = window)
@@ -88,7 +132,6 @@ def sar(High,Low,Close,initial=0.02,maximum = 0.2):
     sar.loc[Close<tmp_sar] = -1
     
     return sar
-    
     
     
     

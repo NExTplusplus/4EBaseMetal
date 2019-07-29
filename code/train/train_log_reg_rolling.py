@@ -95,7 +95,8 @@ if __name__ == '__main__':
                                     norm_params = {'vol_norm':norm_volume, 'ex_spread_norm':norm_ex,'spot_spread_norm': norm_3m_spread, 
                                                     'len_ma':len_ma, 'len_update':len_update, 'both':3,'strength':0.01
                                                     }
-                                    tech_params = {'strength':0.01,'both':3}
+                                    tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
+                                                   'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
                                     # start_time = time.time()
                                     # load data
                                     time_series = copy(time_series.loc[split_date[0]:split_date[2]])

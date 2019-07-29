@@ -6,7 +6,7 @@ import sys
 from datetime import datetime
 sys.path.insert(0,os.path.abspath(os.path.join(sys.path[0],"..")))
 from utils.normalize_feature import normalize_3mspot_spread,normalize_3mspot_spread_ex,normalize_OI,normalize_volume
-from utils.Technical_indicator import ad, divergence_ad, pvt, divergence_pvt
+from utils.Technical_indicator import pvt, divergence_pvt,ema,bollinger,ppo,vsd,natr,vbm,sar
 from sklearn import preprocessing
 import scipy.stats as sct
 
@@ -220,13 +220,32 @@ def technical_indication(X,train_end,params):
     """
     cols = X.columns.values.tolist()
     for col in cols:
-        if "Close" in col:
-            setting = col[:-5]
-            if setting+"Volume" in cols:
+        setting = col[:-5]
+        
+        if "Close" in col or 'Spot' in col:
+            X[setting+"EMA"] = ema(copy(X[col]),params['Win_EMA'])
+            X[setting+"bollinger"] = bollinger(copy(X[col]),params['Win_Bollinger'])
+            X[setting+"PPO"] = ppo(copy(X[col],params['Fast'],params['Slow']))
+            
+            if "Close" in col and setting+"Volume" in cols:
                 print("+".join((col,setting+"Volume"))+"=>"+"+".join((setting+"PVT",setting+"divPVT")))
                 X[setting+"PVT"] = pvt(copy(X[col]),copy(X[setting+"Volume"]))
-                X[setting+"divPVT"] = divergence_pvt(copy(X[col]),copy(X[setting+"PVT"]),train_end, 
+                X[setting+"divPVT_Vol"] = divergence_pvt(copy(X.index),copy(X[col]),copy(X[setting+"Volume"]),train_end, 
                                                             params = params)
+            if "Close" in col and setting+"OI" in cols:
+                X[setting+"divPVT_OI"] = divergence_pvt(copy(X.index),copy(X[col]),copy(X[setting+"OI"]),train_end, 
+                                                            params = params)
+                
+            if 'Close' in col and setting+'High' in col and setting+'Low' in col:
+                X[setting+'NATR'] = natr(X[setting+"High"],X[setting+"Low"],X[col],params['Win_NATR'])
+                X[setting+'VBM'] = vbm(X[setting+"High"],X[setting+"Low"],X[col],params['Win_VBM'])
+                X[setting+'SAR'] = sar(X[setting+"High"],X[setting+"Low"],X[col],params['acc_initial'],params['acc_maximum'])
+        
+        if setting+"Open" in col:
+            if 'High' in col and 'Low' in col:
+                for i in range(len(params['Win_VSD'])):
+                    X[setting+"VSD"+str(params['Win_VSD'][i])] = vsd(X[setting+"High"],X[setting+"Low"],X[col],params['Win_VSD'][i])
+            
             
     return X
 #the function is to generate experimental labelling
