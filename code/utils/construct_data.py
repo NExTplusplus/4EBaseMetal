@@ -254,7 +254,7 @@ def technical_indication_v5(X,train_end,params):
     for col in cols:
         setting = col[:-5]
         if 'Close' in col:
-            if setting+'Volume'in cols:
+            if setting+'Volume' in cols:
                  print("+".join((col,setting+"Volume"))+"=>"+"+".join((setting+"divPVT")))
                  X[setting+"divPVT"] = divergence_pvt(copy(X[col]),copy(X[setting+"Volume"]),train_end, 
                                                                 params = params)
