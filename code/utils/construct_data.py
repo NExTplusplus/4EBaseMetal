@@ -211,8 +211,9 @@ def normalize_without_1d_return(timeseries,train_end, params):
             
     return timeseries, ans
 
-#this function is to build the technical indicator which is called PVT
-def technical_indication(X,train_end,params):
+#this function is to build the technical indicator which is called PVT,DIV_PVT,NATR,VSD,VBM,BSD BOLLINGER,
+#EMA,SAR,PPO  
+def technical_indication_v7(X,train_end,params):
     """
     X: which equals the timeseries
     train_end: string which we use to define the range we use to train
@@ -225,25 +226,38 @@ def technical_indication(X,train_end,params):
         if "Close" in col or 'Spot' in col:
             X[setting+"EMA"] = ema(copy(X[col]),params['Win_EMA'])
             X[setting+"bollinger"] = bollinger(copy(X[col]),params['Win_Bollinger'])
-            X[setting+"PPO"] = ppo(copy(X[col],params['Fast'],params['Slow']))
+            X[setting+"PPO"] = ppo(copy(X[col]),params['Fast'],params['Slow'])
             
             if "Close" in col and setting+"Volume" in cols:
                 print("+".join((col,setting+"Volume"))+"=>"+"+".join((setting+"PVT",setting+"divPVT")))
-                X[setting+"PVT"] = pvt(copy(X[col]),copy(X[setting+"Volume"]))
+                X[setting+"PVT"] = pvt(copy(X.index),copy(X[col]),copy(X[setting+"Volume"]))
                 X[setting+"divPVT"] = divergence_pvt(copy(X[col]),copy(X[setting+"Volume"]),train_end, 
                                                             params = params)
             
             if 'Close' in col and setting+'High' in cols and setting+'Low' in cols:
+                print("+".join((col,setting+"High"))+"=>"+"+".join((setting+"PVT",setting+"divPVT")))
                 X[setting+'NATR'] = natr(X[setting+"High"],X[setting+"Low"],X[col],params['Win_NATR'])
                 X[setting+'VBM'] = vbm(X[setting+"High"],X[setting+"Low"],X[col],params['Win_VBM'])
                 X[setting+'SAR'] = sar(X[setting+"High"],X[setting+"Low"],X[col],params['acc_initial'],params['acc_maximum'])
         
-        if setting+"Open" in col:
-            if 'High' in cols and 'Low' in cols:
+        if setting+"Open" in cols:
+            print("+".join((col,setting+"Open"))+"=>"+"+".join((setting+"PVT",setting+"divPVT")))
+            if setting+'High' in cols and setting+'Low' in cols:
                 for i in range(len(params['Win_VSD'])):
                     X[setting+"VSD"+str(params['Win_VSD'][i])] = vsd(X[setting+"High"],X[setting+"Low"],X[col],params['Win_VSD'][i])
             
             
+    return X
+#this function is to build the technical indicator which is called PVT and DIV_PVT
+def technical_indication_v5(X,train_end,params):
+    cols = X.columns.values.tolist()
+    for col in cols:
+        setting = col[:-5]
+        if 'Close' in col:
+            if setting+'Volume'in cols:
+                 print("+".join((col,setting+"Volume"))+"=>"+"+".join((setting+"divPVT")))
+                 X[setting+"divPVT"] = divergence_pvt(copy(X[col]),copy(X[setting+"Volume"]),train_end, 
+                                                                params = params)
     return X
 #the function is to generate experimental labelling
 def labelling_ex1(X,horizon,ground_truth_columns,lag):

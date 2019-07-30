@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import talib as ta
 from itertools import accumulate
 from copy import copy
 # This function will calculate Price Volume Trend as mentioned in google drive/ technical indicator for more explanations
@@ -59,12 +58,6 @@ def divergence_pvt(close,volume,train_end,params):
     	elif divPT[i] < mn:
     		divPT[i] = mn    
     return divPT
-#This function will calculate the Normalized Average True Range
-#High is a series of high price per day, so on so as
-#NART is a measure of volatilty normalized by close price, more comparable across securities.
-def natr(High,Low,Close,window):
-    
-    return ta.NATR(High,Low,Close,timeperiod = window)
 
 #This function will calculate the volatility scissor difference.
 #High is a series of high price per day, so on so as. Window is an integer
@@ -77,7 +70,6 @@ def vsd(High,Low,Open,window):
     tmp = np.array(sdiff_win)>0
     vsd.iloc[1:] = tmp[:-1]*1
     return vsd
-
 #This function will calculate Bollinger Bands.
 #Close is a series of close price.
 #When the price of the commodity considered is volatile, the bands tend to expand.
@@ -93,6 +85,15 @@ def bollinger(Close,window):
     bollinger.loc[Close<lower] = -1
     
     return bollinger
+
+import talib as ta
+#This function will calculate the Normalized Average True Range
+#High is a series of high price per day, so on so as
+#NART is a measure of volatilty normalized by close price, more comparable across securities.
+def natr(High,Low,Close,window):
+    
+    return ta.NATR(High,Low,Close,timeperiod = window)
+
 
 #This function will calculate the Exponential Moving Average.
 #Close is a series of close price.
@@ -128,7 +129,7 @@ def vbm(High,Low,Close,window):
 #High is a series of high price, so on so as
 #Acceleration factor starts at 0.02, and increases by 0.02, up to a maximum of 0.2.
 def sar(High,Low,Close,initial=0.02,maximum = 0.2):
-    tmp_sar = ta.SAR(High,Low,accelerator = initial, max = maximum)
+    tmp_sar = ta.SAR(High,Low,acceleration = initial, maximum = maximum)
     sar =  pd.Series(index = High.index,data = [0]*len(High))
     sar.loc[Close>tmp_sar] = 1
     sar.loc[Close<tmp_sar] = -1

@@ -99,8 +99,8 @@ if __name__ == '__main__':
                                                    'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
                                     # start_time = time.time()
                                     # load data
-                                    time_series = copy(time_series.loc[split_date[0]:split_date[2]])
-                                    X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params = load_data_v5_rolling(time_series, horizon, args.ground_truth, lag, 
+                                    ts = copy(time_series.loc[split_date[0]:split_date[2]])
+                                    X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params = load_data_v5_rolling(ts, horizon, args.ground_truth, lag, 
                                                                                                     LME_dates, split_date, 
                                                                                                     norm_params, tech_params)
                                     
