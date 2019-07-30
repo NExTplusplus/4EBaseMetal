@@ -1,0 +1,2743 @@
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.46875
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.546875
+[2]	validation_0-error:0.546875
+[3]	validation_0-error:0.554688
+[4]	validation_0-error:0.554688
+[5]	validation_0-error:0.523438
+Stopping. Best iteration:
+[0]	validation_0-error:0.46875
+
+the split_dates is ['2009-07-02', '2014-07-01', '2014-12-31']
+the lag is 5
+the norm_volume is v1
+accuracy is 0.53125
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.467742
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.483871
+[2]	validation_0-error:0.483871
+[3]	validation_0-error:0.419355
+[4]	validation_0-error:0.427419
+[5]	validation_0-error:0.395161
+[6]	validation_0-error:0.443548
+[7]	validation_0-error:0.427419
+[8]	validation_0-error:0.379032
+[9]	validation_0-error:0.379032
+[10]	validation_0-error:0.403226
+[11]	validation_0-error:0.427419
+[12]	validation_0-error:0.443548
+[13]	validation_0-error:0.451613
+Stopping. Best iteration:
+[8]	validation_0-error:0.379032
+
+the split_dates is ['2010-01-04', '2015-01-02', '2015-07-01']
+the lag is 5
+the norm_volume is v1
+accuracy is 0.6209677419354839
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.40625
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.414062
+[2]	validation_0-error:0.4375
+[3]	validation_0-error:0.429688
+[4]	validation_0-error:0.390625
+[5]	validation_0-error:0.5
+[6]	validation_0-error:0.445312
+[7]	validation_0-error:0.46875
+[8]	validation_0-error:0.460938
+[9]	validation_0-error:0.46875
+Stopping. Best iteration:
+[4]	validation_0-error:0.390625
+
+the split_dates is ['2010-07-02', '2015-07-01', '2015-12-31']
+the lag is 5
+the norm_volume is v1
+accuracy is 0.609375
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.584
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.592
+[2]	validation_0-error:0.576
+[3]	validation_0-error:0.56
+[4]	validation_0-error:0.552
+[5]	validation_0-error:0.504
+[6]	validation_0-error:0.48
+[7]	validation_0-error:0.512
+[8]	validation_0-error:0.488
+[9]	validation_0-error:0.488
+[10]	validation_0-error:0.56
+[11]	validation_0-error:0.52
+Stopping. Best iteration:
+[6]	validation_0-error:0.48
+
+the split_dates is ['2011-01-04', '2016-01-04', '2016-07-01']
+the lag is 5
+the norm_volume is v1
+accuracy is 0.52
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.543307
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.519685
+[2]	validation_0-error:0.543307
+[3]	validation_0-error:0.480315
+[4]	validation_0-error:0.503937
+[5]	validation_0-error:0.488189
+[6]	validation_0-error:0.448819
+[7]	validation_0-error:0.433071
+[8]	validation_0-error:0.448819
+[9]	validation_0-error:0.417323
+[10]	validation_0-error:0.440945
+[11]	validation_0-error:0.472441
+[12]	validation_0-error:0.448819
+[13]	validation_0-error:0.409449
+[14]	validation_0-error:0.425197
+[15]	validation_0-error:0.433071
+[16]	validation_0-error:0.433071
+[17]	validation_0-error:0.409449
+[18]	validation_0-error:0.425197
+Stopping. Best iteration:
+[13]	validation_0-error:0.409449
+
+the split_dates is ['2011-07-04', '2016-07-01', '2016-12-30']
+the lag is 5
+the norm_volume is v1
+accuracy is 0.5905511811023622
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.445312
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.445312
+[2]	validation_0-error:0.429688
+[3]	validation_0-error:0.429688
+[4]	validation_0-error:0.398438
+[5]	validation_0-error:0.484375
+[6]	validation_0-error:0.453125
+[7]	validation_0-error:0.445312
+[8]	validation_0-error:0.429688
+[9]	validation_0-error:0.40625
+Stopping. Best iteration:
+[4]	validation_0-error:0.398438
+
+the split_dates is ['2009-07-02', '2014-07-01', '2014-12-31']
+the lag is 5
+the norm_volume is v2
+accuracy is 0.6015625
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.451613
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.435484
+[2]	validation_0-error:0.41129
+[3]	validation_0-error:0.451613
+[4]	validation_0-error:0.395161
+[5]	validation_0-error:0.387097
+[6]	validation_0-error:0.459677
+[7]	validation_0-error:0.419355
+[8]	validation_0-error:0.435484
+[9]	validation_0-error:0.419355
+[10]	validation_0-error:0.395161
+Stopping. Best iteration:
+[5]	validation_0-error:0.387097
+
+the split_dates is ['2010-01-04', '2015-01-02', '2015-07-01']
+the lag is 5
+the norm_volume is v2
+accuracy is 0.6129032258064516
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.40625
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.335938
+[2]	validation_0-error:0.367188
+[3]	validation_0-error:0.4375
+[4]	validation_0-error:0.429688
+[5]	validation_0-error:0.421875
+[6]	validation_0-error:0.429688
+Stopping. Best iteration:
+[1]	validation_0-error:0.335938
+
+the split_dates is ['2010-07-02', '2015-07-01', '2015-12-31']
+the lag is 5
+the norm_volume is v2
+accuracy is 0.6640625
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.568
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.568
+[2]	validation_0-error:0.568
+[3]	validation_0-error:0.6
+[4]	validation_0-error:0.616
+[5]	validation_0-error:0.592
+Stopping. Best iteration:
+[0]	validation_0-error:0.568
+
+the split_dates is ['2011-01-04', '2016-01-04', '2016-07-01']
+the lag is 5
+the norm_volume is v2
+accuracy is 0.432
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.590551
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.566929
+[2]	validation_0-error:0.582677
+[3]	validation_0-error:0.566929
+[4]	validation_0-error:0.559055
+[5]	validation_0-error:0.551181
+[6]	validation_0-error:0.566929
+[7]	validation_0-error:0.551181
+[8]	validation_0-error:0.511811
+[9]	validation_0-error:0.464567
+[10]	validation_0-error:0.464567
+[11]	validation_0-error:0.480315
+[12]	validation_0-error:0.472441
+[13]	validation_0-error:0.511811
+[14]	validation_0-error:0.519685
+Stopping. Best iteration:
+[9]	validation_0-error:0.464567
+
+the split_dates is ['2011-07-04', '2016-07-01', '2016-12-30']
+the lag is 5
+the norm_volume is v2
+accuracy is 0.5354330708661418
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.460938
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.5
+[2]	validation_0-error:0.5
+[3]	validation_0-error:0.523438
+[4]	validation_0-error:0.53125
+[5]	validation_0-error:0.53125
+Stopping. Best iteration:
+[0]	validation_0-error:0.460938
+
+the split_dates is ['2009-07-02', '2014-07-01', '2014-12-31']
+the lag is 10
+the norm_volume is v1
+accuracy is 0.5390625
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.427419
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.419355
+[2]	validation_0-error:0.451613
+[3]	validation_0-error:0.451613
+[4]	validation_0-error:0.451613
+[5]	validation_0-error:0.41129
+[6]	validation_0-error:0.41129
+[7]	validation_0-error:0.41129
+[8]	validation_0-error:0.443548
+[9]	validation_0-error:0.443548
+[10]	validation_0-error:0.475806
+Stopping. Best iteration:
+[5]	validation_0-error:0.41129
+
+the split_dates is ['2010-01-04', '2015-01-02', '2015-07-01']
+the lag is 10
+the norm_volume is v1
+accuracy is 0.5887096774193549
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.414062
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.453125
+[2]	validation_0-error:0.53125
+[3]	validation_0-error:0.53125
+[4]	validation_0-error:0.539062
+[5]	validation_0-error:0.523438
+Stopping. Best iteration:
+[0]	validation_0-error:0.414062
+
+the split_dates is ['2010-07-02', '2015-07-01', '2015-12-31']
+the lag is 10
+the norm_volume is v1
+accuracy is 0.5859375
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.488
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.528
+[2]	validation_0-error:0.48
+[3]	validation_0-error:0.464
+[4]	validation_0-error:0.52
+[5]	validation_0-error:0.512
+[6]	validation_0-error:0.464
+[7]	validation_0-error:0.448
+[8]	validation_0-error:0.48
+[9]	validation_0-error:0.504
+[10]	validation_0-error:0.488
+[11]	validation_0-error:0.496
+[12]	validation_0-error:0.52
+Stopping. Best iteration:
+[7]	validation_0-error:0.448
+
+the split_dates is ['2011-01-04', '2016-01-04', '2016-07-01']
+the lag is 10
+the norm_volume is v1
+accuracy is 0.552
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.496063
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.511811
+[2]	validation_0-error:0.456693
+[3]	validation_0-error:0.503937
+[4]	validation_0-error:0.433071
+[5]	validation_0-error:0.425197
+[6]	validation_0-error:0.417323
+[7]	validation_0-error:0.472441
+[8]	validation_0-error:0.464567
+[9]	validation_0-error:0.503937
+[10]	validation_0-error:0.480315
+[11]	validation_0-error:0.535433
+Stopping. Best iteration:
+[6]	validation_0-error:0.417323
+
+the split_dates is ['2011-07-04', '2016-07-01', '2016-12-30']
+the lag is 10
+the norm_volume is v1
+accuracy is 0.5826771653543307
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.460938
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.492188
+[2]	validation_0-error:0.492188
+[3]	validation_0-error:0.515625
+[4]	validation_0-error:0.523438
+[5]	validation_0-error:0.507812
+Stopping. Best iteration:
+[0]	validation_0-error:0.460938
+
+the split_dates is ['2009-07-02', '2014-07-01', '2014-12-31']
+the lag is 10
+the norm_volume is v2
+accuracy is 0.5390625
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.41129
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.41129
+[2]	validation_0-error:0.419355
+[3]	validation_0-error:0.427419
+[4]	validation_0-error:0.403226
+[5]	validation_0-error:0.379032
+[6]	validation_0-error:0.475806
+[7]	validation_0-error:0.41129
+[8]	validation_0-error:0.419355
+[9]	validation_0-error:0.379032
+[10]	validation_0-error:0.435484
+Stopping. Best iteration:
+[5]	validation_0-error:0.379032
+
+the split_dates is ['2010-01-04', '2015-01-02', '2015-07-01']
+the lag is 10
+the norm_volume is v2
+accuracy is 0.6209677419354839
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.421875
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.429688
+[2]	validation_0-error:0.390625
+[3]	validation_0-error:0.40625
+[4]	validation_0-error:0.40625
+[5]	validation_0-error:0.359375
+[6]	validation_0-error:0.359375
+[7]	validation_0-error:0.40625
+[8]	validation_0-error:0.382812
+[9]	validation_0-error:0.40625
+[10]	validation_0-error:0.398438
+Stopping. Best iteration:
+[5]	validation_0-error:0.359375
+
+the split_dates is ['2010-07-02', '2015-07-01', '2015-12-31']
+the lag is 10
+the norm_volume is v2
+accuracy is 0.640625
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.528
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.544
+[2]	validation_0-error:0.512
+[3]	validation_0-error:0.52
+[4]	validation_0-error:0.496
+[5]	validation_0-error:0.472
+[6]	validation_0-error:0.536
+[7]	validation_0-error:0.528
+[8]	validation_0-error:0.552
+[9]	validation_0-error:0.552
+[10]	validation_0-error:0.544
+Stopping. Best iteration:
+[5]	validation_0-error:0.472
+
+the split_dates is ['2011-01-04', '2016-01-04', '2016-07-01']
+the lag is 10
+the norm_volume is v2
+accuracy is 0.528
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.488189
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.488189
+[2]	validation_0-error:0.409449
+[3]	validation_0-error:0.456693
+[4]	validation_0-error:0.488189
+[5]	validation_0-error:0.464567
+[6]	validation_0-error:0.448819
+[7]	validation_0-error:0.472441
+Stopping. Best iteration:
+[2]	validation_0-error:0.409449
+
+the split_dates is ['2011-07-04', '2016-07-01', '2016-12-30']
+the lag is 10
+the norm_volume is v2
+accuracy is 0.5905511811023622
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.484375
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.507812
+[2]	validation_0-error:0.554688
+[3]	validation_0-error:0.546875
+[4]	validation_0-error:0.539062
+[5]	validation_0-error:0.515625
+Stopping. Best iteration:
+[0]	validation_0-error:0.484375
+
+the split_dates is ['2009-07-02', '2014-07-01', '2014-12-31']
+the lag is 20
+the norm_volume is v1
+accuracy is 0.515625
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.620968
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.491935
+[2]	validation_0-error:0.524194
+[3]	validation_0-error:0.443548
+[4]	validation_0-error:0.5
+[5]	validation_0-error:0.491935
+[6]	validation_0-error:0.508065
+[7]	validation_0-error:0.532258
+[8]	validation_0-error:0.524194
+Stopping. Best iteration:
+[3]	validation_0-error:0.443548
+
+the split_dates is ['2010-01-04', '2015-01-02', '2015-07-01']
+the lag is 20
+the norm_volume is v1
+accuracy is 0.5564516129032258
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.476562
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.398438
+[2]	validation_0-error:0.4375
+[3]	validation_0-error:0.421875
+[4]	validation_0-error:0.359375
+[5]	validation_0-error:0.476562
+[6]	validation_0-error:0.453125
+[7]	validation_0-error:0.460938
+[8]	validation_0-error:0.390625
+[9]	validation_0-error:0.4375
+Stopping. Best iteration:
+[4]	validation_0-error:0.359375
+
+the split_dates is ['2010-07-02', '2015-07-01', '2015-12-31']
+the lag is 20
+the norm_volume is v1
+accuracy is 0.640625
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.48
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.512
+[2]	validation_0-error:0.512
+[3]	validation_0-error:0.504
+[4]	validation_0-error:0.504
+[5]	validation_0-error:0.528
+Stopping. Best iteration:
+[0]	validation_0-error:0.48
+
+the split_dates is ['2011-01-04', '2016-01-04', '2016-07-01']
+the lag is 20
+the norm_volume is v1
+accuracy is 0.52
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.488189
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.488189
+[2]	validation_0-error:0.472441
+[3]	validation_0-error:0.543307
+[4]	validation_0-error:0.574803
+[5]	validation_0-error:0.496063
+[6]	validation_0-error:0.543307
+[7]	validation_0-error:0.503937
+Stopping. Best iteration:
+[2]	validation_0-error:0.472441
+
+the split_dates is ['2011-07-04', '2016-07-01', '2016-12-30']
+the lag is 20
+the norm_volume is v1
+accuracy is 0.5275590551181102
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.546875
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.554688
+[2]	validation_0-error:0.539062
+[3]	validation_0-error:0.523438
+[4]	validation_0-error:0.546875
+[5]	validation_0-error:0.5
+[6]	validation_0-error:0.476562
+[7]	validation_0-error:0.453125
+[8]	validation_0-error:0.460938
+[9]	validation_0-error:0.570312
+[10]	validation_0-error:0.539062
+[11]	validation_0-error:0.53125
+[12]	validation_0-error:0.5625
+Stopping. Best iteration:
+[7]	validation_0-error:0.453125
+
+the split_dates is ['2009-07-02', '2014-07-01', '2014-12-31']
+the lag is 20
+the norm_volume is v2
+accuracy is 0.546875
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.443548
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.443548
+[2]	validation_0-error:0.427419
+[3]	validation_0-error:0.41129
+[4]	validation_0-error:0.379032
+[5]	validation_0-error:0.387097
+[6]	validation_0-error:0.443548
+[7]	validation_0-error:0.475806
+[8]	validation_0-error:0.491935
+[9]	validation_0-error:0.435484
+Stopping. Best iteration:
+[4]	validation_0-error:0.379032
+
+the split_dates is ['2010-01-04', '2015-01-02', '2015-07-01']
+the lag is 20
+the norm_volume is v2
+accuracy is 0.6209677419354839
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.5
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.507812
+[2]	validation_0-error:0.492188
+[3]	validation_0-error:0.507812
+[4]	validation_0-error:0.5
+[5]	validation_0-error:0.492188
+[6]	validation_0-error:0.507812
+[7]	validation_0-error:0.507812
+Stopping. Best iteration:
+[2]	validation_0-error:0.492188
+
+the split_dates is ['2010-07-02', '2015-07-01', '2015-12-31']
+the lag is 20
+the norm_volume is v2
+accuracy is 0.5078125
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.528
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.488
+[2]	validation_0-error:0.496
+[3]	validation_0-error:0.496
+[4]	validation_0-error:0.464
+[5]	validation_0-error:0.488
+[6]	validation_0-error:0.528
+[7]	validation_0-error:0.52
+[8]	validation_0-error:0.488
+[9]	validation_0-error:0.496
+Stopping. Best iteration:
+[4]	validation_0-error:0.464
+
+the split_dates is ['2011-01-04', '2016-01-04', '2016-07-01']
+the lag is 20
+the norm_volume is v2
+accuracy is 0.536
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.503937
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.551181
+[2]	validation_0-error:0.543307
+[3]	validation_0-error:0.488189
+[4]	validation_0-error:0.448819
+[5]	validation_0-error:0.448819
+[6]	validation_0-error:0.464567
+[7]	validation_0-error:0.448819
+[8]	validation_0-error:0.503937
+[9]	validation_0-error:0.559055
+Stopping. Best iteration:
+[4]	validation_0-error:0.448819
+
+the split_dates is ['2011-07-04', '2016-07-01', '2016-12-30']
+the lag is 20
+the norm_volume is v2
+accuracy is 0.5511811023622047
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.515625
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.523438
+[2]	validation_0-error:0.539062
+[3]	validation_0-error:0.492188
+[4]	validation_0-error:0.570312
+[5]	validation_0-error:0.539062
+[6]	validation_0-error:0.523438
+[7]	validation_0-error:0.554688
+[8]	validation_0-error:0.554688
+Stopping. Best iteration:
+[3]	validation_0-error:0.492188
+
+the split_dates is ['2009-07-02', '2014-07-01', '2014-12-31']
+the lag is 30
+the norm_volume is v1
+accuracy is 0.5078125
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.5
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.41129
+[2]	validation_0-error:0.467742
+[3]	validation_0-error:0.419355
+[4]	validation_0-error:0.427419
+[5]	validation_0-error:0.435484
+[6]	validation_0-error:0.419355
+Stopping. Best iteration:
+[1]	validation_0-error:0.41129
+
+the split_dates is ['2010-01-04', '2015-01-02', '2015-07-01']
+the lag is 30
+the norm_volume is v1
+accuracy is 0.5887096774193549
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.4375
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.5
+[2]	validation_0-error:0.515625
+[3]	validation_0-error:0.492188
+[4]	validation_0-error:0.523438
+[5]	validation_0-error:0.46875
+Stopping. Best iteration:
+[0]	validation_0-error:0.4375
+
+the split_dates is ['2010-07-02', '2015-07-01', '2015-12-31']
+the lag is 30
+the norm_volume is v1
+accuracy is 0.5625
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.48
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.432
+[2]	validation_0-error:0.416
+[3]	validation_0-error:0.408
+[4]	validation_0-error:0.424
+[5]	validation_0-error:0.408
+[6]	validation_0-error:0.4
+[7]	validation_0-error:0.448
+[8]	validation_0-error:0.456
+[9]	validation_0-error:0.432
+[10]	validation_0-error:0.456
+[11]	validation_0-error:0.504
+Stopping. Best iteration:
+[6]	validation_0-error:0.4
+
+the split_dates is ['2011-01-04', '2016-01-04', '2016-07-01']
+the lag is 30
+the norm_volume is v1
+accuracy is 0.6
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.551181
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.614173
+[2]	validation_0-error:0.590551
+[3]	validation_0-error:0.614173
+[4]	validation_0-error:0.590551
+[5]	validation_0-error:0.590551
+Stopping. Best iteration:
+[0]	validation_0-error:0.551181
+
+the split_dates is ['2011-07-04', '2016-07-01', '2016-12-30']
+the lag is 30
+the norm_volume is v1
+accuracy is 0.44881889763779526
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.492188
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.5625
+[2]	validation_0-error:0.515625
+[3]	validation_0-error:0.539062
+[4]	validation_0-error:0.554688
+[5]	validation_0-error:0.515625
+Stopping. Best iteration:
+[0]	validation_0-error:0.492188
+
+the split_dates is ['2009-07-02', '2014-07-01', '2014-12-31']
+the lag is 30
+the norm_volume is v2
+accuracy is 0.5078125
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.483871
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.419355
+[2]	validation_0-error:0.419355
+[3]	validation_0-error:0.41129
+[4]	validation_0-error:0.443548
+[5]	validation_0-error:0.435484
+[6]	validation_0-error:0.379032
+[7]	validation_0-error:0.387097
+[8]	validation_0-error:0.379032
+[9]	validation_0-error:0.346774
+[10]	validation_0-error:0.362903
+[11]	validation_0-error:0.362903
+[12]	validation_0-error:0.387097
+[13]	validation_0-error:0.362903
+[14]	validation_0-error:0.387097
+Stopping. Best iteration:
+[9]	validation_0-error:0.346774
+
+the split_dates is ['2010-01-04', '2015-01-02', '2015-07-01']
+the lag is 30
+the norm_volume is v2
+accuracy is 0.6532258064516129
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.445312
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.507812
+[2]	validation_0-error:0.523438
+[3]	validation_0-error:0.484375
+[4]	validation_0-error:0.492188
+[5]	validation_0-error:0.453125
+Stopping. Best iteration:
+[0]	validation_0-error:0.445312
+
+the split_dates is ['2010-07-02', '2015-07-01', '2015-12-31']
+the lag is 30
+the norm_volume is v2
+accuracy is 0.5546875
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.488
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.448
+[2]	validation_0-error:0.44
+[3]	validation_0-error:0.4
+[4]	validation_0-error:0.456
+[5]	validation_0-error:0.448
+[6]	validation_0-error:0.48
+[7]	validation_0-error:0.464
+[8]	validation_0-error:0.464
+Stopping. Best iteration:
+[3]	validation_0-error:0.4
+
+the split_dates is ['2011-01-04', '2016-01-04', '2016-07-01']
+the lag is 30
+the norm_volume is v2
+accuracy is 0.6
+Considering Exchange Rate
+Normalizing Volume:COMEX_GC_lag1_Volume=>COMEX_GC_lag1_OI
+Normalizing OI:COMEX_GC_lag1_OI=>COMEX_GC_lag1_nOI
+Normalizing Volume:COMEX_Co_Volume=>COMEX_Co_OI
+Normalizing OI:COMEX_Co_OI=>COMEX_Co_nOI
+Normalizing Volume:COMEX_SI_lag1_Volume=>COMEX_SI_lag1_OI
+Normalizing OI:COMEX_SI_lag1_OI=>COMEX_SI_lag1_nOI
+Normalizing Volume:DCE_AC_Volume=>DCE_AC_OI
+Normalizing OI:DCE_AC_OI=>DCE_AC_nOI
+Normalizing Volume:DCE_AK_Volume=>DCE_AK_OI
+Normalizing OI:DCE_AK_OI=>DCE_AK_nOI
+Normalizing Volume:DCE_AE_Volume=>DCE_AE_OI
+Normalizing OI:DCE_AE_OI=>DCE_AE_nOI
+Normalizing OI:LME_Co_OI=>LME_Co_nOI
+Normalizing OI:LME_Al_OI=>LME_Al_nOI
+Normalizing OI:LME_Le_OI=>LME_Le_nOI
+Normalizing OI:LME_Ni_OI=>LME_Ni_nOI
+Normalizing OI:LME_Zi_OI=>LME_Zi_nOI
+Normalizing OI:LME_Ti_OI=>LME_Ti_nOI
+Normalizing Spread:LME_Al_Close=>LME_Al_Spot
+Normalizing Volume:LME_Al_Volume=>LME_Al_OI
+Normalizing Spread:LME_Co_Close=>LME_Co_Spot
+Normalizing Volume:LME_Co_Volume=>LME_Co_OI
+Normalizing Spread:LME_Ti_Close=>LME_Ti_Spot
+Normalizing Volume:LME_Ti_Volume=>LME_Ti_OI
+Normalizing Spread:LME_Le_Close=>LME_Le_Spot
+Normalizing Volume:LME_Le_Volume=>LME_Le_OI
+Normalizing Spread:LME_Ni_Close=>LME_Ni_Spot
+Normalizing Volume:LME_Ni_Volume=>LME_Ni_OI
+Normalizing Spread:LME_Zi_Close=>LME_Zi_Spot
+Normalizing Volume:LME_Zi_Volume=>LME_Zi_OI
+SHFE_Al_Close+LME_Al_Spot=>SHFE_Al_nEx3MSpread
+SHFE_Al_Close+LME_Al_Close=>SHFE_Al_nEx3MSpread
+Normalizing Volume:SHFE_Al_Volume=>SHFE_Al_OI
+Normalizing OI:SHFE_Al_OI=>SHFE_Al_nOI
+Normalizing Volume:SHFE_Co_Volume=>SHFE_Co_OI
+Normalizing OI:SHFE_Co_OI=>SHFE_Co_nOI
+COMEX_GC_lag1_Close+COMEX_GC_lag1_Volume=>COMEX_GC_lag1_PVT+COMEX_GC_lag1_divPVT
+COMEX_Co_Close+COMEX_Co_Volume=>COMEX_Co_PVT+COMEX_Co_divPVT
+COMEX_SI_lag1_Close+COMEX_SI_lag1_Volume=>COMEX_SI_lag1_PVT+COMEX_SI_lag1_divPVT
+DCE_AC_Close+DCE_AC_Volume=>DCE_AC_PVT+DCE_AC_divPVT
+DCE_AK_Close+DCE_AK_Volume=>DCE_AK_PVT+DCE_AK_divPVT
+DCE_AE_Close+DCE_AE_Volume=>DCE_AE_PVT+DCE_AE_divPVT
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+SHFE_Al_Close+SHFE_Al_Volume=>SHFE_Al_PVT+SHFE_Al_divPVT
+SHFE_RT_Close+SHFE_RT_Volume=>SHFE_RT_PVT+SHFE_RT_divPVT
+[0]	validation_0-error:0.559055
+Will train until validation_0-error hasn't improved in 5 rounds.
+[1]	validation_0-error:0.519685
+[2]	validation_0-error:0.551181
+[3]	validation_0-error:0.543307
+[4]	validation_0-error:0.535433
+[5]	validation_0-error:0.527559
+[6]	validation_0-error:0.480315
+[7]	validation_0-error:0.511811
+[8]	validation_0-error:0.527559
+[9]	validation_0-error:0.559055
+[10]	validation_0-error:0.535433
+[11]	validation_0-error:0.543307
+Stopping. Best iteration:
+[6]	validation_0-error:0.480315
+
+the split_dates is ['2011-07-04', '2016-07-01', '2016-12-30']
+the lag is 30
+the norm_volume is v2
+accuracy is 0.5196850393700787

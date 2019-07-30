@@ -84,7 +84,7 @@ if __name__ == '__main__':
                 for lag in [5,10,20,30]:
                     for norm_volume in ["v1","v2"]:
                         for norm_ex in ["v1"]:
-                            for length in [1,3,5,7]:
+                            for length in [5]:
                                 split_dates = rolling_half_year("2003-01-01","2017-01-01",length)
                                 split_dates = split_dates[-args.k_folds:]
                                 for split_date in split_dates:
@@ -98,8 +98,8 @@ if __name__ == '__main__':
                                     tech_params = {'strength':0.01,'both':3}
                                     # start_time = time.time()
                                     # load data
-                                    time_series = copy(time_series.loc[split_date[0]:split_date[2]])
-                                    X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params = load_data_v5_rolling(time_series, horizon, args.ground_truth, lag, 
+                                    ts = copy(time_series.loc[split_date[0]:split_date[2]])
+                                    X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params = load_data_v5_rolling(ts, horizon, args.ground_truth, lag, 
                                                                                                     LME_dates, split_date, 
                                                                                                     norm_params, tech_params)
                                     
