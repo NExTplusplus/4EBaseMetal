@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Jul 30 11:09:42 2019
+
+@author: think
+"""
+
 '''
     
 '''
@@ -14,7 +21,7 @@ import matplotlib.pyplot as plt
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 
 
-from data.load_data_v5_rolling import load_data_v5_rolling
+from data.load_data_v7_rolling import load_data_v7_rolling
 from model.logistic_regression import LogReg
 from utils.transform_data import flatten
 from utils.construct_data import rolling_half_year
@@ -84,7 +91,7 @@ if __name__ == '__main__':
                 for lag in [5,10,20,30]:
                     for norm_volume in ["v1","v2"]:
                         for norm_ex in ["v1"]:
-                            for length in [5]:
+                            for length in [1,3,5,7]:
                                 split_dates = rolling_half_year("2003-01-01","2017-01-01",length)
                                 split_dates = split_dates[-args.k_folds:]
                                 for split_date in split_dates:

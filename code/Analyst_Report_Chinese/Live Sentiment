@@ -6,7 +6,11 @@ from scipy.stats import norm
 import sqlalchemy as sq
 
 class Score:
-    def __init__(self,conn_accur,build_db_accur = False,build_db_sent = False):
+    def __init__(self,conn_accur,build_db_accur = False,build_db_sent = False,1d_mean=0.5970621007055215,
+    1d_std=8.414777764276467,3d_mean=-1.3903934034969327,3d_std=8.639183559227595,5d_mean=0.12424428895705525,
+    5d_std=8.89325631926181,7d_mean=-0.2639188717791406,7d_std=9.311861941713998,10d_mean=-0.4306721228527607,
+    10d_std=9.69384406444057,15d_mean=0.2675713929447853,15d_std=10.070878860043765,20d_mean=0.5740284171779138,
+    20d_std=10.039971650746566):
         
         # This is the parameter to discrete the sentiment score
         # default tier_class is 3 (cannot change) 
@@ -23,32 +27,32 @@ class Score:
         self.adjusted_snt_mean = {}
         self.adjusted_snt_std = {} 
         
-        self.adjusted_snt_mean['1d'] = 0.5970621007055215
-        self.adjusted_snt_std['1d'] = 8.414777764276467
+        self.adjusted_snt_mean['1d'] = 1d_mean
+        self.adjusted_snt_std['1d'] = 1d_std
 
         
-        self.adjusted_snt_mean['3d'] = -1.3903934034969327
-        self.adjusted_snt_std['3d'] = 8.639183559227595
+        self.adjusted_snt_mean['3d'] = 3d_mean
+        self.adjusted_snt_std['3d'] = 3d_std
         
 
-        self.adjusted_snt_mean['5d'] = 0.12424428895705525
-        self.adjusted_snt_std['5d']= 8.89325631926181
+        self.adjusted_snt_mean['5d'] = 5d_mean
+        self.adjusted_snt_std['5d']= 5d_std
         
-        self.adjusted_snt_mean['7d'] = -0.2639188717791406
-        self.adjusted_snt_std['7d'] = 9.311861941713998
-        
-
+        self.adjusted_snt_mean['7d'] = 7d_mean
+        self.adjusted_snt_std['7d'] = 7d_std
         
 
-        self.adjusted_snt_mean['10d'] = -0.4306721228527607
-        self.adjusted_snt_std['10d'] = 9.69384406444057
+        
+
+        self.adjusted_snt_mean['10d'] = 10d_mean
+        self.adjusted_snt_std['10d'] = 10d_std
         
         
-        self.adjusted_snt_mean['15d'] = 0.2675713929447853
-        self.adjusted_snt_std['15d'] = 10.070878860043765
+        self.adjusted_snt_mean['15d'] = 15d_mean
+        self.adjusted_snt_std['15d'] = 15d_std
         
-        self.adjusted_snt_mean['20d'] = 0.5740284171779138
-        self.adjusted_snt_std['20d']= 10.039971650746566
+        self.adjusted_snt_mean['20d'] = 20d_mean
+        self.adjusted_snt_std['20d']= 20d_std
 
         
         # Record the connection of the database, set up the database in required format if build_db = True

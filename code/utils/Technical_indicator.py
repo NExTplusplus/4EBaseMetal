@@ -1,23 +1,44 @@
 import pandas as pd
 import numpy as np
+from itertools import accumulate
 from copy import copy
-
 # This function will calculate Price Volume Trend as mentioned in google drive/ technical indicator for more explanations
 # close is the column for closing price and volume is the column for volume.
-# It is encourged to use different version of volumes to try the result
+# When price adjusted volume on up days outpaces that on down day, then PVT rises, vice versa.
+# When PVT goes up, the buying pressure is up as well
+def pvt (idx,Close,Volume):
+    pvt = np.log(Close/Close.shift(1))*Volume
+    pvt = pd.Series(index = idx[1:],data = accumulate(pvt.dropna()))
+    pvt = (pvt>pvt.shift(1))*1
+    
+    return pvt
 
-def pvt (close,volume):
+#def divergence_pvt_OI(idx,Close,OI,train_end,params):
+#    
+#    pvt = np.log(Close/Close.shift(1))*OI
+#    pvt = pd.Series(index = idx[1:],data = accumulate(pvt.dropna()))
+#
+#    divPT = pvt/pvt.shift(1) - Close/Close.shift(1)
+#    temp = sorted(copy(divPT[:train_end]))
+#    mx = temp[-1]
+#    mn = temp[0]
+#    if params['both'] == 1:
+#        mx = temp[int(np.floor((1-params['strength'])*len(temp)))]
+#    elif params['both'] == 2:
+#        mn = temp[int(np.ceil(params['strength']*len(temp)))]
+#    elif params['both'] == 3:
+#        mx = temp[int(np.floor((1-params['strength'])*len(temp)))]
+#        mn = temp[int(np.ceil(params['strength']*len(temp)))]
+#    divPT = divPT.apply(lambda x: min(x,mx))
+#    divPT = divPT.apply(lambda x: max(x,mn))
+
+def divergence_pvt(close,volume,train_end,params):
+    
     pvt = close.shift(1)
     pvt.iloc[1] = ((close.iloc[1]/close.iloc[0])-1)*volume.iloc[1]
     for i in range(2,len(close)):
-        pvt.iloc[i] = ((close.iloc[i]/close.iloc[i-1])-1)*volume.iloc[i] + pvt.iloc[i-1]     
-    return pvt
-
-# This function will calculate divergence between Price Volume Trend and percentage price change 
-# as mentioned in google drive/ technical indicator for more explanations
-# close is the column for closing price and pvt is the column for pvt.
-# It is encourged to use different version of pvts to try the result
-def divergence_pvt (close,pvt,train_end,params):
+    	pvt.iloc[i] = ((close.iloc[i]/close.iloc[i-1])-1)*volume.iloc[i] + pvt.iloc[i-1]  
+    
     percentage_change = (close/close.shift(1))-1
     pvt_change = (pvt/pvt.shift(1))-1
     divPT = percentage_change-pvt_change
@@ -25,40 +46,108 @@ def divergence_pvt (close,pvt,train_end,params):
     mx = temp[-1]
     mn = temp[0]
     if params['both'] == 1:
-        mx = temp[int(np.floor((1-params['strength'])*len(temp)))]
+    	mx = temp[int(np.floor((1-params['strength'])*len(temp)))]
     elif params['both'] == 2:
-        mn = temp[int(np.ceil(params['strength']*len(temp)))]
+    	mn = temp[int(np.ceil(params['strength']*len(temp)))]
     elif params['both'] == 3:
-        mx = temp[int(np.floor((1-params['strength'])*len(temp)))]
-        mn = temp[int(np.ceil(params['strength']*len(temp)))]
+    	mx = temp[int(np.floor((1-params['strength'])*len(temp)))]
+    	mn = temp[int(np.ceil(params['strength']*len(temp)))]
     for i in range(len(divPT)):
-        if divPT[i] > mx:
-            divPT[i] = mx
-        elif divPT[i] < mn:
-            divPT[i] = mn    
+    	if divPT[i] > mx:
+    		divPT[i] = mx
+    	elif divPT[i] < mn:
+    		divPT[i] = mn    
     return divPT
 
-# This function will calculate accumulation/distribution as mentioned in google drive/ technical indicator for more explanations
-# "X" is the dataframe we want to process
-# close,low,opened,high are the column for closing price, low price, open price and high price respectively
-# volume is the column for volume. 
-# It is encourged to use different version of volumes to try the result
-def ad (close,low,opened,high,volume):
-    close_p = close
-    low_p =  low
-    open_p =  opened
-    high_p =  high
-    money_flow = ((close_p - low_p)-(high_p-close_p))/(high_p-low_p)      
-    return money_flow*volume
+#This function will calculate the volatility scissor difference.
+#High is a series of high price per day, so on so as. Window is an integer
+#This indicator is a measure of difference between upward volatility and downward volatility within one day.
+#The benchmark of this indicator is open price.
+def vsd(High,Low,Open,window):
+    sdiff = (High - 2*Open + Low)/Open
+    sdiff_win = sdiff.rolling(window).mean()
+    vsd = pd.Series(index = High.index,data = [0]*len(High))
+    tmp = np.array(sdiff_win)>0
+    vsd.iloc[1:] = tmp[:-1]*1
+    return vsd
+#This function will calculate Bollinger Bands.
+#Close is a series of close price.
+#When the price of the commodity considered is volatile, the bands tend to expand.
+#When of close price is higher than the upper band,you get an "overbought" signal.
+def bollinger(Close,window):
+    middle = Close.rolling(window).mean()
+    rrange = Close.rolling(window).std()
+    upper = middle + 2*rrange
+    lower = middle - 2*rrange
+    
+    bollinger = pd.Series(index = Close.index,data = [0]*len(Close))
+    bollinger.loc[Close>upper] = 1
+    bollinger.loc[Close<lower] = -1
+    
+    return bollinger
 
-# This function will calculate divergence between accumulation/distribution and percentage price change 
-# as mentioned in google drive/ technical indicator for more explanations
-# close is the column for closing price and ad is the column for ad.
-# It is encourged to use different version of ads to try the result
-def divergence_ad (close,ad):
-    percentage_change = (close/close.shift(1))-1
-    ad_change = (ad/ad.shift(1))-1
-    for i in range(len(ad_change)):
-        if np.isinf(ad_change[i]):
-            ad_change[i] = np.nan
-    return percentage_change-ad_change
+import talib as ta
+#This function will calculate the Normalized Average True Range
+#High is a series of high price per day, so on so as
+#NART is a measure of volatilty normalized by close price, more comparable across securities.
+def natr(High,Low,Close,window):
+    
+    return ta.NATR(High,Low,Close,timeperiod = window)
+
+
+#This function will calculate the Exponential Moving Average.
+#Close is a series of close price.
+#The EMA is normalized by close price, will be more comparable accross the price on difference days.
+def ema(Close,window = 12):
+    tmp = ta.EMA(Close,timeperiod = window)
+    ema = tmp/Close
+    
+    return ema
+
+#This function will calculate the percntage price oscillator.
+#Close is a series of close price.Both fast and slow are integer.
+#PPO measures the difference between two moving averages as a percnetage of the larger moving average.
+#If PPO is higher than 1, the more recently price is higher.
+def ppo(Close,fast = 12,slow = 26):
+    tmp_ppo = ta.PPO(Close,fastperiod = fast,slowperiod = slow, matype = 0)
+    ppo = pd.Series(index = Close.index,data = [0]*len(Close))
+    ppo.loc[tmp_ppo>0] = 1
+    ppo.loc[tmp_ppo<=0] = -1
+    
+    return ppo
+
+#This function will calculate the Volatility Based Momentum, a volatility-adjusted measure of momentum.
+##Close is a series of close price,so on so as. Window is an integer
+def vbm(High,Low,Close,window):
+    atr = ta.ATR(High,Low,Close,timeperiod = window)
+    vbm = (Close - Close.shift(window))/atr
+    
+    return vbm
+
+#This function will calculate the "Stop and Reverse",
+#Which is used to determine trend direnction and potential reversals in price.
+#High is a series of high price, so on so as
+#Acceleration factor starts at 0.02, and increases by 0.02, up to a maximum of 0.2.
+def sar(High,Low,Close,initial=0.02,maximum = 0.2):
+    tmp_sar = ta.SAR(High,Low,acceleration = initial, maximum = maximum)
+    sar =  pd.Series(index = High.index,data = [0]*len(High))
+    sar.loc[Close>tmp_sar] = 1
+    sar.loc[Close<tmp_sar] = -1
+    
+    return sar
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

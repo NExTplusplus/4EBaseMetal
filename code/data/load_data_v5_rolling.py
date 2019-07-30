@@ -8,7 +8,7 @@ import json
 from utils.read_data import  process_missing_value_v3
 from utils.normalize_feature import log_1d_return, normalize_volume, normalize_3mspot_spread, normalize_OI, normalize_3mspot_spread_ex
 from utils.transform_data import flatten
-from utils.construct_data import construct,normalize_without_1d_return,technical_indication,construct_keras_data,scaling,labelling,deal_with_abnormal_value_exp3
+from utils.construct_data import construct,normalize_without_1d_return,technical_indication_v5,construct_keras_data,scaling,labelling,deal_with_abnormal_value_exp3
 
 def save_data(fname,time_series,columns, ground_truth = None):
     col_name = ""
@@ -75,7 +75,7 @@ def load_data_v5_rolling(time_series, horizon, ground_truth_columns, lags, LME_d
     '''
     org_cols = time_series.columns.values.tolist()
     time_series, norm_params = normalize_without_1d_return(time_series, time_series.index.get_loc(split_dates[1]), params = norm_params)
-    time_series = technical_indication(time_series, time_series.index.get_loc(split_dates[1]), params = tech_params)
+    time_series = technical_indication_v5(time_series, time_series.index.get_loc(split_dates[1]), params = tech_params)
     for col in copy(time_series.columns):
         if "_Volume" in col or "_OI" in col or "CNYUSD" in col or "_PVT" in col:
             time_series = time_series.drop(col,axis = 1)

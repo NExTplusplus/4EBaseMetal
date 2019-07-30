@@ -36,7 +36,17 @@ class Crawler_machine:
         # keyword_report is to select all reports that contain keyword
         # If keyword_report is All, then xpath and tag_element for the all report links must be given in order to locate them
         # keyword_filter is the keyword must be contained in the title if not we will filter it out
-        
+        '''
+        crawl_type:(string)['manual_num_crawl', 'auto_click_crawl', 'auto_link_crawl','same_page_click']the difference type of the page
+        analyst_company:(string)the company name
+        news_type:(string)to detect whether the report is weekly or daily
+        website_link:(string)the link of the website
+        xpath:(string)the specific title of the html
+        tag:(string)help us to track the html stage
+        key_next_page:(string)the word we need to go to the next page
+        keyword_filter:(list)the chinese name of the metal
+        exclude_list:(list)to detect whether we need to wrawl other information,default is []
+        '''
          
         result = self.conn_html.execute("SHOW TABLES LIKE 'html';")
         
@@ -60,6 +70,7 @@ class Crawler_machine:
         driver.execute_script("window.open('');")
         driver.switch_to.window(driver.window_handles[0])
         
+        driver.max_window()
         type_lst = ['manual_num_crawl', 'auto_click_crawl', 'auto_link_crawl','same_page_click']
         if crawl_type not in type_lst:
             driver.quit()
@@ -209,8 +220,14 @@ class Crawler_machine:
         print('Link crawled : ',crawled_data)
     
     def crawl(self,wait_time,website_link,webdriver_link):
-        
-        
+        '''
+        This is the function we use to tranfer the data to the crawl_func
+        '''
+        '''
+        wait_time:(float)the time to open the website
+        website_lint:(string)the link we need to crawl
+        webdriver_link:(string)the link of the tool we use to crawl the website
+        '''
         pre_click = False
         keyword_filter = ['铜','铅','锌','镍','铝','锡','有色'] 
         exclude_list=[]
@@ -673,12 +690,14 @@ website_link_lst.append('http://www.gtaxqh.com/html/RESEARCH_SERVICES/zhlcb/mrsp
 website_link_lst.append('http://www.shcifco.com/html/yanjiuzhongxin/shishikuaixun/panzhongshidian/')
 
 ##############################################################################################################33
-#Example
+#the command we need to run the cralwer
 
 engine = sq.create_engine("mysql+pymysql://root:next++4e@localhost/Alternative_DB?host=localhost?port=3306")
 conn = engine.connect()
 webdriver_link = '/home/liangchen/4e/Alternative Data/chromedriver'
 wait_time = 2.5
-website_link = 'http://www.shcifco.com/html/yanjiuzhongxin/shishikuaixun/panzhongshidian/'
 crawler = Crawler_machine(conn)
-crawler.crawl(wait_time,website_link,webdriver_link)
+for website_link in website_link_lst:
+    crawler.crawl(wait_time,website_link,webdriver_link)
+
+
