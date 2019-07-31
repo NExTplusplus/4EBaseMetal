@@ -25,7 +25,7 @@ def save_data(fname,time_series,columns, ground_truth = None):
             if ground_truth is not None:
                 out.write(str(ground_truth[i]))
             out.write("\n")
-def load_data_v5_rolling(time_series, horizon, ground_truth_columns, lags, LME_dates, split_dates, norm_params, tech_params):
+def load_data_v5_ex3(time_series, horizon, ground_truth_columns, lags, LME_dates, split_dates, norm_params, tech_params):
     """
     input: time_series: A dataframe that holds the data.
            split_dates: define the time that we use to define the range of the data.

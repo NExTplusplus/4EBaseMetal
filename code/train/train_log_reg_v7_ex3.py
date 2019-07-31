@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 
 
-from data.load_data_v7_rolling import load_data_v7_rolling
+from data.load_data_v7_ex3 import load_data_v7_ex3
 from model.logistic_regression import LogReg
 from utils.transform_data import flatten
 from utils.construct_data import rolling_half_year
@@ -107,7 +107,7 @@ if __name__ == '__main__':
                                     # start_time = time.time()
                                     # load data
                                     ts = copy(time_series.loc[split_date[0]:split_date[2]])
-                                    X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params = load_data_v5_rolling(ts, horizon, args.ground_truth, lag, 
+                                    X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params = load_data_v7_ex3(ts, horizon, args.ground_truth, lag, 
                                                                                                     LME_dates, split_date, 
                                                                                                     norm_params, tech_params)
                                     
