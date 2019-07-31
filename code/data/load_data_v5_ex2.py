@@ -25,7 +25,7 @@ def save_data(fname,time_series,columns, ground_truth = None):
             if ground_truth is not None:
                 out.write(str(ground_truth[i]))
             out.write("\n")
-def load_data_v5_ex2(config, horizon, ground_truth_columns, lags, source, split_dates, norm_params, tech_params):
+def load_data_v5_ex2(time_series, horizon, ground_truth_columns, lags, LME_dates, split_dates, norm_params, tech_params):
     """
     input: config: A file to define which file we load and which column we use.
            split_dates: define the time that we use to define the range of the data.
@@ -52,13 +52,6 @@ def load_data_v5_ex2(config, horizon, ground_truth_columns, lags, source, split_
                         nEx(boolean): check True if Cross Exchange Spread is produced
            
     """
-    if source =="NExT":
-        from utils.read_data import read_data_NExT
-        data_list, LME_dates = read_data_NExT(config, split_dates[0])
-        time_series = pd.concat(data_list, axis = 1, sort = True)
-    elif source == "4E":
-        from utils.read_data import read_data_v5_4E
-        time_series, LME_dates = read_data_v5_4E(split_dates[0])
 
     '''
     deal with the abnormal data which we found in the data. 
@@ -70,6 +63,12 @@ def load_data_v5_ex2(config, horizon, ground_truth_columns, lags, source, split_
     '''
     time_series = time_series.loc[LME_dates]
     labels = labelling_ex2(time_series, horizon, ground_truth_columns,time_series.index.get_loc(split_dates[1],method = 'ffill'))
+
+    time_series = process_missing_value_v3(time_series,1)
+
+    split_dates[0] = time_series.index[time_series.index.get_loc(split_dates[0], method = 'bfill')]
+    split_dates[1] = time_series.index[time_series.index.get_loc(split_dates[1], method = 'bfill')]
+    split_dates[2] = time_series.index[time_series.index.get_loc(split_dates[2], method = 'ffill')]
 
     '''
     Normalize, create technical indicators, handle outliers and rescale data
@@ -103,7 +102,9 @@ def load_data_v5_ex2(config, horizon, ground_truth_columns, lags, source, split_
         time_series = [time_series]
         all_cols.append(time_series[0].columns)
     
-    
+
+
+ 
 
     '''
     Merge labels with time series dataframe
@@ -116,6 +117,10 @@ def load_data_v5_ex2(config, horizon, ground_truth_columns, lags, source, split_
     '''
     create 3d array with dimensions (n_samples, lags, n_features)
     '''
+
+    split_dates[0] = time_series[0].index[time_series[0].index.get_loc(split_dates[0], method = 'bfill')]
+    split_dates[1] = time_series[0].index[time_series[0].index.get_loc(split_dates[1], method = 'bfill')]
+    split_dates[2] = time_series[0].index[time_series[0].index.get_loc(split_dates[2], method = 'ffill')]   
 
     tra_ind = 0
     if tra_ind < lags - 1:

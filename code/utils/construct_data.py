@@ -148,7 +148,6 @@ def construct_ex2(time_series, ground_truth, start_ind, end_ind, T, h, norm_meth
     indices_to_keep = y.nonzero()[0]
     y = y[indices_to_keep,:]
     X = X[indices_to_keep,:]
-    print(len(y))
 
     
     return X,y
