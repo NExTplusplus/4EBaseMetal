@@ -68,7 +68,7 @@ def process_missing_value_v2(X):
 # "X" is the dataframe we want to process and "cons_data" is number of consecutive complede data we need to have 
 
 
-def process_missing_value_v3(X,cons_data):
+def process_missing_value_v3(X,cons_data=1):
     count = 0
     sta_ind = 0
     for i in range(X.shape[0]):
