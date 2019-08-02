@@ -295,8 +295,6 @@ def construct_v1(time_series, ground_truth, start_ind, end_ind, T, h):
             y[sample_ind, 0] = ground_truth.values[ind]
             sample_ind += 1
     
-    print(X)
-    
     return X,y
 
 def construct_v1_ex2(time_series, ground_truth, start_ind, end_ind, T, h):
