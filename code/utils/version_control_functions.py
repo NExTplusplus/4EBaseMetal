@@ -81,14 +81,14 @@ def technical_indication(arguments, version):
         automated generation of technical indicators for all possible combinations (only PVT)
         '''
         return technical_indication_v1(time_series,time_series.index.get_loc(arguments['split_dates'][1]),
-                                        arguments['tech_params'])
+                                        arguments['tech_params'],arguments['ground_truth_columns'])
     
     if version == "v2":
         '''
         automated generation of technical indicators for all possible combinations
         '''
         return technical_indication_v2(time_series,time_series.index.get_loc(arguments['split_dates'][1]),
-                                        arguments['tech_params'])
+                                        arguments['tech_params'],arguments['ground_truth_columns'])
 
 
 def remove_unused_columns(arguments, version):

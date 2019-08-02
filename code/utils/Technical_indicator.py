@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from itertools import accumulate
 from copy import copy
+
 # This function will calculate Price Volume Trend as mentioned in google drive/ technical indicator for more explanations
 # close is the column for closing price and volume is the column for volume.
 # When price adjusted volume on up days outpaces that on down day, then PVT rises, vice versa.
@@ -135,6 +136,19 @@ def sar(High,Low,Close,initial=0.02,maximum = 0.2):
     sar.loc[Close<tmp_sar] = -1
     
     return sar
+
+#This function will calculate the Relative Strength Index.
+#RSI is a siganl of overbought and oversold, more sensitive for bearish market.
+def rsi(Close,period = 14):
+    rsi = ta.RSI(Close,timeperiod = period)
+    rsi_signal = pd.Series(index = Close.index,data = [0]*len(Close))
+    for i in range(1,len(rsi_signal)):
+        if rsi.iloc[i-1]>50:
+            rsi_signal.iloc[i] = -1
+        elif rsi.iloc[i-1]<30:
+            rsi_signal.iloc[i] = 1
+    return rsi_signal
+    
     
     
     
