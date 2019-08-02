@@ -16,9 +16,11 @@ def generate_version_params(version):
 
     if ex == "ex1":
         ans['labelling'] = "v1_ex1"
-    elif ex == "ex2":
+    if ex == "ex2":
         ans['labelling'] = "v1_ex2"
         ans['construct'] = "v1_ex2"
+    if ex == "ex3":
+        ans['technical_indication'] = ans['technical_indication']+"_ex3"
     return ans
 
 def deal_with_abnormal_value(arguments, version):
@@ -78,17 +80,32 @@ def technical_indication(arguments, version):
     time_series = arguments['time_series']
     if version == "v1":
         '''
-        automated generation of technical indicators for all possible combinations (only PVT)
+        automated generation of divPVT for all possible combinations (only PVT)
         '''
         return technical_indication_v1(time_series,time_series.index.get_loc(arguments['split_dates'][1]),
                                         arguments['tech_params'],arguments['ground_truth_columns'])
-    
-    if version == "v2":
+                                        
+    elif version == "v1_ex3":
         '''
-        automated generation of technical indicators for all possible combinations
+        automated generation of technical indicators for all possible combinations (only LME Ground Truth)
+        '''
+        return technical_indication_v1_ex3(time_series,time_series.index.get_loc(arguments['split_dates'][1]),
+                                        arguments['tech_params'],arguments['ground_truth_columns'])
+    
+    elif version == "v2":
+        '''
+        automated generation of divPVT for all possible combinations
         '''
         return technical_indication_v2(time_series,time_series.index.get_loc(arguments['split_dates'][1]),
                                         arguments['tech_params'],arguments['ground_truth_columns'])
+    
+    elif version == "v2_ex3":
+        '''
+        automated generation of technical indicators for all possible combinations (only LME Ground Truth)
+        '''
+        return technical_indication_v2_ex3(time_series,time_series.index.get_loc(arguments['split_dates'][1]),
+                                        arguments['tech_params'],arguments['ground_truth_columns'])
+    
 
 
 def remove_unused_columns(arguments, version):

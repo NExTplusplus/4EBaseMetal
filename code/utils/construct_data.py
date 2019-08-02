@@ -210,8 +210,19 @@ def technical_indication_v1(X,train_end,params,ground_truth):
                                                                 params = params)
     return X
 
-#this function is to build the technical indicator which is called PVT,DIV_PVT,NATR,VSD,VBM,BSD BOLLINGER,
-#EMA,SAR,PPO  
+#this function is to build the technical indicator which is called PVT and DIV_PVT for LME Ground Truth only
+def technical_indication_v1_ex3(X,train_end,params,ground_truth):
+    print('====================================technical indicator_v1_ex3========================================')
+    cols = X.columns.values.tolist()
+    for col in cols:
+        setting = col[:-5]
+        if 'Close' in col and setting in ground_truth[0]:
+            if setting+'Volume' in cols:
+                 print("+".join((col,setting+"Volume"))+"=>"+(setting+"divPVT"))
+                 X[setting+"divPVT"] = divergence_pvt(copy(X[col]),copy(X[setting+"Volume"]),train_end, 
+                                                                params = params)
+    return X
+
 def technical_indication_v2(X,train_end,params,ground_truth_columns):
     """
     X: which equals the timeseries
@@ -219,6 +230,45 @@ def technical_indication_v2(X,train_end,params,ground_truth_columns):
     params: A dictionary we use to feed the parameter
     """
     print('====================================technical indicator_v2========================================')
+    cols = X.columns.values.tolist()
+    for col in cols:
+        setting = col[:-5]
+        ground_truth = ground_truth_columns[0][4:6]
+        if "Close" in col or 'Spot' in col:
+            X[col+"_EMA"] = ema(copy(X[col]),params['Win_EMA'])
+            X[col+"_bollinger"] = bollinger(copy(X[col]),params['Win_Bollinger'])
+            X[col+"_PPO"] = ppo(copy(X[col]),params['Fast'],params['Slow'])
+            X[col+"_RSI"] = rsi(copy(X[col]))
+                
+            if "Close" in col and setting+"Volume" in cols:
+                
+                print("+".join((col,setting+"Volume"))+"=>"+"+".join((setting+"PVT",setting+"divPVT")))
+                X[setting+"PVT"] = pvt(copy(X.index),copy(X[col]),copy(X[setting+"Volume"]))
+                X[setting+"divPVT"] = divergence_pvt(copy(X[col]),copy(X[setting+"Volume"]),train_end, 
+                                                            params = params)
+            
+            if 'Close' in col and setting+'High' in cols and setting+'Low' in cols:
+                X[setting+'NATR'] = natr(X[setting+"High"],X[setting+"Low"],X[col],params['Win_NATR'])
+                X[setting+'VBM'] = vbm(X[setting+"High"],X[setting+"Low"],X[col],params['Win_VBM'])
+                X[setting+'SAR'] = sar(X[setting+"High"],X[setting+"Low"],X[col],params['acc_initial'],params['acc_maximum'])
+        
+        if setting+"Open" in cols:
+            if setting+'High' in cols and setting+'Low' in cols:
+                for i in range(len(params['Win_VSD'])):
+                    X[setting+"VSD"+str(params['Win_VSD'][i])] = vsd(X[setting+"High"],X[setting+"Low"],X[col],params['Win_VSD'][i])
+            
+                
+    return X
+
+#this function is to build the technical indicator which is called PVT,DIV_PVT,NATR,VSD,VBM,BSD BOLLINGER,
+#EMA,SAR,PPO only for LME Ground Truth
+def technical_indication_v2_ex3(X,train_end,params,ground_truth_columns):
+    """
+    X: which equals the timeseries
+    train_end: string which we use to define the range we use to train
+    params: A dictionary we use to feed the parameter
+    """
+    print('====================================technical indicator_v2_ex3========================================')
     cols = X.columns.values.tolist()
     for col in cols:
         setting = col[:-5]
@@ -231,15 +281,11 @@ def technical_indication_v2(X,train_end,params,ground_truth_columns):
                 X[col+"_RSI"] = rsi(copy(X[col]))
                     
                 if "Close" in col and setting+"Volume" in cols:
-                    
-                    print("+".join((col,setting+"Volume"))+"=>"+"+".join((setting+"PVT",setting+"divPVT")))
                     X[setting+"PVT"] = pvt(copy(X.index),copy(X[col]),copy(X[setting+"Volume"]))
                     X[setting+"divPVT"] = divergence_pvt(copy(X[col]),copy(X[setting+"Volume"]),train_end, 
                                                                 params = params)
                 
                 if 'Close' in col and setting+'High' in cols and setting+'Low' in cols:
-                   
-                    print("+".join((col,setting+"High"))+"=>"+"+".join((setting+"PVT",setting+"divPVT")))
                     X[setting+'NATR'] = natr(X[setting+"High"],X[setting+"Low"],X[col],params['Win_NATR'])
                     X[setting+'VBM'] = vbm(X[setting+"High"],X[setting+"Low"],X[col],params['Win_VBM'])
                     X[setting+'SAR'] = sar(X[setting+"High"],X[setting+"Low"],X[col],params['acc_initial'],params['acc_maximum'])
