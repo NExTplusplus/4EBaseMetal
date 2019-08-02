@@ -127,7 +127,6 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     y_va = []
     X_te = []
     y_te = []
-    print(parameters['time_series'][0].columns)
     # print(len(time_series))
     for ind in range(len(parameters['time_series'])):
         # construct the training

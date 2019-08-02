@@ -111,7 +111,6 @@ if __name__ == '__main__':
                                         neg_y_tr = y_tr[ind] - 1
                                         y_tr[ind] = y_tr[ind] + neg_y_tr
                                         X_tr[ind] = flatten(X_tr[ind])
-                                        print(X_tr)
                                         
                                         neg_y_va = y_va[ind] - 1
                                         y_va[ind] = y_va[ind] + neg_y_va
