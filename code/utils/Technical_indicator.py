@@ -75,11 +75,11 @@ def vsd(High,Low,Open,window):
 #Close is a series of close price.
 #When the price of the commodity considered is volatile, the bands tend to expand.
 #When of close price is higher than the upper band,you get an "overbought" signal.
-def bollinger(Close,window):
+def bollinger(Close,window, limiting_factor = 2):
     middle = Close.rolling(window).mean()
     rrange = Close.rolling(window).std()
-    upper = middle + 2*rrange
-    lower = middle - 2*rrange
+    upper = middle + limiting_factor*rrange
+    lower = middle - limiting_factor*rrange
     
     bollinger = pd.Series(index = Close.index,data = [0]*len(Close))
     bollinger.loc[Close>upper] = 1
@@ -88,6 +88,7 @@ def bollinger(Close,window):
     return bollinger
 
 import talib as ta
+
 #This function will calculate the Normalized Average True Range
 #High is a series of high price per day, so on so as
 #NART is a measure of volatilty normalized by close price, more comparable across securities.
@@ -148,6 +149,52 @@ def rsi(Close,period = 14):
         elif rsi.iloc[i-1]<30:
             rsi_signal.iloc[i] = 1
     return rsi_signal
+
+#This function will generate the predictions based on the 3rd strategy
+#price can be either High Price or Close Price, window is the amount of days for our price difference comparison
+def strategy_3(price,window):
+    ans = copy(price)
+    max_price = ans.rolling(window).max().shift(1).dropna()
+    min_price = ans.rolling(window).min().shift(1).dropna()
+    ans = ans[window:]
+    temp_price = copy(ans)
+    ans.loc[temp_price > max_price] = 1
+    ans.loc[temp_price < min_price] = -1
+    ans.loc[abs(ans) != 1] = 0
+
+    return ans
+
+def strategy_6(High, Low, Close, window, limiting_factor):
+    ATR = ta.ATR(High,Low,Close,timeperiod = window)
+    MA = Close.rolling(window).mean()
+    ans = copy(Close)
+    ans.loc[Close > MA + limiting_factor*ATR] = 1
+    ans.loc[Close < MA - limiting_factor*ATR] = -1
+    ans.loc[abs(ans) != 1] = 0
+
+    return ans
+
+
+
+def strategy_7(Close, window, limiting_factor):
+    BB = bollinger(Close, window, limiting_factor)
+    MA = Close.rolling(window).mean()
+    ans = copy(Close)
+    ans.loc[(BB==1)&(Close.shift(1) > MA.shift(1))] = 1
+    ans.loc[(BB==-1)&(Close.shift(1) < MA.shift(1))] = -1
+    ans.loc[abs(ans) != 1] = 0
+
+    return ans
+
+
+def strategy_9(Close, FastLength, SlowLength, MACDLength):
+    return None
+
+
+
+
+
+
     
     
     

@@ -5,8 +5,8 @@ import os
 import sys
 from datetime import datetime
 sys.path.insert(0,os.path.abspath(os.path.join(sys.path[0],"..")))
-from utils.normalize_feature import normalize_3mspot_spread,normalize_3mspot_spread_ex,normalize_OI,normalize_volume
-from utils.Technical_indicator import pvt, divergence_pvt,ema,bollinger,ppo,vsd,natr,vbm,sar,rsi
+from utils.normalize_feature import *
+from utils.Technical_indicator import *
 from sklearn import preprocessing
 import scipy.stats as sct
 
@@ -298,6 +298,20 @@ def technical_indication_v2_ex3(X,train_end,params,ground_truth_columns):
                         X[setting+"VSD"+str(params['Win_VSD'][i])] = vsd(X[setting+"High"],X[setting+"Low"],X[col],params['Win_VSD'][i])
                 
                 
+    return X
+
+def strategy_testing(X,strategy_params):
+    cols = X.columns.values.tolist()
+    for col in cols:
+        if "High" in col:
+            X[col+"_strat3"] = strategy_3(X[col],strategy_params['strat3']['window'])
+        if "Close" in col:
+            setting = col[:-5]
+            X[col+"_strat3"] = strategy_3(X[col],strategy_params['strat3']['window'])
+            X[col+"_strat7"] = strategy_7(X[col],strategy_params['strat7']['window'],strategy_params['strat7']['limiting_factor'])
+            if setting+"High" in cols and setting+"Low" in cols:
+                X[setting+"strat6"] = strategy_6(X[setting+"High"],X[setting+"Low"],X[col],strategy_params['strat6']['window'],strategy_params['strat6']['limiting_factor'])
+            
     return X
 
 def remove_unused_columns_v1(time_series,org_cols):
