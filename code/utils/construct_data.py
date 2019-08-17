@@ -300,16 +300,18 @@ def technical_indication_v2_ex3(X,train_end,params,ground_truth_columns):
                 
     return X
 
-def strategy_testing(X,strategy_params):
+def strategy_testing(X,strategy_params,activation_params):
     cols = X.columns.values.tolist()
     for col in cols:
-        if "High" in col:
+        if "High" in col and activation_params["strat3"]:
             X[col+"_strat3"] = strategy_3(X[col],strategy_params['strat3']['window'])
         if "Close" in col:
             setting = col[:-5]
-            X[col+"_strat3"] = strategy_3(X[col],strategy_params['strat3']['window'])
-            X[col+"_strat7"] = strategy_7(X[col],strategy_params['strat7']['window'],strategy_params['strat7']['limiting_factor'])
-            if setting+"High" in cols and setting+"Low" in cols:
+            if activation_params["strat3"]:
+                X[col+"_strat3"] = strategy_3(X[col],strategy_params['strat3']['window'])
+            if activation_params["strat7"]:
+                X[col+"_strat7"] = strategy_7(X[col],strategy_params['strat7']['window'],strategy_params['strat7']['limiting_factor'])
+            if setting+"High" in cols and setting+"Low" in cols and activation_params["strat6"]:
                 X[setting+"strat6"] = strategy_6(X[setting+"High"],X[setting+"Low"],X[col],strategy_params['strat6']['window'],strategy_params['strat6']['limiting_factor'])
             
     return X
