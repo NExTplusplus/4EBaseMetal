@@ -126,6 +126,10 @@ def price_normalization(arguments, version):
         '''
         return log_1d_return(time_series,arguments['org_cols'])
 
+def insert_date_into_feature(arguments):
+    time_series = arguments['time_series']
+
+    return insert_date_into_feature_v1(time_series)
 
 def scaling(arguments, version):
     time_series = arguments['time_series']
