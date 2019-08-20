@@ -71,8 +71,13 @@ def deal_with_abnormal_value_v2(data):
 
     return data
 
-
-
+#this function is to build the time_feature into the data
+def insert_date_into_feature_v1(time_series):
+    time_series['month']=[item[1] for item in time_series.index.str.split('-').to_list()]
+    time_series['day']=[item[2] for item in time_series.index.str.split('-').to_list()]
+    #print(pd.Series([item[1] for item in time_series.index.str.split('-').to_list()]))
+    #print(time_series['day'])
+    return time_series
 
 
 #the function is to label the target and rename the result
