@@ -72,16 +72,22 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     '''
     Normalize, create technical indicators, handle outliers and rescale data
     '''
+    parameters['cat_cols'] = []
     parameters['org_cols'] = time_series.columns.values.tolist()
     parameters['time_series'], parameters['norm_check'] = normalize_without_1d_return(parameters, version_params['normalize_without_1d_return'])
     parameters['time_series'] = technical_indication(parameters, version_params['technical_indication'])
     if parameters['norm_params']['xgboost']:
         print("xgboost")
+        parameters['cat_cols'] = ['day','month']
         parameters['time_series'] = insert_date_into_feature(parameters)
     parameters['time_series'], parameters['org_cols'] = remove_unused_columns(parameters, version_params['remove_unused_columns'])
     parameters['time_series'] = price_normalization(parameters,version_params['price_normalization'])
     parameters['time_series'] = process_missing_value(parameters, version_params['process_missing_value'])
     split_dates = reset_split_dates(time_series,split_dates)
+    
+    for col in parameters['time_series'].columns.values.tolist():
+        if len(parameters['time_series'][col].unique().tolist()) <= 3:
+            parameters['cat_cols'].append(col)
     parameters['time_series'] = scaling(parameters,version_params['scaling'])
     complete_time_series = []
     parameters['time_series'] = parameters['time_series'][sorted(parameters['time_series'].columns)]
@@ -111,7 +117,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
         
         parameters['time_series'][ind] = process_missing_value_v3(parameters['time_series'][ind])
         split_dates = reset_split_dates(parameters['time_series'][ind],split_dates)
-    #   save_data("i6",time_series[0],time_series[0].columns.values.tolist())
+        # save_data("i6",parameters['time_series'][0],parameters['time_series'][0].columns.values.tolist())
 
     '''
     create 3d array with dimensions (n_samples, lags, n_features)
@@ -159,6 +165,6 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     
     
     
-    return X_tr, y_tr, X_va, y_va, X_te, y_te,parameters['norm_check']
+    return X_tr, y_tr, X_va, y_va, X_te, y_te,parameters['norm_check'], parameters['all_cols']
 
 
