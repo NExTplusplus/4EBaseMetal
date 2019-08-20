@@ -75,6 +75,9 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     parameters['org_cols'] = time_series.columns.values.tolist()
     parameters['time_series'], parameters['norm_check'] = normalize_without_1d_return(parameters, version_params['normalize_without_1d_return'])
     parameters['time_series'] = technical_indication(parameters, version_params['technical_indication'])
+    if parameters['norm_params']['xgboost']:
+        print("xgboost")
+        parameters['time_series'] = insert_date_into_feature(parameters)
     parameters['time_series'], parameters['org_cols'] = remove_unused_columns(parameters, version_params['remove_unused_columns'])
     parameters['time_series'] = price_normalization(parameters,version_params['price_normalization'])
     parameters['time_series'] = process_missing_value(parameters, version_params['process_missing_value'])
