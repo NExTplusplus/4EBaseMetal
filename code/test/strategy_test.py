@@ -122,7 +122,7 @@ if __name__ == '__main__':
         activation_params['strat6'] = True
         limiting_factor = np.arange(0.3,1.05,0.05)
         print("a")
-        window = range(6,51)
+        window = range(10,51)
         comb = product(window,limiting_factor)
         ls = [list([time_series,ground_truth[:-5],labels,strategy_params,activation_params,list(com)]) for com in comb]
         pool = pl()
@@ -136,7 +136,7 @@ if __name__ == '__main__':
         activation_params['strat6'] = False
         activation_params['strat7'] = True
         limiting_factor = np.arange(1.8,2.44,0.05)
-        window = range(8,51)
+        window = range(10,51)
         print("b")
         comb = product(window,limiting_factor)
         ls = [list([time_series,ground_truth[:-5],labels,strategy_params,activation_params,list(com)]) for com in comb]
@@ -151,7 +151,7 @@ if __name__ == '__main__':
         activation_params['strat7'] = False
         activation_params['strat9'] = True
         print("c")
-        comb = list(permutations(range(5,50),3))
+        comb = list(permutations(range(10,50),3))
         ls = [list([time_series,ground_truth[:-5],labels,strategy_params,activation_params,list(com)]) for com in comb]
         print(len(comb))
         pool = pl()
