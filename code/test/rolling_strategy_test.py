@@ -64,8 +64,8 @@ def output(time_series,ground_truth,strategy_params,activation_params,array,chec
         labels = np.array(labels)*2-1
         column = np.array(column)
         compared = abs(sum(labels == column)/len(labels)-0.5)
-        if compared < 0.025 and check:
-            return [""]
+        # if compared < 0.025 and check:
+        #     return [""]
         temp_list.append(compared)
         temp_list.append(len(labels)/length)
     temp_list = [str(e) for e in temp_list]
@@ -100,9 +100,10 @@ if __name__ == '__main__':
     with open(args.output,"w") as out:
         if args.source == "NExT":
             data_list, LME_dates = read_data_NExT(fname_columns, "2003-11-12")
+            time_series = pd.concat(data_list, axis = 1, sort = True)
         elif args.source == "4E":
-            data_list, LME_dates = read_data_v5_4E("2003-11-12")
-        time_series = pd.concat(data_list, axis = 1, sort = True)
+            time_series, LME_dates = read_data_v5_4E("2003-11-12")
+        
         n=0
         time_series = deal_with_abnormal_value_v1(time_series)
         LME_dates = sorted(set(LME_dates).intersection(time_series.index.values.tolist()))
@@ -128,9 +129,8 @@ if __name__ == '__main__':
             results = pool.starmap_async(output,ls)
             pool.close()
             pool.join()
-            results = list(np.unique(results.get()))
-            if [""] in results:
-                results.remove([""])
+            results,idx = list(np.unique(results.get(),return_inverse = True,axis = 1))
+            results = [list(res[idx]) for res in results]
             results = [[int(res[0]),float(res[2]),float(res[3]),float(res[5]),float(res[6])] for res in results]
             results = pd.DataFrame(data = results, columns = ["Window","High Acc","High Cov","Close Acc","Close Cov"])
             results = results.loc[(results["High Cov"]>0.05)&(results["Close Cov"]>0.05)]
@@ -147,15 +147,13 @@ if __name__ == '__main__':
             results = pool.starmap_async(output,ls)
             pool.close()
             pool.join()
-            results = list(np.unique(results.get()))
-            if [""] in results:
-                results.remove([""])
+            results,idx = list(np.unique(results.get(),return_inverse = True,axis = 1))
+            results = [list(res[idx]) for res in results]
             results = [[int(res[0]),float(res[1]),float(res[3]),float(res[4])] for res in results]
             results = pd.DataFrame(data = results, columns = ["Window","Limiting Factor","Acc","Cov"])
             results = results.loc[(results["Cov"]>0.05)]
             strat_results['strat6']['window'] = results.loc[results["Acc"].idxmax(),"Window"]
             strat_results['strat6']['limiting_factor'] = results.loc[results["Acc"].idxmax(),"Limiting Factor"]
-            print(results["Acc"].max())
             
             activation_params['strat6'] = False
             activation_params['strat7'] = True
@@ -167,15 +165,13 @@ if __name__ == '__main__':
             results = pool.starmap_async(output,ls)
             pool.close()
             pool.join()
-            results = list(np.unique(results.get()))
-            if [""] in results:
-                results.remove([""])
+            results,idx = list(np.unique(results.get(),return_inverse = True,axis = 1))
+            results = [list(res[idx]) for res in results]
             results = [[int(res[0]),float(res[1]),float(res[3]),float(res[4])] for res in results]
             results = pd.DataFrame(data = results, columns = ["Window","Limiting Factor","Acc","Cov"])
             results = results.loc[(results["Cov"]>0.05)]
             strat_results['strat7']['window'] = results.loc[results["Acc"].idxmax(),"Window"]
             strat_results['strat7']['limiting_factor'] = results.loc[results["Acc"].idxmax(),"Limiting Factor"]
-            print(results["Acc"].max())
 
             activation_params['strat7'] = False
             activation_params['strat9'] = True
@@ -185,16 +181,14 @@ if __name__ == '__main__':
             results = pool.starmap_async(output,ls)
             pool.close()
             pool.join()
-            results = list(np.unique(results.get()))
-            if [""] in results:
-                results.remove([""])
+            results,idx = list(np.unique(results.get(),return_inverse = True,axis = 1))
+            results = [list(res[idx]) for res in results]
             results = [[int(res[0]),int(res[1]),int(res[2]),float(res[4]),float(res[5])] for res in results]
             results = pd.DataFrame(data = results, columns = ["Slow Window","Fast Window","MACD Length","Acc","Cov"])
             results = results.loc[(results["Cov"]>0.05)]
             strat_results['strat9']['SlowLength'] = results.loc[results["Acc"].idxmax(),"Slow Window"]
             strat_results['strat9']['FastLength'] = results.loc[results["Acc"].idxmax(),"Fast Window"]
             strat_results['strat9']['MACDLength'] = results.loc[results["Acc"].idxmax(),"MACD Length"]
-            print(results["Acc"].max())
 
             ts = time_series.loc[(time_series.index >= split_date[1])&(time_series.index < split_date[2])]
             activation_params = {'strat3':True, 'strat6':False, 'strat7':False, 'strat9': False}
