@@ -106,61 +106,85 @@ if __name__ == '__main__':
         time_series = process_missing_value_v3(time_series)
         time_series = pd.concat([time_series, labels[0]], axis = 1)
         
+        ts = time_series.loc[time_series.index <="2017-01-01"]
         strategy_params = {'strat3':{'window':0},'strat6':{'window':0,'limiting_factor':0},'strat7':{'window':0,'limiting_factor':0}, 'strat9':{'SlowLength':0,'FastLength':0,'MACDLength':0}}
         activation_params = {'strat3':True, 'strat6':False, 'strat7':False, 'strat9': False}
-        comb = range(5,51)
-        ls = [list([time_series,ground_truth[:-5],labels,strategy_params,activation_params,[com]]) for com in comb]
+        strat_results = {'strat3':{'high window':0, 'close window':0},'strat6':{'window':0,'limiting_factor':0},'strat7':{'window':0,'limiting_factor':0}, 'strat9':{'SlowLength':0,'FastLength':0,'MACDLength':0}}
+        comb = range(5,51,2)
+        ls = [list([ts,ground_truth[:-5],labels,strategy_params,activation_params,[com]]) for com in comb]
         pool = pl()
         results = pool.starmap_async(output,ls)
         pool.close()
         pool.join()
-        results = [','.join(res) for res in results.get()]
-        [out.write(res+"\n") if len(res.split(",")) > 1 else out.write("") for res in results]
-
+        results,idx = list(np.unique(results.get(),return_inverse = True,axis = 1))
+        results = [list(res[idx]) for res in results]
+        results = [[int(res[0]),float(res[2]),float(res[3]),float(res[5]),float(res[6])] for res in results]
+        results = pd.DataFrame(data = results, columns = ["Window","High Acc","High Cov","Close Acc","Close Cov"])
+        results = results.loc[(results["High Cov"]>0.05)&(results["Close Cov"]>0.05)]
+        strat_results['strat3']['high window'] = results.loc[results["High Acc"].idxmax(),"Window"]
+        strat_results['strat3']['close window'] = results.loc[results["Close Acc"].idxmax(),"Window"]
+        
         out.write("\n\n")
         activation_params['strat3'] = False
         activation_params['strat6'] = True
-        limiting_factor = np.arange(0.3,1.05,0.05)
-        print("a")
-        window = range(10,51)
+        limiting_factor = np.arange(0.3,1.05,0.1)
+        
+        window = range(10,51,2)
         comb = product(window,limiting_factor)
-        ls = [list([time_series,ground_truth[:-5],labels,strategy_params,activation_params,list(com)]) for com in comb]
+        ls = [list([ts,ground_truth[:-5],labels,strategy_params,activation_params,list(com)]) for com in comb]
         pool = pl()
         results = pool.starmap_async(output,ls)
         pool.close()
         pool.join()
-        results = [','.join(res) for res in results.get()]
-        [out.write(res+"\n") if len(res.split(",")) > 2 else out.write("") for res in results]
+        results,idx = list(np.unique(results.get(),return_inverse = True,axis = 1))
+        results = [list(res[idx]) for res in results]
+        results = [[int(res[0]),float(res[1]),float(res[3]),float(res[4])] for res in results]
+        results = pd.DataFrame(data = results, columns = ["Window","Limiting Factor","Acc","Cov"])
+        results = results.loc[(results["Cov"]>0.05)]
+        strat_results['strat6']['window'] = results.loc[results["Acc"].idxmax(),"Window"]
+        strat_results['strat6']['limiting_factor'] = results.loc[results["Acc"].idxmax(),"Limiting Factor"]
+            
         
         out.write("\n\n")
         activation_params['strat6'] = False
         activation_params['strat7'] = True
         limiting_factor = np.arange(1.8,2.44,0.05)
         window = range(10,51)
-        print("b")
+        
         comb = product(window,limiting_factor)
-        ls = [list([time_series,ground_truth[:-5],labels,strategy_params,activation_params,list(com)]) for com in comb]
+        ls = [list([ts,ground_truth[:-5],labels,strategy_params,activation_params,list(com)]) for com in comb]
         pool = pl()
         results = pool.starmap_async(output,ls)
         pool.close()
         pool.join()
-        results = [','.join(res) for res in results.get()]
-        [out.write(res+"\n") if len(res.split(",")) > 2 else out.write("") for res in results]
+        results,idx = list(np.unique(results.get(),return_inverse = True,axis = 1))
+        results = [list(res[idx]) for res in results]
+        results = [[int(res[0]),float(res[1]),float(res[3]),float(res[4])] for res in results]
+        results = pd.DataFrame(data = results, columns = ["Window","Limiting Factor","Acc","Cov"])
+        results = results.loc[(results["Cov"]>0.05)]
+        strat_results['strat7']['window'] = results.loc[results["Acc"].idxmax(),"Window"]
+        strat_results['strat7']['limiting_factor'] = results.loc[results["Acc"].idxmax(),"Limiting Factor"]
 
         out.write("\n\n")
         activation_params['strat7'] = False
         activation_params['strat9'] = True
-        print("c")
-        comb = list(permutations(range(10,50),3))
-        ls = [list([time_series,ground_truth[:-5],labels,strategy_params,activation_params,list(com)]) for com in comb]
-        print(len(comb))
+        
+        comb = list(permutations(range(10,50,2),3))
+        ls = [list([ts,ground_truth[:-5],labels,strategy_params,activation_params,list(com)]) for com in comb]
+        
         pool = pl()
         results = pool.starmap_async(output,ls)
         pool.close()
         pool.join()
-        results = [','.join(res) for res in results.get()]
-        [out.write(res+"\n") if len(res.split(",")) > 3 else out.write("") for res in results]
-        
+        results,idx = list(np.unique(results.get(),return_inverse = True,axis = 1))
+        results = [list(res[idx]) for res in results]
+        results = [[int(res[0]),int(res[1]),int(res[2]),float(res[4]),float(res[5])] for res in results]
+        results = pd.DataFrame(data = results, columns = ["Slow Window","Fast Window","MACD Length","Acc","Cov"])
+        results = results.loc[(results["Cov"]>0.05)]
+        strat_results['strat9']['SlowLength'] = results.loc[results["Acc"].idxmax(),"Slow Window"]
+        strat_results['strat9']['FastLength'] = results.loc[results["Acc"].idxmax(),"Fast Window"]
+        strat_results['strat9']['MACDLength'] = results.loc[results["Acc"].idxmax(),"MACD Length"]
+    
         out.close()
         
 

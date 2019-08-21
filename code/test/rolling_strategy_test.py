@@ -41,13 +41,13 @@ def output(time_series,ground_truth,strategy_params,activation_params,array,chec
         if activation_params[key]:
             strat = key
     if strat is None:
-        return None
+        return 
     n = 0
     for key in sp[strat]:
         sp[strat][key] = array[n]
         n+=1
     if strat =='strat9' and sp[strat]['SlowLength'] < sp[strat]['FastLength']:
-        return [""]
+        return 
     ts = strategy_testing(copy(time_series),ground_truth,sp, activation_params)
     ts = ts[list(set(ts.columns.values.tolist()) - org_cols)]
     temp_list = array
@@ -175,14 +175,14 @@ if __name__ == '__main__':
 
             activation_params['strat7'] = False
             activation_params['strat9'] = True
-            comb = list(permutations(range(10,50,2),3))
+            comb = list(permutations(range(10,51,2),3))
             ls = [list([ts,ground_truth[:-5],strategy_params,activation_params,list(com)]) for com in comb]
             pool = pl()
             results = pool.starmap_async(output,ls)
             pool.close()
             pool.join()
-            results,idx = list(np.unique(results.get(),return_inverse = True,axis = 1))
-            results = [list(res[idx]) for res in results]
+            results,idx = list(np.unique([i for i in results.get() if i],return_inverse = True,axis = 1))
+            results = [res[idx] for res in results]
             results = [[int(res[0]),int(res[1]),int(res[2]),float(res[4]),float(res[5])] for res in results]
             results = pd.DataFrame(data = results, columns = ["Slow Window","Fast Window","MACD Length","Acc","Cov"])
             results = results.loc[(results["Cov"]>0.05)]
