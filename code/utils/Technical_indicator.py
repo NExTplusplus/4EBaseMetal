@@ -8,11 +8,12 @@ from copy import copy
 # When price adjusted volume on up days outpaces that on down day, then PVT rises, vice versa.
 # When PVT goes up, the buying pressure is up as well
 def pvt (idx,Close,Volume):
-    pvt = np.log(Close/Close.shift(1))*Volume
-    pvt = pd.Series(index = idx[1:],data = accumulate(pvt.dropna()))
-    pvt = (pvt>pvt.shift(1))*1
+    ans = np.log(Close/Close.shift(1))*Volume
+    ans = pd.Series(index = idx[1:],data = accumulate(ans.dropna()))
+    ans = (ans>ans.shift(1))*1
+    ans.loc[ans==0] = -1
     
-    return pvt
+    return ans
 
 #def divergence_pvt_OI(idx,Close,OI,train_end,params):
 #    
@@ -140,16 +141,38 @@ def sar(High,Low,Close,initial=0.02,maximum = 0.2):
 
 #This function will calculate the Relative Strength Index.
 #RSI is a siganl of overbought and oversold, more sensitive for bearish market.
-def rsi(Close,period = 14):
+def rsi(Close,period = 14,upper = 70,lower = 30):
     rsi = ta.RSI(Close,timeperiod = period)
     rsi_signal = pd.Series(index = Close.index,data = [0]*len(Close))
     for i in range(1,len(rsi_signal)):
-        if rsi.iloc[i-1]>50:
+        if rsi.iloc[i-1]>upper:
             rsi_signal.iloc[i] = -1
-        elif rsi.iloc[i-1]<30:
+        elif rsi.iloc[i-1]<lower:
             rsi_signal.iloc[i] = 1
     return rsi_signal
 
+
+#This function will generate the predictions based on the 1st strategy
+#Short and Medium is window length of short-term and medium-term EMA respectively.
+def strategy_1(Close,Short,Medium):
+    short_ema = ta.EMA(Close,Short)
+    medium_ema = ta.EMA(Close,Medium)
+    ans = pd.Series(index = Close.index,data = [0]*len(Close))
+    ans.loc[short_ema>medium_ema] = 1
+    ans.loc[short_ema<medium_ema] = -1
+    ans = ans[Medium:]
+
+    return ans
+
+#This function will generate the predictions based on the 2nd strategy
+#N is the window length, the amount of days for price comparison
+def strategy_2(Close,N):
+    ans = pd.Series(index = Close.index,data = [0]*len(Close))
+    ans.loc[Close>Close.shift(N)] = 1
+    ans.loc[Close<Close.shift(N)] = -1
+    ans = ans[N:]
+    
+    return ans
 #This function will generate the predictions based on the 3rd strategy
 #price can be either High Price or Close Price, window is the amount of days for our price difference comparison
 def strategy_3(price,window):
