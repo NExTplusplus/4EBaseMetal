@@ -63,7 +63,10 @@ def output(time_series,ground_truth,strategy_params,activation_params,array,chec
         labels = labels.loc[column.index]
         labels = np.array(labels)*2-1
         column = np.array(column)
-        compared = abs(sum(labels == column)/len(labels)-0.5)
+        if len(labels) == 0:
+            compared = 0
+        else:
+            compared = abs(sum(labels == column)/len(labels)-0.5)
         # if compared < 0.025 and check:
         #     return [""]
         temp_list.append(compared)

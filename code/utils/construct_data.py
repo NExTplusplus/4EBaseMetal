@@ -307,36 +307,22 @@ def technical_indication_v2_ex3(X,train_end,params,ground_truth_columns):
 
 def strategy_testing(X,ground_truth,strategy_params,activation_params):
     cols = X.columns.values.tolist()
-    ground_truth = activation_params['ground_truth']
+    # ground_truth = activation_params['ground_truth']
     for col in cols:
-<<<<<<< HEAD
-        if 'LME' in col and ground_truth in col:
-#            if "High" in col and activation_params["strat3"]:
-#                X[col+"_strat3"] = strategy_3(X[col],strategy_params['strat3']['window'])
-            if "Close" in col:
-                setting = col[:-5]
-                if setting+"Volume" in cols and activation_params['pvt']:
-                    X[setting+"pvt"] = pvt(copy(X.index),copy(X[col]),copy(X[setting+"Volume"]))
-                if setting+"High" in cols and setting+"Low" in cols and activation_params['sar']:
-                    X[setting+'sar'] = sar(X[setting+"High"],X[setting+"Low"],X[col],strategy_params['stratsar']['initial'],strategy_params['stratsar']['maximum'])
-                if activation_params['rsi']:
-                    X[col+"_rsi"] = rsi(copy(X[col]),strategy_params['stratrsi']['window'],strategy_params['stratrsi']['upper'],strategy_params['stratrsi']['lower'])
-                if activation_params["strat1"]:
-                    X[col+"_strat1"] = strategy_1(X[col],strategy_params['strat1']['short'],strategy_params['strat1']['medium'])
-                if activation_params["strat2"]:
-                    X[col+"_strat2"] = strategy_2(X[col],strategy_params['strat2']['window'])
-#                if activation_params["strat3"]:
-#                    X[col+"_strat3"] = strategy_3(X[col],strategy_params['strat3']['window'])
-#                if activation_params["strat7"]:
-#                    X[col+"_strat7"] = strategy_7(X[col],strategy_params['strat7']['window'],strategy_params['strat7']['limiting_factor'])
-#                if setting+"High" in cols and setting+"Low" in cols and activation_params["strat6"]:
-#                    X[setting+"strat6"] = strategy_6(X[setting+"High"],X[setting+"Low"],X[col],strategy_params['strat6']['window'],strategy_params['strat6']['limiting_factor'])
-        
-=======
         if ground_truth+"_High" in col and activation_params["strat3"]:
             X[col+"_strat3"] = strategy_3(X[col],strategy_params['strat3']['window'])
         if ground_truth+"_Close" in col:
             setting = col[:-5]
+            # if setting+"Volume" in cols and activation_params['pvt']:
+            #     X[setting+"pvt"] = pvt(copy(X.index),copy(X[col]),copy(X[setting+"Volume"]))
+            # if setting+"High" in cols and setting+"Low" in cols and activation_params['sar']:
+            #     X[setting+'sar'] = sar(X[setting+"High"],X[setting+"Low"],X[col],strategy_params['stratsar']['initial'],strategy_params['stratsar']['maximum'])
+            # if activation_params['rsi']:
+            #     X[col+"_rsi"] = rsi(copy(X[col]),strategy_params['stratrsi']['window'],strategy_params['stratrsi']['upper'],strategy_params['stratrsi']['lower'])
+            # if activation_params["strat1"]:
+            #     X[col+"_strat1"] = strategy_1(X[col],strategy_params['strat1']['short'],strategy_params['strat1']['medium'])
+            # if activation_params["strat2"]:
+            #     X[col+"_strat2"] = strategy_2(X[col],strategy_params['strat2']['window'])
             if activation_params["strat3"]:
                 X[col+"_strat3"] = strategy_3(X[col],strategy_params['strat3']['window'])
             if activation_params["strat7"]:
@@ -346,7 +332,6 @@ def strategy_testing(X,ground_truth,strategy_params,activation_params):
             if ground_truth+"_High" in cols and ground_truth+"_Low" in cols and activation_params["strat6"]:
                 X[setting+"strat6"] = strategy_6(X[setting+"High"],X[setting+"Low"],X[col],strategy_params['strat6']['window'],strategy_params['strat6']['limiting_factor'])
             
->>>>>>> f418eb4c7eb6654066e7bf7b6e4738cfdda45b67
     return X
 
 def remove_unused_columns_v1(time_series,org_cols):
