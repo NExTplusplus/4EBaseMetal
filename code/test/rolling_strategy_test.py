@@ -13,7 +13,7 @@ from multiprocessing import Pool as pl
 from itertools import permutations, product
 from copy import copy
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
-from utils.read_data import read_data_NExT, process_missing_value_v3
+from utils.read_data import read_data_NExT, process_missing_value_v3,read_data_v5_4E
 from utils.construct_data import labelling_v1, deal_with_abnormal_value_v1, strategy_testing, rolling_half_year
 
 os.chdir(os.path.abspath(sys.path[0]))
@@ -87,6 +87,9 @@ if __name__ == '__main__':
     parser.add_argument('-gt', '--ground_truth', help='ground truth column',
                         type=str, default="LME_Co_Spot")
     parser.add_argument('-out','--output',type = str, default= "test1.csv",help ="output name")
+    parser.add_argument(
+        '-sou','--source', help='source of data', type = str, default = "NExT"
+    )
 
     args = parser.parse_args()
     ground_truth = args.ground_truth
@@ -95,7 +98,10 @@ if __name__ == '__main__':
         fname_columns = json.load(fin)[0]
 
     with open(args.output,"w") as out:
-        data_list, LME_dates = read_data_NExT(fname_columns, "2003-11-12")
+        if args.source == "NExT":
+            data_list, LME_dates = read_data_NExT(fname_columns, "2003-11-12")
+        elif args.source == "4E":
+            data_list, LME_dates = read_data_v5_4E("2003-11-12")
         time_series = pd.concat(data_list, axis = 1, sort = True)
         n=0
         time_series = deal_with_abnormal_value_v1(time_series)
@@ -105,8 +111,12 @@ if __name__ == '__main__':
         labels = labelling_v1(time_series,args.steps,[args.ground_truth])
         time_series = process_missing_value_v3(time_series)
         time_series = pd.concat([time_series, labels[0]], axis = 1)
-        split_dates = rolling_half_year("2003-01-01","2017-01-01",5)
-        split_dates = split_dates[-5:]
+        if args.source == "NExT":
+            split_dates = rolling_half_year("2003-01-01","2017-01-01",5)
+            split_dates = split_dates[-5:]
+        elif args.source == "4E":
+            split_dates = rolling_half_year("2003-01-01","2019-01-01",5)
+            split_dates = split_dates[-9:]
         for split_date in split_dates:
             ts = time_series.loc[(time_series.index >= split_date[0])&(time_series.index <= split_date[1])]
             strategy_params = {'strat3':{'window':0},'strat6':{'window':0,'limiting_factor':0},'strat7':{'window':0,'limiting_factor':0}, 'strat9':{'SlowLength':0,'FastLength':0,'MACDLength':0}}
