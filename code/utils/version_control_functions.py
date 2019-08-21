@@ -5,7 +5,7 @@ from utils.normalize_feature import log_1d_return
 def generate_version_params(version):
     ans = {"deal_with_abnormal_value":"v2", "labelling":"v1", "process_missing_value":"v1", 
             "normalize_without_1d_return": "v1", "technical_indication":"v1",
-            "remove_unused_columns":"v1", "price_normalization":"v1", "scaling":"v1",
+            "remove_unused_columns":"v1", "price_normalization":"v1", "scaling":"v2",
             "construct":"v1"}
     ver = version.split("_")
     v = ver[0]
@@ -126,6 +126,10 @@ def price_normalization(arguments, version):
         '''
         return log_1d_return(time_series,arguments['org_cols'])
 
+def insert_date_into_feature(arguments):
+    time_series = arguments['time_series']
+
+    return insert_date_into_feature_v1(time_series)
 
 def scaling(arguments, version):
     time_series = arguments['time_series']
@@ -134,6 +138,11 @@ def scaling(arguments, version):
         standard scaling
         '''
         return scaling_v1(time_series,time_series.index.get_loc(arguments['split_dates'][1]))
+    if version == "v2":
+        '''
+        scaling without affecting categorical variables
+        '''
+        return scaling_v2(time_series,time_series.index.get_loc(arguments['split_dates'][1]),arguments['cat_cols'])
 
 
 def construct(ind, arguments, version):

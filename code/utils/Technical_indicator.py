@@ -211,7 +211,15 @@ def strategy_7(Close, window, limiting_factor):
 
 
 def strategy_9(Close, FastLength, SlowLength, MACDLength):
-    return None
+    MACDValue = Close.rolling(FastLength).mean() - Close.rolling(SlowLength).mean()
+    AvgMACD = MACDValue.rolling(MACDLength).mean()
+    MACDDiff = MACDValue - AvgMACD
+    ans = copy(Close)
+    ans.loc[(MACDValue>0)&(MACDDiff>0)] = 1
+    ans.loc[(MACDValue<0)&(MACDDiff<0)] = -1
+    ans.loc[abs(ans) != 1] = 0
+
+    return ans
 
 
 

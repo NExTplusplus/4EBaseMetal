@@ -71,8 +71,13 @@ def deal_with_abnormal_value_v2(data):
 
     return data
 
-
-
+#this function is to build the time_feature into the data
+def insert_date_into_feature_v1(time_series):
+    time_series['month']=[item[1] for item in time_series.index.str.split('-').to_list()]
+    time_series['day']=[item[2] for item in time_series.index.str.split('-').to_list()]
+    #print(pd.Series([item[1] for item in time_series.index.str.split('-').to_list()]))
+    #print(time_series['day'])
+    return time_series
 
 
 #the function is to label the target and rename the result
@@ -300,10 +305,11 @@ def technical_indication_v2_ex3(X,train_end,params,ground_truth_columns):
                 
     return X
 
-def strategy_testing(X,strategy_params,activation_params):
+def strategy_testing(X,ground_truth,strategy_params,activation_params):
     cols = X.columns.values.tolist()
     ground_truth = activation_params['ground_truth']
     for col in cols:
+<<<<<<< HEAD
         if 'LME' in col and ground_truth in col:
 #            if "High" in col and activation_params["strat3"]:
 #                X[col+"_strat3"] = strategy_3(X[col],strategy_params['strat3']['window'])
@@ -326,6 +332,21 @@ def strategy_testing(X,strategy_params,activation_params):
 #                if setting+"High" in cols and setting+"Low" in cols and activation_params["strat6"]:
 #                    X[setting+"strat6"] = strategy_6(X[setting+"High"],X[setting+"Low"],X[col],strategy_params['strat6']['window'],strategy_params['strat6']['limiting_factor'])
         
+=======
+        if ground_truth+"_High" in col and activation_params["strat3"]:
+            X[col+"_strat3"] = strategy_3(X[col],strategy_params['strat3']['window'])
+        if ground_truth+"_Close" in col:
+            setting = col[:-5]
+            if activation_params["strat3"]:
+                X[col+"_strat3"] = strategy_3(X[col],strategy_params['strat3']['window'])
+            if activation_params["strat7"]:
+                X[col+"_strat7"] = strategy_7(X[col],strategy_params['strat7']['window'],strategy_params['strat7']['limiting_factor'])
+            if activation_params["strat9"]:
+                X[col+"_strat9"] = strategy_9(X[col],strategy_params['strat9']['FastLength'],strategy_params['strat9']['SlowLength'],strategy_params['strat9']['MACDLength'])
+            if ground_truth+"_High" in cols and ground_truth+"_Low" in cols and activation_params["strat6"]:
+                X[setting+"strat6"] = strategy_6(X[setting+"High"],X[setting+"Low"],X[col],strategy_params['strat6']['window'],strategy_params['strat6']['limiting_factor'])
+            
+>>>>>>> f418eb4c7eb6654066e7bf7b6e4738cfdda45b67
     return X
 
 def remove_unused_columns_v1(time_series,org_cols):
@@ -348,6 +369,16 @@ def scaling_v1(X,train_end):
     X = pd.DataFrame(scaler.transform(X), index = X.index, columns = X.columns)
     return X
 
+def scaling_v2(X,train_end, cat_cols):
+    scaler = preprocessing.StandardScaler()
+    cols = list(set(X.columns)-set(cat_cols))
+
+    data = X[cols]
+    scaler.fit(data.iloc[:train_end].values)
+    
+    data = pd.DataFrame(scaler.transform(data), index = data.index, columns = cols)
+    X[cols] = data
+    return X
 
 
 
