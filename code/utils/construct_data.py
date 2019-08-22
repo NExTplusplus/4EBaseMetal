@@ -307,22 +307,20 @@ def technical_indication_v2_ex3(X,train_end,params,ground_truth_columns):
 
 def strategy_testing(X,ground_truth,strategy_params,activation_params):
     cols = X.columns.values.tolist()
-    # ground_truth = activation_params['ground_truth']
+    ground_truth = ground_truth[:-5]
     for col in cols:
-        if ground_truth+"_High" in col and activation_params["strat3"]:
+        if ground_truth+"_High" == col and activation_params["strat3"]:
             X[col+"_strat3"] = strategy_3(X[col],strategy_params['strat3']['window'])
-        if ground_truth+"_Close" in col:
+        if ground_truth+"_Close" == col:
             setting = col[:-5]
-            # if setting+"Volume" in cols and activation_params['pvt']:
-            #     X[setting+"pvt"] = pvt(copy(X.index),copy(X[col]),copy(X[setting+"Volume"]))
-            # if setting+"High" in cols and setting+"Low" in cols and activation_params['sar']:
-            #     X[setting+'sar'] = sar(X[setting+"High"],X[setting+"Low"],X[col],strategy_params['stratsar']['initial'],strategy_params['stratsar']['maximum'])
-            # if activation_params['rsi']:
-            #     X[col+"_rsi"] = rsi(copy(X[col]),strategy_params['stratrsi']['window'],strategy_params['stratrsi']['upper'],strategy_params['stratrsi']['lower'])
-            # if activation_params["strat1"]:
-            #     X[col+"_strat1"] = strategy_1(X[col],strategy_params['strat1']['short'],strategy_params['strat1']['medium'])
-            # if activation_params["strat2"]:
-            #     X[col+"_strat2"] = strategy_2(X[col],strategy_params['strat2']['window'])
+            if setting+"High" in cols and setting+"Low" in cols and activation_params['sar']:
+                X[setting+'sar'] = sar(X[setting+"High"],X[setting+"Low"],X[col],strategy_params['sar']['initial'],strategy_params['sar']['maximum'])
+            if activation_params['rsi']:
+                X[col+"_rsi"] = rsi(copy(X[col]),strategy_params['rsi']['window'],strategy_params['rsi']['upper'],strategy_params['rsi']['lower'])
+            if activation_params["strat1"]:
+                X[col+"_strat1"] = strategy_1(X[col],strategy_params['strat1']['short window'],strategy_params['strat1']['med window'])
+            if activation_params["strat2"]:
+                X[col+"_strat2"] = strategy_2(X[col],strategy_params['strat2']['window'])
             if activation_params["strat3"]:
                 X[col+"_strat3"] = strategy_3(X[col],strategy_params['strat3']['window'])
             if activation_params["strat7"]:
