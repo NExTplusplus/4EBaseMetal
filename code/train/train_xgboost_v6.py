@@ -188,8 +188,8 @@ if __name__ == '__main__':
                                     prediction = np.zeros((len(X_va), 1))
                                     folder_index = []
                                     for fold_n, (train_index, valid_index) in enumerate(folds.split(train_X)):
-                                        print("the train_index is {}".format(train_index))
-                                        print("the test_index is {}".format(valid_index))
+                                        #print("the train_index is {}".format(train_index))
+                                        #print("the test_index is {}".format(valid_index))
                                         X_train, X_valid = train_X[column_lag_list].iloc[train_index], train_X[column_lag_list].iloc[valid_index]
                                         y_train, y_valid = train_y.iloc[train_index], train_y.iloc[valid_index]
                                         model.fit(X_train, y_train,eval_metric='error',verbose=True,eval_set=[(X_valid,y_valid)],early_stopping_rounds=5)
