@@ -34,7 +34,7 @@ if __name__ == '__main__':
     parser.add_argument('-max_iter','--max_iter',type=int,default=100,
                         help='max number of iterations')
     parser.add_argument(
-        '-sou','--source', help='source of data', type = str, default = "4E"
+        '-sou','--source', help='source of data', type = str, default = "NExT"
     )
     parser.add_argument(
         '-mout', '--model_save_path', type=str, help='path to save model',
@@ -284,42 +284,80 @@ if __name__ == '__main__':
                                     print("the far precision is {}".format(metrics.accuracy_score(y_va, final_list)))
                                     if split_date[1].split("-")[1]=='01':
                                         result = np.concatenate((folder_1,folder_3,folder_5,folder_7,folder_9),axis=1)
+                                        final_list = []
+                                        for j in range(len(result)):
+                                            count_1=0
+                                            count_0=0
+                                            for item in result[j]:
+                                                if item > 0.5:
+                                                    count_1+=1
+                                                else:
+                                                    count_0+=1
+                                            if count_1>count_0:
+                                                final_list.append(1)
+                                            else:
+                                                final_list.append(0)
+                                        #print("the lag is {}".format(lag))
+                                        print("the same precision is {}".format(metrics.accuracy_score(y_va, final_list)))
+                                        result = np.concatenate((folder_2,folder_4,folder_6,folder_8,folder_10),axis=1)
+                                        final_list = []
+                                        for j in range(len(result)):
+                                            count_1=0
+                                            count_0=0
+                                            for item in result[j]:
+                                                if item > 0.5:
+                                                    count_1+=1
+                                                else:
+                                                    count_0+=1
+                                            if count_1>count_0:
+                                                final_list.append(1)
+                                            else:
+                                                final_list.append(0)
+                                        #print("the lag is {}".format(lag))
+                                        print("the reverse precision is {}".format(metrics.accuracy_score(y_va, final_list)))
+                                        print("the max_depth is {}".format(max_depth))
+                                        print("the learning_rate is {}".format(learning_rate))
+                                        print("the gamma is {}".format(gamma))
+                                        print("the min_child_weight is {}".format(min_child_weight))
+                                        print("the subsample is {}".format(subsample))
                                     else:
                                         result = np.concatenate((folder_2,folder_4,folder_6,folder_8,folder_10),axis=1)
-                                    final_list = []
-                                    for j in range(len(result)):
-                                        count_1=0
-                                        count_0=0
-                                        for item in result[j]:
-                                            if item > 0.5:
-                                                count_1+=1
+                                        final_list = []
+                                        for j in range(len(result)):
+                                            count_1=0
+                                            count_0=0
+                                            for item in result[j]:
+                                                if item > 0.5:
+                                                    count_1+=1
+                                                else:
+                                                    count_0+=1
+                                            if count_1>count_0:
+                                                final_list.append(1)
                                             else:
-                                                count_0+=1
-                                        if count_1>count_0:
-                                            final_list.append(1)
-                                        else:
-                                            final_list.append(0)
-                                    #print("the lag is {}".format(lag))
-                                    print("the same precision is {}".format(metrics.accuracy_score(y_va, final_list)))
-                                    if split_date[1].split("-")[1]=='07':
+                                                final_list.append(0)
+                                        #print("the lag is {}".format(lag))
+                                        print("the same precision is {}".format(metrics.accuracy_score(y_va, final_list)))
                                         result = np.concatenate((folder_1,folder_3,folder_5,folder_7,folder_9),axis=1)
-                                    else:
-                                        result = np.concatenate((folder_2,folder_4,folder_6,folder_8,folder_10),axis=1)
-                                    final_list = []
-                                    for j in range(len(result)):
-                                        count_1=0
-                                        count_0=0
-                                        for item in result[j]:
-                                            if item > 0.5:
-                                                count_1+=1
+                                        final_list = []
+                                        for j in range(len(result)):
+                                            count_1=0
+                                            count_0=0
+                                            for item in result[j]:
+                                                if item > 0.5:
+                                                    count_1+=1
+                                                else:
+                                                    count_0+=1
+                                            if count_1>count_0:
+                                                final_list.append(1)
                                             else:
-                                                count_0+=1
-                                        if count_1>count_0:
-                                            final_list.append(1)
-                                        else:
-                                            final_list.append(0)
-                                    #print("the lag is {}".format(lag))
-                                    print("the reverse precision is {}".format(metrics.accuracy_score(y_va, final_list)))
+                                                final_list.append(0)
+                                        #print("the lag is {}".format(lag))
+                                        print("the reverse precision is {}".format(metrics.accuracy_score(y_va, final_list)))
+                                        print("the max_depth is {}".format(max_depth))
+                                        print("the learning_rate is {}".format(learning_rate))
+                                        print("the gamma is {}".format(gamma))
+                                        print("the min_child_weight is {}".format(min_child_weight))
+                                        print("the subsample is {}".format(subsample))
                 print("the lag is {}".format(lag))
                 print("the train date is {}".format(split_date[0]))
                 print("the test date is {}".format(split_date[1]))
