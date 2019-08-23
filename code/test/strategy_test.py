@@ -46,7 +46,6 @@ def output(time_series,ground_truth,strategy_params,activation_params,array,chec
     for key in sp[strat]:
         sp[strat][key] = array[n]
         n+=1
-    print(sp)
     if strat =='strat9' and sp[strat]['SlowLength'] < sp[strat]['FastLength']:
         return 
     ts = strategy_testing(copy(time_series),ground_truth,sp, activation_params)
@@ -91,8 +90,8 @@ def parallel_process(ts,strat,cov,strat_results,ground_truth,strategy_params,act
         strat_results['sar']['initial'] = results.loc[results["Acc"].idxmax(),"Initial"]
         strat_results['sar']['maximum'] = results.loc[results["Acc"].idxmax(),"Maximum"]
 
-    elif strat ==' rsi':
-        results = [[int(res[0]),float(res[1]),float(res[2]),float(res[4]),float(res[5])] for res in results]
+    elif strat =='rsi':
+        results = [[int(res[0]),int(res[1]),int(res[2]),float(res[4]),float(res[5])] for res in results]
         results = pd.DataFrame(data = results, columns = ["Window","Upper","Lower","Acc","Cov"])
         results = results.loc[(results["Cov"]>0.05)]
         strat_results['rsi']['window'] = results.loc[results["Acc"].idxmax(),"Window"]
@@ -112,25 +111,27 @@ def parallel_process(ts,strat,cov,strat_results,ground_truth,strategy_params,act
         results = results.loc[(results["Cov"]>0.05)]
         strat_results['strat2']['window'] = results.loc[results["Acc"].idxmax(),"Window"]
 
-    
     elif strat == "strat3":
         results = [[int(res[0]),float(res[2]),float(res[3]),float(res[5]),float(res[6])] for res in results]
         results = pd.DataFrame(data = results, columns = ["Window","High Acc","High Cov","Close Acc","Close Cov"])
         results = results.loc[(results["High Cov"]>0.05)&(results["Close Cov"]>0.05)]
         strat_results['strat3']['high window'] = results.loc[results["High Acc"].idxmax(),"Window"]
         strat_results['strat3']['close window'] = results.loc[results["Close Acc"].idxmax(),"Window"]
+    
     elif strat == "strat6":
         results = [[int(res[0]),float(res[1]),float(res[3]),float(res[4])] for res in results]
         results = pd.DataFrame(data = results, columns = ["Window","Limiting Factor","Acc","Cov"])
         results = results.loc[(results["Cov"]>cov)]
         strat_results['strat6']['window'] = results.loc[results["Acc"].idxmax(),"Window"]
         strat_results['strat6']['limiting_factor'] = results.loc[results["Acc"].idxmax(),"Limiting Factor"]
+    
     elif strat == "strat7":
         results = [[int(res[0]),float(res[1]),float(res[3]),float(res[4])] for res in results]
         results = pd.DataFrame(data = results, columns = ["Window","Limiting Factor","Acc","Cov"])
         results = results.loc[(results["Cov"]>cov)]
         strat_results['strat7']['window'] = results.loc[results["Acc"].idxmax(),"Window"]
         strat_results['strat7']['limiting_factor'] = results.loc[results["Acc"].idxmax(),"Limiting Factor"]
+    
     elif strat == "strat9":
         results = [[int(res[0]),int(res[1]),int(res[2]),float(res[4]),float(res[5])] for res in results]
         results = pd.DataFrame(data = results, columns = ["Slow Window","Fast Window","MACD Length","Acc","Cov"])
@@ -179,147 +180,149 @@ if __name__ == '__main__':
     labels = labelling_v1(time_series,args.steps,[args.ground_truth])
     time_series = process_missing_value_v3(time_series)
     time_series = pd.concat([time_series, labels[0]], axis = 1)
-    split_dates = [["2003-01-01","2017-01-01","2019-01-01"]]
-    for split_date in split_dates:
-        ts = time_series.loc[(time_series.index >= split_date[0])&(time_series.index <= split_date[1])]
-        strategy_params = {'sar':{'initial':0,'maximum':0},'rsi':{'window':0,'upper':0,'lower':0},'strat1':{'short window':0,"med window":0},'strat2':{'window':0},'strat3':{'window':0},'strat6':{'window':0,'limiting_factor':0},'strat7':{'window':0,'limiting_factor':0}, 'strat9':{'SlowLength':0,'FastLength':0,'MACDLength':0}}
+    split_date = ["2003-01-01","2015-01-01","2017-01-01"]
+    ts = time_series.loc[(time_series.index >= split_date[0])&(time_series.index <= split_date[1])]
+    strategy_params = {'sar':{'initial':0,'maximum':0},'rsi':{'window':0,'upper':0,'lower':0},'strat1':{'short window':0,"med window":0},'strat2':{'window':0},'strat3':{'window':0},'strat6':{'window':0,'limiting_factor':0},'strat7':{'window':0,'limiting_factor':0}, 'strat9':{'SlowLength':0,'FastLength':0,'MACDLength':0}}
+    activation_params = {'sar':True,'rsi':False,'strat1':False,'strat2':False,'strat3':False, 'strat6':False, 'strat7':False, 'strat9': False}
+    strat_results = {'sar':{'initial':0,'maximum':0},'rsi':{'window':0,'upper':0,'lower':0},'strat1':{'short window':0,"med window":0},'strat2':{'window':0},'strat3':{'high window':0, 'close window':0},'strat6':{'window':0,'limiting_factor':0},'strat7':{'window':0,'limiting_factor':0}, 'strat9':{'SlowLength':0,'FastLength':0,'MACDLength':0}}
+    
+    print("sar")
+    initial = np.arange(0.01,0.051,0.002)
+    mx = np.arange(0.1,0.51,0.02)
+    comb = product(initial,mx)
+    strat_results = parallel_process(ts, "sar", 0.05, strat_results, ground_truth, strategy_params,activation_params,comb)
+    
+    print("rsi")
+    activation_params['sar'] = False
+    activation_params['rsi'] = True
+    window = range(5,51,2)
+    upper = range(60,91,2)
+    lower = range(20,51,2)
+    comb = product(window, upper,lower)
+    strat_results = parallel_process(ts, "rsi", 0.05, strat_results, ground_truth, strategy_params,activation_params,comb)
+
+    print("strat1")
+    activation_params['rsi'] = False
+    activation_params['strat1'] = True
+    short = range(20,35,2)
+    med = range(50,71,2)
+    comb = product(short,med)
+    strat_results = parallel_process(ts, "strat1", 0.05, strat_results, ground_truth, strategy_params,activation_params,comb)
+
+    print("strat2")
+    activation_params['strat1'] = False
+    activation_params['strat2'] = True
+    comb = [range(45,61,2)]
+    strat_results = parallel_process(ts, "strat2", 0.05, strat_results, ground_truth, strategy_params,activation_params,comb)
+
+    print("strat3")
+    activation_params['strat2'] = False
+    activation_params['strat3'] = True
+    comb = [range(5,51,2)]
+    strat_results = parallel_process(ts, "strat3", 0.05, strat_results, ground_truth, strategy_params,activation_params,comb)
+    
+    print("strat6")
+    activation_params['strat3'] = False
+    activation_params['strat6'] = True
+    limiting_factor = np.arange(0.3,1.05,0.1)
+    window = range(10,51,2)
+    comb = product(window,limiting_factor)
+    strat_results = parallel_process(ts, "strat6", 0.05, strat_results, ground_truth, strategy_params,activation_params,comb)
+    
+    print("strat7")
+    activation_params['strat6'] = False
+    activation_params['strat7'] = True
+    limiting_factor = np.arange(1.8,2.45,0.1)
+    window = range(10,51,2)
+    comb = product(window,limiting_factor)
+    strat_results = parallel_process(ts, "strat7", 0.05, strat_results, ground_truth, strategy_params,activation_params,comb)
+
+    print('strat9')
+    activation_params['strat7'] = False
+    activation_params['strat9'] = True
+    comb = list(permutations(range(10,51,2),3))
+    strat_results = parallel_process(ts, "strat9", 0.05, strat_results, ground_truth, strategy_params,activation_params,comb)
+    
+    test_split_dates = rolling_half_year("2003-01-01","2019-01-01",5)
+    test_split_dates = test_split_dates[-4:]
+    ans = {'index':['2017-01-01','2017-07-01','2018-01-01','2018-07-01'],
+            'sar_initial':[],'sar_maximum':[],'sar_acc':[],'sar_cov':[],
+            'rsi_window':[],'rsi_upper':[],'rsi_lower':[],'rsi_acc':[],'rsi_cov':[],
+            'strat1_short_window':[],'strat1_med_window':[],'strat1_acc':[],'strat1_cov':[],
+            'strat2_window':[],'strat2_acc':[],'strat2_cov':[],
+            'strat3_high_window':[],'strat3_high_acc':[],'strat3_high_cov':[],
+            'strat3_close_window':[],'strat3_close_acc':[],'strat3_close_cov':[],
+            'strat6_window':[],'strat6_limiting_factor':[],'strat6_acc':[],'strat6_cov':[],
+            'strat7_window':[],'strat7_limiting_factor':[],'strat7_acc':[],'strat7_cov':[],
+            'strat9_slow_length':[],'strat9_fast_length':[],'strat9_macd_length':[],'strat9_acc':[],'strat9_cov':[],}
+    
+    for test_split_date in test_split_dates:
+        ts = time_series.loc[(time_series.index >= test_split_date[1])&(time_series.index < test_split_date[2])]
         activation_params = {'sar':True,'rsi':False,'strat1':False,'strat2':False,'strat3':False, 'strat6':False, 'strat7':False, 'strat9': False}
-        strat_results = {'sar':{'initial':0,'maximum':0},'rsi':{'window':0,'upper':0,'lower':0},'strat1':{'short window':0,"med window":0},'strat2':{'window':0},'strat3':{'high window':0, 'close window':0},'strat6':{'window':0,'limiting_factor':0},'strat7':{'window':0,'limiting_factor':0}, 'strat9':{'SlowLength':0,'FastLength':0,'MACDLength':0}}
-        
-        # print("sar")
-        # initial = np.arange(0.01,0.051,0.002)
-        # mx = np.arange(0.1,0.51,0.02)
-        # comb = product(initial,mx)
-        # strat_results = parallel_process(ts, "sar", 0.05, strat_results, ground_truth, strategy_params,activation_params,comb)
-        
-        # print("rsi")
-        # activation_params['sar'] = False
-        # activation_params['rsi'] = True
-        # window = range(5,51,2)
-        # upper = range(60,91,2)
-        # lower = range(20,51,2)
-        # comb = product(window, upper,lower)
-        # strat_results = parallel_process(ts, "rsi", 0.05, strat_results, ground_truth, strategy_params,activation_params,comb)
+        results = output(ts,ground_truth,strategy_params,activation_params,[strat_results['sar']['initial'],strat_results['sar']['maximum']], check = False)
+        ans['sar_initial'].append(strat_results['sar']['initial'])
+        ans['sar_maximum'].append(strat_results['sar']['maximum'])
+        ans['sar_acc'].append(results[3])
+        ans['sar_cov'].append(results[4])            
+        activation_params = {'sar':False,'rsi':True,'strat1':False,'strat2':False,'strat3':False, 'strat6':False, 'strat7':False, 'strat9': False}
+        results = output(ts,ground_truth,strategy_params,activation_params,[strat_results['rsi']['window']], check = False)
+        ans['rsi_window'].append(strat_results['rsi']['window'])
+        ans['rsi_upper'].append(strat_results['rsi']['upper'])
+        ans['rsi_lower'].append(strat_results['rsi']['lower'])
+        ans['rsi_acc'].append(results[4])
+        ans['rsi_cov'].append(results[5])
 
-        print("strat1")
-        activation_params['rsi'] = False
-        activation_params['strat1'] = True
-        short = range(20,35,2)
-        med = range(50,71,2)
-        comb = product(short,med)
-        strat_results = parallel_process(ts, "strat1", 0.05, strat_results, ground_truth, strategy_params,activation_params,comb)
+        activation_params = {'sar':False,'rsi':False,'strat1':True,'strat2':False,'strat3':False, 'strat6':False, 'strat7':False, 'strat9': False}
+        results = output(ts,ground_truth,strategy_params,activation_params,[strat_results['strat1']['short window'],strat_results['strat1']['med window']], check = False)
+        ans['strat1_short_window'].append(strat_results['strat1']['short window'])
+        ans['strat1_med_window'].append(strat_results['strat1']['med window'])
+        ans['strat1_acc'].append(results[3])
+        ans['strat1_cov'].append(results[4])    
 
-        print("strat2")
-        activation_params['strat1'] = False
-        activation_params['strat2'] = True
-        comb = [range(45,61,2)]
-        strat_results = parallel_process(ts, "strat2", 0.05, strat_results, ground_truth, strategy_params,activation_params,comb)
+        activation_params = {'sar':False,'rsi':False,'strat1':False,'strat2':True,'strat3':False, 'strat6':False, 'strat7':False, 'strat9': False}
+        results = output(ts,ground_truth,strategy_params,activation_params,[strat_results['rsi']['window'],strat_results['rsi']['upper'],strat_results['rsi']['lower']], check = False)
+        ans['strat2_window'].append(strat_results['strat2']['window'])
+        ans['strat2_acc'].append(results[2])
+        ans['strat2_cov'].append(results[3]) 
+        
+        activation_params = {'sar':False,'rsi':False,'strat1':False,'strat2':False,'strat3':True, 'strat6':False, 'strat7':False, 'strat9': False}
+        results = output(ts,ground_truth,strategy_params,activation_params,[strat_results['strat3']['high window']], check = False)
+        ans['strat3_high_window'].append(strat_results['strat3']['high window'])
+        ans['strat3_high_acc'].append(results[2])
+        ans['strat3_high_cov'].append(results[3]) 
 
-        print("strat3")
-        activation_params['strat2'] = False
-        activation_params['strat3'] = True
-        comb = [range(5,51,2)]
-        strat_results = parallel_process(ts, "strat3", 0.05, strat_results, ground_truth, strategy_params,activation_params,comb)
+        results = output(ts,ground_truth,strategy_params,activation_params,[strat_results['strat3']['close window']], check = False)
+        ans['strat3_close_window'].append(strat_results['strat3']['close window'])
+        ans['strat3_close_acc'].append(results[5])
+        ans['strat3_close_cov'].append(results[6]) 
         
-        print("strat6")
-        activation_params['strat3'] = False
-        activation_params['strat6'] = True
-        limiting_factor = np.arange(0.3,1.05,0.1)
-        window = range(10,51,2)
-        comb = product(window,limiting_factor)
-        strat_results = parallel_process(ts, "strat6", 0.05, strat_results, ground_truth, strategy_params,activation_params,comb)
-        
-        print("strat7")
-        activation_params['strat6'] = False
-        activation_params['strat7'] = True
-        limiting_factor = np.arange(1.8,2.45,0.1)
-        window = range(10,51,2)
-        comb = product(window,limiting_factor)
-        strat_results = parallel_process(ts, "strat7", 0.05, strat_results, ground_truth, strategy_params,activation_params,comb)
+        activation_params = {'sar':False,'rsi':False,'strat1':False,'strat2':False,'strat3':False, 'strat6':True, 'strat7':False, 'strat9': False}
+        results = output(ts,ground_truth,strategy_params,activation_params,[strat_results['strat6']['window'],strat_results['strat6']['limiting_factor']], check = False)
+        ans['strat6_window'].append(strat_results['strat6']['window'])
+        ans['strat6_limiting_factor'].append(strat_results['strat6']['limiting_factor'])
+        ans['strat6_acc'].append(results[3])
+        ans['strat6_cov'].append(results[4]) 
+        activation_params = {'sar':False,'rsi':False,'strat1':False,'strat2':False,'strat3':False, 'strat6':False, 'strat7':True, 'strat9': False}
+        results = output(ts,ground_truth,strategy_params,activation_params,[strat_results['strat7']['window'],strat_results['strat7']['limiting_factor']], check = False)
+        ans['strat7_window'].append(strat_results['strat7']['window'])
+        ans['strat7_limiting_factor'].append(strat_results['strat7']['limiting_factor'])
+        ans['strat7_acc'].append(results[3])
+        ans['strat7_cov'].append(results[4])
+        activation_params = {'sar':False,'rsi':False,'strat1':False,'strat2':False,'strat3':False, 'strat6':False, 'strat7':False, 'strat9': True}
+        results = output(ts,ground_truth,strategy_params,activation_params,[strat_results['strat9']['SlowLength'],strat_results['strat9']['FastLength'],strat_results['strat9']['MACDLength']], check = False)
+        ans['strat9_slow_length'].append(strat_results['strat9']['SLowLength'])
+        ans['strat9_fast_length'].append(strat_results['strat9']['FastLength'])
+        ans['strat9_macd_length'].append(strat_results['strat9']['MACDLength'])
+        ans['strat9_acc'].append(results[4])
+        ans['start9_cov'].append(results[5])
 
-        print('strat9')
-        activation_params['strat7'] = False
-        activation_params['strat9'] = True
-        comb = list(permutations(range(10,51,2),3))
-        strat_results = parallel_process(ts, "strat9", 0.05, strat_results, ground_truth, strategy_params,activation_params,comb)
-        
-        test_split_dates = rolling_half_year("2003-01-01","2019-01-01",5)
-        test_split_dates = test_split_dates[:-4]
-        for test_split_date in test_split_dates:
-            ts = time_series.loc[(time_series.index >= test_split_date[1])&(time_series.index < test_split_date[2])]
-            ans = {'index':['2017-01-01','2017-07-01','2018-01-01','2018-07-01'],
-                    'sar_initial':[],'sar_maximum':[],'sar_acc':[],'sar_cov':[],
-                    'rsi_window':[],'rsi_upper':[],'rsi_lower':[],'rsi_acc':[],'rsi_cov':[],
-                    'strat1_short_window':[],'strat1_med_window':[],'strat1_acc':[],'strat1_cov':[],
-                    'strat2_window':[],'strat2_acc':[],'strat2_cov':[],
-                    'strat3_high_window':[],'strat3_high_acc':[],'strat3_high_cov':[],
-                    'strat3_close_window':[],'strat3_close_acc':[],'strat3_close_cov':[],
-                    'strat6_window':[],'strat6_limiting_factor':[],'strat6_acc':[],'strat6_cov':[],
-                    'strat7_window':[],'strat7_limiting_factor':[],'strat7_acc':[],'strat7_cov':[],
-                    'strat9_slow_length':[],'strat9_fast_length':[],'strat9_macd_length':[],'strat9_acc':[],'strat9_cov':[],}
-            # activation_params = {'sar':True,'rsi':False,'strat1':False,'strat2':False,'strat3':False, 'strat6':False, 'strat7':False, 'strat9': False}
-            # results = output(ts,ground_truth[:-5],strategy_params,activation_params,[strat_results['sar']['initial'],strat_results['sar']['maximum']], check = False)
-            # ans['sar_initial'].append(strat_results['sar']['initial'])
-            # ans['sar_maximum'].append(strat_results['sar']['maximum'])
-            # ans['sar_acc'].append(results[3])
-            # ans['sar_cov'].append(results[4])            
-            # activation_params = {'sar':False,'rsi':True,'strat1':False,'strat2':False,'strat3':False, 'strat6':False, 'strat7':False, 'strat9': False}
-            # results = output(ts,ground_truth[:-5],strategy_params,activation_params,[strat_results['rsi']['window']], check = False)
-            # ans['rsi_window'].append(strat_results['rsi']['window'])
-            # ans['rsi_upper'].append(strat_results['rsi']['upper'])
-            # ans['rsi_lower'].append(strat_results['rsi']['lower'])
-            # ans['rsi_acc'].append(results[4])
-            # ans['rsi_cov'].append(results[5])
-            activation_params = {'sar':False,'rsi':False,'strat1':True,'strat2':False,'strat3':False, 'strat6':False, 'strat7':False, 'strat9': False}
-            results = output(ts,ground_truth[:-5],strategy_params,activation_params,[strat_results['strat1']['short window'],strat_results['strat1']['med window']], check = False)
-            ans['strat1_short_window'].append(strat_results['strat1']['short window'])
-            ans['strat1_med_window'].append(strat_results['strat1']['med window'])
-            ans['strat1_acc'].append(results[3])
-            ans['strat1_cov'].append(results[4])    
-            activation_params = {'sar':False,'rsi':False,'strat1':False,'strat2':True,'strat3':False, 'strat6':False, 'strat7':False, 'strat9': False}
-            results = output(ts,ground_truth[:-5],strategy_params,activation_params,[strat_results['strat2']['window']], check = False)
-            ans['strat2_window'].append(strat_results['strat2']['window'])
-            ans['strat2_acc'].append(results[2])
-            ans['strat2_cov'].append(results[3]) 
+    ans = pd.DataFrame(ans)
+    ans.to_csv(out)
+
+
+    
+
             
-            activation_params = {'sar':False,'rsi':False,'strat1':False,'strat2':False,'strat3':True, 'strat6':False, 'strat7':False, 'strat9': False}
-            results = output(ts,ground_truth[:-5],strategy_params,activation_params,[strat_results['strat3']['high window']], check = False)
-            ans['strat3_high_window'].append(strat_results['strat3']['high_window'])
-            ans['strat3_high_acc'].append(results[2])
-            ans['strat3_high_cov'].append(results[3]) 
-
-            results = output(ts,ground_truth[:-5],strategy_params,activation_params,[strat_results['strat3']['close window']], check = False)
-            ans['strat3_close_window'].append(strat_results['strat3']['close_window'])
-            ans['strat3_close_acc'].append(results[5])
-            ans['strat3_close_cov'].append(results[6]) 
-            
-            activation_params = {'sar':False,'rsi':False,'strat1':False,'strat2':False,'strat3':False, 'strat6':True, 'strat7':False, 'strat9': False}
-            results = output(ts,ground_truth[:-5],strategy_params,activation_params,[strat_results['strat6']['window'],strat_results['strat6']['limiting_factor']], check = False)
-            ans['strat6_window'].append(strat_results['strat6']['window'])
-            ans['strat6_limiting_factor'].append(strat_results['strat6']['limiting_factor'])
-            ans['strat6_acc'].append(results[3])
-            ans['strat6_cov'].append(results[4]) 
-            activation_params = {'sar':False,'rsi':False,'strat1':False,'strat2':False,'strat3':False, 'strat6':False, 'strat7':True, 'strat9': False}
-            results = output(ts,ground_truth[:-5],strategy_params,activation_params,[strat_results['strat7']['window'],strat_results['strat7']['limiting_factor']], check = False)
-            ans['strat7_window'].append(strat_results['strat7']['window'])
-            ans['strat7_limiting_factor'].append(strat_results['strat7']['limiting_factor'])
-            ans['strat7_acc'].append(results[3])
-            ans['strat7_cov'].append(results[4])
-            activation_params = {'sar':False,'rsi':False,'strat1':False,'strat2':False,'strat3':False, 'strat6':False, 'strat7':False, 'strat9': True}
-            results = output(ts,ground_truth[:-5],strategy_params,activation_params,[strat_results['strat9']['SlowLength'],strat_results['strat9']['FastLength'],strat_results['strat9']['MACDLength']], check = False)
-            ans['strat9_short_length'].append(strat_results['strat9']['ShortLength'])
-            ans['strat9_fast_length'].append(strat_results['strat9']['FastLength'])
-            ans['strat9_macd_length'].append(strat_results['strat9']['MACDLength'])
-            ans['strat9_acc'].append(results[4])
-            ans['start9_cov'].append(results[5])
-
-            ans = pd.DataFrame(ans)
-            ans.to_csv(split_dates[1]+"_"+out)
-
-
-        
-
-                
 
 
 
