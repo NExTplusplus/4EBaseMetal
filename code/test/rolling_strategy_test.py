@@ -21,7 +21,7 @@ def save_data(fname,time_series,columns, ground_truth = None):
     col_name = ""
     for col in columns:
         col_name = col_name + " " + col
-    with open("../../"+fname+".csv","w") as out:
+    with open(fname+".csv","w") as out:
         out.write(col_name.replace(" ",","))
         out.write(",\n")
         for i in [5]:
@@ -49,8 +49,11 @@ def output(time_series,ground_truth,strategy_params,activation_params,array,chec
     if strat =='strat9' and sp[strat]['SlowLength'] < sp[strat]['FastLength']:
         return 
     ts = strategy_testing(copy(time_series),ground_truth,sp, activation_params)
-    ts = ts[list(set(ts.columns.values.tolist()) - org_cols)]
+    ts = ts[sorted(list(set(ts.columns.values.tolist()) - org_cols))]
     temp_list = array
+#     if not check:
+#         save_data("rolling_"+ground_truth+str(sp[strat]),ts,ts.columns.values.tolist())
+    
     for col in ts.columns.values.tolist():
         if col == "Label":
             continue
@@ -86,14 +89,14 @@ def parallel_process(ts,strat,cov,strat_results,ground_truth,strategy_params,act
     if strat == 'sar':
         results = [[float(res[0]),float(res[1]),float(res[3]),float(res[4])] for res in results]
         results = pd.DataFrame(data = results, columns = ["Initial","Maximum","Acc","Cov"])
-        results = results.loc[(results["Cov"]>0.05)]
+#         results = results.loc[(results["Cov"]>cov)]
         strat_results['sar']['initial'] = results.loc[results["Acc"].idxmax(),"Initial"]
         strat_results['sar']['maximum'] = results.loc[results["Acc"].idxmax(),"Maximum"]
 
     elif strat =='rsi':
         results = [[int(res[0]),int(res[1]),int(res[2]),float(res[4]),float(res[5])] for res in results]
         results = pd.DataFrame(data = results, columns = ["Window","Upper","Lower","Acc","Cov"])
-        results = results.loc[(results["Cov"]>0.05)]
+#         results = results.loc[(results["Cov"]>cov)]
         strat_results['rsi']['window'] = results.loc[results["Acc"].idxmax(),"Window"]
         strat_results['rsi']['upper'] = results.loc[results["Acc"].idxmax(),"Upper"]
         strat_results['rsi']['lower'] = results.loc[results["Acc"].idxmax(),"Lower"]
@@ -101,41 +104,41 @@ def parallel_process(ts,strat,cov,strat_results,ground_truth,strategy_params,act
     elif strat == 'strat1':
         results = [[int(res[0]),int(res[1]),float(res[3]),float(res[4])] for res in results]
         results = pd.DataFrame(data = results, columns = ["Short Window","Med Window","Acc","Cov"])
-        results = results.loc[(results["Cov"]>0.05)]
+#         results = results.loc[(results["Cov"]>cov)]
         strat_results['strat1']['short window'] = results.loc[results["Acc"].idxmax(),"Short Window"]
         strat_results['strat1']['med window'] = results.loc[results["Acc"].idxmax(),"Med Window"]
 
     elif strat == 'strat2':
         results = [[int(res[0]),float(res[2]),float(res[3])] for res in results]
         results = pd.DataFrame(data = results, columns = ["Window","Acc","Cov"])
-        results = results.loc[(results["Cov"]>0.05)]
+#         results = results.loc[(results["Cov"]>cov)]
         strat_results['strat2']['window'] = results.loc[results["Acc"].idxmax(),"Window"]
 
     elif strat == "strat3":
         results = [[int(res[0]),float(res[2]),float(res[3]),float(res[5]),float(res[6])] for res in results]
-        results = pd.DataFrame(data = results, columns = ["Window","High Acc","High Cov","Close Acc","Close Cov"])
-        results = results.loc[(results["High Cov"]>0.05)&(results["Close Cov"]>0.05)]
+        results = pd.DataFrame(data = results, columns = ["Window","Close Acc","Close Cov","High Acc","High Cov"])
+        results = results.loc[(results["High Cov"]>cov)&(results["Close Cov"]>cov)]
         strat_results['strat3']['high window'] = results.loc[results["High Acc"].idxmax(),"Window"]
         strat_results['strat3']['close window'] = results.loc[results["Close Acc"].idxmax(),"Window"]
+    
     elif strat == "strat6":
-
         results = [[int(res[0]),float(res[1]),float(res[3]),float(res[4])] for res in results]
         results = pd.DataFrame(data = results, columns = ["Window","Limiting Factor","Acc","Cov"])
-        results = results.loc[(results["Cov"]>cov)]
+#         results = results.loc[(results["Cov"]>cov)]
         strat_results['strat6']['window'] = results.loc[results["Acc"].idxmax(),"Window"]
         strat_results['strat6']['limiting_factor'] = results.loc[results["Acc"].idxmax(),"Limiting Factor"]
     
     elif strat == "strat7":
         results = [[int(res[0]),float(res[1]),float(res[3]),float(res[4])] for res in results]
         results = pd.DataFrame(data = results, columns = ["Window","Limiting Factor","Acc","Cov"])
-        results = results.loc[(results["Cov"]>cov)]
+#         results = results.loc[(results["Cov"]>cov)]
         strat_results['strat7']['window'] = results.loc[results["Acc"].idxmax(),"Window"]
         strat_results['strat7']['limiting_factor'] = results.loc[results["Acc"].idxmax(),"Limiting Factor"]
     
     elif strat == "strat9":
         results = [[int(res[0]),int(res[1]),int(res[2]),float(res[4]),float(res[5])] for res in results]
         results = pd.DataFrame(data = results, columns = ["Slow Window","Fast Window","MACD Length","Acc","Cov"])
-        results = results.loc[(results["Cov"]>cov)]
+#         results = results.loc[(results["Cov"]>cov)]
         strat_results['strat9']['SlowLength'] = results.loc[results["Acc"].idxmax(),"Slow Window"]
         strat_results['strat9']['FastLength'] = results.loc[results["Acc"].idxmax(),"Fast Window"]
         strat_results['strat9']['MACDLength'] = results.loc[results["Acc"].idxmax(),"MACD Length"]
@@ -169,8 +172,10 @@ if __name__ == '__main__':
     if args.source == "NExT":
         data_list, LME_dates = read_data_NExT(fname_columns, "2003-11-12")
         time_series = pd.concat(data_list, axis = 1, sort = True)
+        split_dates = rolling_half_year("2003-01-01","2017-01-01",5)
     elif args.source == "4E":
         time_series, LME_dates = read_data_v5_4E("2003-11-12")
+        split_dates = rolling_half_year("2003-01-01","2019-01-01",5)
     
     n = 0
     time_series = deal_with_abnormal_value_v1(time_series)
@@ -180,7 +185,7 @@ if __name__ == '__main__':
     labels = labelling_v1(time_series,args.steps,[args.ground_truth])
     time_series = process_missing_value_v3(time_series)
     time_series = pd.concat([time_series, labels[0]], axis = 1)
-    split_dates = rolling_half_year("2003-01-01","2017-01-01",5)
+    
     split_dates = split_dates[-4:]
     ans = {'index':['2017-01-01','2017-07-01','2018-01-01','2018-07-01'],
                 'sar_initial':[],'sar_maximum':[],'sar_acc':[],'sar_cov':[],
@@ -194,6 +199,7 @@ if __name__ == '__main__':
                 'strat9_slow_length':[],'strat9_fast_length':[],'strat9_macd_length':[],'strat9_acc':[],'strat9_cov':[]
                 }
     for split_date in split_dates:
+        print(split_date)
         ts = time_series.loc[(time_series.index >= split_date[0])&(time_series.index <= split_date[1])]
         strategy_params = {'sar':{'initial':0,'maximum':0},'rsi':{'window':0,'upper':0,'lower':0},'strat1':{'short window':0,"med window":0},'strat2':{'window':0},'strat3':{'window':0},'strat6':{'window':0,'limiting_factor':0},'strat7':{'window':0,'limiting_factor':0}, 'strat9':{'SlowLength':0,'FastLength':0,'MACDLength':0}}
         activation_params = {'sar':True,'rsi':False,'strat1':False,'strat2':False,'strat3':False, 'strat6':False, 'strat7':False, 'strat9': False}
@@ -225,13 +231,15 @@ if __name__ == '__main__':
         print("strat2")
         activation_params['strat1'] = False
         activation_params['strat2'] = True
-        comb = [range(45,61,2)]
+        comb = list(range(45,61,2))
+        comb = [[com] for com in comb]
         strat_results = parallel_process(ts, "strat2", 0.05, strat_results, ground_truth, strategy_params,activation_params,comb)
 
         print("strat3")
         activation_params['strat2'] = False
         activation_params['strat3'] = True
-        comb = [range(5,51,2)]
+        comb = list(range(5,51,2))
+        comb = [[com] for com in comb]
         strat_results = parallel_process(ts, "strat3", 0.05, strat_results, ground_truth, strategy_params,activation_params,comb)
         
         print("strat6")
@@ -286,13 +294,13 @@ if __name__ == '__main__':
         activation_params = {'sar':False,'rsi':False,'strat1':False,'strat2':False,'strat3':True, 'strat6':False, 'strat7':False, 'strat9': False}
         results = output(ts,ground_truth,strategy_params,activation_params,[strat_results['strat3']['high window']], check = False)
         ans['strat3_high_window'].append(strat_results['strat3']['high window'])
-        ans['strat3_high_acc'].append(results[2])
-        ans['strat3_high_cov'].append(results[3]) 
+        ans['strat3_high_acc'].append(results[5])
+        ans['strat3_high_cov'].append(results[6]) 
 
         results = output(ts,ground_truth,strategy_params,activation_params,[strat_results['strat3']['close window']], check = False)
         ans['strat3_close_window'].append(strat_results['strat3']['close window'])
-        ans['strat3_close_acc'].append(results[5])
-        ans['strat3_close_cov'].append(results[6]) 
+        ans['strat3_close_acc'].append(results[2])
+        ans['strat3_close_cov'].append(results[3])
         
         activation_params = {'sar':False,'rsi':False,'strat1':False,'strat2':False,'strat3':False, 'strat6':True, 'strat7':False, 'strat9': False}
         results = output(ts,ground_truth,strategy_params,activation_params,[strat_results['strat6']['window'],strat_results['strat6']['limiting_factor']], check = False)
@@ -314,7 +322,7 @@ if __name__ == '__main__':
         ans['strat9_acc'].append(results[4])
         ans['strat9_cov'].append(results[5])
     ans = pd.DataFrame(ans)
-    ans.to_csv(args.out)
+    ans.to_csv("rolling_"+args.output)
 
 
         
