@@ -149,6 +149,12 @@ def rsi(Close,period = 14,upper = 70,lower = 30):
             rsi_signal.iloc[i] = -1
         elif rsi.iloc[i-1]<lower:
             rsi_signal.iloc[i] = 1
+#    rsi.loc[rsi>upper] = -1
+#    rsi.loc[rsi<lower] = 1
+#    rsi.loc[abs(rsi)>1] = 0
+#    rsi_signal.iloc[1:] = rsi.iloc[:-1]
+#    rsi_signal = rsi_signal.shift(1)
+    
     return rsi_signal
 
 
