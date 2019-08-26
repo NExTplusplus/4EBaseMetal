@@ -4,9 +4,11 @@ from copy import copy
 import os
 import sys
 from datetime import datetime
+from itertools import product
 sys.path.insert(0,os.path.abspath(os.path.join(sys.path[0],"..")))
-from utils.normalize_feature import *
+from utils.normalize_feature import * 
 from utils.Technical_indicator import *
+from utils.process_strategy import *
 from sklearn import preprocessing
 import scipy.stats as sct
 
@@ -199,8 +201,16 @@ def normalize_without_1d_return_v1(timeseries,train_end, params):
     return timeseries, ans
 
 
-
-
+#This function is for one-hot encoding.
+def one_hot(dataframe):
+    output = pd.DataFrame(index = dataframe.index)
+    for col in dataframe.columns:
+        output[col+'_positive'] = pd.Series(index = dataframe.index,[0]*len(dataframe))
+        output[col+'_negative'] = pd.Series(index = dataframe.index,[0]*len(dataframe))
+        output[col+'_positive'].loc[dataframe[col]==1] = 1
+        output[col+'_positive'].loc[dataframe[col]==-1] = 1
+        
+    return output
 
 #this function is to build the technical indicator which is called PVT and DIV_PVT
 def technical_indication_v1(X,train_end,params,ground_truth):
@@ -305,30 +315,77 @@ def technical_indication_v2_ex3(X,train_end,params,ground_truth_columns):
                 
     return X
 
-def strategy_testing(X,ground_truth,strategy_params,activation_params):
+def strategy_signal(X,ground_truth,strategy_params,activation_params):
+    
+    strat_results = {'sar':{'initial':[],'maximum':[]},'rsi':{'window':[],'upper':[],'lower':[]},'strat1':{'short window':[],"med window":[]},'strat2':{'window':[]},'strat3':{'high window':[], 'close window':[]},'strat6':{'window':[],'limiting_factor':[]},'strat7':{'window':[],'limiting_factor':[]}, 'strat9':{'SlowLength':[],'FastLength':[],'MACDLength':[]}}
     cols = X.columns.values.tolist()
     ground_truth = ground_truth[:-5]
+    tmp_pd = pd.DataFrame(index = X.index)
+    output = pd.DataFrame(index = X.index)
     for col in cols:
         if ground_truth+"_High" == col and activation_params["strat3"]:
-            X[col+"_strat3"] = strategy_3(X[col],strategy_params['strat3']['window'])
+            tmp_pd[col+'_strat3'] = strategy_3(X[col],strategy_params['strat3']['window'])
+            output_strat3 = one_hot(tmp_pd)
+            output = pd.concat([output,output_strat3],axis = 1)
+            tmp_pd = pd.DataFrame(index = X.index)
+            
         if ground_truth+"_Close" == col:
             setting = col[:-5]
             if setting+"High" in cols and setting+"Low" in cols and activation_params['sar']:
-                X[setting+'sar'] = sar(X[setting+"High"],X[setting+"Low"],X[col],strategy_params['sar']['initial'],strategy_params['sar']['maximum'])
+                tmp_pd[col+'_sar'] = sar(X[setting+"High"],X[setting+"Low"],X[col],strategy_params['sar']['initial'],strategy_params['sar']['maximum'])
+                output_sar = one_hot(tmp_pd)
+                output = pd.concat([output,output_sar],axis = 1)
+                tmp_pd = pd.DataFrame(index = X.index)
+                
             if activation_params['rsi']:
-                X[col+"_rsi"] = rsi(copy(X[col]),strategy_params['rsi']['window'],strategy_params['rsi']['upper'],strategy_params['rsi']['lower'])
+                strategy_params['rsi']['window'] = range(5,51,2)
+                strategy_params['rsi']['upper'] = range(60,91,10)
+                strategy_params['rsi']['lower'] = range(20,51,2)
+                comb = product(strategy_params['rsi']['window'],strategy_params['rsi']['upper'],strategy_params['rsi']['lower'])
+                tmp = parallel_process(X, "sar", 0.05, strat_results, ground_truth, strategy_params,activation_params,comb)
+                output_rsi = one_hot(tmp)
+                output = pd.concat([output,output_rsi],axis = 1)
+                
             if activation_params["strat1"]:
-                X[col+"_strat1"] = strategy_1(X[col],strategy_params['strat1']['short window'],strategy_params['strat1']['med window'])
+                strategy_params['strat1']['short'] = range(20,35,2)
+                strategy_params['strat1']['medium'] = range(50,71,2)
+                comb = product(strategy_params['strat1']['short'],strategy_params['strat1']['medium'])
+                tmp = parallel_process(ts, "strat1", 0.05, strat_results, ground_truth, strategy_params,activation_params,comb)
+                output_strat1 = one_hot(tmp)
+                output = pd.concat([output,output_strat1],axis = 1)
+
             if activation_params["strat2"]:
-                X[col+"_strat2"] = strategy_2(X[col],strategy_params['strat2']['window'])
+                tmp_pd[col+'_strat2'] = strategy_2(X[col],strategy_params['strat2']['window'])
+                output_strat2 = one_hot(tmp_pd)
+                output = pd.concat([output,output_strat2],axis = 1)
+                tmp_pd = pd.DataFrame(index = X.index)
+
             if activation_params["strat3"]:
-                X[col+"_strat3"] = strategy_3(X[col],strategy_params['strat3']['window'])
+                tmp_pd[col+'_strat3'] = strategy_3(X[col],strategy_params['strat3']['window'])
+                output_strat3 = one_hot(tmp_pd)
+                output = pd.concat([output,output_strat3],axis = 1)
+                tmp_pd = pd.DataFrame(index = X.index)
+
             if activation_params["strat7"]:
-                X[col+"_strat7"] = strategy_7(X[col],strategy_params['strat7']['window'],strategy_params['strat7']['limiting_factor'])
+                tmp_pd = strategy_7(X[col],strategy_params['strat7']['window'],strategy_params['strat7']['limiting_factor'])
+                output_strat7 = one_hot(tmp_pd)
+                output = pd.concat([output,output_strat7],axis = 1)
+                tmp_pd = pd.DataFrame(index = X.index)
+                
             if activation_params["strat9"]:
-                X[col+"_strat9"] = strategy_9(X[col],strategy_params['strat9']['FastLength'],strategy_params['strat9']['SlowLength'],strategy_params['strat9']['MACDLength'])
+                
+                comb = list(permutations(range(10,51,2),3))
+                tmp = parallel_process(ts, "strat9", 0.05, strat_results, ground_truth, strategy_params,activation_params,comb)
+                output_strat9 = one_hot(tmp)
+                output = pd.concat([output,output_strat9],axis = 1)
+                
             if ground_truth+"_High" in cols and ground_truth+"_Low" in cols and activation_params["strat6"]:
-                X[setting+"strat6"] = strategy_6(X[setting+"High"],X[setting+"Low"],X[col],strategy_params['strat6']['window'],strategy_params['strat6']['limiting_factor'])
+                strategy_params['strat6']['limiting_factor'] = np.arange(1.8,2.45,0.1)
+                strategy_params['strat6']['window'] = range(10,51,2)
+                comb = product(strategy_params['strat6']['limiting_factor'],strategy_params['strat6']['window'])
+                tmp = parallel_process(ts, "strat6", 0.05, strat_results, ground_truth, strategy_params,activation_params,comb)
+                output_strat7 = one_hot(tmp)
+                output = pd.concat([output,output_strat7],axis = 1)
             
     return X
 
