@@ -340,6 +340,11 @@ def remove_unused_columns_v1(time_series,org_cols):
                 org_cols.remove(col)
     return time_series, org_cols
 
+def remove_unused_columns_v2(time_series,org_cols):
+    for col in copy(time_series.columns):
+        if col in org_cols:
+            time_series = time_series.drop(col,axis = 1)
+
 
 #this function is to scale the data use the standardscaler
 def scaling_v1(X,train_end):
