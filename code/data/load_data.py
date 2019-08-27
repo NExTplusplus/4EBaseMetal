@@ -66,6 +66,8 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     parameters['time_series'] = parameters['time_series'].loc[LME_dates]
     labels = labelling(parameters, version_params['labelling'])
     parameters['time_series'] = process_missing_value(parameters,version_params['process_missing_value'])
+    parameters['org_cols'] = time_series.columns.values.tolist()
+    parameters['time_series'] = strategy_signal(parameters,version_params['strategy_testing'])
     split_dates = reset_split_dates(parameters['time_series'],split_dates)
 
 
@@ -73,7 +75,6 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     Normalize, create technical indicators, handle outliers and rescale data
     '''
     parameters['cat_cols'] = []
-    parameters['org_cols'] = time_series.columns.values.tolist()
     parameters['time_series'], parameters['norm_check'] = normalize_without_1d_return(parameters, version_params['normalize_without_1d_return'])
     parameters['time_series'] = technical_indication(parameters, version_params['technical_indication'])
     if parameters['norm_params']['xgboost']:

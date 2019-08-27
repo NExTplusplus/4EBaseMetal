@@ -89,14 +89,14 @@ def parallel_process(ts,strat,cov,strat_results,ground_truth,strategy_params,act
     if strat == 'sar':
         results = [[float(res[0]),float(res[1]),float(res[3]),float(res[4])] for res in results]
         results = pd.DataFrame(data = results, columns = ["Initial","Maximum","Acc","Cov"])
-#         results = results.loc[(results["Cov"]>cov)]
+        results = results.loc[(results["Cov"]>cov)]
         strat_results['sar']['initial'] = results.loc[results["Acc"].idxmax(),"Initial"]
         strat_results['sar']['maximum'] = results.loc[results["Acc"].idxmax(),"Maximum"]
 
     elif strat =='rsi':
         results = [[int(res[0]),int(res[1]),int(res[2]),float(res[4]),float(res[5])] for res in results]
         results = pd.DataFrame(data = results, columns = ["Window","Upper","Lower","Acc","Cov"])
-#         results = results.loc[(results["Cov"]>cov)]
+        results = results.loc[(results["Cov"]>cov)]
         strat_results['rsi']['window'] = results.loc[results["Acc"].idxmax(),"Window"]
         strat_results['rsi']['upper'] = results.loc[results["Acc"].idxmax(),"Upper"]
         strat_results['rsi']['lower'] = results.loc[results["Acc"].idxmax(),"Lower"]
@@ -104,14 +104,14 @@ def parallel_process(ts,strat,cov,strat_results,ground_truth,strategy_params,act
     elif strat == 'strat1':
         results = [[int(res[0]),int(res[1]),float(res[3]),float(res[4])] for res in results]
         results = pd.DataFrame(data = results, columns = ["Short Window","Med Window","Acc","Cov"])
-#         results = results.loc[(results["Cov"]>cov)]
+        results = results.loc[(results["Cov"]>cov)]
         strat_results['strat1']['short window'] = results.loc[results["Acc"].idxmax(),"Short Window"]
         strat_results['strat1']['med window'] = results.loc[results["Acc"].idxmax(),"Med Window"]
 
     elif strat == 'strat2':
         results = [[int(res[0]),float(res[2]),float(res[3])] for res in results]
         results = pd.DataFrame(data = results, columns = ["Window","Acc","Cov"])
-#         results = results.loc[(results["Cov"]>cov)]
+        results = results.loc[(results["Cov"]>cov)]
         strat_results['strat2']['window'] = results.loc[results["Acc"].idxmax(),"Window"]
 
     elif strat == "strat3":
@@ -124,21 +124,21 @@ def parallel_process(ts,strat,cov,strat_results,ground_truth,strategy_params,act
     elif strat == "strat6":
         results = [[int(res[0]),float(res[1]),float(res[3]),float(res[4])] for res in results]
         results = pd.DataFrame(data = results, columns = ["Window","Limiting Factor","Acc","Cov"])
-#         results = results.loc[(results["Cov"]>cov)]
+        results = results.loc[(results["Cov"]>cov)]
         strat_results['strat6']['window'] = results.loc[results["Acc"].idxmax(),"Window"]
         strat_results['strat6']['limiting_factor'] = results.loc[results["Acc"].idxmax(),"Limiting Factor"]
     
     elif strat == "strat7":
         results = [[int(res[0]),float(res[1]),float(res[3]),float(res[4])] for res in results]
         results = pd.DataFrame(data = results, columns = ["Window","Limiting Factor","Acc","Cov"])
-#         results = results.loc[(results["Cov"]>cov)]
+        results = results.loc[(results["Cov"]>cov)]
         strat_results['strat7']['window'] = results.loc[results["Acc"].idxmax(),"Window"]
         strat_results['strat7']['limiting_factor'] = results.loc[results["Acc"].idxmax(),"Limiting Factor"]
     
     elif strat == "strat9":
         results = [[int(res[0]),int(res[1]),int(res[2]),float(res[4]),float(res[5])] for res in results]
         results = pd.DataFrame(data = results, columns = ["Slow Window","Fast Window","MACD Length","Acc","Cov"])
-#         results = results.loc[(results["Cov"]>cov)]
+        results = results.loc[(results["Cov"]>cov)]
         strat_results['strat9']['SlowLength'] = results.loc[results["Acc"].idxmax(),"Slow Window"]
         strat_results['strat9']['FastLength'] = results.loc[results["Acc"].idxmax(),"Fast Window"]
         strat_results['strat9']['MACDLength'] = results.loc[results["Acc"].idxmax(),"MACD Length"]

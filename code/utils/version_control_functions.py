@@ -3,9 +3,9 @@ from utils.read_data import process_missing_value_v3
 from utils.normalize_feature import log_1d_return
 
 def generate_version_params(version):
-    ans = {"deal_with_abnormal_value":"v2", "labelling":"v1", "process_missing_value":"v1", 
+    ans = {"deal_with_abnormal_value":"v2", "labelling":"v1", "process_missing_value":"v1", "strategy_signal":None,
             "normalize_without_1d_return": "v1", "technical_indication":"v1",
-            "remove_unused_columns":"v1", "price_normalization":"v1", "scaling":"v2",
+            "remove_unused_columns":"v1", "price_normalization":"v1", "scaling":"v1",
             "construct":"v1"}
     ver = version.split("_")
     v = ver[0]
@@ -13,6 +13,13 @@ def generate_version_params(version):
 
     if v == "v7":
         ans['technical_indication'] = "v2"
+    if v == "v9":
+        ans['strategy_signal'] = "v1"
+        ans["normalize_without_1d_return"] = None
+        ans["technical_indication"] = None
+        ans["price_normalization"] = None
+        ans["remove_unused_columns"] = "v2"
+        ans["scaling"] = None
 
     if ex == "ex1":
         ans['labelling'] = "v1_ex1"
@@ -25,7 +32,9 @@ def generate_version_params(version):
 
 def deal_with_abnormal_value(arguments, version):
     time_series = arguments['time_series']
-    if version == "v1":
+    if version is None:
+        return time_series
+    elif version == "v1":
         '''
         includes processing abnormally large and small values and interpolation for missing values
         '''
@@ -66,8 +75,18 @@ def process_missing_value(arguments, version):
         '''
         return process_missing_value_v3(time_series)
 
+def strategy_signal(arguments,version):
+    time_series = arguments['time_series']
+    if version is None:
+        return time_series
+    elif version == "v1":
+        activation_params= {'rsi': True, 'sar':True, 'strat1': True, 'strat2': True, 'strat3': True, 'strat6': True, 'strat7': True, 'strat9': True}
+        return strategy_signal_v1(time_series,  arguments['split_dates'], arguments['ground_truth_columns'], arguments['strat_params'],arguments['activation_params'])
+
 def normalize_without_1d_return(arguments, version):
     time_series = arguments['time_series']
+    if version is None:
+        return time_series
     if version == "v1":
         '''
         automated normalization for all possible combinations
@@ -78,6 +97,8 @@ def normalize_without_1d_return(arguments, version):
 
 def technical_indication(arguments, version):
     time_series = arguments['time_series']
+    if version is None:
+        return time_series
     if version == "v1":
         '''
         automated generation of divPVT for all possible combinations (only PVT)
@@ -110,16 +131,25 @@ def technical_indication(arguments, version):
 
 def remove_unused_columns(arguments, version):
     time_series = arguments['time_series']
+    if version is None:
+        return time_series
     if version == "v1":
         '''
         remove columns that will not be used in model
         '''
         return remove_unused_columns_v1(time_series,arguments['org_cols'])
+    if version == "v2":
+        '''
+        remove columns that will not be used in model
+        '''
+        return remove_unused_columns_v2(time_series,arguments['org_cols'])
 
 
 
 def price_normalization(arguments, version):
     time_series = arguments['time_series']
+    if version is None:
+        return time_series
     if version == "v1":
         '''
         daily log returns
@@ -133,6 +163,8 @@ def insert_date_into_feature(arguments):
 
 def scaling(arguments, version):
     time_series = arguments['time_series']
+    if version is None:
+        return time_series
     if version == "v1":
         '''
         standard scaling
@@ -156,7 +188,7 @@ def construct(ind, arguments, version):
                             arguments['lags'], arguments['horizon'])
     elif version =="v1_ex2":
         '''
-        construct ndarray for three classifier
+        construct ndarray for three classifier  
         '''
         return construct_v1_ex2(time_series[ind][arguments['all_cols'][ind]], time_series[ind]["Label"], 
                             arguments['start_ind'], arguments['end_ind'], 

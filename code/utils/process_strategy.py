@@ -20,6 +20,7 @@ def strategy_testing(X,ground_truth,strategy_params,activation_params,cov = ""):
     for col in cols:
         if ground_truth+"_High" == col and activation_params["strat3"]:
             X[col+cov+"_strat3"] = strategy_3(X[col],strategy_params['strat3']['window'])
+
         if ground_truth+"_Close" == col:
             setting = col[:-5]
             if setting+"High" in cols and setting+"Low" in cols and activation_params['sar']:
@@ -41,7 +42,7 @@ def strategy_testing(X,ground_truth,strategy_params,activation_params,cov = ""):
             
     return X
 
-def output(time_series,ground_truth,strategy_params,activation_params,array,check = True):
+def output(time_series,split_dates,ground_truth,strategy_params,activation_params,array,check = True):
     org_cols = set(time_series.columns.values.tolist()) - set(["Label"])
     strat = None
     sp = copy(strategy_params)
@@ -59,6 +60,10 @@ def output(time_series,ground_truth,strategy_params,activation_params,array,chec
     ts = strategy_testing(copy(time_series),ground_truth,sp, activation_params)
     ts = ts[sorted(list(set(ts.columns.values.tolist()) - org_cols))]
     temp_list = array
+    if check:
+        ts = ts[(ts.index >= split_dates[0])&(ts.index < split_dates[1])]
+    else:
+        ts = ts[(ts.index >= split_dates[1])&(ts.index < split_dates[2])]
     
     for col in ts.columns.values.tolist():
         if col == "Label":
@@ -81,8 +86,8 @@ def output(time_series,ground_truth,strategy_params,activation_params,array,chec
     
     return temp_list
 
-def parallel_process(ts,strat,strat_results,ground_truth,strategy_params,activation_params,combination):
-    ls = [list([ts,ground_truth,strategy_params,activation_params,list(com)]) for com in combination]
+def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_params,activation_params,combination):
+    ls = [list([copy(ts),split_dates,ground_truth,strategy_params,activation_params,list(com)]) for com in combination]
     pool = pl()
     results = pool.starmap_async(output,ls)
     pool.close()
@@ -164,7 +169,10 @@ def parallel_process(ts,strat,strat_results,ground_truth,strategy_params,activat
 
         mn += 0.1
         mx += 0.1
-    
+
+    keys = strategy_params[strat].keys()
+    org_cols = set(ts.columns.values.tolist())
+    ans = None
     if strat == "strat3":
         cov_col = pd.to_numeric(results[results.columns.values.tolist()[3]])
         while len(results.loc[cov_col>=mn]) > 0:
@@ -176,20 +184,34 @@ def parallel_process(ts,strat,strat_results,ground_truth,strategy_params,activat
             strat_results['strat3']['close window'].append(temp_results.loc[temp_results["Close Acc"].idxmax(),"Window"])
             mn += 0.1
             mx += 0.1
-        print(strat_results)
+            for window in strat_results[strat]['high window']:
+                sp = copy(strategy_params)
+                temp_ans = strategy_testing(copy(ts),ground_truth,sp, activation_params,[window])
+                temp_ans = temp_ans[sorted(list(set(temp_ans.columns.values.tolist()) - org_cols))]
+                if ans is None:
+                    ans = temp_ans
+                else:
+                    ans = pd.concat([ans,temp_ans])
+            for window in strat_results[strat]['close window']:
+                sp = copy(strategy_params)
+                temp_ans = strategy_testing(copy(ts),ground_truth,sp, activation_params,[window])
+                temp_ans = temp_ans[sorted(list(set(temp_ans.columns.values.tolist()) - org_cols))]
+                if ans is None:
+                    ans = temp_ans
+                else:
+                    ans = pd.concat([ans,temp_ans])
+        
 
-    keys = strat_results[strat].keys()
-    org_cols = set(ts.columns.values.tolist())
-    ans = None
-    for i in range(max([len(res) for res in strat_results[strat].values()])):
-        sp = copy(strategy_params)
-        for key in keys:
-            sp[strat][key] = strat_results[strat][key][i]
-        temp_ans = strategy_testing(copy(ts),ground_truth,sp, activation_params,cov_array[i])
-        temp_ans = temp_ans[sorted(list(set(temp_ans.columns.values.tolist()) - org_cols))]
-        if ans is None:
-            ans = temp_ans
-        else:
-            ans = pd.concat([ans,temp_ans])
-    
-    return ans
+    else:
+        for i in range(max([len(res) for res in strat_results[strat].values()])):
+            sp = copy(strategy_params)
+            for key in keys:
+                sp[strat][key] = strat_results[strat][key][i]
+            temp_ans = strategy_testing(copy(ts),ground_truth,sp, activation_params,cov_array[i])
+            temp_ans = temp_ans[sorted(list(set(temp_ans.columns.values.tolist()) - org_cols))]
+            if ans is None:
+                ans = temp_ans
+            else:
+                ans = pd.concat([ans,temp_ans], sort = True)
+        
+        return ans
