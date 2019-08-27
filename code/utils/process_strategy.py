@@ -199,7 +199,7 @@ def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_pa
                 if ans is None:
                     ans = temp_ans
                 else:
-                    ans = pd.concat([ans,temp_ans])
+                    ans = pd.concat([ans,temp_ans],sort = True, axis = 1)
         
 
     else:
@@ -212,6 +212,7 @@ def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_pa
             if ans is None:
                 ans = temp_ans
             else:
-                ans = pd.concat([ans,temp_ans], sort = True)
+                ans = pd.concat([ans,temp_ans], sort = True,axis = 1)
+    ans = ans.dropna()
         
-        return ans
+    return ans

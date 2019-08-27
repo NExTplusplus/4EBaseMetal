@@ -80,13 +80,14 @@ def strategy_signal(arguments,version):
     if version is None:
         return time_series
     elif version == "v1":
-        activation_params= {'rsi': True, 'sar':True, 'strat1': True, 'strat2': True, 'strat3': True, 'strat6': True, 'strat7': True, 'strat9': True}
-        return strategy_signal_v1(time_series,  arguments['split_dates'], arguments['ground_truth_columns'], arguments['strat_params'],arguments['activation_params'])
+        ts = copy(time_series)
+        ts['Label'] = arguments['labels'][0]
+        return strategy_signal_v1(ts,  arguments['split_dates'], arguments['ground_truth_columns'], arguments['strat_params'],arguments['activation_params'])
 
 def normalize_without_1d_return(arguments, version):
     time_series = arguments['time_series']
     if version is None:
-        return time_series
+        return time_series, None
     if version == "v1":
         '''
         automated normalization for all possible combinations

@@ -53,7 +53,8 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     parameters = {'time_series':time_series, 'LME_dates': LME_dates, 'horizon': horizon, 
                     'ground_truth_columns': ground_truth_columns, 'lags': lags, 'split_dates':split_dates,
                     'norm_params':norm_params, 'tech_params': tech_params}
-
+    parameters['strat_params'] = {'sar':{'initial':[0.01],'maximum':[0.12]},'rsi':{'window':[],'upper':[],'lower':[]},'strat1':{'short window':[],"med window":[]},'strat2':{'window':[59]},'strat3':{'high window':[41,29,13,5], 'close window':[41,27,13,5]},'strat6':{'window':[],'limiting_factor':[]},'strat7':{'window':[18,14,44],'limiting_factor':[2.8,1.9,1.8]}, 'strat9':{'SlowLength':[],'FastLength':[],'MACDLength':[]}}
+    parameters['activation_params'] = {'rsi': True, 'sar':True, 'strat1': True, 'strat2': True, 'strat3': True, 'strat6': True, 'strat7': True, 'strat9': True}
     '''
     deal with the abnormal data which we found in the data. 
     '''
@@ -64,10 +65,12 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     '''
     LME_dates = sorted(set(LME_dates).intersection(parameters['time_series'].index.values.tolist()))
     parameters['time_series'] = parameters['time_series'].loc[LME_dates]
-    labels = labelling(parameters, version_params['labelling'])
+    parameters['labels'] = labelling(parameters, version_params['labelling'])
     parameters['time_series'] = process_missing_value(parameters,version_params['process_missing_value'])
     parameters['org_cols'] = time_series.columns.values.tolist()
-    parameters['time_series'] = strategy_signal(parameters,version_params['strategy_testing'])
+    save_data("i2",parameters['time_series'],parameters['time_series'].columns.values.tolist())
+    parameters['time_series'] = strategy_signal(parameters,version_params['strategy_signal'])
+    save_data("i3",parameters['time_series'],parameters['time_series'].columns.values.tolist())
     split_dates = reset_split_dates(parameters['time_series'],split_dates)
 
 
@@ -77,11 +80,13 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     parameters['cat_cols'] = []
     parameters['time_series'], parameters['norm_check'] = normalize_without_1d_return(parameters, version_params['normalize_without_1d_return'])
     parameters['time_series'] = technical_indication(parameters, version_params['technical_indication'])
+    save_data("i4",parameters['time_series'],parameters['time_series'].columns.values.tolist())
     if parameters['norm_params']['xgboost']:
         print("xgboost")
         parameters['cat_cols'] = ['day','month']
         parameters['time_series'] = insert_date_into_feature(parameters)
     parameters['time_series'], parameters['org_cols'] = remove_unused_columns(parameters, version_params['remove_unused_columns'])
+    save_data("i5",parameters['time_series'],parameters['time_series'].columns.values.tolist())
     parameters['time_series'] = price_normalization(parameters,version_params['price_normalization'])
     parameters['time_series'] = process_missing_value(parameters, version_params['process_missing_value'])
     split_dates = reset_split_dates(time_series,split_dates)
@@ -104,7 +109,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
         #     all_cols.append(temp.columns)
         # time_series = complete_time_series
     else:
-        parameters['time_series'].insert(0,ground_truth_columns[0],parameters['time_series'].pop(ground_truth_columns[0]),allow_duplicates = True)
+        # parameters['time_series'].insert(0,ground_truth_columns[0],parameters['time_series'].pop(ground_truth_columns[0]),allow_duplicates = True)
         parameters['time_series'] = [parameters['time_series']]
         parameters['all_cols'].append(parameters['time_series'][0].columns)
     
@@ -114,11 +119,12 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     Merge labels with time series dataframe
     '''
     for ind in range(len(parameters['time_series'])):
-        parameters['time_series'][ind] = pd.concat([parameters['time_series'][ind], labels[ind]], axis = 1)
+        print(len(parameters['time_series']))
+        parameters['time_series'][ind] = pd.concat([parameters['time_series'][ind], parameters['labels'][ind]], axis = 1)
         
         parameters['time_series'][ind] = process_missing_value_v3(parameters['time_series'][ind])
         split_dates = reset_split_dates(parameters['time_series'][ind],split_dates)
-        # save_data("i6",parameters['time_series'][0],parameters['time_series'][0].columns.values.tolist())
+        save_data("i6",parameters['time_series'][0],parameters['time_series'][0].columns.values.tolist())
 
     '''
     create 3d array with dimensions (n_samples, lags, n_features)

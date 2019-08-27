@@ -96,7 +96,7 @@ if __name__ == '__main__':
     lower = range(20,51,10)
     comb = product(window, upper,lower)
     rsi = parallel_process(copy(ts), split_dates, "rsi", strat_results, ground_truth, strategy_params,activation_params,comb)
-    
+    print(rsi)
 
     print("strat1")
     activation_params['rsi'] = False
@@ -143,7 +143,7 @@ if __name__ == '__main__':
     strat9 = parallel_process(copy(ts), split_dates, "strat9", strat_results, ground_truth, strategy_params,activation_params,comb)
     
 
-    ans = {'index':['2017-01-01','2017-07-01','2018-01-01','2018-07-01'],
+    ans = {'index':[],
             'sar_initial':[],'sar_maximum':[],'sar_acc':[],'sar_cov':[],
             'rsi_window':[],'rsi_upper':[],'rsi_lower':[],'rsi_acc':[],'rsi_cov':[],
             'strat1_short_window':[],'strat1_med_window':[],'strat1_acc':[],'strat1_cov':[],
@@ -155,11 +155,12 @@ if __name__ == '__main__':
             'strat9_slow_length':[],'strat9_fast_length':[],'strat9_macd_length':[],'strat9_acc':[],'strat9_cov':[]
           }
     print(strat_results)
+    mx = max([len(list(strat_results[strat].values())[0]) for strat in strat_results.keys()])
     for test_split_date in test_split_dates:
         print(test_split_date)
+        ans['index'] = ans['index']+[test_split_date[1]]*mx
         # ts = time_series.loc[(time_series.index >= test_split_date[1])&(time_series.index < test_split_date[2])]
         activation_params = {'sar':True,'rsi':False,'strat1':False,'strat2':False,'strat3':False, 'strat6':False, 'strat7':False, 'strat9': False}
-        mx = max([len(list(strat_results[strat].values())[0]) for strat in strat_results.keys()])
         for i in range(mx):
             if i < len(strat_results['sar']['initial']):
                 results = output(ts, test_split_date,ground_truth,strategy_params,activation_params,[strat_results['sar']['initial'][i],strat_results['sar']['maximum'][i]], check = False)
