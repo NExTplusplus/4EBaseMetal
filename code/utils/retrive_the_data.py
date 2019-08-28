@@ -164,10 +164,10 @@ def retrive_the_file(path):
 					sub_file = []
 	#print(all_file)
 	file_dataframe = pd.DataFrame(all_file,columns=['all_voting','near_voting','far_voting','same_voting','reverse_voting','max_depth','learning_rate','gamma','min_child_weight','subsample','lag','train_date','test_date'])
-	file_dataframe.to_csv("h3_l5_xgbv6.csv",index=False)
+	file_dataframe.to_csv("LMAHDY_h3_l30_xgbv6.csv",index=False)
 				#for new_line in lines[i+1:i+13]:
 					#if 
 
 if __name__ == "__main__":
-	path = "LMAHDY_h3_l5_xgbv6.txt"
+	path = "LMAHDY_h3_l30_xgbv6.txt"
 	retrive_the_file(path)
