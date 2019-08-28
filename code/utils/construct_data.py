@@ -338,7 +338,7 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
             setting = col[:-5]
             if setting+"High" in cols and setting+"Low" in cols and activation_params['sar']:
                 for i in range(len(strategy_params['sar']['initial'])):
-                    tmp_pd[col+'_sar_i'+str(strategy_params['sar']['initial'][i])] = sar(X[setting+"High"],X[setting+"Low"],X[col],strategy_params['sar']['initial'][i],strategy_params['sar']['maximum'][i])
+                    tmp_pd[col+'_sar_i'+str(strategy_params['sar']['initial'][i])+'_mx'+str(strategy_params['sar']['maximum'][i])] = sar(X[setting+"High"],X[setting+"Low"],X[col],strategy_params['sar']['initial'][i],strategy_params['sar']['maximum'][i])
                     output_sar = one_hot(tmp_pd)
                     output = pd.concat([output,output_sar],axis = 1)
                     tmp_pd = pd.DataFrame(index = X.index)
@@ -380,7 +380,7 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
 
             if activation_params["strat7"]:
                 for i in range(len(strategy_params['strat7']['window'])):
-                    tmp_pd[col+'_strat7_w'+str(strategy_params['strat7']['window'][i])] = strategy_7(X[col],strategy_params['strat7']['window'][i],strategy_params['strat7']['limiting_factor'][i])
+                    tmp_pd[col+'_strat7_w'+str(strategy_params['strat7']['window'][i])+'_lf'+str(strategy_params['strat7']['window'][i])] = strategy_7(X[col],strategy_params['strat7']['window'][i],strategy_params['strat7']['limiting_factor'][i])
                     output_strat7 = one_hot(tmp_pd)
                     output = pd.concat([output,output_strat7],axis = 1)
                     tmp_pd = pd.DataFrame(index = X.index)
@@ -402,6 +402,7 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
                 tmp = parallel_process(X, split_dates, "strat6", strat_results, ground_truth, strategy_params,act,comb)
                 output_strat6 = one_hot(tmp)
                 output = pd.concat([output,output_strat6],axis = 1)
+    print(strat_results)
     X = pd.concat([X,output],axis = 1, sort = True)
             
     return X

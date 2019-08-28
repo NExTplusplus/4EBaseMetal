@@ -1,9 +1,11 @@
 from utils.construct_data import *
 from utils.read_data import process_missing_value_v3
 from utils.normalize_feature import log_1d_return
+import json
 
 def generate_version_params(version):
-    ans = {"deal_with_abnormal_value":"v2", "labelling":"v1", "process_missing_value":"v1", "strategy_signal":None,
+    ans = { "generate_strat_params":None,
+            "deal_with_abnormal_value":"v2", "labelling":"v1", "process_missing_value":"v1", "strategy_signal":None,
             "normalize_without_1d_return": "v1", "technical_indication":"v1",
             "remove_unused_columns":"v1", "price_normalization":"v1", "scaling":"v1",
             "construct":"v1"}
@@ -14,6 +16,7 @@ def generate_version_params(version):
     if v == "v7":
         ans['technical_indication'] = "v2"
     if v == "v9":
+        ans["generate_strat_params"]="v1"
         ans['strategy_signal'] = "v1"
         ans["normalize_without_1d_return"] = None
         ans["technical_indication"] = None
@@ -30,6 +33,16 @@ def generate_version_params(version):
         ans['technical_indication'] = ans['technical_indication']+"_ex3"
     return ans
 
+def generate_strat_params(ground_truth,steps,version):
+    if version is None:
+        return None,None
+    if version == "v1":
+        with open("exp/strat_param.conf") as f:
+            all_params = json.load(f)
+        strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
+        print(strat_params)
+        activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3":True,"strat6":True,"strat7":True,"strat9":True}
+        return strat_params,activation_params
 def deal_with_abnormal_value(arguments, version):
     time_series = arguments['time_series']
     if version is None:

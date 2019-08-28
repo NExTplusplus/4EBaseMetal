@@ -96,6 +96,8 @@ def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_pa
     results = pd.DataFrame([list(res[idx]) for res in results])
     cov_col = pd.to_numeric(results[results.columns.values.tolist()[-1]])
     mn = float(str(min(cov_col))[0:3])
+    if mn < 0.1:
+        mn = 0.1
     mx = mn+0.1
     cov_array = []
     while len(results.loc[cov_col>=mn]) > 0:
@@ -176,6 +178,8 @@ def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_pa
     if strat == "strat3":
         cov_col = pd.to_numeric(results[results.columns.values.tolist()[3]])
         while len(results.loc[cov_col>=mn]) > 0:
+            cov_array.append("_"+str(mn)+"-"+str(mx))
+            temp_results = results[(cov_col<mx)&(cov_col>=mn)]
             temp_results = (temp_results.drop(1,axis = 1))
             temp_results = (temp_results.drop(4,axis = 1))
             for col in temp_results.columns:
@@ -184,22 +188,28 @@ def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_pa
             strat_results['strat3']['close window'].append(temp_results.loc[temp_results["Close Acc"].idxmax(),"Window"])
             mn += 0.1
             mx += 0.1
-            for window in strat_results[strat]['high window']:
-                sp = copy(strategy_params)
-                temp_ans = strategy_testing(copy(ts),ground_truth,sp, activation_params,[window])
-                temp_ans = temp_ans[sorted(list(set(temp_ans.columns.values.tolist()) - org_cols))]
-                if ans is None:
-                    ans = temp_ans
-                else:
-                    ans = pd.concat([ans,temp_ans])
-            for window in strat_results[strat]['close window']:
-                sp = copy(strategy_params)
-                temp_ans = strategy_testing(copy(ts),ground_truth,sp, activation_params,[window])
-                temp_ans = temp_ans[sorted(list(set(temp_ans.columns.values.tolist()) - org_cols))]
-                if ans is None:
-                    ans = temp_ans
-                else:
-                    ans = pd.concat([ans,temp_ans],sort = True, axis = 1)
+        i=0
+        for window in strat_results[strat]['high window']:
+            sp = copy(strategy_params)
+            sp[strat]['window'] = window
+            temp_ans = strategy_testing(copy(ts),ground_truth,sp, activation_params,cov_array[i])
+            temp_ans = temp_ans[sorted(list(set(temp_ans.columns.values.tolist()) - org_cols))]
+            if ans is None:
+                ans = temp_ans
+            else:
+                ans = pd.concat([ans,temp_ans], sort = True, axis = 1)
+            i+=1
+        i=0
+        for window in strat_results[strat]['close window']:
+            sp = copy(strategy_params)
+            sp[strat]['window'] = window
+            temp_ans = strategy_testing(copy(ts),ground_truth,sp, activation_params,cov_array[i])
+            temp_ans = temp_ans[sorted(list(set(temp_ans.columns.values.tolist()) - org_cols))]
+            if ans is None:
+                ans = temp_ans
+            else:
+                ans = pd.concat([ans,temp_ans],sort = True, axis = 1)
+            i+=1
         
 
     else:

@@ -53,8 +53,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     parameters = {'time_series':time_series, 'LME_dates': LME_dates, 'horizon': horizon, 
                     'ground_truth_columns': ground_truth_columns, 'lags': lags, 'split_dates':split_dates,
                     'norm_params':norm_params, 'tech_params': tech_params}
-    parameters['strat_params'] = {'sar':{'initial':[0.01],'maximum':[0.12]},'rsi':{'window':[],'upper':[],'lower':[]},'strat1':{'short window':[],"med window":[]},'strat2':{'window':[59]},'strat3':{'high window':[41,29,13,5], 'close window':[41,27,13,5]},'strat6':{'window':[],'limiting_factor':[]},'strat7':{'window':[18,14,44],'limiting_factor':[2.8,1.9,1.8]}, 'strat9':{'SlowLength':[],'FastLength':[],'MACDLength':[]}}
-    parameters['activation_params'] = {'rsi': True, 'sar':True, 'strat1': True, 'strat2': True, 'strat3': True, 'strat6': True, 'strat7': True, 'strat9': True}
+    parameters['strat_params'],parameters['activation_params'] = generate_strat_params(ground_truth_columns[0], horizon, version_params['generate_strat_params'])
     '''
     deal with the abnormal data which we found in the data. 
     '''
