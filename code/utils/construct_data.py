@@ -402,7 +402,6 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
                 tmp = parallel_process(X, split_dates, "strat6", strat_results, ground_truth, strategy_params,act,comb)
                 output_strat6 = one_hot(tmp)
                 output = pd.concat([output,output_strat6],axis = 1)
-    print(strat_results)
     X = pd.concat([X,output],axis = 1, sort = True)
             
     return X
@@ -416,6 +415,7 @@ def remove_unused_columns_v1(time_series,org_cols):
     return time_series, org_cols
 
 def remove_unused_columns_v2(time_series,org_cols):
+    org_cols.append("Label")
     for col in copy(time_series.columns):
         if col in org_cols:
             time_series = time_series.drop(col,axis = 1)
