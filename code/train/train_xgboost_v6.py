@@ -162,7 +162,7 @@ if __name__ == '__main__':
                 test_dataframe = pd.DataFrame(X_va,columns=column_lag_list)
                 test_X = test_dataframe.loc[:,column_lag_list] 
                 n_splits=args.k_folds
-                for max_depth in [2,3,4,5,6,7,8,9]:
+                for max_depth in [3,4,5]:
                     for learning_rate in [0.6,0.7,0.8,0.9]:
                         for gamma in [0.6,0.7,0.8,0.9]:
                             for min_child_weight in [3,4,5,6]:
