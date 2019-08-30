@@ -80,13 +80,16 @@ def output(time_series,split_dates,ground_truth,strategy_params,activation_param
         if len(labels) == 0:
             compared = 0
         else:
-            compared = abs(sum(labels == column)/len(labels)-0.5)
+            if check:
+                compared = abs(sum(labels == column)/len(labels)-0.5)
+            else:
+                compared = sum(labels == column)/len(labels)
         temp_list.append(compared)
         temp_list.append(float(len(labels)/length))
     
     return temp_list
 
-def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_params,activation_params,combination):
+def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_params,activation_params,cov_inc,combination):
     ls = [list([copy(ts),split_dates,ground_truth,strategy_params,activation_params,list(com)]) for com in combination]
     pool = pl()
     results = pool.starmap_async(output,ls)
@@ -98,7 +101,7 @@ def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_pa
     mn = float(str(min(cov_col))[0:3])
     if mn < 0.1:
         mn = 0.1
-    mx = mn+0.1
+    mx = mn+1.1
     cov_array = []
     while len(results.loc[cov_col>=mn]) > 0:
         cov_array.append("_"+str(mn)+"-"+str(mx))
@@ -119,7 +122,7 @@ def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_pa
             strat_results['rsi']['window'].append(temp_results.loc[temp_results["Acc"].idxmax(),"Window"])
             strat_results['rsi']['upper'].append(temp_results.loc[temp_results["Acc"].idxmax(),"Upper"])
             strat_results['rsi']['lower'].append(temp_results.loc[temp_results["Acc"].idxmax(),"Lower"])
-        
+
         elif strat == 'strat1':
             temp_results = (temp_results.drop(2,axis = 1))
             for col in temp_results.columns:
@@ -143,7 +146,7 @@ def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_pa
             temp_results.columns = ["Window","Close Acc","Close Cov","High Acc","High Cov"]
             strat_results['strat3']['high window'].append(temp_results.loc[temp_results["High Acc"].idxmax(),"Window"])
             strat_results['strat3']['close window'].append(temp_results.loc[temp_results["Close Acc"].idxmax(),"Window"])
-        
+
         elif strat == "strat6":
             temp_results = (temp_results.drop(2,axis = 1))
             for col in temp_results.columns:
@@ -151,7 +154,7 @@ def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_pa
             temp_results.columns = ["Window","Limiting Factor","Acc","Cov"]
             strat_results['strat6']['window'].append(temp_results.loc[temp_results["Acc"].idxmax(),"Window"])
             strat_results['strat6']['limiting_factor'].append(temp_results.loc[temp_results["Acc"].idxmax(),"Limiting Factor"])
-        
+
         elif strat == "strat7":
             temp_results = (temp_results.drop(2,axis = 1))
             for col in temp_results.columns:
@@ -159,7 +162,7 @@ def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_pa
             temp_results.columns = ["Window","Limiting Factor","Acc","Cov"]
             strat_results['strat7']['window'].append(temp_results.loc[temp_results["Acc"].idxmax(),"Window"])
             strat_results['strat7']['limiting_factor'].append(temp_results.loc[temp_results["Acc"].idxmax(),"Limiting Factor"])
-        
+
         elif strat == "strat9":
             temp_results = (temp_results.drop(3,axis = 1))
             for col in temp_results.columns:
@@ -169,8 +172,8 @@ def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_pa
             strat_results['strat9']['FastLength'].append(temp_results.loc[temp_results["Acc"].idxmax(),"Fast Window"])
             strat_results['strat9']['MACDLength'].append(temp_results.loc[temp_results["Acc"].idxmax(),"MACD Length"])
 
-        mn += 0.1
-        mx += 0.1
+        mn += 1.1
+        mx += 1.1
 
     keys = strategy_params[strat].keys()
     org_cols = set(ts.columns.values.tolist())
@@ -180,14 +183,15 @@ def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_pa
         while len(results.loc[cov_col>=mn]) > 0:
             cov_array.append("_"+str(mn)+"-"+str(mx))
             temp_results = results[(cov_col<mx)&(cov_col>=mn)]
+            temp_results = copy(results)
             temp_results = (temp_results.drop(1,axis = 1))
             temp_results = (temp_results.drop(4,axis = 1))
             for col in temp_results.columns:
                 temp_results[col] = pd.to_numeric(temp_results[col])
             temp_results.columns = ["Window","Close Acc","Close Cov","High Acc","High Cov"]
             strat_results['strat3']['close window'].append(temp_results.loc[temp_results["Close Acc"].idxmax(),"Window"])
-            mn += 0.1
-            mx += 0.1
+        mn += 1.1
+        mx += 1.1
         i=0
         for window in strat_results[strat]['high window']:
             sp = copy(strategy_params)

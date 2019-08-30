@@ -350,7 +350,7 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
                 strategy_params['rsi']['upper'] = range(60,91,10)
                 strategy_params['rsi']['lower'] = range(20,51,10)
                 comb = product(strategy_params['rsi']['window'],strategy_params['rsi']['upper'],strategy_params['rsi']['lower'])
-                tmp = parallel_process(X, split_dates, "rsi", strat_results, ground_truth, strategy_params,act,comb)
+                tmp = parallel_process(X, split_dates, "rsi", strat_results, ground_truth, strategy_params,act,0.1,comb)
                 output_rsi = one_hot(tmp)
                 output = pd.concat([output,output_rsi],axis = 1)
                 
@@ -360,7 +360,7 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
                 strategy_params['strat1']['short window'] = range(20,35,2)
                 strategy_params['strat1']['med window'] = range(50,71,2)
                 comb = product(strategy_params['strat1']['short window'],strategy_params['strat1']['med window'])
-                tmp = parallel_process(X, split_dates, "strat1", strat_results, ground_truth, strategy_params,act,comb)
+                tmp = parallel_process(X, split_dates, "strat1", strat_results, ground_truth, strategy_params,act,0.1,comb)
                 output_strat1 = one_hot(tmp)
                 output = pd.concat([output,output_strat1],axis = 1)
 
@@ -389,7 +389,7 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
                 act = copy(temp_act)
                 act['strat9'] = True
                 comb = list(permutations(range(10,51,2),3))
-                tmp = parallel_process(X, split_dates, "strat9", strat_results, ground_truth, strategy_params,act,comb)
+                tmp = parallel_process(X, split_dates, "strat9", strat_results, ground_truth, strategy_params,act,0.1,comb)
                 output_strat9 = one_hot(tmp)
                 output = pd.concat([output,output_strat9],axis = 1)
                 
@@ -399,7 +399,7 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
                 strategy_params['strat6']['limiting_factor'] = np.arange(1.8,2.45,0.1)
                 strategy_params['strat6']['window'] = range(10,51,2)
                 comb = product(strategy_params['strat6']['window'],strategy_params['strat6']['limiting_factor'])
-                tmp = parallel_process(X, split_dates, "strat6", strat_results, ground_truth, strategy_params,act,comb)
+                tmp = parallel_process(X, split_dates, "strat6", strat_results, ground_truth, strategy_params,act,0.1,comb)
                 output_strat6 = one_hot(tmp)
                 output = pd.concat([output,output_strat6],axis = 1)
     print(strat_results)
