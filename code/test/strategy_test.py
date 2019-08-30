@@ -96,7 +96,6 @@ if __name__ == '__main__':
     lower = range(20,51,10)
     comb = product(window, upper,lower)
     rsi = parallel_process(copy(ts), split_dates, "rsi", strat_results, ground_truth, strategy_params,activation_params,comb)
-    print(rsi)
 
     print("strat1")
     activation_params['rsi'] = False
@@ -154,7 +153,6 @@ if __name__ == '__main__':
             'strat7_window':[],'strat7_limiting_factor':[],'strat7_acc':[],'strat7_cov':[],
             'strat9_slow_length':[],'strat9_fast_length':[],'strat9_macd_length':[],'strat9_acc':[],'strat9_cov':[]
           }
-    print(strat_results)
     mx = max([len(list(strat_results[strat].values())[0]) for strat in strat_results.keys()])
     for test_split_date in test_split_dates:
         print(test_split_date)
