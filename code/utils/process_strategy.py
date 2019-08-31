@@ -89,7 +89,7 @@ def output(time_series,split_dates,ground_truth,strategy_params,activation_param
     
     return temp_list
 
-def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_params,activation_params,cov_inc,combination,mn =0.1):
+def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_params,activation_params,cov_inc,combination,mnm):
     ls = [list([copy(ts),split_dates,ground_truth,strategy_params,activation_params,list(com)]) for com in combination]
     pool = pl()
     results = pool.starmap_async(output,ls)
@@ -99,9 +99,9 @@ def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_pa
     results = pd.DataFrame([list(res[idx]) for res in results])
     cov_col = pd.to_numeric(results[results.columns.values.tolist()[-1]])
     mn = float(str(min(cov_col))[0:3])
-    if mn < 0.1:
-        mn = 0.1
-    mx = mn+1.1
+    if mn < mnm:
+        mn = mnm
+    mx = mn+cov_inc
     cov_array = []
     while len(results.loc[cov_col>=mn]) > 0:
         cov_array.append("_"+str(mn)+"-"+str(mx))
@@ -172,8 +172,8 @@ def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_pa
             strat_results['strat9']['FastLength'].append(temp_results.loc[temp_results["Acc"].idxmax(),"Fast Window"])
             strat_results['strat9']['MACDLength'].append(temp_results.loc[temp_results["Acc"].idxmax(),"MACD Length"])
 
-        mn += 1.1
-        mx += 1.1
+        mn += cov_inc
+        mx += cov_inc
 
     keys = strategy_params[strat].keys()
     org_cols = set(ts.columns.values.tolist())
@@ -190,8 +190,8 @@ def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_pa
                 temp_results[col] = pd.to_numeric(temp_results[col])
             temp_results.columns = ["Window","Close Acc","Close Cov","High Acc","High Cov"]
             strat_results['strat3']['close window'].append(temp_results.loc[temp_results["Close Acc"].idxmax(),"Window"])
-        mn += 1.1
-        mx += 1.1
+        mn += cov_inc
+        mx += cov_inc
         i=0
         for window in strat_results[strat]['high window']:
             sp = copy(strategy_params)
