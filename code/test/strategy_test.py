@@ -50,6 +50,9 @@ if __name__ == '__main__':
     parser.add_argument(
         '-sou','--source', help='source of data', type = str, default = "NExT"
     )
+    parser.add_argument(
+        '-m','--min', help='minimum coverage', type = float, default = 0.1
+    )
 
     args = parser.parse_args()
     ground_truth = args.ground_truth
@@ -85,7 +88,7 @@ if __name__ == '__main__':
     initial = np.arange(0.01,0.051,0.002)
     mx = np.arange(0.1,0.51,0.02)
     comb = product(initial,mx)
-    sar = parallel_process(copy(ts), split_dates, "sar", strat_results, ground_truth, strategy_params,activation_params,1,comb)
+    sar = parallel_process(copy(ts), split_dates, "sar", strat_results, ground_truth, strategy_params,activation_params,1,comb,args.min)
     
     
     print("rsi")
@@ -95,7 +98,7 @@ if __name__ == '__main__':
     upper = range(60,91,10) 
     lower = range(20,51,10)
     comb = product(window, upper,lower)
-    rsi = parallel_process(copy(ts), split_dates, "rsi", strat_results, ground_truth, strategy_params,activation_params,1,comb)
+    rsi = parallel_process(copy(ts), split_dates, "rsi", strat_results, ground_truth, strategy_params,activation_params,1,comb,args.min)
 
     print("strat1")
     activation_params['rsi'] = False
@@ -103,21 +106,21 @@ if __name__ == '__main__':
     short = range(20,35,2)
     med = range(50,71,2)
     comb = product(short,med)
-    strat1 = parallel_process(copy(ts), split_dates, "strat1", strat_results, ground_truth, strategy_params,activation_params,1,comb)
+    strat1 = parallel_process(copy(ts), split_dates, "strat1", strat_results, ground_truth, strategy_params,activation_params,1,comb,args.min)
     
     print("strat2")
     activation_params['strat1'] = False
     activation_params['strat2'] = True
     comb = list(range(45,61,2))
     comb = [[com] for com in comb]
-    strat2 = parallel_process(copy(ts), split_dates, "strat2", strat_results, ground_truth, strategy_params,activation_params,1,comb)
+    strat2 = parallel_process(copy(ts), split_dates, "strat2", strat_results, ground_truth, strategy_params,activation_params,1,comb,args.min)
     
     print("strat3")
     activation_params['strat2'] = False
     activation_params['strat3'] = True
     comb = list(range(5,51,2))
     comb = [[com] for com in comb]
-    strat3 = parallel_process(copy(ts), split_dates, "strat3", strat_results, ground_truth, strategy_params,activation_params,1,comb)
+    strat3 = parallel_process(copy(ts), split_dates, "strat3", strat_results, ground_truth, strategy_params,activation_params,1,comb,args.min)
     
     print("strat6")
     activation_params['strat3'] = False
@@ -125,7 +128,7 @@ if __name__ == '__main__':
     limiting_factor = np.arange(0.3,1.05,0.1)
     window = range(10,51,2)
     comb = product(window,limiting_factor)
-    strat6 = parallel_process(copy(ts), split_dates, "strat6", strat_results, ground_truth, strategy_params,activation_params,1,comb)
+    strat6 = parallel_process(copy(ts), split_dates, "strat6", strat_results, ground_truth, strategy_params,activation_params,1,comb,args.min)
     
     print("strat7")
     activation_params['strat6'] = False
@@ -133,13 +136,13 @@ if __name__ == '__main__':
     limiting_factor = np.arange(1.8,2.45,0.1)
     window = range(10,51,2)
     comb = product(window,limiting_factor)
-    strat7 = parallel_process(copy(ts), split_dates, "strat7", strat_results, ground_truth, strategy_params,activation_params,1,comb)
+    strat7 = parallel_process(copy(ts), split_dates, "strat7", strat_results, ground_truth, strategy_params,activation_params,1,comb,args.min)
     
     print('strat9')
     activation_params['strat7'] = False
     activation_params['strat9'] = True
     comb = list(permutations(range(10,51,2),3))
-    strat9 = parallel_process(copy(ts), split_dates, "strat9", strat_results, ground_truth, strategy_params,activation_params,1,comb)
+    strat9 = parallel_process(copy(ts), split_dates, "strat9", strat_results, ground_truth, strategy_params,activation_params,1,comb,args.min)
     
 
     ans = {'index':[],

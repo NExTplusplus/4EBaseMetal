@@ -89,7 +89,7 @@ def output(time_series,split_dates,ground_truth,strategy_params,activation_param
     
     return temp_list
 
-def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_params,activation_params,cov_inc,combination):
+def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_params,activation_params,cov_inc,combination,mn =0.1):
     ls = [list([copy(ts),split_dates,ground_truth,strategy_params,activation_params,list(com)]) for com in combination]
     pool = pl()
     results = pool.starmap_async(output,ls)
