@@ -12,6 +12,13 @@ from utils.process_strategy import *
 from sklearn import preprocessing
 import scipy.stats as sct
 
+def generate_strat_params_v1(ground_truth,steps):
+    with open("exp/strat_param.conf") as f:
+        all_params = json.load(f)
+    strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
+    activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat6":True,"strat7":True,"strat9":True}
+    return strat_params,activation_params
+
 #the function is to deal with the abnormal data
 def deal_with_abnormal_value_v1(data):
     #deal with the big value
@@ -315,9 +322,9 @@ def technical_indication_v2_ex3(X,train_end,params,ground_truth_columns):
                 
     return X
 
-def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activation_params):
+def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activation_params,cov_inc,mnm):
     
-    strat_results = {'sar':{'initial':[],'maximum':[]},'rsi':{'window':[],'upper':[],'lower':[]},'strat1':{'short window':[],"med window":[]},'strat2':{'window':[]},'strat3':{'high window':[], 'close window':[]},'strat6':{'window':[],'limiting_factor':[]},'strat7':{'window':[],'limiting_factor':[]}, 'strat9':{'SlowLength':[],'FastLength':[],'MACDLength':[]}}
+    strat_results = {'sar':{'initial':[],'maximum':[]},'rsi':{'window':[],'upper':[],'lower':[]},'strat1':{'short window':[],"med window":[]},'strat2':{'window':[]},'strat3_high':{'window':[]}, 'strat3_close':{'window':[]},'strat6':{'window':[],'limiting_factor':[]},'strat7':{'window':[],'limiting_factor':[]}, 'strat9':{'SlowLength':[],'FastLength':[],'MACDLength':[]}}
     cols = X.columns.values.tolist()
     ground_truth = ground_truth_columns[0]
     gt = ground_truth[:-5]
@@ -327,81 +334,98 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
     for key in temp_act.keys():
         temp_act[key] = False
     for col in cols:
-        if gt+"_High" == col and activation_params["strat3"]:
-            for window in strategy_params['strat3']['high window']:
-                tmp_pd[col+'_strat3_hw'+str(window)] = strategy_3(X[col],window)
-                output_strat3 = one_hot(tmp_pd)
-                output = pd.concat([output,output_strat3],axis = 1)
-                tmp_pd = pd.DataFrame(index = X.index)
+        if gt+"_High" == col and activation_params["strat3_high"]:
+            act = copy(temp_act)
+            act['strat3_high'] = True
+            comb = list(range(5,51,2))
+            comb = [[com] for com in comb]
+            tmp_pd = parallel_process(X, split_dates, "strat3_high",strat_results,ground_truth,strategy_params,act,cov_inc,comb,mnm)
+            output_strat3 = one_hot(tmp_pd)
+            output = pd.concat([output,output_strat3],sort = True, axis = 1)
+            tmp_pd = pd.DataFrame(index = X.index)
             
         if gt+"_Close" == col:
             setting = col[:-5]
             if setting+"High" in cols and setting+"Low" in cols and activation_params['sar']:
-                for i in range(len(strategy_params['sar']['initial'])):
-                    tmp_pd[col+'_sar_i'+str(strategy_params['sar']['initial'][i])+'_mx'+str(strategy_params['sar']['maximum'][i])] = sar(X[setting+"High"],X[setting+"Low"],X[col],strategy_params['sar']['initial'][i],strategy_params['sar']['maximum'][i])
-                    output_sar = one_hot(tmp_pd)
-                    output = pd.concat([output,output_sar],axis = 1)
-                    tmp_pd = pd.DataFrame(index = X.index)
+                act = copy(temp_act)
+                act['sar'] = True
+                initial = np.arange(0.01,0.051,0.002)
+                mx = np.arange(0.1,0.51,0.02)
+                comb = product(initial,mx)
+                tmp_pd = parallel_process(X, split_dates, "sar",strat_results,ground_truth,strategy_params,act,cov_inc,comb,mnm)
+                output_sar = one_hot(tmp_pd)
+                output = pd.concat([output,output_sar],sort = True, axis = 1)
+                tmp_pd = pd.DataFrame(index = X.index)
                 
             if activation_params['rsi']:
                 act = copy(temp_act)
                 act['rsi'] = True
-                strategy_params['rsi']['window'] = range(5,51,2)
-                strategy_params['rsi']['upper'] = range(60,91,10)
-                strategy_params['rsi']['lower'] = range(20,51,10)
-                comb = product(strategy_params['rsi']['window'],strategy_params['rsi']['upper'],strategy_params['rsi']['lower'])
-                tmp = parallel_process(X, split_dates, "rsi", strat_results, ground_truth, strategy_params,act,0.1,comb)
+                window = list(range(5,51,2))
+                upper = list(range(60,91,10))
+                lower = list(range(20,51,10))
+                comb = product(window,upper,lower)
+                tmp = parallel_process(X, split_dates, "rsi",strat_results,ground_truth,strategy_params,act,cov_inc,comb,mnm)
                 output_rsi = one_hot(tmp)
-                output = pd.concat([output,output_rsi],axis = 1)
+                output = pd.concat([output,output_rsi],sort = True, axis = 1)
                 
             if activation_params["strat1"]:
                 act = copy(temp_act)
                 act['strat1'] = True
-                strategy_params['strat1']['short window'] = range(20,35,2)
-                strategy_params['strat1']['med window'] = range(50,71,2)
-                comb = product(strategy_params['strat1']['short window'],strategy_params['strat1']['med window'])
-                tmp = parallel_process(X, split_dates, "strat1", strat_results, ground_truth, strategy_params,act,0.1,comb)
+                short_window = list(range(20,35,2))
+                med_window = list(range(50,71,2))
+                comb = product(short_window,med_window)
+                tmp = parallel_process(X, split_dates, "strat1",strat_results,ground_truth,strategy_params,act,cov_inc,comb,mnm)
                 output_strat1 = one_hot(tmp)
-                output = pd.concat([output,output_strat1],axis = 1)
+                output = pd.concat([output,output_strat1],sort = True, axis = 1)
 
             if activation_params["strat2"]:
-                for window in strategy_params['strat2']['window']:
-                    tmp_pd[col+'_strat2_w'+str(window)] = strategy_2(X[col],window)
-                    output_strat2 = one_hot(tmp_pd)
-                    output = pd.concat([output,output_strat2],axis = 1)
-                    tmp_pd = pd.DataFrame(index = X.index)
+                act = copy(temp_act)
+                act['strat2'] = True
+                comb = list(range(45,61,2))
+                comb = [[com] for com in comb]
+                tmp_pd = parallel_process(X, split_dates, "strat2",strat_results,ground_truth,strategy_params,act,cov_inc,comb,mnm)
+                output_strat2 = one_hot(tmp_pd)
+                output = pd.concat([output,output_strat2],sort = True, axis = 1)
+                tmp_pd = pd.DataFrame(index = X.index)
 
-            if activation_params["strat3"]:
-                for window in strategy_params['strat3']['close window']:
-                    tmp_pd[col+'_strat3_cw'+str(window)] = strategy_3(X[col],window)
-                    output_strat3 = one_hot(tmp_pd)
-                    output = pd.concat([output,output_strat3],axis = 1)
-                    tmp_pd = pd.DataFrame(index = X.index)
+            if activation_params["strat3_close"]:
+                act = copy(temp_act)
+                act['strat3_close'] = True
+                comb = list(range(5,51,2))
+                comb = [[com] for com in comb]
+                tmp_pd = parallel_process(X, split_dates, "strat3_close",strat_results,ground_truth,strategy_params,act,cov_inc,comb,mnm)
+                output_strat3 = one_hot(tmp_pd)
+                output = pd.concat([output,output_strat3],sort = True, axis = 1)
+                tmp_pd = pd.DataFrame(index = X.index)
 
             if activation_params["strat7"]:
-                for i in range(len(strategy_params['strat7']['window'])):
-                    tmp_pd[col+'_strat7_w'+str(strategy_params['strat7']['window'][i])+'_lf'+str(strategy_params['strat7']['window'][i])] = strategy_7(X[col],strategy_params['strat7']['window'][i],strategy_params['strat7']['limiting_factor'][i])
-                    output_strat7 = one_hot(tmp_pd)
-                    output = pd.concat([output,output_strat7],axis = 1)
-                    tmp_pd = pd.DataFrame(index = X.index)
+                act = copy(temp_act)
+                act['strat7'] = True
+                limiting_factor = np.arange(1.8,2.45,0.1)
+                window = list(range(10,51,2))
+                comb = product(window,limiting_factor)
+                tmp_pd = parallel_process(X, split_dates, "strat7",strat_results,ground_truth,strategy_params,act,cov_inc,comb,mnm)
+                output_strat7 = one_hot(tmp_pd)
+                output = pd.concat([output,output_strat7],sort = True, axis = 1)
+                tmp_pd = pd.DataFrame(index = X.index)
                 
             if activation_params["strat9"]:
                 act = copy(temp_act)
                 act['strat9'] = True
-                comb = list(permutations(range(10,51,2),3))
-                tmp = parallel_process(X, split_dates, "strat9", strat_results, ground_truth, strategy_params,act,0.1,comb)
+                comb = list(permutations(list(range(10,51,2)),3))
+                tmp = parallel_process(X, split_dates, "strat9",strat_results,ground_truth,strategy_params,act,cov_inc,comb,mnm)
                 output_strat9 = one_hot(tmp)
-                output = pd.concat([output,output_strat9],axis = 1)
+                output = pd.concat([output,output_strat9],sort = True, axis = 1)
                 
             if gt+"_High" in cols and gt+"_Low" in cols and activation_params["strat6"]:
                 act = copy(temp_act)
                 act['strat6'] = True
-                strategy_params['strat6']['limiting_factor'] = np.arange(1.8,2.45,0.1)
-                strategy_params['strat6']['window'] = range(10,51,2)
-                comb = product(strategy_params['strat6']['window'],strategy_params['strat6']['limiting_factor'])
-                tmp = parallel_process(X, split_dates, "strat6", strat_results, ground_truth, strategy_params,act,0.1,comb)
+                limiting_factor = np.arange(1.8,2.45,0.1)
+                window = list(range(10,51,2))
+                comb = product(window,limiting_factor)
+                tmp = parallel_process(X, split_dates, "strat6",strat_results,ground_truth,strategy_params,act,cov_inc,comb,mnm)
                 output_strat6 = one_hot(tmp)
-                output = pd.concat([output,output_strat6],axis = 1)
+                output = pd.concat([output,output_strat6],sort = True, axis = 1)
     print(strat_results)
     X = pd.concat([X,output],axis = 1, sort = True)
             
@@ -410,7 +434,7 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
 def remove_unused_columns_v1(time_series,org_cols):
     for col in copy(time_series.columns):
         if "_Volume" in col or "_OI" in col or "CNYUSD" in col or "_PVT" in col:
-            time_series = time_series.drop(col,axis = 1)
+            time_series = time_series.drop(col, axis = 1)
             if col in org_cols:
                 org_cols.remove(col)
     return time_series, org_cols
@@ -419,7 +443,7 @@ def remove_unused_columns_v2(time_series,org_cols):
     org_cols.append("Label")
     for col in copy(time_series.columns):
         if col in org_cols:
-            time_series = time_series.drop(col,axis = 1)
+            time_series = time_series.drop(col, axis = 1)
     return time_series,org_cols
 
 
