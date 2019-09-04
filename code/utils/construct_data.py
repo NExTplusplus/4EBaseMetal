@@ -10,10 +10,18 @@ from utils.normalize_feature import *
 from utils.Technical_indicator import *
 from utils.process_strategy import *
 from sklearn import preprocessing
+import json
 import scipy.stats as sct
 
 def generate_strat_params_v1(ground_truth,steps):
-    with open("exp/strat_param.conf") as f:
+    with open("exp/strat_param_v9.conf") as f:
+        all_params = json.load(f)
+    strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
+    activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat6":True,"strat7":True,"strat9":True}
+    return strat_params,activation_params
+
+def generate_strat_params_v2(ground_truth,steps):
+    with open("exp/strat_param_v11.conf") as f:
         all_params = json.load(f)
     strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
     activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat6":True,"strat7":True,"strat9":True}
