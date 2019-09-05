@@ -118,11 +118,11 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     Merge labels with time series dataframe
     '''
     for ind in range(len(parameters['time_series'])):
-        parameters['time_series'][ind] = pd.concat([parameters['time_series'][ind], parameters['labels'][ind]], axis = 1)
+        parameters['time_series'][ind] = pd.concat([parameters['time_series'][ind], parameters['labels'][ind]],sort = True, axis = 1)
         
         parameters['time_series'][ind] = process_missing_value_v3(parameters['time_series'][ind])
         split_dates = reset_split_dates(parameters['time_series'][ind],split_dates)
-        # save_data("i6",parameters['time_series'][0],parameters['time_series'][0].columns.values.tolist())
+        # save_data(ground_truth_columns[0]+"i6",parameters['time_series'][0],parameters['time_series'][0].columns.values.tolist())
 
     '''
     create 3d array with dimensions (n_samples, lags, n_features)

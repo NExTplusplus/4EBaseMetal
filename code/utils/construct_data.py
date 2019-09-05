@@ -21,6 +21,13 @@ def generate_strat_params_v1(ground_truth,steps):
     return strat_params,activation_params
 
 def generate_strat_params_v2(ground_truth,steps):
+    with open("exp/strat_param_v10.conf") as f:
+        all_params = json.load(f)
+    strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
+    activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat6":True,"strat7":True,"strat9":True}
+    return strat_params,activation_params
+
+def generate_strat_params_v3(ground_truth,steps):
     with open("exp/strat_param_v11.conf") as f:
         all_params = json.load(f)
     strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
@@ -434,7 +441,6 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
                 tmp = parallel_process(X, split_dates, "strat6",strat_results,ground_truth,strategy_params,act,cov_inc,comb,mnm)
                 output_strat6 = one_hot(tmp)
                 output = pd.concat([output,output_strat6],sort = True, axis = 1)
-    print(strat_results)
     X = pd.concat([X,output],axis = 1, sort = True)
             
     return X

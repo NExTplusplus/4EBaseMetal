@@ -54,10 +54,10 @@ if __name__ == '__main__':
                         help='train, test, tune')
     parser.add_argument('-xgb','--xgboost',type = int,help='if you want to train the xgboost you need to inform us of that',default=1)
     parser.add_argument('-max_depth','--max_depth',type = int, help='feed the parameter into the model', default=0)
-    parser.add_argument('-learning_rate','--learning_rate',type=int,help='feed the parameter into the model', default=0)
-    parser.add_argument('-gamma','--gamma',type=int,help='feed the parameter into the model',default=0)
+    parser.add_argument('-learning_rate','--learning_rate',type=float,help='feed the parameter into the model', default=0)
+    parser.add_argument('-gamma','--gamma',type=float,help='feed the parameter into the model',default=0)
     parser.add_argument('-min_child','--min_child',type=int,help='feed the parameter into the model',default=0)
-    parser.add_argument('-subsample','--subsample',type=int,help='feed the parameter into the model',default=0)
+    parser.add_argument('-subsample','--subsample',type=float,help='feed the parameter into the model',default=0)
     parser.add_argument('-voting','--voting',type=str,help='there are five methods for voting: all,far,same,near,reverse')
     args = parser.parse_args()
     if args.ground_truth =='None':
@@ -128,7 +128,7 @@ if __name__ == '__main__':
                             silent=True,
                             nthread=10,
                             gamma=args.gamma,
-                            min_child_weight=args.min_child_weight,
+                            min_child_weight=args.min_child,
                             subsample=args.subsample,
                             colsample_bytree=0.7,
                             colsample_bylevel=1,
@@ -273,11 +273,6 @@ if __name__ == '__main__':
                                 final_list.append(0)
                         #print("the lag is {}".format(lag))
                         print("the reverse precision is {}".format(metrics.accuracy_score(y_va, final_list)))
-                        print("the max_depth is {}".format(max_depth))
-                        print("the learning_rate is {}".format(learning_rate))
-                        print("the gamma is {}".format(gamma))
-                        print("the min_child_weight is {}".format(min_child_weight))
-                        print("the subsample is {}".format(subsample))
                     else:
                         result = np.concatenate((folder_2,folder_4,folder_6,folder_8,folder_10),axis=1)
                         final_list = []
@@ -311,11 +306,6 @@ if __name__ == '__main__':
                                 final_list.append(0)
                         #print("the lag is {}".format(lag))
                         print("the reverse precision is {}".format(metrics.accuracy_score(y_va, final_list)))
-                        print("the max_depth is {}".format(max_depth))
-                        print("the learning_rate is {}".format(learning_rate))
-                        print("the gamma is {}".format(gamma))
-                        print("the min_child_weight is {}".format(min_child_weight))
-                        print("the subsample is {}".format(subsample))
                 print("the lag is {}".format(lag))
                 print("the train date is {}".format(split_date[0]))
                 print("the test date is {}".format(split_date[1]))

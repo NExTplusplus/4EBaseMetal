@@ -89,13 +89,16 @@ def output(time_series,split_dates,ground_truth,strategy_params,activation_param
     
     return temp_list
 
-def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_params,activation_params,cov_inc,combination,mnm):
+def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_params,activation_params,cov_inc,combination,mnm,op= "v1"):
     strat_dc = [create_dc_from_comb(strat,strategy_params,comb) for comb in combination]
     strat_keys = list(strategy_params[strat].keys())
     if len(strategy_params[strat][strat_keys[0]]) == 0:
         ls = [list([copy(ts),split_dates,ground_truth,strategy_params,activation_params,com]) for com in strat_dc]
         pool = pl()
-        results = pool.starmap_async(output,ls)
+        if op == 'v1':
+            results = pool.starmap_async(output,ls)
+        else:
+            results = pool.starmap_async(output_v2,ls)
         pool.close()
         pool.join()
         results,idx = list(np.unique([i for i in results.get() if i],return_inverse = True,axis = 1))
@@ -208,3 +211,61 @@ def create_dc_from_comb(strat,strategy_params,combination):
     for i in range(len(strat_keys)):
         ans[strat_keys[i]] = combination[i]
     return ans
+
+def output_v2(time_series,split_dates,ground_truth,strategy_params,activation_params,dc,check = True):
+    org_cols = set(time_series.columns.values.tolist())
+    strat = None
+    sp = deepcopy(strategy_params)
+    for key in activation_params.keys():
+        if activation_params[key]:
+            strat = key
+    if strat is None:
+        return 
+    n = 0
+    for key in sp[strat]:
+        sp[strat][key] = dc[key]
+        n+=1
+    if strat =='strat9' and sp[strat]['SlowLength'] < sp[strat]['FastLength']:
+        return 
+    ts = None
+    for gt in ['LME_Co_Spot','LME_Al_Spot',"LME_Ni_Spot",'LME_Zi_Spot','LME_Ti_Spot','LME_Le_Spot']:
+        two_alph = gt.split("_")[1]
+        label = copy(time_series[two_alph+' Label'])
+        temp_ts = strategy_testing(copy(time_series), gt,sp, activation_params)
+        generated_col = (list(set(temp_ts.columns.values.tolist()) - org_cols))
+        temp_ts['LME_Co'+generated_col[0][7:]] = temp_ts[generated_col[0]]
+        temp_ts = temp_ts[sorted(list(set(temp_ts.columns.values.tolist()) - org_cols - set(generated_col)))]
+        temp_ts['Label'] = label
+        if ts is None:
+            ts = temp_ts
+        else:
+            ts = pd.concat([ts,temp_ts], sort = False, axis = 0)
+    temp_list = list(dc.values())
+    if check:
+        ts = ts[(ts.index >= split_dates[0])&(ts.index < split_dates[1])]
+    else:
+        ts = ts[(ts.index >= split_dates[1])&(ts.index < split_dates[2])]
+    ts = ts.reset_index(drop = True)
+    for col in ts.columns.values.tolist():
+        if "Label" == col:
+            continue
+        temp_list.append(col)
+        labels = copy(ts['Label'])  
+        length = len(labels)
+        column = copy(ts[col])
+        column = column.replace(0,np.nan)
+        column = column.dropna()
+        labels = labels.loc[column.index]
+        labels = np.array(labels)*2-1
+        column = np.array(column)
+        if len(labels) == 0:
+            compared = 0
+        else:
+            if check:
+                compared = abs(sum(labels == column)/len(labels)-0.5)
+            else:
+                compared = sum(labels == column)/len(labels)
+        temp_list.append(compared)
+        temp_list.append(float(len(labels)/length))
+    
+    return temp_list
