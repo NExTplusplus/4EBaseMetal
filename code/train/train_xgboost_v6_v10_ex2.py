@@ -140,12 +140,12 @@ if __name__ == '__main__':
                 else:
                     norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
                                 'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False}
-                final_X_tr = None
-                final_y_tr = None
-                final_X_va = None
-                final_y_va = None
-                final_X_te = None
-                final_y_te = None 
+                final_X_tr = []
+                final_y_tr = []
+                final_X_va = []
+                final_y_va = []
+                final_X_te = []
+                final_y_te = [] 
                 tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
                                                 'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
                 ts = copy(time_series.loc[split_date[0]:split_date[2]])
@@ -163,23 +163,19 @@ if __name__ == '__main__':
                     X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
                     X_va = np.append(X_va,[metal_id]*len(X_va),axis = 1)
                     y_va = np.concatenate(y_va)
-                    if final_X_tr is None:
-                        final_X_tr = X_tr
-                    else:
-                        final_X_tr = np.vstack((final_X_tr,X_tr))
-                    if final_y_tr is None:
-                        final_y_tr = y_tr
-                    else:
-                        final_y_tr = np.vstack((final_y_tr,y_tr))
-                    if final_X_va is None:
-                        final_X_va = X_va
-                    else:
-                        final_X_va = np.vstack((final_X_va,X_va))
-                    if final_y_va is None:
-                        final_y_va = y_va
-                    else:
-                        final_y_va = np.vstack((final_y_va,y_va))
+                    final_X_tr.append(X_tr)
+                    final_y_tr.append(y_tr)
+                    final_X_va.append(X_va)
+                    final_y_va.append(y_va)
                     i+=1
+                final_X_tr = [np.transpose(arr) for arr in np.dstack(final_X_tr)]
+                final_y_tr = [np.transpose(arr) for arr in np.dstack(final_y_tr)]
+                final_X_va = [np.transpose(arr) for arr in np.dstack(final_X_va)]
+                final_y_va = [np.transpose(arr) for arr in np.dstack(final_y_va)]
+                final_X_tr = np.reshape(final_X_tr,[np.shape(final_X_tr)[0]*np.shape(final_X_tr)[1],np.shape(final_X_tr)[2]])
+                final_y_tr = np.reshape(final_y_tr,[np.shape(final_y_tr)[0]*np.shape(final_y_tr)[1],np.shape(final_y_tr)[2]])
+                final_X_va = np.reshape(final_X_va,[np.shape(final_X_va)[0]*np.shape(final_X_va)[1],np.shape(final_X_va)[2]])
+                final_y_va = np.reshape(final_y_va,[np.shape(final_y_va)[0]*np.shape(final_y_va)[1],np.shape(final_y_va)[2]])
                 
                 column_lag_list = []
                 column_name = []
