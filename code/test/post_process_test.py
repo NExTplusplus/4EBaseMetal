@@ -73,7 +73,7 @@ if __name__ == '__main__':
     if args.source == "NExT":
         data_list, LME_dates = read_data_NExT(fname_columns, "2003-11-12")
         time_series = pd.concat(data_list, axis = 1, sort = True)
-        split_dates = ["2007-01-01","2017-01-01","2019-01-01"]
+        split_dates = ["2007-01-01","2017-01-01","2017-01-01"]
         test_split_dates = rolling_half_year(split_dates[0],split_dates[2],5)
         test_split_dates = test_split_dates[-5:]
     elif args.source == "4E":
@@ -99,7 +99,6 @@ if __name__ == '__main__':
     mx = np.arange(0.1,0.51,0.02)
     comb = product(initial,mx)
     sar = post_process(copy(ts), split_dates, "sar", strat_results, ground_truth, strategy_params,activation_params,comb,args.min)
-    
     
     print("rsi")
     activation_params['sar'] = False
@@ -167,8 +166,8 @@ if __name__ == '__main__':
             'rsi_window':[],'rsi_upper':[],'rsi_lower':[],'rsi_train_acc':[],'rsi_train_cov':[],'rsi_acc':[],'rsi_cov':[],
             'strat1_short_window':[],'strat1_med_window':[],'strat1_train_acc':[],'strat1_train_cov':[],'strat1_acc':[],'strat1_cov':[],
             'strat2_window':[],'strat2_train_acc':[],'strat2_train_cov':[],'strat2_acc':[],'strat2_cov':[],
-            'strat3_high_window':[],'strat3_train_high_acc':[],'strat3_train_high_cov':[],'strat3_high_acc':[],'strat3_high_cov':[],
-            'strat3_close_window':[],'strat3_train_close_acc':[],'strat3_train_close_cov':[],'strat3_close_acc':[],'strat3_close_cov':[],
+            'strat3_high_window':[],'strat3_high_train_acc':[],'strat3_high_train_cov':[],'strat3_high_acc':[],'strat3_high_cov':[],
+            'strat3_close_window':[],'strat3_close_train_acc':[],'strat3_close_train_cov':[],'strat3_close_acc':[],'strat3_close_cov':[],
             'strat6_window':[],'strat6_limiting_factor':[],'strat6_train_acc':[],'strat6_train_cov':[],'strat6_acc':[],'strat6_cov':[],
             'strat7_window':[],'strat7_limiting_factor':[],'strat7_train_acc':[],'strat7_train_cov':[],'strat7_acc':[],'strat7_cov':[],
             'strat9_slow_length':[],'strat9_fast_length':[],'strat9_macd_length':[],'strat9_train_acc':[],'strat9_train_cov':[],'strat9_acc':[],'strat9_cov':[]
@@ -214,6 +213,7 @@ if __name__ == '__main__':
                 ans['rsi_train_acc'].append(train_results[4])
                 ans['rsi_train_cov'].append(train_results[5])
                 ans['rsi_acc'].append(results[4])
+                #print(ans['rsi_acc'])
                 ans['rsi_cov'].append(results[5])
             else:
                 ans['rsi_window'].append(None)
@@ -271,14 +271,14 @@ if __name__ == '__main__':
                 train_results = output(ts, split_dates,ground_truth,strategy_params,activation_params,strat_dc)
                 results = output(ts, test_split_date,ground_truth,strategy_params,activation_params,strat_dc, check = False)
                 ans['strat3_high_window'].append(strat_results['strat3_high']['window'][i])
-                ans['strat3_train_high_acc'].append(train_results[2])
-                ans['strat3_train_high_cov'].append(train_results[3])
+                ans['strat3_high_train_acc'].append(train_results[2])
+                ans['strat3_high_train_cov'].append(train_results[3])
                 ans['strat3_high_acc'].append(results[2])
                 ans['strat3_high_cov'].append(results[3]) 
             else:
                 ans['strat3_high_window'].append(None)
-                ans['strat3_train_high_acc'].append(None)
-                ans['strat3_train_high_cov'].append(None)
+                ans['strat3_high_train_acc'].append(None)
+                ans['strat3_high_train_cov'].append(None)
                 ans['strat3_high_acc'].append(None)
                 ans['strat3_high_cov'].append(None) 
 
@@ -291,14 +291,14 @@ if __name__ == '__main__':
                 train_results = output(ts, split_dates,ground_truth,strategy_params,activation_params,strat_dc)
                 results = output(ts, test_split_date,ground_truth,strategy_params,activation_params,strat_dc, check = False)
                 ans['strat3_close_window'].append(strat_results['strat3_close']['window'][i])
-                ans['strat3_train_close_acc'].append(train_results[2])
-                ans['strat3_train_close_cov'].append(train_results[3])
+                ans['strat3_close_train_acc'].append(train_results[2])
+                ans['strat3_close_train_cov'].append(train_results[3])
                 ans['strat3_close_acc'].append(results[2])
                 ans['strat3_close_cov'].append(results[3]) 
             else:
                 ans['strat3_close_window'].append(None)
-                ans['strat3_train_close_acc'].append(None)
-                ans['strat3_train_close_cov'].append(None)
+                ans['strat3_close_train_acc'].append(None)
+                ans['strat3_close_train_cov'].append(None)
                 ans['strat3_close_acc'].append(None)
                 ans['strat3_close_cov'].append(None) 
     
@@ -367,8 +367,67 @@ if __name__ == '__main__':
                 ans['strat9_train_cov'].append(None)
                 ans['strat9_acc'].append(None)
                 ans['strat9_cov'].append(None)
-    ans = pd.DataFrame(ans)
-    ans.to_csv(args.output)
+    
+    output = copy(ans)
+    for key in ans.keys():
+        if not any(ans[key]) and "acc" not in key:
+            del output[key]
+     
+    print(output.keys())
+    ans = pd.DataFrame(output)
+    
+    strat_list = ['sar','rsi','strat1','strat2','strat3_close','strat3_high','strat6','strat7','strat9']
+    
+    final = pd.DataFrame()
+    for strat in strat_list:
+        print(strat)
+        #print(ans.columns)
+        average_list = pd.DataFrame()
+        
+        for col in ans.columns:
+            
+            if strat in col:
+                if average_list.empty:
+                    average_list = pd.DataFrame(ans[col])
+                else:
+                    average_list = pd.concat([average_list,ans[col]],axis = 1)
+        print(average_list.columns)
+        if len(average_list.columns)<=4 or not any([strat+'_cov' in col for col in average_list.columns]):
+            continue
+        else:
+            num_of_column = len(average_list.columns)
+            num_of_sort = num_of_column - 4
+            print(num_of_sort)
+#            sort_item = []
+#            for i in range(num_of_sort):
+#                sort_item[i] = set(average_list.iloc[:,i])
+            acc_sum_list = []
+            #train_sum_list = []
+            #average_list.to_csv(args.output)
+            for i in range(len(average_list)-1):
+                curr = average_list.iloc[i]
+                acc = curr.iloc[-2]
+                #print(acc)
+                #train_acc = curr.iloc[-4]
+                for j in range(i+1,len(average_list)):  
+                    if all([average_list.iloc[j,k] == curr.iloc[k] for k in range(num_of_sort)]):
+                         acc += average_list.iloc[j,-2]
+                         #train_acc += average_list.iloc[j,-4]
+                acc_sum_list.append(acc)
+                #train_sum_list.append(train_acc)
+            
+            acc_sum_list.append(average_list.iloc[-1,-2])
+            #train_sum_list.append(average_list.iloc[-1,-4])
+            average_list[strat+'_acc_sum'] = acc_sum_list
+            #average_list[strat+'_train_sum'] = train_sum_list
+            average_list = average_list[average_list.iloc[:,-2]>0]
+            average_list = average_list.sort_values(by = strat+'_acc_sum',ascending = False)
+            if final.empty:
+                final = average_list
+            else:
+                final = pd.concat([final,average_list],axis = 1)
+                
+    final.to_csv(args.output)
 
 
     
