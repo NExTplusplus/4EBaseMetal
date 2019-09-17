@@ -14,13 +14,15 @@ def generate_version_params(version):
 
     if v == "v7":
         ans['technical_indication'] = "v2"
-    if v == "v9" or v == "v10" or v == "v11":
+    if v == "v9" or v == "v10" or v == "v11" or v == "v12":
         if v == "v9":
             ans["generate_strat_params"]="v1"
         elif v== "v10":
             ans["generate_strat_params"]="v2"
         elif v== 'v11':
             ans["generate_strat_params"]="v3"
+        elif v== 'v11':
+            ans["generate_strat_params"]="v4"
         ans['strategy_signal'] = "v1"
         ans["normalize_without_1d_return"] = None
         ans["technical_indication"] = None
@@ -46,6 +48,8 @@ def generate_strat_params(ground_truth,steps,version):
         return generate_strat_params_v2(ground_truth,steps)
     if version == "v3":
         return generate_strat_params_v3(ground_truth,steps)
+    if version == "v4":
+        return generate_strat_params_v4(ground_truth,steps)
 
 def deal_with_abnormal_value(arguments, version):
     time_series = arguments['time_series']

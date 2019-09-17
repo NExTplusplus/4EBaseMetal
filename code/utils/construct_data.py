@@ -34,6 +34,14 @@ def generate_strat_params_v3(ground_truth,steps):
     activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat6":True,"strat7":True,"strat9":True}
     return strat_params,activation_params
 
+def generate_strat_params_v4(ground_truth,steps):
+    with open("exp/strat_param_v12.conf") as f:
+        all_params = json.load(f)
+    strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
+    activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat6":True,"strat7":True,"strat9":True}
+    return strat_params,activation_params
+
+
 #the function is to deal with the abnormal data
 def deal_with_abnormal_value_v1(data):
     #deal with the big value
