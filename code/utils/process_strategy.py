@@ -89,13 +89,17 @@ def output(time_series,split_dates,ground_truth,strategy_params,activation_param
     
     return temp_list
 
-def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_params,activation_params,cov_inc,combination,mnm):
-    
+def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_params,activation_params,cov_inc,combination,mnm,op= "v1"):    
     strat_dc = [create_dc_from_comb(strat,strategy_params,comb) for comb in combination]
     strat_keys = list(strategy_params[strat].keys())
     if len(strategy_params[strat][strat_keys[0]]) == 0:
         ls = [list([copy(ts),split_dates,ground_truth,strategy_params,activation_params,com]) for com in strat_dc]
         pool = pl()
+        if op == 'v1':
+            results = pool.starmap_async(output,ls)
+        else:
+            results = pool.starmap_async(output_v2,ls)
+            
         results = pool.starmap_async(output,ls)
         pool.close()
         pool.join()
