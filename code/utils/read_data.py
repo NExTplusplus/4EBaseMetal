@@ -216,7 +216,7 @@ def read_data_NExT(config,start_date):
     for fname in config:
         df = read_single_csv(fname,sel_col_names = config[fname])
         df = df.loc[start_date:]
-        temp = copy(df.loc["2004-11-12":])
+        temp = copy(df.loc[start_date:])
         data.append(df)
         # put in dates all dates that LME has operations (even if only there are metals that are not traded)
         if "LME" in fname:

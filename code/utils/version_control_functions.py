@@ -21,7 +21,7 @@ def generate_version_params(version):
             ans["generate_strat_params"]="v2"
         elif v== 'v11':
             ans["generate_strat_params"]="v3"
-        elif v== 'v11':
+        elif v== 'v12':
             ans["generate_strat_params"]="v4"
         ans['strategy_signal'] = "v1"
         ans["normalize_without_1d_return"] = None
