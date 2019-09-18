@@ -79,7 +79,7 @@ if __name__ == '__main__':
 
     ans['start'].append(start_date)
     ans['end'].append(last_date)
-    ans['acc'].append(sum(ttarget == ttbc)/len(ttarget))
+    ans['acc'].append(sum(ttarget.loc[(ttarget.index>=start_date)&(ttarget.index< last_date)] == ttbc.loc[(ttbc.index>=start_date)&(ttbc.index< last_date)])/len(ttarget.loc[(ttarget.index>=start_date)&(ttarget.index< last_date)]))
 
     while len(ttarget.loc[ttarget.index > start_date])>0 :
         end_date = str(int(start_date.split("-")[0])+1)+"-01-01"
