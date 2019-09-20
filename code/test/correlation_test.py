@@ -38,12 +38,12 @@ if __name__ == '__main__':
     parser.add_argument(
         '--data_configure_file', '-c', type=str,
         help='configure file of the features to be read',
-        default='exp/5d/Co/logistic_regression/v5/LMCADY_v5.conf'
+        default='exp/5d/Co/logistic_regression/v3/LMCADY_v3.conf'
     )
     parser.add_argument('-s','--steps',type=str,default='1,1',
                         help='steps in the future to be predicted')
     parser.add_argument('-gt', '--ground_truth', help='ground truth column',
-                        type=str, default="LME_Co_Spot,LME_Zi_Spot")
+                        type=str, default="LME_Co_Spot,LME_Co_Close")
     parser.add_argument(
         '-sou','--source', help='source of data', type = str, default = "NExT"
     )
@@ -54,6 +54,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     ground_truth = args.ground_truth.split(",")
     steps = [int(i) for i in args.steps.split(",")]
+    lags = list(range(args.lag-40,args.lag+51))
     with open(os.path.join(sys.path[0],args.data_configure_file)) as fin:
         fname_columns = json.load(fin)[0]
 
@@ -67,32 +68,46 @@ if __name__ == '__main__':
     LME_dates = sorted(set(LME_dates).intersection(time_series.index.values.tolist()))
     time_series = time_series.loc[LME_dates]
     org_cols = set(time_series.columns.values.tolist())
-    ttarget = labelling_v1(time_series,steps[0],[ground_truth[0]])[0]
-    ttbc = labelling_v1(time_series,steps[1],[ground_truth[1]])[0]
-    ans = {"start":[],"end":[],"acc":[]}
-    start_date = "2002-01-01"
-    last_date =  "2017-01-01"
-    ttbc = ttbc.shift(args.lag)
-    ttbc.dropna(inplace = True)
-    ttarget = ttarget.loc[ttbc.index]
-    
+    tttarget = labelling_v1(time_series,steps[0],[ground_truth[0]])[0]
+    tttbc = labelling_v1(time_series,steps[1],[ground_truth[1]])[0]
+    tttarget = tttarget.loc[(tttarget.index<"2008-01-01")|(tttarget.index>="2009-01-01")]
+    tttbc = tttbc.loc[(tttbc.index<"2008-01-01")|(tttbc.index>="2009-01-01")]
+#    print(tttarget.index)
+    correlation = pd.DataFrame()
+    for lag in lags:
+        print(lag)
+        ans = {"start":[],"end":[],"acc_"+str(lag):[]}
+        start_date = "2001-01-01"
+        last_date =  "2017-01-01"
+        ttbc = tttbc.shift(lag)
+        ttbc.dropna(inplace = True)
+        ttarget = tttarget.loc[ttbc.index]
+        
 
-    ans['start'].append(start_date)
-    ans['end'].append(last_date)
-    ans['acc'].append(sum(ttarget.loc[(ttarget.index>=start_date)&(ttarget.index< last_date)] == ttbc.loc[(ttbc.index>=start_date)&(ttbc.index< last_date)])/len(ttarget.loc[(ttarget.index>=start_date)&(ttarget.index< last_date)]))
-
-    while len(ttarget.loc[ttarget.index > start_date])>0 :
-        end_date = str(int(start_date.split("-")[0])+1)+"-01-01"
-        target = copy(ttarget)
-        tbc = copy(ttbc)
-        target = target[(target.index >= start_date)&(target.index <end_date)]
-        tbc = tbc[(tbc.index >= start_date)&(tbc.index <end_date)]
         ans['start'].append(start_date)
-        ans['end'].append(end_date)
-        ans['acc'].append(sum(target == tbc)/len(target))
-        start_date = end_date
-    ans = pd.DataFrame(ans)
-    ans.to_csv(args.ground_truth+args.steps+".csv")
+        ans['end'].append(last_date)
+        ans['acc_'+str(lag)].append(sum(ttarget.loc[(ttarget.index>=start_date)&(ttarget.index< last_date)] == ttbc.loc[(ttbc.index>=start_date)&(ttbc.index< last_date)])/len(ttarget.loc[(ttarget.index>=start_date)&(ttarget.index< last_date)]))
+
+        while len(ttarget.loc[ttarget.index > start_date])>0 :
+#            print(start_date)
+            if start_date == "2008-01-01":
+                start_date = "2009-01-01"
+                continue
+            end_date = str(int(start_date.split("-")[0])+1)+"-01-01"
+            target = copy(ttarget)
+            tbc = copy(ttbc)
+            target = target[(target.index >= start_date)&(target.index <end_date)]
+            tbc = tbc[(tbc.index >= start_date)&(tbc.index <end_date)]
+            ans['start'].append(start_date)
+            ans['end'].append(end_date)
+            ans['acc_'+str(lag)].append(sum(target == tbc)/len(target))
+            start_date = end_date
+        ans = pd.DataFrame(ans)
+        if correlation.empty:
+            correlation = ans
+        else:
+            correlation = pd.concat([correlation,ans["acc_"+str(lag)]],axis = 1)
+    correlation.to_csv(args.ground_truth+'_'+str(steps[0])+".csv")
 
 
     
