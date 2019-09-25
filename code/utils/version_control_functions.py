@@ -14,7 +14,7 @@ def generate_version_params(version):
 
     if v == "v7":
         ans['technical_indication'] = "v2"
-    if v == "v9" or v == "v10" or v == "v11" or v == "v12":
+    if v == "v9" or v == "v10" or v == "v11" or v == "v12" or v=="v14":
         if v == "v9":
             ans["generate_strat_params"]="v1"
         elif v== "v10":
@@ -23,11 +23,22 @@ def generate_version_params(version):
             ans["generate_strat_params"]="v3"
         elif v== 'v12':
             ans["generate_strat_params"]="v4"
+        elif v== 'v14':
+            ans["generate_strat_params"]="v5"
+            ans["construct"]="v2"
+
         ans['strategy_signal'] = "v1"
-        ans["normalize_without_1d_return"] = None
         ans["technical_indication"] = None
-        ans["price_normalization"] = None
-        ans["remove_unused_columns"] = "v2"
+        
+        
+        if v=='v14':
+            ans["remove_unused_columns"] = "v3"
+            ans["price_normalization"] = "v2"
+        else: 
+            ans["remove_unused_columns"] = "v2"
+            ans["normalize_without_1d_return"] = None
+            ans["price_normalization"] = None
+            
         ans["scaling"] = None
 
     if ex == "ex1":
@@ -50,6 +61,8 @@ def generate_strat_params(ground_truth,steps,version):
         return generate_strat_params_v3(ground_truth,steps)
     if version == "v4":
         return generate_strat_params_v4(ground_truth,steps)
+    if version == "v5":
+        return generate_strat_params_v5(ground_truth,steps)
 
 def deal_with_abnormal_value(arguments, version):
     time_series = arguments['time_series']
@@ -151,7 +164,7 @@ def technical_indication(arguments, version):
     
 
 
-def remove_unused_columns(arguments, version):
+def remove_unused_columns(arguments, version,ground_truth):
     time_series = arguments['time_series']
     if version is None:
         return time_series
@@ -165,6 +178,13 @@ def remove_unused_columns(arguments, version):
         remove columns that will not be used in model
         '''
         return remove_unused_columns_v2(time_series,arguments['org_cols'])
+    
+    if version == "v3":
+        '''
+        remove columns that will not be used in model
+        '''
+        print("Remove Columns Version3")
+        return remove_unused_columns_v3(time_series,arguments['org_cols'],ground_truth)
 
 
 
@@ -177,7 +197,12 @@ def price_normalization(arguments, version):
         daily log returns
         '''
         return log_1d_return(time_series,arguments['org_cols'])
-
+    if version == "v2":
+        '''
+        DXY log returns
+        '''
+        return log_1d_return(time_series,["DXY"])
+    
 def insert_date_into_feature(arguments):
     time_series = arguments['time_series']
 
@@ -215,4 +240,11 @@ def construct(ind, arguments, version):
         return construct_v1_ex2(time_series[ind][arguments['all_cols'][ind]], time_series[ind]["Label"], 
                             arguments['start_ind'], arguments['end_ind'], 
                             arguments['lags'], arguments['horizon'])
+    elif version == "v2":
+        '''
+        construct ndarray for discrete lags
+        '''
+        return construct_v2(time_series[ind][arguments['all_cols'][ind]], time_series[ind]["Label"], 
+                    arguments['start_ind'], arguments['end_ind'], 
+                    arguments['lags'], arguments['horizon'])
 

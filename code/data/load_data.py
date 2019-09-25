@@ -84,7 +84,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
         print("xgboost")
         parameters['cat_cols'] = ['day','month']
         parameters['time_series'] = insert_date_into_feature(parameters)
-    parameters['time_series'], parameters['org_cols'] = remove_unused_columns(parameters, version_params['remove_unused_columns'])
+    parameters['time_series'], parameters['org_cols'] = remove_unused_columns(parameters, version_params['remove_unused_columns'],ground_truth_columns)
     # save_data("i5",parameters['time_series'],parameters['time_series'].columns.values.tolist())
     parameters['time_series'] = price_normalization(parameters,version_params['price_normalization'])
     parameters['time_series'] = process_missing_value(parameters, version_params['process_missing_value'])

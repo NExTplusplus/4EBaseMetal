@@ -41,6 +41,14 @@ def generate_strat_params_v4(ground_truth,steps):
     activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat6":True,"strat7":True,"strat9":True}
     return strat_params,activation_params
 
+def generate_strat_params_v5(ground_truth,steps):
+    print("################generate_strat_params_v5##################")
+    with open("exp/strat_param_v14.conf") as f:
+        all_params = json.load(f)
+    strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
+    activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat6":True,"strat7":True,"strat8":True,"strat9":True}
+    return strat_params,activation_params
+
 
 #the function is to deal with the abnormal data
 def deal_with_abnormal_value_v1(data):
@@ -167,9 +175,6 @@ def labelling_v1_ex2(X,horizon,ground_truth_columns,val_end):
         ans.append(labels)
     
     return ans
-
-
-
 
 
 #we use this function to make the data normalization
@@ -367,6 +372,18 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
             output = pd.concat([output,output_strat3],sort = True, axis = 1)
             tmp_pd = pd.DataFrame(index = X.index)
             
+        if gt+"_Spread" == col and activation_params["strat8"]:
+            act = copy(temp_act)
+            act['strat8'] = True
+            limiting_factor = np.arange(1.8,2.45,0.1)
+            window = list(range(10,51,2))
+            comb = product(window,limiting_factor)
+            tmp_pd = parallel_process(X, split_dates, "strat8",strat_results,ground_truth,strategy_params,act,cov_inc,comb,mnm)
+            output_strat8 = one_hot(tmp_pd)
+            print(output_strat8.columns)
+            output = pd.concat([output,output_strat8],sort = True, axis = 1)
+            tmp_pd = pd.DataFrame(index = X.index)
+
         if gt+"_Close" == col:
             setting = col[:-5]
             if setting+"High" in cols and setting+"Low" in cols and activation_params['sar']:
@@ -468,6 +485,20 @@ def remove_unused_columns_v2(time_series,org_cols):
             time_series = time_series.drop(col, axis = 1)
     return time_series,org_cols
 
+def remove_unused_columns_v3(time_series,org_cols,ground_truth):
+    print("#####################remove_unused_columns_v3#####################")
+    org_cols.append("Label")
+    target = ground_truth[0].split('_')[-2]
+    for col in copy(time_series.columns):
+
+        if col in org_cols:
+            if col!="DXY":
+                time_series = time_series.drop(col, axis = 1)
+        else:
+            if "Spread" in col or ("nVol" in col and ("LME" not in col or target not in col)) or ("nOI" in col and ("LME" not in col or  target not in col)):
+                time_series = time_series.drop(col,axis = 1)
+    print(time_series.columns)       
+    return time_series,org_cols
 
 #this function is to scale the data use the standardscaler
 def scaling_v1(X,train_end):
@@ -515,6 +546,38 @@ def construct_v1(time_series, ground_truth, start_ind, end_ind, T, h):
     for ind in range(start_ind, end_ind):
         if not time_series.iloc[ind - T + 1 : ind + 1].isnull().values.any():
             X[sample_ind] = time_series.values[ind - T + 1: ind + 1, :]
+            y[sample_ind, 0] = ground_truth.values[ind]
+            sample_ind += 1
+    
+
+    return X,y
+
+def construct_v2(time_series, ground_truth, start_ind, end_ind, T, h):
+    print("#########################construct_v2############################")
+    num = 0
+    '''
+        convert 2d numpy array of time series data into 3d numpy array, with extra dimension for lags, i.e.
+        input of (n_samples, n_features) becomes (n_samples, T, n_features)
+        time_series (2d np.array): financial time series data
+        ground_truth (1d np.array): column which is used as ground truth
+        start_index (string): string which is the date that we wish to begin including from.
+        end_index (string): string which is the date that we wish to include last.
+        T (int): number of lags
+        Considering the auto-correlaiton between features will weaken the power of XGBoost Model,
+        lag will be set as discrete time points,like lag1,lag5,lag10, rather that consecutive period,
+        like lag1-lag10.
+    '''
+    lags = [x for x in range(0,T+1) if x%5==0]
+    for ind in range(start_ind, end_ind):
+        if not time_series.iloc[[ind-x for x in lags]].isnull().values.any():
+            num += 1
+    X = np.zeros([num, len(lags), time_series.shape[1]], dtype=np.float32)
+    y = np.zeros([num, 1], dtype=np.float32)
+    #construct the data by the time index
+    sample_ind = 0
+    for ind in range(start_ind, end_ind):
+        if not time_series.iloc[[ind-x for x in lags]].isnull().values.any():
+            X[sample_ind] = time_series.values[[ind-x for x in lags], :]
             y[sample_ind, 0] = ground_truth.values[ind]
             sample_ind += 1
     

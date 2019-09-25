@@ -20,7 +20,8 @@ def strategy_testing(X,ground_truth,strategy_params,activation_params,cov = ""):
     for col in cols:
         if ground_truth+"_High" == col and activation_params["strat3_high"]:
             X[col+cov+"_strat3"] = strategy_3(X[col],strategy_params['strat3_high']['window'])
-
+        if ground_truth+"_Spread" == col and activation_params["strat8"]:
+            X[ground_truth+cov+"_strat8"] = strategy_7(X[col],strategy_params['strat8']['window'],strategy_params['strat8']['limiting_factor'])
         if ground_truth+"_Close" == col:
             setting = col[:-5]
             if setting+"High" in cols and setting+"Low" in cols and activation_params['sar']:
@@ -39,7 +40,7 @@ def strategy_testing(X,ground_truth,strategy_params,activation_params,cov = ""):
                 X[col+cov+"_strat9"] = strategy_9(X[col],strategy_params['strat9']['FastLength'],strategy_params['strat9']['SlowLength'],strategy_params['strat9']['MACDLength'])
             if ground_truth+"_High" in cols and ground_truth+"_Low" in cols and activation_params["strat6"]:
                 X[setting+cov+"strat6"] = strategy_6(X[setting+"High"],X[setting+"Low"],X[col],strategy_params['strat6']['window'],strategy_params['strat6']['limiting_factor'])
-            
+                
     return X
 
 def output(time_series,split_dates,ground_truth,strategy_params,activation_params,dc,check = True):
