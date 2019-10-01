@@ -81,7 +81,7 @@ if __name__ == '__main__':
             for split_date in split_dates:
                 #print("the train date is {}".format(split_date[0]))
                 #print("the test date is {}".format(split_date[1]))
-                split_date[0]='2009-07-01'
+                #split_date[0]='2009-07-01'
                 print(split_date)
                 horizon = args.steps
                 norm_volume = "v1"
