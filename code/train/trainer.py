@@ -1,4 +1,4 @@
- #encoding:utf-8
+#encoding:utf-8
 import pandas as pd
 import numpy as np
 import os, sys, time, random
@@ -367,38 +367,38 @@ class Trainer:
 
             print('the average test loss is {}, f1_score is {}, accurary is {}, with time: {}'.format(test_loss, test_f1, test_acc,end-start))
             
-            if (epoch+1)%10 == 0:
-                current_val_pred = np.array(current_val_pred).reshape(self.case_number,-1)
-                current_test_pred = np.array(current_test_pred).reshape(self.case_number,-1)
+            #if (epoch+1)%10 == 0:
+            #    current_val_pred = np.array(current_val_pred).reshape(self.case_number,-1)
+            #    current_test_pred = np.array(current_test_pred).reshape(self.case_number,-1)
 
-                val_prediction.append([list(ele) for ele in current_val_pred][:10])
-                test_prediction.append([list(ele) for ele in current_test_pred][:10])
+            #    val_prediction.append([list(ele) for ele in current_val_pred][:10])
+            #    test_prediction.append([list(ele) for ele in current_test_pred][:10])
             
             #if interval == -2:
             #    if test_loss < lowest_loss:
             #        torch.save(net.state_dict(),self.path_name)
             #        lowest_loss = test_loss
             
-        out_loss = pd.DataFrame()
-        out_loss['val_loss'] = val_loss_list
-        out_loss['test_loss'] = test_loss_list
-        out_loss['val_f1'] = val_f1_list
-        out_loss['test_f1'] = test_f1_list
-        out_loss['val_acc'] = val_acc_list
-        out_loss['test_acc'] = test_acc_list
+        #out_loss = pd.DataFrame()
+        #out_loss['val_loss'] = val_loss_list
+        #out_loss['test_loss'] = test_loss_list
+        #out_loss['val_f1'] = val_f1_list
+        #out_loss['test_f1'] = test_f1_list
+        #out_loss['val_acc'] = val_acc_list
+        #out_loss['test_acc'] = test_acc_list
         
-        out_pred_val = pd.DataFrame()
-        out_pred_test = pd.DataFrame()
+        #out_pred_val = pd.DataFrame()
+        #out_pred_test = pd.DataFrame()
 
-        for epoch_index in range(int(num_epochs/10)):
-            epoch = (epoch_index+1)*10
-            out_pred_val[epoch] = val_prediction[epoch_index]
-            out_pred_test[epoch] = test_prediction[epoch_index]
+        #for epoch_index in range(int(num_epochs/10)):
+        #    epoch = (epoch_index+1)*10
+        #    out_pred_val[epoch] = val_prediction[epoch_index]
+        #    out_pred_test[epoch] = test_prediction[epoch_index]
         
         #out_pred_train=0
         #out_pred_test=0
         #out_loss=0
-        return out_pred_val, out_pred_test, out_loss
+        #return out_pred_val, out_pred_test, out_loss
 
 
 if __name__ == '__main__':
@@ -631,6 +631,7 @@ if __name__ == '__main__':
                 #test_embedding = test_dataframe.loc[:,id_column]
                 #print(final_train_X_embedding)
                 train_y = pd.DataFrame(final_y_tr,columns=['result'])
+                print(train_y)
                 test_y = pd.DataFrame(final_y_te,columns=['result'])
                 val_y = pd.DataFrame(final_y_val,columns=['result'])
                 window_size = lag
@@ -639,5 +640,5 @@ if __name__ == '__main__':
                 end = time.time()
                 print("pre-processing time: {}".format(end-start))
                 print("the split date is {}".format(split_date[1]))
-                out_val_pred, out_test_pred, out_loss = trainer.train_minibatch(num_epochs, batch_size, interval)
-
+                #out_val_pred, out_test_pred, out_loss = trainer.train_minibatch(num_epochs, batch_size, interval)
+                trainer.train_minibatch(num_epochs, batch_size, interval)
