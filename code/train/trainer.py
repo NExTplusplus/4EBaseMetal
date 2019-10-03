@@ -1,6 +1,5 @@
 #encoding:utf-8
 import pandas as pd
-import numpy as np
 import os, sys, time, random
 import argparse
 import json
@@ -10,20 +9,13 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 from sklearn.metrics import accuracy_score, f1_score
 from copy import copy
-#from dataset import Dataset
 import psutil
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 from data.load_data_v16_torch import load_data
 from model.model_embedding import MultiHeadAttention, attention, bilstm
-from model.logistic_regression import LogReg
-from utils.transform_data import flatten
 from utils.construct_data import rolling_half_year
-from utils.log_reg_functions import objective_function, loss_function
-import warnings
-from sklearn import metrics
 from utils.version_control_functions import generate_version_params
 import numpy as np
-from sklearn.model_selection import train_test_split
 torch.manual_seed(1)
 np.random.seed(1)
 random.seed(1)
@@ -404,7 +396,7 @@ class Trainer:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Train the bi-LSTM + attention-based model on stock')
     parser.add_argument(
-        '-e', '--epoch', type=int, default=10,
+        '-e', '--epoch', type=int, default=30,
         help='the number of epochs')
     parser.add_argument(
         '-b', '--batch', type=int, default=256,
@@ -466,7 +458,7 @@ if __name__ == '__main__':
         '-sou','--source', help='source of data', type = str, default = "NExT"
     )
     parser.add_argument(
-        '-l','--lag', type=int, default = 5, help='lag'
+        '-l','--lag', type=int, default=10, help='lag'
     )
     parser.add_argument(
         '-v','--version', help='version', type = str, default = 'v10'
@@ -474,7 +466,8 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--action', type=str, default='train',
                         help='train, test, tune')
     #parser.add_argument('-xgb','--xgboost',type = int,help='if you want to train the xgboost you need to inform us of that',default=0)
-    parser.add_argument('-torch','--torch',type = int, help = 'if you want to train the torch you need to set this parameter to 1',default=1)
+    parser.add_argument('-torch', '--torch', type=int, default=1,
+                        help='if you want to train the torch you need to set this parameter to 1')
     args = parser.parse_args()
     if args.ground_truth =='None':
         args.ground_truth = None
@@ -512,9 +505,13 @@ if __name__ == '__main__':
             elif args.source == "4E":
                 from utils.read_data import read_data_v5_4E
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
+            else:
+                print('Unexpected source: %s' % args.source)
+                exit(0)
+
             length = 5
             split_dates = rolling_half_year("2009-07-01","2017-01-01",length)
-            split_dates  =  split_dates[:]
+            # split_dates = split_dates[:]
             importance_list = []
             version_params=generate_version_params(args.version)
             for split_date in split_dates:
@@ -526,12 +523,12 @@ if __name__ == '__main__':
                 len_update = 30
                 tol = 1e-7
                 if args.torch==1:
-                    #print(args.xgboost)
                     norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
                                 'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False, 'torch':True}
                 else:
                     norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
                                 'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False, 'torch':False}
+
                 tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
                                                 'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
                 final_X_tr = []
@@ -546,12 +543,19 @@ if __name__ == '__main__':
                 i = 0
                 for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Le_Spot','LME_Ni_Spot','LME_Zi_Spot','LME_Ti_Spot']:
                     print(ground_truth)
+                    print('Before Load Data')
+                    print(split_date)
                     new_time_series = copy(time_series)
                     spot_list = np.array(new_time_series[ground_truth])
-                    new_time_series['spot_price']=spot_list
+                    new_time_series['spot_price'] = spot_list
+
                     ts = new_time_series.loc[split_date[0]:split_date[2]]
+                    print(ts.shape)
                     X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check, column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,split_date,norm_params,tech_params,version_params,torch)
                     X_tr = np.concatenate(X_tr)
+
+                    print(type(X_tr))
+
                     X_ta = X_tr.reshape(len(X_tr),lag*len(column_list[0]))[:int(len(X_tr)*split)].tolist()
                     #print(X_tr)
                     y_ta = np.concatenate(y_tr)[:int(len(X_tr)*split)].tolist()

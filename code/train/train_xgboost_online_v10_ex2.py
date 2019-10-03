@@ -131,7 +131,7 @@ if __name__ == '__main__':
                 final_y_tr = [np.transpose(arr) for arr in np.dstack(final_y_tr)]
                 final_X_tr = np.reshape(final_X_tr,[np.shape(final_X_tr)[0]*np.shape(final_X_tr)[1],np.shape(final_X_tr)[2]])
                 final_y_tr = np.reshape(final_y_tr,[np.shape(final_y_tr)[0]*np.shape(final_y_tr)[1],np.shape(final_y_tr)[2]])
-                
+
                 column_lag_list = []
                 column_name = []
                 for i in range(lag):

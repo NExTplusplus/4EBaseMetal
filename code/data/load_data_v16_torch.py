@@ -132,7 +132,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     Merge labels with time series dataframe
     '''
     #print()
-    print(parameters['time_series'])
+    # print(parameters['time_series'])
     for ind in range(len(parameters['time_series'])):
         parameters['time_series'][ind] = pd.concat([parameters['time_series'][ind], parameters['spot_price'][ind]],sort = True, axis = 1)
         parameters['time_series'][ind] = pd.concat([parameters['time_series'][ind], parameters['labels'][ind]],sort = True, axis = 1)
