@@ -31,7 +31,12 @@ def memory_usage():
     print('memory useage:', memory_use)
 
 class Trainer:
-    def __init__(self, input_dim, hidden_state, time_step, lr, dropout, split, attention_size, embedding_size, train_X, train_y, test_X, test_y, val_X, val_y, final_train_X_embedding, final_test_X_embedding, final_val_X_embedding):
+    def __init__(self, input_dim, hidden_state, time_step, lr, dropout,
+                 case_number, attention_size, embedding_size,
+                 train_X, train_y,
+                 test_X, test_y,
+                 val_X, val_y,
+                 final_train_X_embedding, final_test_X_embedding, final_val_X_embedding):
         # dataset
         #self.dataset = Dataset(driving, target, time_step, split, 0, version)
         #self.train_size, self.test_size = self.dataset.get_size()
@@ -52,11 +57,11 @@ class Trainer:
         self.window_size = time_step
         self.feature_size = input_dim
         #the case number is the number of the metal we want to predict
-        self.case_number = 6
+        self.case_number = case_number
         self.train_day = len(train_y)/self.case_number
         self.test_day = len(test_y)/self.case_number
         # Network
-        self.split = split
+        # self.split = split
         self.lr = lr
         self.hidden_state = hidden_state
         self.dropout = dropout
@@ -66,6 +71,8 @@ class Trainer:
         self.attention_size = attention_size
         
         # get the train data and test data
+        '''
+        old code from Jiangeng
         self.train_X = train_X
         self.train_y = train_y.values
         self.test_X = test_X
@@ -75,27 +82,46 @@ class Trainer:
         self.train_embedding = final_train_X_embedding
         self.test_embedding = final_test_X_embedding
         self.val_embedding = final_val_X_embedding
+        '''
+        self.train_X = train_X
+        self.train_y = train_y
+        self.test_X = test_X
+        self.test_y = test_y
+        self.val_X = val_X
+        self.val_y = val_y
+        self.train_embedding = final_train_X_embedding
+        self.test_embedding = final_test_X_embedding
+        self.val_embedding = final_val_X_embedding
+
 
     def train_minibatch(self, num_epochs, batch_size, interval):
         start = time.time()
-        net = bilstm(input_dim=self.feature_size, hidden_dim=self.hidden_state, num_layers=2,lag=self.window_size, h=self.attention_size, dropout=self.dropout,case_number=self.case_number,embedding_size=self.embedding_size)
+        net = bilstm(input_dim=self.feature_size,
+                     hidden_dim=self.hidden_state,
+                     num_layers=2,
+                     lag=self.window_size,
+                     h=self.attention_size,
+                     dropout=self.dropout,
+                     case_number=self.case_number,
+                     embedding_size=self.embedding_size)
         end = time.time()
         print("net initializing with time: {}".format(end-start))
         start = time.time()
         val_y_class = []
         for item in self.val_y:
-            if item >= 0.5:
+            if item >= thresh:
                 val_y_class.append(1)
             else:
                 val_y_class.append(0)
         test_y_class = []
         for item in self.test_y:
-            if item >= 0.5:
+            if item >= thresh:
                 test_y_class.append(1)
             else:
                 test_y_class.append(0)
         end = time.time()
         print("preparing training and testing date with time: {}".format(end-start))
+        '''
         #train_day =  int(self.train_day*self.split)
         #val_day = self.train_day-train_day
         #train_X = self.train_X[:train_day*self.case_number]
@@ -224,6 +250,7 @@ class Trainer:
         
         #y_train = y_train.reshape(-1,1)
         #y_test = y_test.reshape(-1,1)
+        '''
         
         optimizer = torch.optim.Adam(net.parameters(), lr=self.lr)
         loss_func = self.loss_func   
@@ -255,7 +282,10 @@ class Trainer:
             
             i = 0
             loss_sum = 0
-           
+
+            ##########################
+            # TBD: add an offset (fuli)
+            ##########################
             while i < train_size:
                 batch_end = i + batch_size
                 if batch_end > train_size:
@@ -405,7 +435,7 @@ if __name__ == '__main__':
         '-i', '--interval', type=int, default=1,
         help='save models every interval epoch')
     parser.add_argument(
-        '-lrate', '--lrate', type=float, default=0.01,
+        '-lrate', '--lrate', type=float, default=0.001,
         help='learning rate')
     parser.add_argument(
         '-t', '--test', action='store_true',
@@ -415,14 +445,14 @@ if __name__ == '__main__':
         help='the model name(after encoder/decoder)'
     )
     parser.add_argument(
-        '-hidden','--hidden_state',type=int, default=16,
+        '-hidden','--hidden_state',type=int, default=50,
         help='number of hidden_state of encoder/decoder'
     )
     parser.add_argument(
         '-split', '--split', type=float, default=0.9,
         help='the split ratio of validation set')
     parser.add_argument(
-        '-d','--drop_out', type=float, default = 0.1,
+        '-d','--drop_out', type=float, default = 0.3,
         help='the dropout rate of LSTM network'
     )
     parser.add_argument(
@@ -430,7 +460,7 @@ if __name__ == '__main__':
         help='the head number in MultiheadAttention Mechanism'
     )
     parser.add_argument(
-        '-embed','--embedding_size', type=int, default = 10,
+        '-embed','--embedding_size', type=int, default = 5,
         help='the size of embedding layer'
     )
     parser.add_argument(
@@ -458,7 +488,7 @@ if __name__ == '__main__':
         '-sou','--source', help='source of data', type = str, default = "NExT"
     )
     parser.add_argument(
-        '-l','--lag', type=int, default=10, help='lag'
+        '-l','--lag', type=int, default=4, help='lag'
     )
     parser.add_argument(
         '-v','--version', help='version', type = str, default = 'v10'
@@ -541,7 +571,8 @@ if __name__ == '__main__':
                 final_test_X_embedding = []
                 final_val_X_embedding = []
                 i = 0
-                for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Le_Spot','LME_Ni_Spot','LME_Zi_Spot','LME_Ti_Spot']:
+                ground_truths_list = ['LME_Co_Spot','LME_Al_Spot','LME_Le_Spot','LME_Ni_Spot','LME_Zi_Spot','LME_Ti_Spot']
+                for ground_truth in ground_truths_list:
                     print(ground_truth)
                     print('Before Load Data')
                     print(split_date)
@@ -583,10 +614,10 @@ if __name__ == '__main__':
 
                     # split validation
                     X_ta = X_tr[:int(len(X_tr) * split), :, :]
-                    y_ta = y_tr[:int(len(y_tr) * split), :, :]
+                    y_ta = y_tr[:int(len(y_tr) * split)]
 
                     X_val = X_tr[int(len(X_tr) * split):, :, :]
-                    y_val = y_tr[int(len(y_tr) * split):, :, :]
+                    y_val = y_tr[int(len(y_tr) * split):]
 
                     X_te = X_va
                     y_te = y_va
@@ -602,12 +633,45 @@ if __name__ == '__main__':
                     #train_y_id_embedding = [i]*len(y_tr)
                     #test_y_id_embedding = [i]*len(y_va)
 
+                    '''
+                    old code from Jiangeng
                     final_X_tr+=X_ta
                     final_y_tr+=y_ta
                     final_X_te+=X_te
                     final_y_te+=y_te
                     final_X_val+=X_val
                     final_y_val+=y_val
+                    '''
+
+                    if len(final_X_tr) == 0:
+                        final_X_tr = copy(X_ta)
+                    else:
+                        final_X_tr = np.concatenate((final_X_tr, X_ta), axis=0)
+                    if len(final_y_tr) == 0:
+                        final_y_tr = copy(y_ta)
+                    else:
+                        final_y_tr = np.concatenate((final_y_tr, y_ta), axis=0)
+
+                    if len(final_X_te) == 0:
+                        final_X_te = copy(X_te)
+                    else:
+                        final_X_te = np.concatenate((final_X_te, X_te), axis=0)
+                    if len(final_y_te) == 0:
+                        final_y_te = copy(y_te)
+                    else:
+                        final_y_te = np.concatenate((final_y_te, y_te), axis=0)
+
+                    if len(final_X_val) == 0:
+                        final_X_val = copy(X_val)
+                    else:
+                        final_X_val = np.concatenate((final_X_val, X_val), axis=0)
+                    if len(final_y_val) == 0:
+                        final_y_val = copy(y_val)
+                    else:
+                        final_y_val = np.concatenate((final_y_val, y_val), axis=0)
+                    ###############################
+                    # to replace the old code (Fuli)
+                    ###############################
 
                     final_train_X_embedding+=train_X_id_embedding
                     final_test_X_embedding+=test_X_id_embedding
@@ -620,6 +684,13 @@ if __name__ == '__main__':
                 #final_X_tr = np.reshape(final_X_tr,[np.shape(final_X_tr)[0]*np.shape(final_X_tr)[1],np.shape(final_X_tr)[2]])
                 #final_y_tr = np.reshape(final_y_tr,[np.shape(final_y_tr)[0]*np.shape(final_y_tr)[1],np.shape(final_y_tr)[2]])
                 #print(final_X_tr)
+                print('Dataset statistic: #examples')
+                print('Train:', len(final_X_tr), len(final_y_tr), len(final_train_X_embedding))
+                print('Validation:', len(final_X_val), len(final_y_val), len(final_val_X_embedding))
+                print('Testing:', len(final_X_te), len(final_y_te), len(final_test_X_embedding))
+
+                '''
+                old code from Jiangeng
                 column_lag_list = []
                 column_name = []
                 #print(column_list)
@@ -674,6 +745,25 @@ if __name__ == '__main__':
                 start = time.time()
                 trainer = Trainer(input_dim, hidden_state, window_size, lr, dropout, args.split, attention_size, embedding_size,train_X,train_y,test_X,test_y, val_X, val_y, final_train_X_embedding, final_test_X_embedding,final_val_X_embedding)
                 end = time.time()
+                '''
+
+                input_dim = final_X_tr.shape[-1]
+                window_size = lag
+                case_number = len(ground_truths_list)
+                start = time.time()
+                trainer = Trainer(input_dim, hidden_state, window_size, lr,
+                                  dropout, case_number, attention_size,
+                                  embedding_size,
+                                  final_X_tr, final_y_tr,
+                                  final_X_te, final_y_te,
+                                  final_X_val, final_y_val,
+                                  final_train_X_embedding,
+                                  final_test_X_embedding,
+                                  final_val_X_embedding)
+                end = time.time()
+                ###############################
+                # to replace the old code (Fuli)
+                ###############################
                 print("pre-processing time: {}".format(end-start))
                 print("the split date is {}".format(split_date[1]))
                 #out_val_pred, out_test_pred, out_loss = trainer.train_minibatch(num_epochs, batch_size, interval)

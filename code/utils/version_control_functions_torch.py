@@ -114,10 +114,19 @@ def torch_labelling(arguments):
         #print(ground)
         labels = copy(time_series[ground])
         #print(labels)
+        '''
+        old code from Jiangeng
         if type(labels)==np.ndarray:
             labels = np.true_divide(labels[arguments['horizon']:], labels[:-arguments['horizon']])-1
         else:
             labels.values[arguments['horizon']:]=np.true_divide(labels.values[arguments['horizon']:], labels.values[:-arguments['horizon']])-1
+        '''
+
+        price_changes = labels.shift(-arguments['horizon']) - labels
+        labels.values = np.true_divide(price_changes.values, labels.values)
+        ###############################
+        # to replace the old code (Fuli)
+        ###############################
         #print(labels)
         #if type(spot_price)== np.ndarray:
         #    spot_price = np.log(np.true_divide(spot_price[1:], spot_price[:-1]))
