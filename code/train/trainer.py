@@ -550,38 +550,70 @@ if __name__ == '__main__':
                     new_time_series['spot_price'] = spot_list
 
                     ts = new_time_series.loc[split_date[0]:split_date[2]]
-                    print(ts.shape)
-                    X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check, column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,split_date,norm_params,tech_params,version_params,torch)
+
+                    X_tr, y_tr, \
+                    X_va, y_va, \
+                    X_te, y_te, \
+                    norm_check, column_list = load_data(
+                        copy(ts), LME_dates, horizon, [ground_truth], lag,
+                        copy(split_date), norm_params, tech_params,
+                        version_params, torch
+                    )
+
+                    '''
+                    old code from Jiangeng
                     X_tr = np.concatenate(X_tr)
 
-                    print(type(X_tr))
-
                     X_ta = X_tr.reshape(len(X_tr),lag*len(column_list[0]))[:int(len(X_tr)*split)].tolist()
-                    #print(X_tr)
                     y_ta = np.concatenate(y_tr)[:int(len(X_tr)*split)].tolist()
                     
-                    #print(y_tr)
                     X_te = np.concatenate(X_va)
                     X_te = X_te.reshape(len(X_te),lag*len(column_list[0])).tolist()
                     y_te = np.concatenate(y_va).tolist()
 
                     X_val = X_tr.reshape(len(X_tr),lag*len(column_list[0]))[int(len(X_tr)*split):].tolist()
                     y_val = np.concatenate(y_tr)[int(len(X_tr)*split):].tolist()
+                    '''
+
+                    # remove the list wrapper
+                    X_tr = np.concatenate(X_tr)
+                    y_tr = np.concatenate(y_tr)
+                    X_va = np.concatenate(X_va)
+                    y_va = np.concatenate(y_va)
+
+                    # split validation
+                    X_ta = X_tr[:int(len(X_tr) * split), :, :]
+                    y_ta = y_tr[:int(len(y_tr) * split), :, :]
+
+                    X_val = X_tr[int(len(X_tr) * split):, :, :]
+                    y_val = y_tr[int(len(y_tr) * split):, :, :]
+
+                    X_te = X_va
+                    y_te = y_va
+
+                    ###############################
+                    # to replace the old code (Fuli)
+                    ###############################
+
+                    # generate metal id for embedding lookup
                     train_X_id_embedding = [i]*len(X_ta)
                     val_X_id_embedding = [i]*len(X_val)
-
                     test_X_id_embedding = [i]*len(X_te)
                     #train_y_id_embedding = [i]*len(y_tr)
                     #test_y_id_embedding = [i]*len(y_va)
+
                     final_X_tr+=X_ta
                     final_y_tr+=y_ta
                     final_X_te+=X_te
                     final_y_te+=y_te
                     final_X_val+=X_val
                     final_y_val+=y_val
+
                     final_train_X_embedding+=train_X_id_embedding
                     final_test_X_embedding+=test_X_id_embedding
                     final_val_X_embedding+=val_X_id_embedding
+
+                    # update metal index
                     i+=1
                 #final_X_tr = [np.transpose(arr) for arr in np.dstack(final_X_tr)]
                 #final_y_tr = [np.transpose(arr) for arr in np.dstack(final_y_tr)]

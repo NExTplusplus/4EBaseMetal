@@ -15,11 +15,11 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="trainer.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="trainer.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/train/trainer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1294">
-              <caret line="584" column="0" lean-forward="false" selection-start-line="584" selection-start-column="0" selection-end-line="584" selection-end-column="0" />
+            <state relative-caret-position="4144">
+              <caret line="595" column="51" lean-forward="false" selection-start-line="595" selection-start-column="51" selection-end-line="595" selection-end-column="51" />
               <folding>
                 <element signature="e#16#35#0" expanded="true" />
                 <element signature="e#859#16057#0" expanded="false" />
@@ -34,23 +34,6 @@
             <state relative-caret-position="135">
               <caret line="78" column="61" lean-forward="false" selection-start-line="78" selection-start-column="61" selection-end-line="78" selection-end-column="61" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="train_xgboost_online_v10_ex2.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/train/train_xgboost_online_v10_ex2.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret line="134" column="16" lean-forward="false" selection-start-line="134" selection-start-column="16" selection-end-line="134" selection-end-column="16" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-                <element signature="e#9313#11926#0" expanded="false" />
-                <element signature="e#11994#12894#0" expanded="false" />
-                <element signature="e#12965#13747#0" expanded="false" />
-                <element signature="e#13817#14597#0" expanded="false" />
-                <element signature="e#14648#18443#0" expanded="false" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -79,8 +62,9 @@
       <find>LME_dates</find>
       <find>rolling_half_year</find>
       <find>split</find>
-      <find>split_date</find>
       <find>column_lag_list = []</find>
+      <find>split_date</find>
+      <find>spot_list</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -97,9 +81,9 @@
         <option value="$PROJECT_DIR$/model/lstm.py" />
         <option value="$PROJECT_DIR$/train/train_lstm.py" />
         <option value="$PROJECT_DIR$/data/load_data_v16_torch.py" />
-        <option value="$PROJECT_DIR$/train/trainer.py" />
         <option value="$PROJECT_DIR$/data/load_data.py" />
         <option value="$PROJECT_DIR$/train/train_xgboost_online_v10_ex2.py" />
+        <option value="$PROJECT_DIR$/train/trainer.py" />
       </list>
     </option>
   </component>
@@ -502,17 +486,17 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/train/trainer.py</url>
-          <line>558</line>
+          <line>566</line>
           <option name="timeStamp" value="33" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/train/trainer.py</url>
-          <line>584</line>
+          <line>616</line>
           <option name="timeStamp" value="35" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/train/trainer.py</url>
-          <line>599</line>
+          <line>631</line>
           <option name="timeStamp" value="36" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -828,7 +812,7 @@
         <state relative-caret-position="384">
           <caret line="29" column="11" lean-forward="false" selection-start-line="29" selection-start-column="4" selection-end-line="29" selection-end-column="11" />
           <folding>
-            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#0#19#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -871,17 +855,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/train/trainer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1294">
-          <caret line="584" column="0" lean-forward="false" selection-start-line="584" selection-start-column="0" selection-end-line="584" selection-end-column="0" />
-          <folding>
-            <element signature="e#16#35#0" expanded="true" />
-            <element signature="e#859#16057#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/data/load_data.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="530">
@@ -895,7 +868,22 @@
         <state relative-caret-position="52">
           <caret line="113" column="37" lean-forward="true" selection-start-line="113" selection-start-column="37" selection-end-line="113" selection-end-column="37" />
           <folding>
+            <element signature="e#0#9#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/train/train_xgboost_online_v10_ex2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="134" column="16" lean-forward="false" selection-start-line="134" selection-start-column="16" selection-end-line="134" selection-end-column="16" />
+          <folding>
             <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#9313#11926#0" expanded="false" />
+            <element signature="e#11994#12894#0" expanded="false" />
+            <element signature="e#12965#13747#0" expanded="false" />
+            <element signature="e#13817#14597#0" expanded="false" />
+            <element signature="e#14648#18443#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -908,17 +896,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/train/train_xgboost_online_v10_ex2.py">
+    <entry file="file://$PROJECT_DIR$/train/trainer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="134" column="16" lean-forward="false" selection-start-line="134" selection-start-column="16" selection-end-line="134" selection-end-column="16" />
+        <state relative-caret-position="4144">
+          <caret line="595" column="51" lean-forward="false" selection-start-line="595" selection-start-column="51" selection-end-line="595" selection-end-column="51" />
           <folding>
-            <element signature="e#0#9#0" expanded="true" />
-            <element signature="e#9313#11926#0" expanded="false" />
-            <element signature="e#11994#12894#0" expanded="false" />
-            <element signature="e#12965#13747#0" expanded="false" />
-            <element signature="e#13817#14597#0" expanded="false" />
-            <element signature="e#14648#18443#0" expanded="false" />
+            <element signature="e#16#35#0" expanded="true" />
+            <element signature="e#859#16057#0" expanded="false" />
           </folding>
         </state>
       </provider>
