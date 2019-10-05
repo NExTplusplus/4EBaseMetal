@@ -113,7 +113,8 @@ def torch_labelling(arguments):
     for ground in arguments['ground_truth_columns']:
         #print(ground)
         labels = copy(time_series[ground])
-        #print(labels)
+        # print(labels)
+        # print('+++++++++++++++')
         '''
         old code from Jiangeng
         if type(labels)==np.ndarray:
@@ -123,11 +124,19 @@ def torch_labelling(arguments):
         '''
 
         price_changes = labels.shift(-arguments['horizon']) - labels
-        labels.values = np.true_divide(price_changes.values, labels.values)
+        # print(price_changes.divide(labels))
+        labels = price_changes.divide(labels)
+
+        # scaling the label with standard division
+        print(np.nanstd(labels.values))
+        labels = labels.div(3 * np.nanstd(labels.values))
+
+        # print('----------------')
+        # labels.values[:] = np.true_divide(price_changes.values[:], labels.values[:])
         ###############################
         # to replace the old code (Fuli)
         ###############################
-        #print(labels)
+        # print(labels)
         #if type(spot_price)== np.ndarray:
         #    spot_price = np.log(np.true_divide(spot_price[1:], spot_price[:-1]))
         #else:
@@ -245,9 +254,14 @@ def spot_price_normalization(arguments):
     spot_price = copy(time_series['spot_price'])
     if type(spot_price)== np.ndarray:
         spot_price = np.log(np.true_divide(spot_price[1:], spot_price[:-1]))
+        # scale the data
+        spot_price = spot_price * (1.0 / 3.0 / np.nanstd(spot_price))
     else:
         spot_price.values[1:] = np.log(np.true_divide(spot_price.values[1:],
                                                 spot_price.values[:-1]))
+        # scale the data
+        spot_price = spot_price.div(3 * np.nanstd(spot_price.values[1:]))
+
     spot_price = spot_price.rename("Spot_price")
     ans.append(spot_price)
     return ans

@@ -277,7 +277,7 @@ class Trainer:
 
             '''start train'''
             net.train()
-            start = time.time()
+            # start = time.time()
             print('current epoch:', epoch+1)
             
             i = 0
@@ -308,21 +308,23 @@ class Trainer:
                 optimizer.step()                
                 loss_sum += loss.detach()*(batch_end-i)
                 i = batch_end
-            end = time.time()
+            # end = time.time()
             train_loss = loss_sum/train_size
-            print("train loss is {} with time {}".format(train_loss, end-start))
-#            train_loss_list.append(float(train_loss))
+            print("train loss is {:.6f}".format(train_loss))
+            #train_loss_list.append(float(train_loss))
             #memory_usage()
             
             if_eval_train = 1
 
             #start eval
-            
-            start = time.time()
+
+            # evaluate on validataion set
+            # start = time.time()
             net.eval()
-            i = 0
             loss_sum = 0
             if if_eval_train:
+                '''
+                old code from Jiangeng
                 while i < val_size:
                     batch_end = i + batch_size
                     if batch_end > val_size:
@@ -339,25 +341,42 @@ class Trainer:
                     loss_sum += loss.detach()*(batch_end-i)
                     i = batch_end
                     current_val_pred += list(val_output.detach().view(-1,))
+                '''
 
-            current_val_class = [1 if ele>thresh else 0 for ele in current_val_pred]
+                val_X = torch.from_numpy(self.val_X).float()
+                val_Y = torch.from_numpy(self.val_y).float()
+                var_x_val_id = torch.LongTensor(np.array(self.val_embedding))
+                # print(val_X.shape)
+                # print(var_x_val_id.shape)
+                val_output = net(val_X, var_x_val_id)
+                loss = loss_func(val_output, val_Y)
+                loss_sum = loss.detach()
+                current_val_pred = list(val_output.detach().view(-1, ))
+                # print(np.min(current_val_pred), np.max(current_val_pred))
+                ###############################
+                # to replace the old code (Fuli)
+                ###############################
 
-            val_loss = loss_sum/val_size
-            val_loss_list.append(float(val_loss))
+                current_val_class = [1 if ele>thresh else 0 for ele in current_val_pred]
+
+                val_loss = loss_sum
+                val_loss_list.append(float(val_loss))
+
+                val_f1 = f1_score(val_y_class, current_val_class)
+                val_f1_list.append(val_f1)
+
+                val_acc = accuracy_score(val_y_class, current_val_class)
+                val_acc_list.append(val_acc)
+                # end = time.time()
             
-            val_f1 = f1_score(val_y_class, current_val_class)
-            val_f1_list.append(val_f1)
+                print('average val loss: {:.6f}, f1_score: {:.4f}, accuracy: {:.4f}'.format(val_loss, val_f1, val_acc))
             
-            val_acc = accuracy_score(val_y_class, current_val_class)
-            val_acc_list.append(val_acc)
-            end = time.time()
-            
-            print('the average val loss is: {}, f1_score is {}, accuracy is {} with time: {}'.format(val_loss, val_f1, val_acc, end-start))
-            
-            start = time.time()
-            
-            i = 0
-            loss_sum = 0
+            # start = time.time()
+
+            # evaluate on test set
+            # i = 0
+            # loss_sum = 0
+            '''
             while i < test_size:
                 batch_end = i + batch_size
                 if batch_end > test_size:
@@ -373,10 +392,20 @@ class Trainer:
                 loss_sum += loss.detach()*(batch_end-i)
                 i = batch_end
                 current_test_pred += list(test_output.detach().view(-1,))
+            '''
+            test_X = torch.from_numpy(self.test_X).float()
+            test_Y = torch.from_numpy(self.test_y).float()
+            var_x_test_id = torch.LongTensor(np.array(self.test_embedding))
+
+            test_output = net(test_X, var_x_test_id)
+            loss = loss_func(test_output, test_Y)
+            loss_sum = loss.detach()
+            current_test_pred = list(test_output.detach().view(-1,))
+            print(np.min(current_test_pred), np.max(current_test_pred))
             
             current_test_class = [1 if ele>thresh else 0 for ele in current_test_pred]    
             
-            test_loss = loss_sum/test_size
+            test_loss = loss_sum
             test_loss_list.append(float(test_loss))
             
             test_f1 = f1_score(test_y_class, current_test_class)
@@ -385,10 +414,11 @@ class Trainer:
             test_acc = accuracy_score(test_y_class, current_test_class)
             test_acc_list.append(test_acc)                        
             
-            end = time.time()
+            # end = time.time()
 
-            print('the average test loss is {}, f1_score is {}, accurary is {}, with time: {}'.format(test_loss, test_f1, test_acc,end-start))
-            
+            print('average test loss: {:.6f}, f1_score: {:.4f}, accuracy: {:.4f}'.format(test_loss, test_f1, test_acc))
+
+            '''
             #if (epoch+1)%10 == 0:
             #    current_val_pred = np.array(current_val_pred).reshape(self.case_number,-1)
             #    current_test_pred = np.array(current_test_pred).reshape(self.case_number,-1)
@@ -421,6 +451,7 @@ class Trainer:
         #out_pred_test=0
         #out_loss=0
         #return out_pred_val, out_pred_test, out_loss
+        '''
 
 
 if __name__ == '__main__':
@@ -429,7 +460,7 @@ if __name__ == '__main__':
         '-e', '--epoch', type=int, default=30,
         help='the number of epochs')
     parser.add_argument(
-        '-b', '--batch', type=int, default=256,
+        '-b', '--batch', type=int, default=1024,
         help='the mini-batch size')
     parser.add_argument(
         '-i', '--interval', type=int, default=1,
@@ -501,6 +532,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if args.ground_truth =='None':
         args.ground_truth = None
+
+    print(args)
 
     os.chdir(os.path.abspath(sys.path[1]))
     num_epochs = args.epoch
@@ -686,8 +719,21 @@ if __name__ == '__main__':
                 #print(final_X_tr)
                 print('Dataset statistic: #examples')
                 print('Train:', len(final_X_tr), len(final_y_tr), len(final_train_X_embedding))
+                print(np.max(final_X_tr), np.min(final_X_tr), np.max(final_y_tr), np.min(final_y_tr))
                 print('Validation:', len(final_X_val), len(final_y_val), len(final_val_X_embedding))
                 print('Testing:', len(final_X_te), len(final_y_te), len(final_test_X_embedding))
+
+                # # scaling price features and labels
+                # y_scaler = np.nanstd(final_y_tr) * 3
+                # final_y_tr /= y_scaler
+                # final_y_val /= y_scaler
+                # final_y_te /= y_scaler
+                #
+                # temp_value = final_X_tr[:,-1,-1]
+                # x_scaler = np.nanstd(final_X_tr[:,-1,-1]) * 3
+                # final_X_tr[:, :, -1] = final_X_tr[:, :, -1] / x_scaler
+                # final_X_val[:, :, -1] = final_X_val[:, :, -1] / x_scaler
+                # final_X_te[:, :, -1] = final_X_te[:, :, -1] / x_scaler
 
                 '''
                 old code from Jiangeng
