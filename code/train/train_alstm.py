@@ -457,7 +457,7 @@ class Trainer:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Train the bi-LSTM + attention-based model on stock')
     parser.add_argument(
-        '-e', '--epoch', type=int, default=30,
+        '-e', '--epoch', type=int, default=1,
         help='the number of epochs')
     parser.add_argument(
         '-b', '--batch', type=int, default=1024,
