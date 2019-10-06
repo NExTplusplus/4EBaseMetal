@@ -120,7 +120,7 @@ if __name__ == '__main__':
                 X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
                 test_dataframe = pd.DataFrame(X_va,columns=column_lag_list)
                 test_X = test_dataframe.loc[:,column_lag_list] 
-                result_v5 = np.loadtxt(args.ground_truth[0]+"_horizon_"+str(horizon)+"_"+split_date[1]+"_v5"+".txt")
+                result_v5 = np.loadtxt(args.ground_truth[0]+"_horizon_"+str(horizon)+"_"+split_date[1]+"_v5"+"_weight_4"+".txt")
                 final_list_v5 = []
                 v5_voting_prob_list=[]
                 for j in range(len(result_v5)):
