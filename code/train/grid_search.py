@@ -22,7 +22,7 @@ def _gen_grid_search_all_para(parameter_combinations, paras, para_values,
 
 
 def grid_search_alstm(sel_paras, cand_values, init_paras, script='code/train/train_alstm.py',
-                      log_file='./tune.log'):
+                      log_file='./tune.log', steps=5):
     # init_paras = model_paras
     print('selected parameters:', sel_paras)
     print('parameter candidates:', cand_values)
@@ -40,6 +40,7 @@ def grid_search_alstm(sel_paras, cand_values, init_paras, script='code/train/tra
              '--drop_out', str(cur_paras['drop_out']),
              '--hidden', str(cur_paras['hidden']),
              '--embedding_size', str(cur_paras['embedding_size']),
+             '--steps', str(steps)
              ]
         )
         print('\n\t\t', cur_paras)

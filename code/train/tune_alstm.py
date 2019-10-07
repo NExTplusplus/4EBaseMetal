@@ -19,6 +19,8 @@ if __name__ == '__main__':
                         help='window size for features')
     parser.add_argument('--batch', type=int, default=512,
                         help='batch size')
+    parser.add_argument('--steps', type=int, default=5,
+                        help='time horizon')
 
     args = parser.parse_args()
     print(args)
@@ -40,4 +42,4 @@ if __name__ == '__main__':
     }
 
     grid_search_alstm(selected_parameters, parameter_values, init_para,
-                script=args.script, log_file=args.log)
+                script=args.script, log_file=args.log, steps=args.steps)

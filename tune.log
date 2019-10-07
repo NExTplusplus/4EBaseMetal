@@ -1,0 +1,3122 @@
+
+		{"drop_out": 0.0, "hidden": 30, "embedding_size": 5, "batch": 512, "lag": 3}
+Namespace(action='train', attention_size=2, batch=512, data_configure_file='exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf', drop_out=0.0, embedding_size=5, epoch=1, ground_truth='LME_Co_Spot', hidden_state=30, interval=1, lag=3, lambd=0, lrate=0.001, model='', save_loss=0, save_prediction=0, source='NExT', split=0.9, steps=5, test=False, torch=1, version='v10')
+LME_Co_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03312139444942249
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Al_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.031046504542578755
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Le_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04484422194216623
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ni_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04376528519386216
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Zi_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03994395097372798
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ti_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03861206714459741
+['2009-10-09', '2014-07-01', '2014-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.4588051 -1.9889958 2.1276393 -1.722016
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 0.00010657310485839844
+the split date is 2014-07-01
+net initializing with time: 0.002252817153930664
+preparing training and testing date with time: 0.0025174617767333984
+current epoch: 1
+train loss is 0.146870
+average val loss: 0.059882, f1_score: 0.5988, accuracy: 0.5364
+-0.17601834 0.28536737
+average test loss: 0.059777, f1_score: 0.5322, accuracy: 0.4973
+LME_Co_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03206970750130583
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Al_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.029288993583389832
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Le_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.041860005318896366
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ni_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.04183159286568789
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Zi_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03758229863025612
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ti_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03726925577064554
+['2010-04-14', '2015-01-02', '2015-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5136144 -2.062028 2.1974127 -1.7840602
+Validation: 714 714 714
+Testing: 714 714 714
+pre-processing time: 0.0002932548522949219
+the split date is 2015-01-01
+net initializing with time: 0.0014033317565917969
+preparing training and testing date with time: 0.0025103092193603516
+current epoch: 1
+train loss is 0.412067
+average val loss: 0.076548, f1_score: 0.4564, accuracy: 0.4496
+-0.28695142 0.4480164
+average test loss: 0.105506, f1_score: 0.5662, accuracy: 0.5000
+LME_Co_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02997344765833213
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Al_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02793208692530724
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Le_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03814523541321009
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ni_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.038653520996412255
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Zi_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03481439408931634
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ti_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03690210477819182
+['2010-10-11', '2015-07-01', '2015-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.5817945 -1.8517256 2.3510935 -1.8018104
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 0.00028777122497558594
+the split date is 2015-07-01
+net initializing with time: 0.0013844966888427734
+preparing training and testing date with time: 0.0025174617767333984
+current epoch: 1
+train loss is 0.396830
+average val loss: 0.116257, f1_score: 0.5392, accuracy: 0.4398
+-0.21054278 0.31293014
+average test loss: 0.119715, f1_score: 0.5818, accuracy: 0.4837
+LME_Co_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.029520812219591956
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Al_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.027172919363397382
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Le_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03647215035180201
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ni_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03823442808850852
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Zi_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.033532646686275584
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ti_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.0362838571540412
+['2011-04-12', '2016-01-04', '2016-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5982225 -1.870957 2.3871424 -1.8325118
+Validation: 714 714 714
+Testing: 720 720 720
+pre-processing time: 9.441375732421875e-05
+the split date is 2016-01-01
+net initializing with time: 0.0013849735260009766
+preparing training and testing date with time: 0.0024781227111816406
+current epoch: 1
+train loss is 0.284878
+average val loss: 0.144068, f1_score: 0.0805, accuracy: 0.6162
+-0.5492154 0.26567566
+average test loss: 0.190195, f1_score: 0.1194, accuracy: 0.4264
+LME_Co_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.029566512271663223
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Al_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.026761764990256048
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Le_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03570850264215912
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ni_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.038054341335321616
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Zi_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.032924238207902023
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ti_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03499746907365794
+['2011-10-11', '2016-07-01', '2016-12-21']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+2.232149 -1.7015269 2.3834527 -1.1833065
+Validation: 720 720 720
+Testing: 732 732 732
+pre-processing time: 9.369850158691406e-05
+the split date is 2016-07-01
+net initializing with time: 0.0013804435729980469
+preparing training and testing date with time: 0.0025205612182617188
+current epoch: 1
+train loss is 0.128881
+average val loss: 0.133681, f1_score: 0.6825, accuracy: 0.5542
+-0.2649336 0.4074368
+average test loss: 0.122230, f1_score: 0.6625, accuracy: 0.5560
+
+		{"drop_out": 0.0, "hidden": 30, "embedding_size": 5, "batch": 1024, "lag": 3}
+Namespace(action='train', attention_size=2, batch=1024, data_configure_file='exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf', drop_out=0.0, embedding_size=5, epoch=1, ground_truth='LME_Co_Spot', hidden_state=30, interval=1, lag=3, lambd=0, lrate=0.001, model='', save_loss=0, save_prediction=0, source='NExT', split=0.9, steps=5, test=False, torch=1, version='v10')
+LME_Co_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03312139444942249
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Al_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.031046504542578755
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Le_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04484422194216623
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ni_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04376528519386216
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Zi_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03994395097372798
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ti_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03861206714459741
+['2009-10-09', '2014-07-01', '2014-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.4588051 -1.9889958 2.1276393 -1.722016
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 0.00010538101196289062
+the split date is 2014-07-01
+net initializing with time: 0.002237081527709961
+preparing training and testing date with time: 0.002144336700439453
+current epoch: 1
+train loss is 0.155896
+average val loss: 0.071553, f1_score: 0.6457, accuracy: 0.5434
+-0.17710611 0.5241329
+average test loss: 0.095212, f1_score: 0.5501, accuracy: 0.4458
+LME_Co_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03206970750130583
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Al_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.029288993583389832
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Le_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.041860005318896366
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ni_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.04183159286568789
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Zi_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03758229863025612
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ti_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03726925577064554
+['2010-04-14', '2015-01-02', '2015-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5136144 -2.062028 2.1974127 -1.7840602
+Validation: 714 714 714
+Testing: 714 714 714
+pre-processing time: 0.00010061264038085938
+the split date is 2015-01-01
+net initializing with time: 0.0013997554779052734
+preparing training and testing date with time: 0.0021610260009765625
+current epoch: 1
+train loss is 0.536971
+average val loss: 0.261266, f1_score: 0.0000, accuracy: 0.5938
+-0.7963932 -0.014375448
+average test loss: 0.301616, f1_score: 0.0000, accuracy: 0.5826
+LME_Co_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02997344765833213
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Al_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02793208692530724
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Le_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03814523541321009
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ni_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.038653520996412255
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Zi_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03481439408931634
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ti_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03690210477819182
+['2010-10-11', '2015-07-01', '2015-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.5817945 -1.8517256 2.3510935 -1.8018104
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 0.00029397010803222656
+the split date is 2015-07-01
+net initializing with time: 0.0013682842254638672
+preparing training and testing date with time: 0.002100229263305664
+current epoch: 1
+train loss is 0.514929
+average val loss: 0.315359, f1_score: 0.0000, accuracy: 0.5770
+-0.8213743 -0.09563047
+average test loss: 0.322826, f1_score: 0.0000, accuracy: 0.5908
+LME_Co_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.029520812219591956
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Al_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.027172919363397382
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Le_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03647215035180201
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ni_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03823442808850852
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Zi_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.033532646686275584
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ti_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.0362838571540412
+['2011-04-12', '2016-01-04', '2016-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5982225 -1.870957 2.3871424 -1.8325118
+Validation: 714 714 714
+Testing: 720 720 720
+pre-processing time: 9.679794311523438e-05
+the split date is 2016-01-01
+net initializing with time: 0.0014066696166992188
+preparing training and testing date with time: 0.0021674633026123047
+current epoch: 1
+train loss is 0.334207
+average val loss: 0.187504, f1_score: 0.5474, accuracy: 0.4188
+-0.1680285 0.6855105
+average test loss: 0.154771, f1_score: 0.7113, accuracy: 0.5625
+LME_Co_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.029566512271663223
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Al_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.026761764990256048
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Le_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03570850264215912
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ni_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.038054341335321616
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Zi_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.032924238207902023
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ti_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03499746907365794
+['2011-10-11', '2016-07-01', '2016-12-21']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+2.232149 -1.7015269 2.3834527 -1.1833065
+Validation: 720 720 720
+Testing: 732 732 732
+pre-processing time: 9.34600830078125e-05
+the split date is 2016-07-01
+net initializing with time: 0.0013284683227539062
+preparing training and testing date with time: 0.0020923614501953125
+current epoch: 1
+train loss is 0.189495
+average val loss: 0.138397, f1_score: 0.7043, accuracy: 0.5639
+-0.22783148 0.47038758
+average test loss: 0.128955, f1_score: 0.6903, accuracy: 0.5587
+
+		{"drop_out": 0.2, "hidden": 30, "embedding_size": 5, "batch": 512, "lag": 3}
+Namespace(action='train', attention_size=2, batch=512, data_configure_file='exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf', drop_out=0.2, embedding_size=5, epoch=1, ground_truth='LME_Co_Spot', hidden_state=30, interval=1, lag=3, lambd=0, lrate=0.001, model='', save_loss=0, save_prediction=0, source='NExT', split=0.9, steps=5, test=False, torch=1, version='v10')
+LME_Co_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03312139444942249
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Al_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.031046504542578755
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Le_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04484422194216623
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ni_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04376528519386216
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Zi_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03994395097372798
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ti_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03861206714459741
+['2009-10-09', '2014-07-01', '2014-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.4588051 -1.9889958 2.1276393 -1.722016
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 0.00010275840759277344
+the split date is 2014-07-01
+net initializing with time: 0.002212047576904297
+preparing training and testing date with time: 0.0019299983978271484
+current epoch: 1
+train loss is 0.154051
+average val loss: 0.063138, f1_score: 0.6862, accuracy: 0.5644
+-0.1134051 0.3448267
+average test loss: 0.073205, f1_score: 0.5789, accuracy: 0.4539
+LME_Co_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03206970750130583
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Al_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.029288993583389832
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Le_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.041860005318896366
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ni_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.04183159286568789
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Zi_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03758229863025612
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ti_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03726925577064554
+['2010-04-14', '2015-01-02', '2015-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5136144 -2.062028 2.1974127 -1.7840602
+Validation: 714 714 714
+Testing: 714 714 714
+pre-processing time: 0.0002932548522949219
+the split date is 2015-01-01
+net initializing with time: 0.0013575553894042969
+preparing training and testing date with time: 0.0019004344940185547
+current epoch: 1
+train loss is 0.210759
+average val loss: 0.141171, f1_score: 0.5823, accuracy: 0.4454
+-0.091766626 0.5235314
+average test loss: 0.176817, f1_score: 0.5899, accuracy: 0.4412
+LME_Co_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02997344765833213
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Al_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02793208692530724
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Le_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03814523541321009
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ni_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.038653520996412255
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Zi_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03481439408931634
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ti_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03690210477819182
+['2010-10-11', '2015-07-01', '2015-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.5817945 -1.8517256 2.3510935 -1.8018104
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 9.417533874511719e-05
+the split date is 2015-07-01
+net initializing with time: 0.0013556480407714844
+preparing training and testing date with time: 0.001932382583618164
+current epoch: 1
+train loss is 0.150447
+average val loss: 0.109948, f1_score: 0.2102, accuracy: 0.5896
+-0.39394635 0.15708655
+average test loss: 0.122019, f1_score: 0.2067, accuracy: 0.5840
+LME_Co_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.029520812219591956
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Al_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.027172919363397382
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Le_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03647215035180201
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ni_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03823442808850852
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Zi_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.033532646686275584
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ti_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.0362838571540412
+['2011-04-12', '2016-01-04', '2016-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5982225 -1.870957 2.3871424 -1.8325118
+Validation: 714 714 714
+Testing: 720 720 720
+pre-processing time: 9.560585021972656e-05
+the split date is 2016-01-01
+net initializing with time: 0.0013642311096191406
+preparing training and testing date with time: 0.0019142627716064453
+current epoch: 1
+train loss is 0.201050
+average val loss: 0.147813, f1_score: 0.0000, accuracy: 0.6134
+-0.5418752 0.04145202
+average test loss: 0.225439, f1_score: 0.0145, accuracy: 0.4333
+LME_Co_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.029566512271663223
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Al_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.026761764990256048
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Le_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03570850264215912
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ni_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.038054341335321616
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Zi_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.032924238207902023
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ti_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03499746907365794
+['2011-10-11', '2016-07-01', '2016-12-21']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+2.232149 -1.7015269 2.3834527 -1.1833065
+Validation: 720 720 720
+Testing: 732 732 732
+pre-processing time: 0.00031495094299316406
+the split date is 2016-07-01
+net initializing with time: 0.0013589859008789062
+preparing training and testing date with time: 0.0018665790557861328
+current epoch: 1
+train loss is 0.158739
+average val loss: 0.142195, f1_score: 0.5984, accuracy: 0.5264
+-0.45928982 0.15739983
+average test loss: 0.136360, f1_score: 0.5291, accuracy: 0.4918
+
+		{"drop_out": 0.2, "hidden": 30, "embedding_size": 5, "batch": 1024, "lag": 3}
+Namespace(action='train', attention_size=2, batch=1024, data_configure_file='exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf', drop_out=0.2, embedding_size=5, epoch=1, ground_truth='LME_Co_Spot', hidden_state=30, interval=1, lag=3, lambd=0, lrate=0.001, model='', save_loss=0, save_prediction=0, source='NExT', split=0.9, steps=5, test=False, torch=1, version='v10')
+LME_Co_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03312139444942249
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Al_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.031046504542578755
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Le_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04484422194216623
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ni_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04376528519386216
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Zi_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03994395097372798
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ti_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03861206714459741
+['2009-10-09', '2014-07-01', '2014-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.4588051 -1.9889958 2.1276393 -1.722016
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 0.00010466575622558594
+the split date is 2014-07-01
+net initializing with time: 0.002237081527709961
+preparing training and testing date with time: 0.0019583702087402344
+current epoch: 1
+train loss is 0.161466
+average val loss: 0.066769, f1_score: 0.6517, accuracy: 0.5448
+-0.16484073 0.45153415
+average test loss: 0.084860, f1_score: 0.5551, accuracy: 0.4526
+LME_Co_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03206970750130583
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Al_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.029288993583389832
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Le_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.041860005318896366
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ni_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.04183159286568789
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Zi_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03758229863025612
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ti_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03726925577064554
+['2010-04-14', '2015-01-02', '2015-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5136144 -2.062028 2.1974127 -1.7840602
+Validation: 714 714 714
+Testing: 714 714 714
+pre-processing time: 0.0003037452697753906
+the split date is 2015-01-01
+net initializing with time: 0.0013623237609863281
+preparing training and testing date with time: 0.0019371509552001953
+current epoch: 1
+train loss is 0.336920
+average val loss: 0.091808, f1_score: 0.1280, accuracy: 0.5994
+-0.6017942 0.18921044
+average test loss: 0.143942, f1_score: 0.0947, accuracy: 0.5714
+LME_Co_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02997344765833213
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Al_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02793208692530724
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Le_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03814523541321009
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ni_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.038653520996412255
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Zi_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03481439408931634
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ti_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03690210477819182
+['2010-10-11', '2015-07-01', '2015-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.5817945 -1.8517256 2.3510935 -1.8018104
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 9.632110595703125e-05
+the split date is 2015-07-01
+net initializing with time: 0.0013589859008789062
+preparing training and testing date with time: 0.0018961429595947266
+current epoch: 1
+train loss is 0.224770
+average val loss: 0.142528, f1_score: 0.6010, accuracy: 0.4664
+-0.17391367 0.44754755
+average test loss: 0.162394, f1_score: 0.5644, accuracy: 0.4268
+LME_Co_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.029520812219591956
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Al_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.027172919363397382
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Le_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03647215035180201
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ni_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03823442808850852
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Zi_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.033532646686275584
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ti_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.0362838571540412
+['2011-04-12', '2016-01-04', '2016-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5982225 -1.870957 2.3871424 -1.8325118
+Validation: 714 714 714
+Testing: 720 720 720
+pre-processing time: 9.870529174804688e-05
+the split date is 2016-01-01
+net initializing with time: 0.0013744831085205078
+preparing training and testing date with time: 0.0019028186798095703
+current epoch: 1
+train loss is 0.318977
+average val loss: 0.112849, f1_score: 0.3713, accuracy: 0.5826
+-0.3935827 0.17117447
+average test loss: 0.147201, f1_score: 0.2524, accuracy: 0.4653
+LME_Co_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.029566512271663223
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Al_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.026761764990256048
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Le_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03570850264215912
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ni_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.038054341335321616
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Zi_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.032924238207902023
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ti_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03499746907365794
+['2011-10-11', '2016-07-01', '2016-12-21']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+2.232149 -1.7015269 2.3834527 -1.1833065
+Validation: 720 720 720
+Testing: 732 732 732
+pre-processing time: 9.989738464355469e-05
+the split date is 2016-07-01
+net initializing with time: 0.00136566162109375
+preparing training and testing date with time: 0.0019450187683105469
+current epoch: 1
+train loss is 0.171472
+average val loss: 0.158649, f1_score: 0.2948, accuracy: 0.4486
+-0.5216538 0.16759032
+average test loss: 0.153607, f1_score: 0.2312, accuracy: 0.4549
+
+		{"drop_out": 0.4, "hidden": 30, "embedding_size": 5, "batch": 512, "lag": 3}
+Namespace(action='train', attention_size=2, batch=512, data_configure_file='exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf', drop_out=0.4, embedding_size=5, epoch=1, ground_truth='LME_Co_Spot', hidden_state=30, interval=1, lag=3, lambd=0, lrate=0.001, model='', save_loss=0, save_prediction=0, source='NExT', split=0.9, steps=5, test=False, torch=1, version='v10')
+LME_Co_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03312139444942249
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Al_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.031046504542578755
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Le_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04484422194216623
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ni_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04376528519386216
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Zi_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03994395097372798
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ti_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03861206714459741
+['2009-10-09', '2014-07-01', '2014-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.4588051 -1.9889958 2.1276393 -1.722016
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 0.00010752677917480469
+the split date is 2014-07-01
+net initializing with time: 0.0022575855255126953
+preparing training and testing date with time: 0.0018970966339111328
+current epoch: 1
+train loss is 0.167669
+average val loss: 0.082425, f1_score: 0.7214, accuracy: 0.5672
+-0.03840314 0.41826615
+average test loss: 0.103863, f1_score: 0.5835, accuracy: 0.4119
+LME_Co_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03206970750130583
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Al_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.029288993583389832
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Le_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.041860005318896366
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ni_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.04183159286568789
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Zi_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03758229863025612
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ti_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03726925577064554
+['2010-04-14', '2015-01-02', '2015-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5136144 -2.062028 2.1974127 -1.7840602
+Validation: 714 714 714
+Testing: 714 714 714
+pre-processing time: 0.0002930164337158203
+the split date is 2015-01-01
+net initializing with time: 0.0013613700866699219
+preparing training and testing date with time: 0.0018656253814697266
+current epoch: 1
+train loss is 0.226996
+average val loss: 0.128889, f1_score: 0.5736, accuracy: 0.4440
+-0.11543151 0.51028013
+average test loss: 0.163761, f1_score: 0.5860, accuracy: 0.4440
+LME_Co_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02997344765833213
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Al_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02793208692530724
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Le_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03814523541321009
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ni_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.038653520996412255
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Zi_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03481439408931634
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ti_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03690210477819182
+['2010-10-11', '2015-07-01', '2015-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.5817945 -1.8517256 2.3510935 -1.8018104
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 0.00029540061950683594
+the split date is 2015-07-01
+net initializing with time: 0.0013666152954101562
+preparing training and testing date with time: 0.0018565654754638672
+current epoch: 1
+train loss is 0.163011
+average val loss: 0.159945, f1_score: 0.0133, accuracy: 0.5840
+-0.53485036 -0.008252919
+average test loss: 0.169976, f1_score: 0.0000, accuracy: 0.5908
+LME_Co_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.029520812219591956
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Al_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.027172919363397382
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Le_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03647215035180201
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ni_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03823442808850852
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Zi_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.033532646686275584
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ti_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.0362838571540412
+['2011-04-12', '2016-01-04', '2016-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5982225 -1.870957 2.3871424 -1.8325118
+Validation: 714 714 714
+Testing: 720 720 720
+pre-processing time: 0.0001010894775390625
+the split date is 2016-01-01
+net initializing with time: 0.0013930797576904297
+preparing training and testing date with time: 0.001825094223022461
+current epoch: 1
+train loss is 0.192503
+average val loss: 0.144209, f1_score: 0.0000, accuracy: 0.6134
+-0.5123028 0.041941762
+average test loss: 0.216391, f1_score: 0.0097, accuracy: 0.4319
+LME_Co_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.029566512271663223
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Al_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.026761764990256048
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Le_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03570850264215912
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ni_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.038054341335321616
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Zi_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.032924238207902023
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ti_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03499746907365794
+['2011-10-11', '2016-07-01', '2016-12-21']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+2.232149 -1.7015269 2.3834527 -1.1833065
+Validation: 720 720 720
+Testing: 732 732 732
+pre-processing time: 9.751319885253906e-05
+the split date is 2016-07-01
+net initializing with time: 0.0014095306396484375
+preparing training and testing date with time: 0.0019135475158691406
+current epoch: 1
+train loss is 0.167720
+average val loss: 0.153580, f1_score: 0.4600, accuracy: 0.4653
+-0.51975876 0.122460514
+average test loss: 0.144380, f1_score: 0.4031, accuracy: 0.4699
+
+		{"drop_out": 0.4, "hidden": 30, "embedding_size": 5, "batch": 1024, "lag": 3}
+Namespace(action='train', attention_size=2, batch=1024, data_configure_file='exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf', drop_out=0.4, embedding_size=5, epoch=1, ground_truth='LME_Co_Spot', hidden_state=30, interval=1, lag=3, lambd=0, lrate=0.001, model='', save_loss=0, save_prediction=0, source='NExT', split=0.9, steps=5, test=False, torch=1, version='v10')
+LME_Co_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03312139444942249
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Al_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.031046504542578755
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Le_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04484422194216623
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ni_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04376528519386216
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Zi_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03994395097372798
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ti_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03861206714459741
+['2009-10-09', '2014-07-01', '2014-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.4588051 -1.9889958 2.1276393 -1.722016
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 0.00010418891906738281
+the split date is 2014-07-01
+net initializing with time: 0.0022382736206054688
+preparing training and testing date with time: 0.0019483566284179688
+current epoch: 1
+train loss is 0.171497
+average val loss: 0.077171, f1_score: 0.7120, accuracy: 0.5728
+-0.039097592 0.43571162
+average test loss: 0.105510, f1_score: 0.5850, accuracy: 0.4214
+LME_Co_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03206970750130583
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Al_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.029288993583389832
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Le_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.041860005318896366
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ni_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.04183159286568789
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Zi_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03758229863025612
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ti_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03726925577064554
+['2010-04-14', '2015-01-02', '2015-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5136144 -2.062028 2.1974127 -1.7840602
+Validation: 714 714 714
+Testing: 714 714 714
+pre-processing time: 0.00028634071350097656
+the split date is 2015-01-01
+net initializing with time: 0.0013582706451416016
+preparing training and testing date with time: 0.0019123554229736328
+current epoch: 1
+train loss is 0.332756
+average val loss: 0.061699, f1_score: 0.4702, accuracy: 0.5770
+-0.4196668 0.31332105
+average test loss: 0.108944, f1_score: 0.4079, accuracy: 0.5406
+LME_Co_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02997344765833213
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Al_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02793208692530724
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Le_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03814523541321009
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ni_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.038653520996412255
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Zi_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03481439408931634
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ti_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03690210477819182
+['2010-10-11', '2015-07-01', '2015-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.5817945 -1.8517256 2.3510935 -1.8018104
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 0.00031495094299316406
+the split date is 2015-07-01
+net initializing with time: 0.0013916492462158203
+preparing training and testing date with time: 0.001956462860107422
+current epoch: 1
+train loss is 0.227089
+average val loss: 0.178182, f1_score: 0.5951, accuracy: 0.4398
+-0.07713777 0.49685615
+average test loss: 0.191559, f1_score: 0.5734, accuracy: 0.4133
+LME_Co_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.029520812219591956
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Al_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.027172919363397382
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Le_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03647215035180201
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ni_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03823442808850852
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Zi_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.033532646686275584
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ti_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.0362838571540412
+['2011-04-12', '2016-01-04', '2016-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5982225 -1.870957 2.3871424 -1.8325118
+Validation: 714 714 714
+Testing: 720 720 720
+pre-processing time: 9.751319885253906e-05
+the split date is 2016-01-01
+net initializing with time: 0.001352548599243164
+preparing training and testing date with time: 0.0018961429595947266
+current epoch: 1
+train loss is 0.287728
+average val loss: 0.231857, f1_score: 0.0000, accuracy: 0.6134
+-0.72566986 -0.16078597
+average test loss: 0.364705, f1_score: 0.0000, accuracy: 0.4306
+LME_Co_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.029566512271663223
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Al_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.026761764990256048
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Le_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03570850264215912
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ni_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.038054341335321616
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Zi_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.032924238207902023
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ti_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03499746907365794
+['2011-10-11', '2016-07-01', '2016-12-21']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+2.232149 -1.7015269 2.3834527 -1.1833065
+Validation: 720 720 720
+Testing: 732 732 732
+pre-processing time: 0.0005910396575927734
+the split date is 2016-07-01
+net initializing with time: 0.001361846923828125
+preparing training and testing date with time: 0.0019435882568359375
+current epoch: 1
+train loss is 0.187146
+average val loss: 0.165730, f1_score: 0.2321, accuracy: 0.4486
+-0.5198377 0.10844841
+average test loss: 0.162414, f1_score: 0.1450, accuracy: 0.4522
+
+		{"drop_out": 0.6, "hidden": 30, "embedding_size": 5, "batch": 512, "lag": 3}
+Namespace(action='train', attention_size=2, batch=512, data_configure_file='exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf', drop_out=0.6, embedding_size=5, epoch=1, ground_truth='LME_Co_Spot', hidden_state=30, interval=1, lag=3, lambd=0, lrate=0.001, model='', save_loss=0, save_prediction=0, source='NExT', split=0.9, steps=5, test=False, torch=1, version='v10')
+LME_Co_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03312139444942249
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Al_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.031046504542578755
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Le_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04484422194216623
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ni_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04376528519386216
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Zi_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03994395097372798
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ti_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03861206714459741
+['2009-10-09', '2014-07-01', '2014-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.4588051 -1.9889958 2.1276393 -1.722016
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 0.00010752677917480469
+the split date is 2014-07-01
+net initializing with time: 0.0022258758544921875
+preparing training and testing date with time: 0.0021178722381591797
+current epoch: 1
+train loss is 0.186136
+average val loss: 0.089305, f1_score: 0.7118, accuracy: 0.5588
+-0.06691949 0.41074252
+average test loss: 0.103776, f1_score: 0.5717, accuracy: 0.4051
+LME_Co_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03206970750130583
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Al_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.029288993583389832
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Le_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.041860005318896366
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ni_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.04183159286568789
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Zi_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03758229863025612
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ti_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03726925577064554
+['2010-04-14', '2015-01-02', '2015-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5136144 -2.062028 2.1974127 -1.7840602
+Validation: 714 714 714
+Testing: 714 714 714
+pre-processing time: 0.00029730796813964844
+the split date is 2015-01-01
+net initializing with time: 0.001416921615600586
+preparing training and testing date with time: 0.0020751953125
+current epoch: 1
+train loss is 0.243123
+average val loss: 0.113229, f1_score: 0.5607, accuracy: 0.4426
+-0.15107617 0.4974724
+average test loss: 0.146194, f1_score: 0.5867, accuracy: 0.4594
+LME_Co_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02997344765833213
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Al_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02793208692530724
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Le_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03814523541321009
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ni_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.038653520996412255
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Zi_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03481439408931634
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ti_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03690210477819182
+['2010-10-11', '2015-07-01', '2015-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.5817945 -1.8517256 2.3510935 -1.8018104
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 9.179115295410156e-05
+the split date is 2015-07-01
+net initializing with time: 0.001348257064819336
+preparing training and testing date with time: 0.0021004676818847656
+current epoch: 1
+train loss is 0.171352
+average val loss: 0.150453, f1_score: 0.0067, accuracy: 0.5826
+-0.48945785 0.013821334
+average test loss: 0.159354, f1_score: 0.0000, accuracy: 0.5894
+LME_Co_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.029520812219591956
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Al_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.027172919363397382
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Le_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03647215035180201
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ni_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03823442808850852
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Zi_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.033532646686275584
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ti_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.0362838571540412
+['2011-04-12', '2016-01-04', '2016-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5982225 -1.870957 2.3871424 -1.8325118
+Validation: 714 714 714
+Testing: 720 720 720
+pre-processing time: 9.34600830078125e-05
+the split date is 2016-01-01
+net initializing with time: 0.0013375282287597656
+preparing training and testing date with time: 0.0021224021911621094
+current epoch: 1
+train loss is 0.185118
+average val loss: 0.155497, f1_score: 0.0000, accuracy: 0.6134
+-0.57696074 -0.0005598664
+average test loss: 0.246033, f1_score: 0.0000, accuracy: 0.4306
+LME_Co_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.029566512271663223
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Al_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.026761764990256048
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Le_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03570850264215912
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ni_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.038054341335321616
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Zi_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.032924238207902023
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ti_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03499746907365794
+['2011-10-11', '2016-07-01', '2016-12-21']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+2.232149 -1.7015269 2.3834527 -1.1833065
+Validation: 720 720 720
+Testing: 732 732 732
+pre-processing time: 0.0003032684326171875
+the split date is 2016-07-01
+net initializing with time: 0.001367807388305664
+preparing training and testing date with time: 0.0021584033966064453
+current epoch: 1
+train loss is 0.167310
+average val loss: 0.168590, f1_score: 0.3069, accuracy: 0.4292
+-0.55793834 0.08571315
+average test loss: 0.158743, f1_score: 0.2261, accuracy: 0.4481
+
+		{"drop_out": 0.6, "hidden": 30, "embedding_size": 5, "batch": 1024, "lag": 3}
+Namespace(action='train', attention_size=2, batch=1024, data_configure_file='exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf', drop_out=0.6, embedding_size=5, epoch=1, ground_truth='LME_Co_Spot', hidden_state=30, interval=1, lag=3, lambd=0, lrate=0.001, model='', save_loss=0, save_prediction=0, source='NExT', split=0.9, steps=5, test=False, torch=1, version='v10')
+LME_Co_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03312139444942249
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Al_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.031046504542578755
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Le_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04484422194216623
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ni_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04376528519386216
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Zi_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03994395097372798
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ti_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03861206714459741
+['2009-10-09', '2014-07-01', '2014-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.4588051 -1.9889958 2.1276393 -1.722016
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 0.00010251998901367188
+the split date is 2014-07-01
+net initializing with time: 0.0022895336151123047
+preparing training and testing date with time: 0.0020990371704101562
+current epoch: 1
+train loss is 0.213218
+average val loss: 0.163358, accuracy: 0.5784
+0.13573115 0.6216055
+average test loss: 0.218583, accuracy: 0.4146
+LME_Co_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03206970750130583
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Al_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.029288993583389832
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Le_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.041860005318896366
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ni_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.04183159286568789
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Zi_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03758229863025612
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ti_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03726925577064554
+['2010-04-14', '2015-01-02', '2015-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5136144 -2.062028 2.1974127 -1.7840602
+Validation: 714 714 714
+Testing: 714 714 714
+pre-processing time: 0.000354766845703125
+the split date is 2015-01-01
+net initializing with time: 0.0014171600341796875
+preparing training and testing date with time: 0.0020029544830322266
+current epoch: 1
+train loss is 0.308927
+average val loss: 0.107363, accuracy: 0.4244
+-0.1340947 0.47901458
+average test loss: 0.152850, accuracy: 0.3978
+LME_Co_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02997344765833213
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Al_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02793208692530724
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Le_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03814523541321009
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ni_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.038653520996412255
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Zi_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03481439408931634
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ti_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03690210477819182
+['2010-10-11', '2015-07-01', '2015-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.5817945 -1.8517256 2.3510935 -1.8018104
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 9.5367431640625e-05
+the split date is 2015-07-01
+net initializing with time: 0.0014350414276123047
+preparing training and testing date with time: 0.002007722854614258
+current epoch: 1
+train loss is 0.240811
+average val loss: 0.236792, accuracy: 0.4230
+-0.036115795 0.6202698
+average test loss: 0.241027, accuracy: 0.4092
+LME_Co_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.029520812219591956
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Al_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.027172919363397382
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Le_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03647215035180201
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ni_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03823442808850852
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Zi_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.033532646686275584
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ti_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.0362838571540412
+['2011-04-12', '2016-01-04', '2016-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5982225 -1.870957 2.3871424 -1.8325118
+Validation: 714 714 714
+Testing: 720 720 720
+pre-processing time: 9.34600830078125e-05
+the split date is 2016-01-01
+net initializing with time: 0.0014264583587646484
+preparing training and testing date with time: 0.0019919872283935547
+current epoch: 1
+train loss is 0.242497
+average val loss: 0.465175, accuracy: 0.6134
+-0.96680135 -0.42604962
+average test loss: 0.686824, accuracy: 0.4306
+LME_Co_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.029566512271663223
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Al_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.026761764990256048
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Le_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03570850264215912
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ni_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.038054341335321616
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Zi_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.032924238207902023
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ti_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03499746907365794
+['2011-10-11', '2016-07-01', '2016-12-21']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+2.232149 -1.7015269 2.3834527 -1.1833065
+Validation: 720 720 720
+Testing: 732 732 732
+pre-processing time: 9.298324584960938e-05
+the split date is 2016-07-01
+net initializing with time: 0.0014111995697021484
+preparing training and testing date with time: 0.0019927024841308594
+current epoch: 1
+train loss is 0.212920
+average val loss: 0.169229, accuracy: 0.4514
+-0.54224646 0.05732283
+average test loss: 0.168035, accuracy: 0.4290
+
+		{"drop_out": 0.0, "hidden": 30, "embedding_size": 10, "batch": 512, "lag": 3}
+Namespace(action='train', attention_size=2, batch=512, data_configure_file='exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf', drop_out=0.0, embedding_size=10, epoch=1, ground_truth='LME_Co_Spot', hidden_state=30, interval=1, lag=3, lambd=0, lrate=0.001, model='', save_loss=0, save_prediction=0, source='NExT', split=0.9, steps=5, test=False, torch=1, version='v10')
+LME_Co_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03312139444942249
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Al_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.031046504542578755
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Le_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04484422194216623
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ni_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04376528519386216
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Zi_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03994395097372798
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ti_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03861206714459741
+['2009-10-09', '2014-07-01', '2014-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.4588051 -1.9889958 2.1276393 -1.722016
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 0.00010371208190917969
+the split date is 2014-07-01
+net initializing with time: 0.002254486083984375
+preparing training and testing date with time: 0.001882314682006836
+current epoch: 1
+train loss is 0.148213
+average val loss: 0.071539, accuracy: 0.5714
+-0.08878392 0.37916455
+average test loss: 0.090135, accuracy: 0.4106
+LME_Co_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03206970750130583
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Al_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.029288993583389832
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Le_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.041860005318896366
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ni_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.04183159286568789
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Zi_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03758229863025612
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ti_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03726925577064554
+['2010-04-14', '2015-01-02', '2015-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5136144 -2.062028 2.1974127 -1.7840602
+Validation: 714 714 714
+Testing: 714 714 714
+pre-processing time: 0.00032901763916015625
+the split date is 2015-01-01
+net initializing with time: 0.0014019012451171875
+preparing training and testing date with time: 0.0018496513366699219
+current epoch: 1
+train loss is 0.148437
+average val loss: 0.142448, accuracy: 0.4062
+-0.057668194 0.47050804
+average test loss: 0.191259, accuracy: 0.4188
+LME_Co_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02997344765833213
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Al_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02793208692530724
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Le_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03814523541321009
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ni_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.038653520996412255
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Zi_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03481439408931634
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ti_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03690210477819182
+['2010-10-11', '2015-07-01', '2015-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.5817945 -1.8517256 2.3510935 -1.8018104
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 9.512901306152344e-05
+the split date is 2015-07-01
+net initializing with time: 0.0013477802276611328
+preparing training and testing date with time: 0.0019440650939941406
+current epoch: 1
+train loss is 0.192580
+average val loss: 0.215711, accuracy: 0.4188
+0.056617796 0.66986644
+average test loss: 0.227528, accuracy: 0.4092
+LME_Co_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.029520812219591956
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Al_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.027172919363397382
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Le_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03647215035180201
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ni_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03823442808850852
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Zi_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.033532646686275584
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ti_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.0362838571540412
+['2011-04-12', '2016-01-04', '2016-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5982225 -1.870957 2.3871424 -1.8325118
+Validation: 714 714 714
+Testing: 720 720 720
+pre-processing time: 0.0006659030914306641
+the split date is 2016-01-01
+net initializing with time: 0.001356363296508789
+preparing training and testing date with time: 0.0018892288208007812
+current epoch: 1
+train loss is 0.228428
+average val loss: 0.143962, accuracy: 0.6106
+-0.4545656 0.037497357
+average test loss: 0.188905, accuracy: 0.4292
+LME_Co_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.029566512271663223
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Al_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.026761764990256048
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Le_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03570850264215912
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ni_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.038054341335321616
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Zi_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.032924238207902023
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ti_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03499746907365794
+['2011-10-11', '2016-07-01', '2016-12-21']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+2.232149 -1.7015269 2.3834527 -1.1833065
+Validation: 720 720 720
+Testing: 732 732 732
+pre-processing time: 0.00032329559326171875
+the split date is 2016-07-01
+net initializing with time: 0.0013535022735595703
+preparing training and testing date with time: 0.0020017623901367188
+current epoch: 1
+train loss is 0.138971
+average val loss: 0.141820, accuracy: 0.5028
+-0.2381945 0.46719342
+average test loss: 0.131941, accuracy: 0.4658
+
+		{"drop_out": 0.0, "hidden": 30, "embedding_size": 10, "batch": 1024, "lag": 3}
+Namespace(action='train', attention_size=2, batch=1024, data_configure_file='exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf', drop_out=0.0, embedding_size=10, epoch=1, ground_truth='LME_Co_Spot', hidden_state=30, interval=1, lag=3, lambd=0, lrate=0.001, model='', save_loss=0, save_prediction=0, source='NExT', split=0.9, steps=5, test=False, torch=1, version='v10')
+LME_Co_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03312139444942249
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Al_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.031046504542578755
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Le_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04484422194216623
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ni_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04376528519386216
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Zi_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03994395097372798
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ti_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03861206714459741
+['2009-10-09', '2014-07-01', '2014-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.4588051 -1.9889958 2.1276393 -1.722016
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 0.00010132789611816406
+the split date is 2014-07-01
+net initializing with time: 0.0022788047790527344
+preparing training and testing date with time: 0.0020728111267089844
+current epoch: 1
+train loss is 0.197706
+average val loss: 0.075664, accuracy: 0.5784
+-0.10526756 0.42837614
+average test loss: 0.101558, accuracy: 0.4038
+LME_Co_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03206970750130583
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Al_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.029288993583389832
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Le_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.041860005318896366
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ni_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.04183159286568789
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Zi_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03758229863025612
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ti_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03726925577064554
+['2010-04-14', '2015-01-02', '2015-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5136144 -2.062028 2.1974127 -1.7840602
+Validation: 714 714 714
+Testing: 714 714 714
+pre-processing time: 0.00032782554626464844
+the split date is 2015-01-01
+net initializing with time: 0.0013303756713867188
+preparing training and testing date with time: 0.0019779205322265625
+current epoch: 1
+train loss is 0.145664
+average val loss: 0.090570, accuracy: 0.4160
+-0.20668247 0.36708796
+average test loss: 0.132348, accuracy: 0.4300
+LME_Co_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02997344765833213
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Al_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02793208692530724
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Le_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03814523541321009
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ni_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.038653520996412255
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Zi_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03481439408931634
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ti_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03690210477819182
+['2010-10-11', '2015-07-01', '2015-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.5817945 -1.8517256 2.3510935 -1.8018104
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 9.679794311523438e-05
+the split date is 2015-07-01
+net initializing with time: 0.0013382434844970703
+preparing training and testing date with time: 0.0020751953125
+current epoch: 1
+train loss is 0.155618
+average val loss: 0.177705, accuracy: 0.4244
+-0.043722183 0.63412344
+average test loss: 0.189540, accuracy: 0.4173
+LME_Co_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.029520812219591956
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Al_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.027172919363397382
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Le_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03647215035180201
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ni_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03823442808850852
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Zi_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.033532646686275584
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ti_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.0362838571540412
+['2011-04-12', '2016-01-04', '2016-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5982225 -1.870957 2.3871424 -1.8325118
+Validation: 714 714 714
+Testing: 720 720 720
+pre-processing time: 9.1552734375e-05
+the split date is 2016-01-01
+net initializing with time: 0.001354217529296875
+preparing training and testing date with time: 0.0020639896392822266
+current epoch: 1
+train loss is 0.294861
+average val loss: 0.236211, accuracy: 0.3894
+-0.09247136 0.5256902
+average test loss: 0.151530, accuracy: 0.5708
+LME_Co_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.029566512271663223
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Al_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.026761764990256048
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Le_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03570850264215912
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ni_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.038054341335321616
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Zi_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.032924238207902023
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ti_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03499746907365794
+['2011-10-11', '2016-07-01', '2016-12-21']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+2.232149 -1.7015269 2.3834527 -1.1833065
+Validation: 720 720 720
+Testing: 732 732 732
+pre-processing time: 0.00010752677917480469
+the split date is 2016-07-01
+net initializing with time: 0.001331329345703125
+preparing training and testing date with time: 0.0020608901977539062
+current epoch: 1
+train loss is 0.151655
+average val loss: 0.187147, accuracy: 0.4250
+-0.5022987 0.4045438
+average test loss: 0.156802, accuracy: 0.4399
+
+		{"drop_out": 0.2, "hidden": 30, "embedding_size": 10, "batch": 512, "lag": 3}
+Namespace(action='train', attention_size=2, batch=512, data_configure_file='exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf', drop_out=0.2, embedding_size=10, epoch=1, ground_truth='LME_Co_Spot', hidden_state=30, interval=1, lag=3, lambd=0, lrate=0.001, model='', save_loss=0, save_prediction=0, source='NExT', split=0.9, steps=5, test=False, torch=1, version='v10')
+LME_Co_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03312139444942249
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Al_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.031046504542578755
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Le_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04484422194216623
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ni_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04376528519386216
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Zi_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03994395097372798
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ti_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03861206714459741
+['2009-10-09', '2014-07-01', '2014-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.4588051 -1.9889958 2.1276393 -1.722016
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 0.00010466575622558594
+the split date is 2014-07-01
+net initializing with time: 0.0022351741790771484
+preparing training and testing date with time: 0.002275705337524414
+current epoch: 1
+train loss is 0.151457
+average val loss: 0.072578, accuracy: 0.5672
+-0.06493166 0.3595764
+average test loss: 0.089342, accuracy: 0.4038
+LME_Co_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03206970750130583
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Al_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.029288993583389832
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Le_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.041860005318896366
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ni_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.04183159286568789
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Zi_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03758229863025612
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ti_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03726925577064554
+['2010-04-14', '2015-01-02', '2015-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5136144 -2.062028 2.1974127 -1.7840602
+Validation: 714 714 714
+Testing: 714 714 714
+pre-processing time: 0.00031948089599609375
+the split date is 2015-01-01
+net initializing with time: 0.00135040283203125
+preparing training and testing date with time: 0.002166271209716797
+current epoch: 1
+train loss is 0.168383
+average val loss: 0.247605, accuracy: 0.4062
+0.01263231 0.7220134
+average test loss: 0.273741, accuracy: 0.4174
+LME_Co_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02997344765833213
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Al_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02793208692530724
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Le_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03814523541321009
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ni_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.038653520996412255
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Zi_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03481439408931634
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ti_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03690210477819182
+['2010-10-11', '2015-07-01', '2015-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.5817945 -1.8517256 2.3510935 -1.8018104
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 0.0003294944763183594
+the split date is 2015-07-01
+net initializing with time: 0.0013811588287353516
+preparing training and testing date with time: 0.002146005630493164
+current epoch: 1
+train loss is 0.130060
+average val loss: 0.120310, accuracy: 0.4468
+-0.23684484 0.39252764
+average test loss: 0.135045, accuracy: 0.5081
+LME_Co_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.029520812219591956
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Al_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.027172919363397382
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Le_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03647215035180201
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ni_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03823442808850852
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Zi_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.033532646686275584
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ti_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.0362838571540412
+['2011-04-12', '2016-01-04', '2016-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5982225 -1.870957 2.3871424 -1.8325118
+Validation: 714 714 714
+Testing: 720 720 720
+pre-processing time: 9.655952453613281e-05
+the split date is 2016-01-01
+net initializing with time: 0.00136566162109375
+preparing training and testing date with time: 0.0022203922271728516
+current epoch: 1
+train loss is 0.144579
+average val loss: 0.120119, accuracy: 0.5980
+-0.46447375 0.29606694
+average test loss: 0.172264, accuracy: 0.4486
+LME_Co_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.029566512271663223
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Al_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.026761764990256048
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Le_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03570850264215912
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ni_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.038054341335321616
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Zi_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.032924238207902023
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ti_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03499746907365794
+['2011-10-11', '2016-07-01', '2016-12-21']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+2.232149 -1.7015269 2.3834527 -1.1833065
+Validation: 720 720 720
+Testing: 732 732 732
+pre-processing time: 0.0006384849548339844
+the split date is 2016-07-01
+net initializing with time: 0.0013511180877685547
+preparing training and testing date with time: 0.002151966094970703
+current epoch: 1
+train loss is 0.195708
+average val loss: 0.136776, accuracy: 0.4597
+-0.26046956 0.30991846
+average test loss: 0.122833, accuracy: 0.4959
+
+		{"drop_out": 0.2, "hidden": 30, "embedding_size": 10, "batch": 1024, "lag": 3}
+Namespace(action='train', attention_size=2, batch=1024, data_configure_file='exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf', drop_out=0.2, embedding_size=10, epoch=1, ground_truth='LME_Co_Spot', hidden_state=30, interval=1, lag=3, lambd=0, lrate=0.001, model='', save_loss=0, save_prediction=0, source='NExT', split=0.9, steps=5, test=False, torch=1, version='v10')
+LME_Co_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03312139444942249
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Al_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.031046504542578755
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Le_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04484422194216623
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ni_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04376528519386216
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Zi_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03994395097372798
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ti_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03861206714459741
+['2009-10-09', '2014-07-01', '2014-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.4588051 -1.9889958 2.1276393 -1.722016
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 0.00010704994201660156
+the split date is 2014-07-01
+net initializing with time: 0.002230405807495117
+preparing training and testing date with time: 0.002313852310180664
+current epoch: 1
+train loss is 0.188250
+average val loss: 0.114038, accuracy: 0.5784
+0.0037287772 0.5368362
+average test loss: 0.156598, accuracy: 0.4146
+LME_Co_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03206970750130583
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Al_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.029288993583389832
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Le_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.041860005318896366
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ni_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.04183159286568789
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Zi_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03758229863025612
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ti_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03726925577064554
+['2010-04-14', '2015-01-02', '2015-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5136144 -2.062028 2.1974127 -1.7840602
+Validation: 714 714 714
+Testing: 714 714 714
+pre-processing time: 0.0003314018249511719
+the split date is 2015-01-01
+net initializing with time: 0.0013470649719238281
+preparing training and testing date with time: 0.0021991729736328125
+current epoch: 1
+train loss is 0.149057
+average val loss: 0.068152, accuracy: 0.5630
+-0.3506053 0.10853219
+average test loss: 0.106350, accuracy: 0.5532
+LME_Co_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02997344765833213
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Al_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02793208692530724
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Le_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03814523541321009
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ni_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.038653520996412255
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Zi_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03481439408931634
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ti_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03690210477819182
+['2010-10-11', '2015-07-01', '2015-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.5817945 -1.8517256 2.3510935 -1.8018104
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 9.417533874511719e-05
+the split date is 2015-07-01
+net initializing with time: 0.0013396739959716797
+preparing training and testing date with time: 0.0022177696228027344
+current epoch: 1
+train loss is 0.191515
+average val loss: 0.112339, accuracy: 0.4944
+-0.24226665 0.51070243
+average test loss: 0.131923, accuracy: 0.5068
+LME_Co_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.029520812219591956
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Al_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.027172919363397382
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Le_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03647215035180201
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ni_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03823442808850852
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Zi_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.033532646686275584
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ti_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.0362838571540412
+['2011-04-12', '2016-01-04', '2016-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5982225 -1.870957 2.3871424 -1.8325118
+Validation: 714 714 714
+Testing: 720 720 720
+pre-processing time: 9.489059448242188e-05
+the split date is 2016-01-01
+net initializing with time: 0.0013394355773925781
+preparing training and testing date with time: 0.0021965503692626953
+current epoch: 1
+train loss is 0.174560
+average val loss: 0.131787, accuracy: 0.5434
+-0.37230003 0.26363674
+average test loss: 0.148287, accuracy: 0.4556
+LME_Co_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.029566512271663223
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Al_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.026761764990256048
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Le_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03570850264215912
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ni_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.038054341335321616
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Zi_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.032924238207902023
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ti_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03499746907365794
+['2011-10-11', '2016-07-01', '2016-12-21']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+2.232149 -1.7015269 2.3834527 -1.1833065
+Validation: 720 720 720
+Testing: 732 732 732
+pre-processing time: 0.0003178119659423828
+the split date is 2016-07-01
+net initializing with time: 0.0013661384582519531
+preparing training and testing date with time: 0.002226114273071289
+current epoch: 1
+train loss is 0.175061
+average val loss: 0.166308, accuracy: 0.5444
+-0.6135255 0.41720998
+average test loss: 0.154639, accuracy: 0.4850
+
+		{"drop_out": 0.4, "hidden": 30, "embedding_size": 10, "batch": 512, "lag": 3}
+Namespace(action='train', attention_size=2, batch=512, data_configure_file='exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf', drop_out=0.4, embedding_size=10, epoch=1, ground_truth='LME_Co_Spot', hidden_state=30, interval=1, lag=3, lambd=0, lrate=0.001, model='', save_loss=0, save_prediction=0, source='NExT', split=0.9, steps=5, test=False, torch=1, version='v10')
+LME_Co_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03312139444942249
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Al_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.031046504542578755
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Le_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04484422194216623
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ni_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04376528519386216
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Zi_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03994395097372798
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ti_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03861206714459741
+['2009-10-09', '2014-07-01', '2014-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.4588051 -1.9889958 2.1276393 -1.722016
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 0.0001010894775390625
+the split date is 2014-07-01
+net initializing with time: 0.002268075942993164
+preparing training and testing date with time: 0.0018875598907470703
+current epoch: 1
+train loss is 0.158701
+average val loss: 0.085134, accuracy: 0.5728
+-0.023482412 0.4034362
+average test loss: 0.107982, accuracy: 0.4146
+LME_Co_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03206970750130583
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Al_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.029288993583389832
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Le_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.041860005318896366
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ni_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.04183159286568789
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Zi_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03758229863025612
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ti_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03726925577064554
+['2010-04-14', '2015-01-02', '2015-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5136144 -2.062028 2.1974127 -1.7840602
+Validation: 714 714 714
+Testing: 714 714 714
+pre-processing time: 9.393692016601562e-05
+the split date is 2015-01-01
+net initializing with time: 0.0013468265533447266
+preparing training and testing date with time: 0.0018167495727539062
+current epoch: 1
+train loss is 0.175115
+average val loss: 0.235513, accuracy: 0.4062
+0.004760027 0.70170796
+average test loss: 0.265192, accuracy: 0.4174
+LME_Co_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02997344765833213
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Al_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02793208692530724
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Le_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03814523541321009
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ni_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.038653520996412255
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Zi_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03481439408931634
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ti_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03690210477819182
+['2010-10-11', '2015-07-01', '2015-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.5817945 -1.8517256 2.3510935 -1.8018104
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 9.655952453613281e-05
+the split date is 2015-07-01
+net initializing with time: 0.001367330551147461
+preparing training and testing date with time: 0.0019092559814453125
+current epoch: 1
+train loss is 0.138448
+average val loss: 0.110210, accuracy: 0.4706
+-0.29114953 0.35099977
+average test loss: 0.124602, accuracy: 0.5190
+LME_Co_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.029520812219591956
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Al_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.027172919363397382
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Le_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03647215035180201
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ni_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03823442808850852
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Zi_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.033532646686275584
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ti_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.0362838571540412
+['2011-04-12', '2016-01-04', '2016-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5982225 -1.870957 2.3871424 -1.8325118
+Validation: 714 714 714
+Testing: 720 720 720
+pre-processing time: 9.512901306152344e-05
+the split date is 2016-01-01
+net initializing with time: 0.00133514404296875
+preparing training and testing date with time: 0.0018465518951416016
+current epoch: 1
+train loss is 0.171482
+average val loss: 0.119944, accuracy: 0.5364
+-0.28758457 0.34469005
+average test loss: 0.133412, accuracy: 0.4792
+LME_Co_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.029566512271663223
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Al_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.026761764990256048
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Le_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03570850264215912
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ni_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.038054341335321616
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Zi_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.032924238207902023
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ti_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03499746907365794
+['2011-10-11', '2016-07-01', '2016-12-21']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+2.232149 -1.7015269 2.3834527 -1.1833065
+Validation: 720 720 720
+Testing: 732 732 732
+pre-processing time: 0.0003216266632080078
+the split date is 2016-07-01
+net initializing with time: 0.0013501644134521484
+preparing training and testing date with time: 0.001874685287475586
+current epoch: 1
+train loss is 0.188852
+average val loss: 0.154521, accuracy: 0.4333
+-0.27476853 0.3053279
+average test loss: 0.128698, accuracy: 0.4672
+
+		{"drop_out": 0.4, "hidden": 30, "embedding_size": 10, "batch": 1024, "lag": 3}
+Namespace(action='train', attention_size=2, batch=1024, data_configure_file='exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf', drop_out=0.4, embedding_size=10, epoch=1, ground_truth='LME_Co_Spot', hidden_state=30, interval=1, lag=3, lambd=0, lrate=0.001, model='', save_loss=0, save_prediction=0, source='NExT', split=0.9, steps=5, test=False, torch=1, version='v10')
+LME_Co_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03312139444942249
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Al_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.031046504542578755
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Le_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04484422194216623
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ni_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.04376528519386216
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Zi_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03994395097372798
+['2009-10-09', '2014-07-01', '2014-12-22']
+LME_Ti_Spot
+Before Load Data
+['2009-07-01', '2014-07-01', '2015-01-01']
+0.03861206714459741
+['2009-10-09', '2014-07-01', '2014-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.4588051 -1.9889958 2.1276393 -1.722016
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 0.00010251998901367188
+the split date is 2014-07-01
+net initializing with time: 0.002286672592163086
+preparing training and testing date with time: 0.001943349838256836
+current epoch: 1
+train loss is 0.179136
+average val loss: 0.151049, accuracy: 0.5784
+0.07910797 0.60706127
+average test loss: 0.204156, accuracy: 0.4146
+LME_Co_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03206970750130583
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Al_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.029288993583389832
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Le_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.041860005318896366
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ni_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.04183159286568789
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Zi_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03758229863025612
+['2010-04-14', '2015-01-02', '2015-06-24']
+LME_Ti_Spot
+Before Load Data
+['2010-01-01', '2015-01-01', '2015-07-01']
+0.03726925577064554
+['2010-04-14', '2015-01-02', '2015-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5136144 -2.062028 2.1974127 -1.7840602
+Validation: 714 714 714
+Testing: 714 714 714
+pre-processing time: 0.0003368854522705078
+the split date is 2015-01-01
+net initializing with time: 0.0013766288757324219
+preparing training and testing date with time: 0.0018439292907714844
+current epoch: 1
+train loss is 0.160242
+average val loss: 0.066151, accuracy: 0.5658
+-0.3315981 0.120079264
+average test loss: 0.104119, accuracy: 0.5602
+LME_Co_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02997344765833213
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Al_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.02793208692530724
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Le_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03814523541321009
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ni_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.038653520996412255
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Zi_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03481439408931634
+['2010-10-11', '2015-07-01', '2015-12-22']
+LME_Ti_Spot
+Before Load Data
+['2010-07-01', '2015-07-01', '2016-01-01']
+0.03690210477819182
+['2010-10-11', '2015-07-01', '2015-12-22']
+Dataset statistic: #examples
+Train: 6420 6420 6420
+1.5817945 -1.8517256 2.3510935 -1.8018104
+Validation: 714 714 714
+Testing: 738 738 738
+pre-processing time: 9.322166442871094e-05
+the split date is 2015-07-01
+net initializing with time: 0.0013637542724609375
+preparing training and testing date with time: 0.0019123554229736328
+current epoch: 1
+train loss is 0.186887
+average val loss: 0.138161, accuracy: 0.4384
+-0.067794204 0.58038604
+average test loss: 0.162578, accuracy: 0.4241
+LME_Co_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.029520812219591956
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Al_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.027172919363397382
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Le_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03647215035180201
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ni_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.03823442808850852
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Zi_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.033532646686275584
+['2011-04-12', '2016-01-04', '2016-06-24']
+LME_Ti_Spot
+Before Load Data
+['2011-01-01', '2016-01-01', '2016-07-01']
+0.0362838571540412
+['2011-04-12', '2016-01-04', '2016-06-24']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+1.5982225 -1.870957 2.3871424 -1.8325118
+Validation: 714 714 714
+Testing: 720 720 720
+pre-processing time: 9.250640869140625e-05
+the split date is 2016-01-01
+net initializing with time: 0.0013608932495117188
+preparing training and testing date with time: 0.0018727779388427734
+current epoch: 1
+train loss is 0.190533
+average val loss: 0.130095, accuracy: 0.5518
+-0.39161336 0.21645802
+average test loss: 0.153858, accuracy: 0.4722
+LME_Co_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.029566512271663223
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Al_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.026761764990256048
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Le_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03570850264215912
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ni_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.038054341335321616
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Zi_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.032924238207902023
+['2011-10-11', '2016-07-01', '2016-12-21']
+LME_Ti_Spot
+Before Load Data
+['2011-07-01', '2016-07-01', '2017-01-01']
+0.03499746907365794
+['2011-10-11', '2016-07-01', '2016-12-21']
+Dataset statistic: #examples
+Train: 6426 6426 6426
+2.232149 -1.7015269 2.3834527 -1.1833065
+Validation: 720 720 720
+Testing: 732 732 732
+pre-processing time: 0.000324249267578125
+the split date is 2016-07-01
+net initializing with time: 0.0013713836669921875
+preparing training and testing date with time: 0.001857757568359375
+current epoch: 1
+train loss is 0.171586
+average val loss: 0.212963, accuracy: 0.4500
+-0.77173233 0.27522203
+average test loss: 0.200264, accuracy: 0.4686

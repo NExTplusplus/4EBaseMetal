@@ -36,7 +36,15 @@ class Trainer:
                  train_X, train_y,
                  test_X, test_y,
                  val_X, val_y,
-                 final_train_X_embedding, final_test_X_embedding, final_val_X_embedding):
+                 final_train_X_embedding,
+                 final_test_X_embedding,
+                 final_val_X_embedding,
+                 test_y_class_case,
+                 test_y_class_top_case,
+                 test_y_class_bot_case,
+                 test_y_top_ind_case,
+                 test_y_bot_ind_case
+                 ):
         # dataset
         #self.dataset = Dataset(driving, target, time_step, split, 0, version)
         #self.train_size, self.test_size = self.dataset.get_size()
@@ -93,6 +101,14 @@ class Trainer:
         self.test_embedding = final_test_X_embedding
         self.val_embedding = final_val_X_embedding
 
+        self.test_y_class_case = test_y_class_case
+        self.test_y_class_top_case = test_y_class_top_case
+        self.test_y_class_bot_case = test_y_class_bot_case
+        self.test_y_top_ind_case = test_y_top_ind_case
+        self.test_y_bot_ind_case = test_y_bot_ind_case
+
+    def evaluate_by_case(self, pred_class):
+        pass
 
     def train_minibatch(self, num_epochs, batch_size, interval):
         start = time.time()
@@ -362,14 +378,17 @@ class Trainer:
                 val_loss = loss_sum
                 val_loss_list.append(float(val_loss))
 
-                val_f1 = f1_score(val_y_class, current_val_class)
-                val_f1_list.append(val_f1)
+                # val_f1 = f1_score(val_y_class, current_val_class)
+                # val_f1_list.append(val_f1)
 
                 val_acc = accuracy_score(val_y_class, current_val_class)
                 val_acc_list.append(val_acc)
                 # end = time.time()
             
-                print('average val loss: {:.6f}, f1_score: {:.4f}, accuracy: {:.4f}'.format(val_loss, val_f1, val_acc))
+                # print('average val loss: {:.6f}, f1_score: {:.4f}, accuracy: {:.4f}'.format(val_loss, val_f1, val_acc))
+                print('average val loss: {:.6f}, accuracy: {:.4f}'.format(
+                    val_loss, val_acc)
+                )
             
             # start = time.time()
 
@@ -401,22 +420,28 @@ class Trainer:
             loss = loss_func(test_output, test_Y)
             loss_sum = loss.detach()
             current_test_pred = list(test_output.detach().view(-1,))
-            print(np.min(current_test_pred), np.max(current_test_pred))
+            # print(np.min(current_test_pred), np.max(current_test_pred))
             
             current_test_class = [1 if ele>thresh else 0 for ele in current_test_pred]    
             
             test_loss = loss_sum
             test_loss_list.append(float(test_loss))
             
-            test_f1 = f1_score(test_y_class, current_test_class)
-            test_f1_list.append(test_f1)
-            
+            # test_f1 = f1_score(test_y_class, current_test_class)
+            # test_f1_list.append(test_f1)
+
             test_acc = accuracy_score(test_y_class, current_test_class)
-            test_acc_list.append(test_acc)                        
-            
+            test_acc_list.append(test_acc)
+
             # end = time.time()
 
-            print('average test loss: {:.6f}, f1_score: {:.4f}, accuracy: {:.4f}'.format(test_loss, test_f1, test_acc))
+            # print('average test loss: {:.6f}, f1_score: {:.4f}, accuracy: {:.4f}'.format(test_loss, test_f1, test_acc))
+            print('average test loss: {:.6f}, accuracy: {:.4f}'.format(
+                test_loss, test_acc)
+            )
+
+            # evaluate by case
+            self.evaluate_by_case(current_test_class)
 
             '''
             #if (epoch+1)%10 == 0:
@@ -600,6 +625,11 @@ if __name__ == '__main__':
                 final_y_val = []
                 final_X_te = []
                 final_y_te = []
+                final_y_te_class_list = []
+                final_y_te_class_top_list = []
+                final_y_te_top_ind_list = []
+                final_y_te_class_bot_list = []
+                final_y_te_bot_ind_list = []
                 final_train_X_embedding = []
                 final_test_X_embedding = []
                 final_val_X_embedding = []
@@ -693,6 +723,20 @@ if __name__ == '__main__':
                         final_y_te = copy(y_te)
                     else:
                         final_y_te = np.concatenate((final_y_te, y_te), axis=0)
+
+                    y_te_rank = np.argsort(y_te)
+                    y_te_class = []
+                    for item in y_te:
+                        if item >= thresh:
+                            y_te_class.append(1)
+                        else:
+                            y_te_class.append(0)
+                    final_y_te_class_list.append(y_te_class)
+                    split_position = len(y_te) // 3
+                    final_y_te_top_ind_list.append(y_te_rank[:split_position])
+                    final_y_te_bot_ind_list.append(y_te_rank[-split_position:])
+                    final_y_te_class_bot_list.append(y_te_class[y_te_rank[:split_position]])
+                    final_y_te_class_top_list.append(y_te_class[y_te_rank[-split_position:]])
 
                     if len(final_X_val) == 0:
                         final_X_val = copy(X_val)
@@ -805,7 +849,13 @@ if __name__ == '__main__':
                                   final_X_val, final_y_val,
                                   final_train_X_embedding,
                                   final_test_X_embedding,
-                                  final_val_X_embedding)
+                                  final_val_X_embedding,
+                                  final_y_te_class_list,
+                                  final_y_te_class_top_list,
+                                  final_y_te_class_bot_list,
+                                  final_y_te_top_ind_list,
+                                  final_y_te_bot_ind_list
+                                  )
                 end = time.time()
                 ###############################
                 # to replace the old code (Fuli)
