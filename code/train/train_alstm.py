@@ -108,7 +108,30 @@ class Trainer:
         self.test_y_bot_ind_case = test_y_bot_ind_case
 
     def evaluate_by_case(self, pred_class):
-        pass
+        pred_class_case = []
+        # split predictions into cases and check whether length match
+        start_index = 0
+        for case in self.test_y_class_case:
+            examples_case = len(case)
+            pred_class_case.append(pred_class[start_index:start_index + examples_case])
+            start_index += examples_case
+        assert len(pred_class) == start_index, \
+            'number of predictions {} does not match number of labels {}'.\
+                format(len(pred_class), start_index)
+
+        # performance by case
+        for case in zip(self.test_y_class_case, pred_class_case):
+            print('case acc:', accuracy_score(case[0], case[1]))
+
+        # top & bottom performance by case
+        for i, case in enumerate(pred_class_case):
+            case = np.array(case)
+            top_acc = accuracy_score(self.test_y_class_top_case[i],
+                                     case[self.test_y_top_ind_case[i]])
+            bot_acc = accuracy_score(self.test_y_class_bot_case[i],
+                                     case[self.test_y_bot_ind_case[i]])
+            print('top acc: {:.4f} ::: bot acc: {:.4f}'.format(top_acc, bot_acc))
+
 
     def train_minibatch(self, num_epochs, batch_size, interval):
         start = time.time()
@@ -482,7 +505,7 @@ class Trainer:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Train the bi-LSTM + attention-based model on stock')
     parser.add_argument(
-        '-e', '--epoch', type=int, default=1,
+        '-e', '--epoch', type=int, default=50,
         help='the number of epochs')
     parser.add_argument(
         '-b', '--batch', type=int, default=1024,
@@ -724,7 +747,7 @@ if __name__ == '__main__':
                     else:
                         final_y_te = np.concatenate((final_y_te, y_te), axis=0)
 
-                    y_te_rank = np.argsort(y_te)
+                    y_te_rank = np.argsort(y_te[:,0])
                     y_te_class = []
                     for item in y_te:
                         if item >= thresh:
@@ -733,10 +756,15 @@ if __name__ == '__main__':
                             y_te_class.append(0)
                     final_y_te_class_list.append(y_te_class)
                     split_position = len(y_te) // 3
-                    final_y_te_top_ind_list.append(y_te_rank[:split_position])
-                    final_y_te_bot_ind_list.append(y_te_rank[-split_position:])
-                    final_y_te_class_bot_list.append(y_te_class[y_te_rank[:split_position]])
-                    final_y_te_class_top_list.append(y_te_class[y_te_rank[-split_position:]])
+                    final_y_te_bot_ind_list.append(y_te_rank[:split_position])
+                    final_y_te_top_ind_list.append(y_te_rank[-split_position:])
+                    y_te_class = np.array(y_te_class)
+                    final_y_te_class_bot_list.append(
+                        y_te_class[y_te_rank[:split_position]])
+                    final_y_te_class_top_list.append(
+                        y_te_class[y_te_rank[-split_position:]])
+                    # final_y_te_class_bot_list.append(y_te_class[y_te_rank[:split_position]])
+                    # final_y_te_class_top_list.append(y_te_class[y_te_rank[-split_position:]])
 
                     if len(final_X_val) == 0:
                         final_X_val = copy(X_val)
