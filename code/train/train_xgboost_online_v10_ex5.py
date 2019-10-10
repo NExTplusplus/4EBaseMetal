@@ -82,10 +82,10 @@ if __name__ == '__main__':
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
             length = args.length
             if length == 10:
-                split_dates = rolling_half_year("2004-07-01","2017-01-01",length)
+                split_dates = rolling_half_year("2004-07-01","2019-01-01",length)
             else:
-                split_dates = rolling_half_year("2009-07-01","2017-01-01",length)
-            split_dates  =  split_dates[:]
+                split_dates = rolling_half_year("2009-07-01","2019-01-01",length)
+            split_dates  =  split_dates[-4:]
             importance_list = []
             version_params=generate_version_params(args.version)
             for split_date in split_dates:
