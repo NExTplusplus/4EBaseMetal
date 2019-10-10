@@ -161,7 +161,7 @@ if __name__ == '__main__':
                     test_X = test[(test['result']==-1) | (test['result']==1)].loc[:,column_lag_list]
                     test_y = test[(test['result']==-1) | (test['result']==1)].loc[:,['result']]
                     test_y = test_y.replace(-1,0)
-                    final_y_va = np.array(test_y)
+                    new_final_y_va = np.array(test_y)
                     test_X = test_dataframe.loc[:,column_lag_list] 
                     n_splits=args.k_folds
                     from sklearn.metrics import accuracy_score
@@ -249,7 +249,7 @@ if __name__ == '__main__':
                             else:
                                 final_list.append(0)
                         #print("the lag is {}".format(lag))
-                        print("the all folder voting precision is {}".format(metrics.accuracy_score(final_y_va, final_list)))
+                        print("the all folder voting precision is {}".format(metrics.accuracy_score(new_final_y_va, final_list)))
                     elif args.voting=='near':
                         result = np.concatenate((folder_6,folder_7,folder_8,folder_9,folder_10),axis=1)
                         final_list = []
