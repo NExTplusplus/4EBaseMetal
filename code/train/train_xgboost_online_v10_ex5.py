@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 from copy import copy
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
-from data.load_data import load_data
+from data.load_data_three_class import load_data
 from model.logistic_regression import LogReg
 from utils.transform_data import flatten
 from utils.construct_data import rolling_half_year
@@ -147,14 +147,22 @@ if __name__ == '__main__':
                 column_lag_list.append("Ti")
                 column_lag_list.append("Zi")
                 column_lag_list.append("Le")
-                #print(column_lag_list)
                 train_dataframe = pd.DataFrame(final_X_tr,columns=column_lag_list)
-                train_X = train_dataframe.loc[:,column_lag_list]
                 train_y = pd.DataFrame(final_y_tr,columns=['result'])
+                train = pd.concat([train_dataframe,train_y],axis=1)
+                train_X = train[(train['result']==-1) | (train['result']==1)].loc[:,column_lag_list]
+                train_y = train[(train['result']==-1) | (train['result']==1)].loc[:,['result']]
+                train_y = train_y.replace(-1,0)
                 for i,gt in enumerate(["LMCADY","LMAHDY","LMNIDY","LMSNDY","LMZSDY","LMPBDY"]):
                     print("ground truth is "+gt)
                     test_dataframe = pd.DataFrame(final_X_va[i],columns=column_lag_list)
-                    test_X = test_dataframe.loc[:,column_lag_list] 
+                    test_y = pd.DataFrame(final_y_va[i],columns=['result'])
+                    test = pd.concat([test_dataframe,test_y],axis=1)
+                    test_X = test[(test['result']==-1) | (test['result']==1)].loc[:,column_lag_list]
+                    test_y = test[(test['result']==-1) | (test['result']==1)].loc[:,['result']]
+                    test_y = test_y.replace(-1,0)
+                    new_final_y_va = np.array(test_y)
+                    #test_X = test_dataframe.loc[:,column_lag_list] 
                     n_splits=args.k_folds
                     from sklearn.metrics import accuracy_score
                     model = xgb.XGBClassifier(max_depth=args.max_depth,
@@ -241,7 +249,9 @@ if __name__ == '__main__':
                             else:
                                 final_list.append(0)
                         #print("the lag is {}".format(lag))
-                        print("the all folder voting precision is {}".format(metrics.accuracy_score(final_y_va[i], final_list)))
+                        print(len(new_final_y_va))
+                        print(len(final_list))
+                        print("the all folder voting precision is {}".format(metrics.accuracy_score(new_final_y_va, final_list)))
                     elif args.voting=='near':
                         result = np.concatenate((folder_6,folder_7,folder_8,folder_9,folder_10),axis=1)
                         final_list = []
@@ -257,7 +267,7 @@ if __name__ == '__main__':
                                 final_list.append(1)
                             else:
                                 final_list.append(0)
-                        print("the near precision is {}".format(metrics.accuracy_score(final_y_va[i], final_list)))
+                        print("the near precision is {}".format(metrics.accuracy_score(final_y_va, final_list)))
                     elif args.voting=='far':
                         result = np.concatenate((folder_1,folder_2,folder_3,folder_4,folder_5),axis=1)
                         final_list = []
@@ -273,7 +283,7 @@ if __name__ == '__main__':
                                 final_list.append(1)
                             else:
                                 final_list.append(0)
-                        print("the far precision is {}".format(metrics.accuracy_score(final_y_va[i], final_list)))
+                        print("the far precision is {}".format(metrics.accuracy_score(final_y_va, final_list)))
                     else:
                         if split_date[1].split("-")[1]=='01':
                             result = np.concatenate((folder_1,folder_3,folder_5,folder_7,folder_9),axis=1)
@@ -291,7 +301,7 @@ if __name__ == '__main__':
                                 else:
                                     final_list.append(0)
                             #print("the lag is {}".format(lag))
-                            print("the same precision is {}".format(metrics.accuracy_score(final_y_va[i], final_list)))
+                            print("the same precision is {}".format(metrics.accuracy_score(final_y_va, final_list)))
                             result = np.concatenate((folder_2,folder_4,folder_6,folder_8,folder_10),axis=1)
                             final_list = []
                             for j in range(len(result)):
@@ -307,7 +317,7 @@ if __name__ == '__main__':
                                 else:
                                     final_list.append(0)
                             #print("the lag is {}".format(lag))
-                            print("the reverse precision is {}".format(metrics.accuracy_score(final_y_va[i], final_list)))
+                            print("the reverse precision is {}".format(metrics.accuracy_score(final_y_va, final_list)))
                         else:
                             result = np.concatenate((folder_2,folder_4,folder_6,folder_8,folder_10),axis=1)
                             final_list = []
@@ -324,7 +334,7 @@ if __name__ == '__main__':
                                 else:
                                     final_list.append(0)
                             #print("the lag is {}".format(lag))
-                            print("the same precision is {}".format(metrics.accuracy_score(final_y_va[i], final_list)))
+                            print("the same precision is {}".format(metrics.accuracy_score(final_y_va, final_list)))
                             result = np.concatenate((folder_1,folder_3,folder_5,folder_7,folder_9),axis=1)
                             final_list = []
                             for j in range(len(result)):
@@ -340,7 +350,7 @@ if __name__ == '__main__':
                                 else:
                                     final_list.append(0)
                             #print("the lag is {}".format(lag))
-                            print("the reverse precision is {}".format(metrics.accuracy_score(final_y_va[i], final_list)))
+                            print("the reverse precision is {}".format(metrics.accuracy_score(final_y_va, final_list)))
                     print("the lag is {}".format(lag))
                     print("the train date is {}".format(split_date[0]))
                     print("the test date is {}".format(split_date[1]))
