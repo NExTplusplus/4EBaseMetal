@@ -82,10 +82,10 @@ if __name__ == '__main__':
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
             length = args.length
             if length == 10:
-                split_dates = rolling_half_year("2004-07-01","2019-01-01",length)
+                split_dates = rolling_half_year("2004-07-01","2017-01-01",length)
             else:
-                split_dates = rolling_half_year("2009-07-01","2019-01-01",length)
-            split_dates  =  split_dates[-4:]
+                split_dates = rolling_half_year("2009-07-01","2017-01-01",length)
+            split_dates  =  split_dates[:]
             importance_list = []
             version_params=generate_version_params(args.version)
             for split_date in split_dates:
@@ -162,7 +162,7 @@ if __name__ == '__main__':
                     test_y = test[(test['result']==-1) | (test['result']==1)].loc[:,['result']]
                     test_y = test_y.replace(-1,0)
                     new_final_y_va = np.array(test_y)
-                    test_X = test_dataframe.loc[:,column_lag_list] 
+                    #test_X = test_dataframe.loc[:,column_lag_list] 
                     n_splits=args.k_folds
                     from sklearn.metrics import accuracy_score
                     model = xgb.XGBClassifier(max_depth=args.max_depth,
@@ -249,6 +249,8 @@ if __name__ == '__main__':
                             else:
                                 final_list.append(0)
                         #print("the lag is {}".format(lag))
+                        print(len(new_final_y_va))
+                        print(len(final_list))
                         print("the all folder voting precision is {}".format(metrics.accuracy_score(new_final_y_va, final_list)))
                     elif args.voting=='near':
                         result = np.concatenate((folder_6,folder_7,folder_8,folder_9,folder_10),axis=1)
