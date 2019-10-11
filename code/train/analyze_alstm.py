@@ -60,15 +60,62 @@ def _get_stop_perf(perfs, stop, stop_window=10):
         # need to be updated
         return perfs[0][-1]['acc'], perfs[1][-1]['acc']
     elif stop == 'best_val':
-        val_loss_mean = 0
-        val_acc_mean = 0
-
-        test_loss_mean = 0
-        test_acc_mean = 0
-        test_case_mean = np.zeros(len(perfs[1][0][0]['case']), dtype=float)
-        test_tp_mean = copy.copy(test_case_mean)
+        # val_loss_mean = 0
+        # val_acc_mean = 0
+        #
+        # test_loss_mean = 0
+        # test_acc_mean = 0
+        # test_case_mean = np.zeros(len(perfs[1][0][0]['case']), dtype=float)
+        # test_tp_mean = copy.copy(test_case_mean)
+        #
+        # rollings = len(perfs[0])
+        # for rolling in range(rollings):
+        #     val_perfs = perfs[0][rolling]
+        #     tes_perfs = perfs[1][rolling]
+        #
+        #     best_val_loss = 1e10
+        #     best_val_acc = 0
+        #     best_test_perf = None
+        #
+        #     for val_perf, tes_perf in zip(val_perfs, tes_perfs):
+        #         # get the best epoch
+        #         if val_perf['loss'] < best_val_loss:
+        #             best_val_loss = val_perf['loss']
+        #             best_val_acc = val_perf['acc']
+        #             best_test_perf = tes_perf
+        #
+        #     # get average val performance across rollings at selected epoch
+        #     val_loss_mean += best_val_loss
+        #     val_acc_mean += best_val_acc
+        #
+        #     # get average test performance across rollings at selected epoch
+        #     test_loss_mean += best_test_perf['loss']
+        #     test_acc_mean += best_test_perf['acc']
+        #     test_case_mean += best_test_perf['case']
+        #     for case in range(len(best_test_perf['tb'])):
+        #         test_tp_mean[case] = test_tp_mean[case] + (best_test_perf['tb'][case][0] + best_test_perf['tb'][case][1]) / 2
+        #     # test_tp_mean += test_perf_rolling['tb']
+        # val_loss_mean /= rollings
+        # val_acc_mean /= rollings
+        # test_loss_mean /= rollings
+        # test_acc_mean /= rollings
+        # test_case_mean /= rollings
+        # test_tp_mean /= rollings
+        #
+        # return val_loss_mean, val_acc_mean, \
+        #        test_loss_mean, test_acc_mean, test_case_mean, test_tp_mean
 
         rollings = len(perfs[0])
+
+        val_loss_rolls = np.zeros(rollings, dtype=float)
+        val_acc_rolls = np.zeros(rollings, dtype=float)
+
+        test_loss_rolls = np.zeros(rollings, dtype=float)
+        test_acc_rolls = np.zeros(rollings, dtype=float)
+
+        test_case_rolls = np.zeros([rollings, len(perfs[1][0][0]['case'])],
+                                   dtype=float)
+        test_tp_rolls = copy.copy(test_case_rolls)
         for rolling in range(rollings):
             val_perfs = perfs[0][rolling]
             tes_perfs = perfs[1][rolling]
@@ -84,26 +131,40 @@ def _get_stop_perf(perfs, stop, stop_window=10):
                     best_val_acc = val_perf['acc']
                     best_test_perf = tes_perf
 
-            # get average val performance across rollings at selected epoch
-            val_loss_mean += best_val_loss
-            val_acc_mean += best_val_acc
+            # record the validation performance at selected epoch
+            val_loss_rolls[rolling] = best_val_loss
+            val_acc_rolls[rolling] = best_val_acc
 
-            # get average test performance across rollings at selected epoch
-            test_loss_mean += best_test_perf['loss']
-            test_acc_mean += best_test_perf['acc']
-            test_case_mean += best_test_perf['case']
+            # record the testing performance at selected epoch
+            test_loss_rolls[rolling] = best_test_perf['loss']
+            test_acc_rolls[rolling] = best_test_perf['acc']
+            test_case_rolls[rolling] = copy.copy(best_test_perf['case'])
+
+            test_tp_mean = np.zeros(len(perfs[1][0][0]['case']), dtype=float)
             for case in range(len(best_test_perf['tb'])):
-                test_tp_mean[case] = test_tp_mean[case] + (best_test_perf['tb'][case][0] + best_test_perf['tb'][case][1]) / 2
-            # test_tp_mean += test_perf_rolling['tb']
-        val_loss_mean /= rollings
-        val_acc_mean /= rollings
-        test_loss_mean /= rollings
-        test_acc_mean /= rollings
-        test_case_mean /= rollings
-        test_tp_mean /= rollings
+                test_tp_mean[case] = (best_test_perf['tb'][case][0] +
+                                      best_test_perf['tb'][case][1]) / 2
+            test_tp_rolls[rolling] = copy.copy(test_tp_mean)
 
-        return val_loss_mean, val_acc_mean, \
-               test_loss_mean, test_acc_mean, test_case_mean, test_tp_mean
+        # format stop performance
+        stop_perf = {}
+        stop_perf['va_loss'] = val_loss_rolls
+        stop_perf['va_acc'] = val_acc_rolls
+        stop_perf['te_loss'] = test_loss_rolls
+        stop_perf['te_acc'] = test_acc_rolls
+        stop_perf['cases'] = test_case_rolls
+        stop_perf['tps'] = test_tp_rolls
+        return stop_perf
+
+        # val_loss_mean /= rollings
+        # val_acc_mean /= rollings
+        # test_loss_mean /= rollings
+        # test_acc_mean /= rollings
+        # test_case_mean /= rollings
+        # test_tp_mean /= rollings
+        #
+        # return val_loss_mean, val_acc_mean, \
+        #        test_loss_mean, test_acc_mean, test_case_mean, test_tp_mean
     elif stop == 'early_va_loss':
         # need to be updated
         va_losses = [val_perf['loss'] for val_perf in perfs[0]]
@@ -115,7 +176,7 @@ def _get_stop_perf(perfs, stop, stop_window=10):
         raise NotImplementedError
 
 
-def report_performance(fnames, case_number=6, stops=None):
+def parse_performance(fnames, case_number=6):
     # parse performances
     paras = []
     perfs = []
@@ -200,46 +261,86 @@ def report_performance(fnames, case_number=6, stops=None):
                 temp = perfs[i]
                 perfs[i] = perfs[j]
                 perfs[j] = temp
+    return paras, perfs
 
-    stop_perfs = []
+
+def get_performance_stop_epoch(paras, perfs, stops, stop_window=10):
+    select_perfs_stops = []
+    assert len(paras) == len(perfs), 'length mismatch before stop inference'
     # report results
     for stop in stops:
-        best_val_loss = 0
-        best_val_acc = 0
-        best_test_loss = 1e10
-        best_test_acc = 0
-        best_test_tp_acc = 0
-        best_para = None
+        select_perfs = []
         for i in range(len(paras)):
             print(paras[i])
-            stop_perf = _get_stop_perf(perfs[i], stop, stop_window=10)
-            print('va_loss: {:.6f}'.format(stop_perf[0]),
-                  'va_acc: {:.4f}'.format(stop_perf[1]),
-                  'te_loss: {:.6f}'.format(stop_perf[2]),
-                  'te_acc: {:.4f}'.format(stop_perf[3]),
-                  'te_tp_acc: {:.4f}'.format(np.mean(stop_perf[5])))
+            stop_perf = _get_stop_perf(perfs[i], stop, stop_window=stop_window)
+            print('va_loss:', stop_perf['va_loss'])
+            print('va_acc:', stop_perf['va_acc'])
+            print('te_loss:', stop_perf['te_loss'])
+            print('te_acc:', stop_perf['te_acc'])
+            select_perfs.append(stop_perf)
+        select_perfs_stops.append(select_perfs)
+    return select_perfs_stops
 
-            # if stop_perf[0] < best_val_loss:
-            if stop_perf[2] < best_test_loss:
-                best_val_loss = stop_perf[0]
-                best_val_acc = stop_perf[1]
-                best_test_loss = stop_perf[2]
-                best_test_acc = stop_perf[3]
-                best_test_tp_acc = np.mean(stop_perf[5])
-                best_para = paras[i]
 
-            stop_perfs.append(stop_perf)
-            # break
+def select_parameter_average_test_loss(paras, perfs, perfs_stops, stop, stops):
+    if stop not in stops:
+        print('unexpected stop method: ', stop)
+        exit(1)
+    assert len(paras) == len(perfs), 'length mismatch before para selection'
 
-        print('Best valid loss: {:.6f} acc: {:.4f}'.format(best_val_loss, best_val_acc))
-        print('Best test loss: {:.6f} acc: {:.4f} tp_acc: {:.4f}'.format(
-            best_test_loss, best_test_acc, best_test_tp_acc)
+    perfs_stop = None
+    for i, s in enumerate(stops):
+        if s == stop:
+            perfs_stop = perfs_stops[i]
+    assert len(paras) == len(perfs_stop), 'length mismatch on stop perfs'
+
+    best_val_loss = 0
+    best_val_acc = 0
+    best_test_loss = 1e10
+    best_test_acc = 0
+    best_test_tp_acc = 0
+    best_test_cases = None
+    best_test_tps = None
+    best_para = None
+    # traverse all parameter combinations
+    for i in range(len(paras)):
+        print(paras[i])
+        stop_perf = perfs_stop[i]
+        val_loss_mean = np.mean(stop_perf['va_loss'])
+        val_acc_mean = np.mean(stop_perf['va_acc'])
+        test_loss_mean = np.mean(stop_perf['te_loss'])
+        test_acc_mean = np.mean(stop_perf['te_acc'])
+        test_tp_mean = np.mean(stop_perf['tps'])
+        print(
+            'va_loss: {:.6f}'.format(val_loss_mean),
+            'va_acc: {:.4f}'.format(val_acc_mean),
+            'te_loss: {:.6f}'.format(test_loss_mean),
+            'te_acc: {:.4f}'.format(test_acc_mean),
+            'te_tp_acc: {:.4f}'.format(test_tp_mean)
         )
-        print('Best para:', best_para)
 
-        # write out
-        print('------------')
-    return paras, perfs, stop_perfs
+        # if stop_perf[0] < best_val_loss:
+        if test_loss_mean < best_test_loss:
+            best_val_loss = val_loss_mean
+            best_val_acc = val_acc_mean
+
+            best_test_loss = test_loss_mean
+            best_test_acc = test_acc_mean
+            best_test_tp_acc = test_tp_mean
+
+            best_test_cases = np.mean(stop_perf['cases'], axis=0)
+            best_test_tps = np.mean(stop_perf['tps'], axis=0)
+
+            best_para = paras[i]
+        # break
+
+    print('Best valid loss: {:.6f} acc: {:.4f}'.format(best_val_loss, best_val_acc))
+    print('Best test loss: {:.6f} acc: {:.4f} tp_acc: {:.4f}'.format(
+        best_test_loss, best_test_acc, best_test_tp_acc)
+    )
+    print('Best test acc cases:', best_test_cases)
+    print('Best test acc tps:', best_test_tps)
+    print('Best para:', best_para)
 
 
 def report_hyperpara(sel_paras, fname):
@@ -322,6 +423,11 @@ if __name__ == '__main__':
     if 'ana' in fnames[-1]:
         report_hyperpara(['dropout', 'hidden1', 'weight_decay'], fnames[-1])
     elif 'tune' in fnames[-1]:
-        report_performance(fnames, 6, ['best_val'])
+        # report_performance(fnames, 6, ['best_val'])
+        paras, perfs = parse_performance(fnames, 6)
+        perfs_stops = get_performance_stop_epoch(paras, perfs, ['best_val'],
+                                                 stop_window=10)
+        select_parameter_average_test_loss(paras, perfs, perfs_stops,
+                                           'best_val', ['best_val'])
     else:
         report_curve(fnames, os.path.join(exp_path, 'gcns'))
