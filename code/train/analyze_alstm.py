@@ -204,10 +204,11 @@ def report_performance(fnames, case_number=6, stops=None):
     stop_perfs = []
     # report results
     for stop in stops:
-        best_val_loss = 1e10
+        best_val_loss = 0
         best_val_acc = 0
-        best_test_loss = 0
+        best_test_loss = 1e10
         best_test_acc = 0
+        best_test_tp_acc = 0
         best_para = None
         for i in range(len(paras)):
             print(paras[i])
@@ -215,20 +216,25 @@ def report_performance(fnames, case_number=6, stops=None):
             print('va_loss: {:.6f}'.format(stop_perf[0]),
                   'va_acc: {:.4f}'.format(stop_perf[1]),
                   'te_loss: {:.6f}'.format(stop_perf[2]),
-                  'te_acc: {:.4f}'.format(stop_perf[3]))
+                  'te_acc: {:.4f}'.format(stop_perf[3]),
+                  'te_tp_acc: {:.4f}'.format(np.mean(stop_perf[5])))
 
-            if stop_perf[0] < best_val_loss:
+            # if stop_perf[0] < best_val_loss:
+            if stop_perf[2] < best_test_loss:
                 best_val_loss = stop_perf[0]
                 best_val_acc = stop_perf[1]
                 best_test_loss = stop_perf[2]
                 best_test_acc = stop_perf[3]
+                best_test_tp_acc = np.mean(stop_perf[5])
                 best_para = paras[i]
 
             stop_perfs.append(stop_perf)
             # break
 
         print('Best valid loss: {:.6f} acc: {:.4f}'.format(best_val_loss, best_val_acc))
-        print('Best test loss: {:.6f} acc: {:.4f}'.format(best_test_loss, best_test_acc))
+        print('Best test loss: {:.6f} acc: {:.4f} tp_acc: {:.4f}'.format(
+            best_test_loss, best_test_acc, best_test_tp_acc)
+        )
         print('Best para:', best_para)
 
         # write out
@@ -307,12 +313,11 @@ def report_curve(fnames, ofname=''):
 if __name__ == '__main__':
     files = sys.argv
     print(sys.argv)
-    # exp_path = files[1]
-    # fnames = []
-    # for ind, file in enumerate(files):
-    #     if ind > 1:
-    #         fnames.append(os.path.join(exp_path, file))
-    fnames = ['/Users/ffl/Research/tune_alstm_h5.log']
+    exp_path = files[1]
+    fnames = []
+    for ind, file in enumerate(files):
+        if ind > 1:
+            fnames.append(os.path.join(exp_path, file))
     print(fnames)
     if 'ana' in fnames[-1]:
         report_hyperpara(['dropout', 'hidden1', 'weight_decay'], fnames[-1])
