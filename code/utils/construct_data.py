@@ -22,6 +22,7 @@ def generate_strat_params_v1(ground_truth,steps):
 
 def generate_strat_params_v2(ground_truth,steps):
     path = os.getcwd()
+    print(os.getcwd())
     with open(path+"exp/strat_param_v10.conf") as f:
         all_params = json.load(f)
     strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
