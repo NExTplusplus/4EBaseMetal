@@ -21,7 +21,7 @@ def generate_strat_params_v1(ground_truth,steps):
     return strat_params,activation_params
 
 def generate_strat_params_v2(ground_truth,steps):
-    with open(os.path.join(sys.path[0],"4EBaseMetal/exp/strat_param_v10.conf")) as f:
+    with open(exp/strat_param_v10.conf") as f:
         all_params = json.load(f)
     strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
     activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat6":True,"strat7":True,"strat9":True}
