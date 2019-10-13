@@ -26,12 +26,19 @@ if __name__ == '__main__':
     print(args)
 
     selected_parameters = ['lag', 'hidden', 'embedding_size', 'drop_out', 'batch']
+    # parameter_values = [
+    #     [3, 5, 10, 20],
+    #     [30, 50, 100],
+    #     [5, 10, 20],
+    #     [0.0, 0.2, 0.4, 0.6],
+    #     [512, 1024]
+    # ]
     parameter_values = [
-        [3, 5, 10, 20],
-        [30, 50, 100],
-        [5, 10, 20],
+        [2, 3, 4, 5],
+        [30, 50, 70],
+        [20, 30],
         [0.0, 0.2, 0.4, 0.6],
-        [512, 1024]
+        [256, 512]
     ]
     init_para = {
         'drop_out': args.drop_out,
