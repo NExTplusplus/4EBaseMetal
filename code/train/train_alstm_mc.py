@@ -360,7 +360,7 @@ class Trainer:
             # start MC evaluation
             # net.eval()
             net.train()
-            net.dropout_test()
+            net.test_dropout()
             if if_eval_train:
                 '''
                 old code from Jiangeng
@@ -387,8 +387,9 @@ class Trainer:
                 # print(val_X.shape)
                 # print(var_x_val_id.shape)
                 # MC evaluation
-                for i in range(self.repeat_mc):
-                    if i == 0:
+                for rep in range(self.repeat_mc):
+                    # print(rep)
+                    if rep == 0:
                         val_pred = net(val_X, var_x_val_id).detach()
                     else:
                         val_pred += net(val_X, var_x_val_id).detach()
@@ -444,8 +445,9 @@ class Trainer:
             test_Y = torch.from_numpy(self.test_y).float()
             var_x_test_id = torch.LongTensor(np.array(self.test_embedding))
 
-            for i in range(self.repeat_mc):
-                if i == 0:
+            for rep in range(self.repeat_mc):
+                # print(rep)
+                if rep == 0:
                     test_pred = net(test_X, var_x_test_id).detach()
                 else:
                     test_pred += net(test_X, var_x_test_id).detach()

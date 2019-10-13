@@ -279,10 +279,10 @@ def get_performance_stop_epoch(paras, perfs, stops, stop_window=10):
         for i in range(len(paras)):
             print(paras[i])
             stop_perf = _get_stop_perf(perfs[i], stop, stop_window=stop_window)
-            print('va_loss:', stop_perf['va_loss'])
-            print('va_acc:', stop_perf['va_acc'])
-            print('te_loss:', stop_perf['te_loss'])
-            print('te_acc:', stop_perf['te_acc'])
+            print('va_loss:', stop_perf['va_loss'], np.mean(stop_perf['va_loss']))
+            print('va_acc:', stop_perf['va_acc'], np.mean(stop_perf['va_acc']))
+            print('te_loss:', stop_perf['te_loss'], np.mean(stop_perf['te_loss']))
+            print('te_acc:', stop_perf['te_acc'], np.mean(stop_perf['te_acc']))
             select_perfs.append(stop_perf)
         select_perfs_stops.append(select_perfs)
     return select_perfs_stops
