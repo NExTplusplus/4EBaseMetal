@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 import sys
 import json
@@ -25,7 +27,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--data_configure_file', '-c', type=str,
         help='configure file of the features to be read',
-        default='exp/online_v10.conf'
+        default='exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf'
     )
     parser.add_argument('-s','--steps',type=int,default=3,
                         help='steps in the future to be predicted')
@@ -59,7 +61,6 @@ if __name__ == '__main__':
     parser.add_argument('-min_child','--min_child',type=int,help='feed the parameter into the model',default=0)
     parser.add_argument('-subsample','--subsample',type=float,help='feed the parameter into the model',default=0)
     parser.add_argument('-voting','--voting',type=str,help='there are five methods for voting: all,far,same,near,reverse')
-    parser.add_argument('-length','--length',type=int,help='it is the length of the data we want to train', default=10)
     args = parser.parse_args()
     if args.ground_truth =='None':
         args.ground_truth = None
@@ -80,11 +81,8 @@ if __name__ == '__main__':
             elif args.source == "4E":
                 from utils.read_data import read_data_v5_4E
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
-            length = args.length
-            if length == 10:
-                split_dates = rolling_half_year("2004-07-01","2019-01-01",length)
-            else:
-                split_dates = rolling_half_year("2009-07-01","2019-01-01",length)
+            length = 5
+            split_dates = rolling_half_year("2009-07-01","2019-01-01",length)
             split_dates  =  split_dates[-4:]
             importance_list = []
             version_params=generate_version_params(args.version)
@@ -115,6 +113,7 @@ if __name__ == '__main__':
                 i = 0
                 for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
                     print(ground_truth)
+                    
                     metal_id = [0,0,0,0,0,0]
                     metal_id[i] = 1
                     X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,split_date,norm_params,tech_params,version_params)
@@ -135,8 +134,10 @@ if __name__ == '__main__':
                 final_y_tr = [np.transpose(arr) for arr in np.dstack(final_y_tr)]
                 final_X_tr = np.reshape(final_X_tr,[np.shape(final_X_tr)[0]*np.shape(final_X_tr)[1],np.shape(final_X_tr)[2]])
                 final_y_tr = np.reshape(final_y_tr,[np.shape(final_y_tr)[0]*np.shape(final_y_tr)[1],np.shape(final_y_tr)[2]])
+                
                 column_lag_list = []
                 column_name = []
+  #              l = [x for x in range(lag+1) if x%5==0]
                 for i in range(lag):
                     for item in column_list[0]:
                         new_item = item+"_"+str(lag-i)
@@ -147,7 +148,6 @@ if __name__ == '__main__':
                 column_lag_list.append("Ti")
                 column_lag_list.append("Zi")
                 column_lag_list.append("Le")
-                #print(column_lag_list)
                 train_dataframe = pd.DataFrame(final_X_tr,columns=column_lag_list)
                 train_X = train_dataframe.loc[:,column_lag_list]
                 train_y = pd.DataFrame(final_y_tr,columns=['result'])

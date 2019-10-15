@@ -34,10 +34,15 @@ def strategy_testing(X,ground_truth,strategy_params,activation_params,cov = ""):
                 X[col+cov+"_strat2"] = strategy_2(X[col],strategy_params['strat2']['window'])
             if activation_params["strat3_close"]:
                 X[col+cov+"_strat3"] = strategy_3(X[col],strategy_params['strat3_close']['window'])
+            if activation_params["strat5"]:
+                X[col+cov+"_strat5"] = strategy_5(X[col],strategy_params['strat5']['window'])
+                
             if activation_params["strat7"]:
                 X[col+cov+"_strat7"] = strategy_7(X[col],strategy_params['strat7']['window'],strategy_params['strat7']['limiting_factor'])
             if activation_params["strat9"]:
                 X[col+cov+"_strat9"] = strategy_9(X[col],strategy_params['strat9']['FastLength'],strategy_params['strat9']['SlowLength'],strategy_params['strat9']['MACDLength'])
+            if ground_truth+"_High" in cols and ground_truth+"_Low" in cols and activation_params["strat4"]:
+                X[setting+cov+"strat4"] = strategy_4(X[setting+"High"],X[setting+"Low"],X[col],strategy_params['strat4']['window'],strategy_params['strat4']['limiting_factor'])
             if ground_truth+"_High" in cols and ground_truth+"_Low" in cols and activation_params["strat6"]:
                 X[setting+cov+"strat6"] = strategy_6(X[setting+"High"],X[setting+"Low"],X[col],strategy_params['strat6']['window'],strategy_params['strat6']['limiting_factor'])
                 

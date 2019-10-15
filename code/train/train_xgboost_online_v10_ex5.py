@@ -18,14 +18,15 @@ from xgboost import plot_importance
 from sklearn import metrics
 from sklearn.model_selection import KFold
 from utils.version_control_functions import generate_version_params
-
+import scipy.stats as sct
+import math
 if __name__ == '__main__':
     desc = 'the logistic regression model'
     parser = argparse.ArgumentParser(description=desc)
     parser.add_argument(
         '--data_configure_file', '-c', type=str,
         help='configure file of the features to be read',
-        default='exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf'
+        default='exp/online_v10.conf'
     )
     parser.add_argument('-s','--steps',type=int,default=3,
                         help='steps in the future to be predicted')
@@ -58,7 +59,7 @@ if __name__ == '__main__':
     parser.add_argument('-gamma','--gamma',type=float,help='feed the parameter into the model',default=0)
     parser.add_argument('-min_child','--min_child',type=int,help='feed the parameter into the model',default=0)
     parser.add_argument('-subsample','--subsample',type=float,help='feed the parameter into the model',default=0)
-    parser.add_argument('-voting','--voting',type=str,help='there are five methods for voting: all,far,same,near,reverse')
+    parser.add_argument('-voting','--voting',type=str,help='there are five methods for voting: all,far,same,near,reverse',default='all')
     parser.add_argument('-length','--length',type=int,help='it is the length of the data we want to train', default=10)
     args = parser.parse_args()
     if args.ground_truth =='None':
@@ -81,6 +82,28 @@ if __name__ == '__main__':
                 from utils.read_data import read_data_v5_4E
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
             length = args.length
+            start_length = args.steps+250
+            new_time_series = copy(time_series)
+            for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
+                spot_price = copy(time_series[ground_truth])
+                spot_price = np.log( spot_price.shift(-args.steps) / spot_price )
+                spot_price = spot_price[:]
+                spot_change = copy(spot_price)
+                for i in range(start_length,len(spot_change)):
+                    mean=np.nanmean(spot_change[i-start_length:i-args.steps+1])
+                    std=np.nanstd(spot_change[i-start_length:i-args.steps+1])
+                    threshold_1 = sct.norm.ppf(q=0.309,loc=mean,scale=std)
+                    threshold_2 = sct.norm.ppf(q=0.691,loc=mean,scale=std)
+                    if not math.isnan(spot_price[i]):
+                        if spot_price[i]<=threshold_1:
+                            spot_price[i]=-1
+                        elif threshold_1<spot_price[i]<=threshold_2:
+                            spot_price[i]=0
+                        else:
+                            spot_price[i]=1
+                spot_price = spot_price.rename(ground_truth+"_label")
+                new_time_series = pd.concat([copy(new_time_series), spot_price],sort = True, axis = 1)
+                #print(new_time_series)
             if length == 10:
                 split_dates = rolling_half_year("2004-07-01","2019-01-01",length)
             else:
@@ -111,7 +134,7 @@ if __name__ == '__main__':
                 final_y_va = []
                 final_X_te = None
                 final_y_te = None 
-                ts = copy(time_series.loc[split_date[0]:split_date[2]])
+                ts = copy(new_time_series.loc[split_date[0]:split_date[2]])
                 i = 0
                 for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
                     print(ground_truth)
@@ -249,7 +272,7 @@ if __name__ == '__main__':
                             else:
                                 final_list.append(0)
                         #print("the lag is {}".format(lag))
-                        print(len(new_final_y_va))
+                        #print(len(new_final_y_va))
                         print(len(final_list))
                         print("the all folder voting precision is {}".format(metrics.accuracy_score(new_final_y_va, final_list)))
                     elif args.voting=='near':

@@ -5,14 +5,11 @@ import argparse
 import json
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-from torch.autograd import Variable
-from sklearn.metrics import accuracy_score, f1_score
+from sklearn.metrics import accuracy_score
 from copy import copy
-import psutil
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 from data.load_data_v16_torch import load_data
-from model.model_embedding import MultiHeadAttention, attention, bilstm
+from model.model_embedding_mc import bilstm
 from utils.construct_data import rolling_half_year
 from utils.version_control_functions import generate_version_params
 import numpy as np
@@ -23,16 +20,10 @@ random.seed(1)
 thresh = 0
 
 
-
-def memory_usage():
-    pid = os.getpid()
-    py = psutil.Process(pid=pid)
-    memory_use = py.memory_info()[0]/2.**30
-    print('memory useage:', memory_use)
-
 class Trainer:
     def __init__(self, input_dim, hidden_state, time_step, lr, dropout,
                  case_number, attention_size, embedding_size,
+                 dropout_mc, repeat_mc,
                  train_X, train_y,
                  test_X, test_y,
                  val_X, val_y,
@@ -77,7 +68,11 @@ class Trainer:
         self.embedding_size = embedding_size
         # attention
         self.attention_size = attention_size
-        
+
+        # MC
+        self.dropout_mc = dropout_mc
+        self.repeat_mc = repeat_mc
+
         # get the train data and test data
         '''
         old code from Jiangeng
@@ -141,9 +136,11 @@ class Trainer:
                      lag=self.window_size,
                      h=self.attention_size,
                      dropout=self.dropout,
+                     dropout_test=self.dropout_mc,
                      case_number=self.case_number,
                      embedding_size=self.embedding_size)
         end = time.time()
+        print('train dropout: {} test dropout: {}'.format(self.dropout, self.dropout_mc))
         print("net initializing with time: {}".format(end-start))
         start = time.time()
         val_y_class = []
@@ -316,6 +313,7 @@ class Trainer:
 
             '''start train'''
             net.train()
+            net.train_dropout()
             # start = time.time()
             print('current epoch:', epoch+1)
             
@@ -359,8 +357,10 @@ class Trainer:
 
             # evaluate on validataion set
             # start = time.time()
-            net.eval()
-            loss_sum = 0
+            # start MC evaluation
+            # net.eval()
+            net.train()
+            net.test_dropout()
             if if_eval_train:
                 '''
                 old code from Jiangeng
@@ -381,16 +381,22 @@ class Trainer:
                     i = batch_end
                     current_val_pred += list(val_output.detach().view(-1,))
                 '''
-
                 val_X = torch.from_numpy(self.val_X).float()
                 val_Y = torch.from_numpy(self.val_y).float()
                 var_x_val_id = torch.LongTensor(np.array(self.val_embedding))
                 # print(val_X.shape)
                 # print(var_x_val_id.shape)
-                val_output = net(val_X, var_x_val_id)
-                loss = loss_func(val_output, val_Y)
+                # MC evaluation
+                for rep in range(self.repeat_mc):
+                    # print(rep)
+                    if rep == 0:
+                        val_pred = net(val_X, var_x_val_id).detach()
+                    else:
+                        val_pred += net(val_X, var_x_val_id).detach()
+                val_pred /= self.repeat_mc
+                loss = loss_func(val_pred, val_Y)
                 loss_sum = loss.detach()
-                current_val_pred = list(val_output.detach().view(-1, ))
+                current_val_pred = list(val_pred.view(-1, ))
                 # print(np.min(current_val_pred), np.max(current_val_pred))
                 ###############################
                 # to replace the old code (Fuli)
@@ -439,11 +445,16 @@ class Trainer:
             test_Y = torch.from_numpy(self.test_y).float()
             var_x_test_id = torch.LongTensor(np.array(self.test_embedding))
 
-            test_output = net(test_X, var_x_test_id)
-            loss = loss_func(test_output, test_Y)
+            for rep in range(self.repeat_mc):
+                # print(rep)
+                if rep == 0:
+                    test_pred = net(test_X, var_x_test_id).detach()
+                else:
+                    test_pred += net(test_X, var_x_test_id).detach()
+            test_pred /= self.repeat_mc
+            loss = loss_func(test_pred, test_Y)
             loss_sum = loss.detach()
-            current_test_pred = list(test_output.detach().view(-1,))
-            # print(np.min(current_test_pred), np.max(current_test_pred))
+            current_test_pred = list(test_pred.view(-1, ))
             
             current_test_class = [1 if ele>thresh else 0 for ele in current_test_pred]    
             
@@ -535,6 +546,14 @@ if __name__ == '__main__':
         help='the dropout rate of LSTM network'
     )
     parser.add_argument(
+        '-dmc', '--drop_out_mc', type=float, default=0.05,
+        help='the MC dropout rate of LSTM network'
+    )
+    parser.add_argument(
+        '-rmc', '--repeat_mc', type=int, default=10,
+        help='the times to repeat evaluation'
+    )
+    parser.add_argument(
         '-a','--attention_size', type = int, default = 2,
         help='the head number in MultiheadAttention Mechanism'
     )
@@ -622,7 +641,6 @@ if __name__ == '__main__':
 
             length = 5
             split_dates = rolling_half_year("2009-07-01","2019-01-01",length)
-            # split_dates = split_dates[:]
             split_dates = split_dates[-4:]
             importance_list = []
             version_params=generate_version_params(args.version)
@@ -873,6 +891,7 @@ if __name__ == '__main__':
                 trainer = Trainer(input_dim, hidden_state, window_size, lr,
                                   dropout, case_number, attention_size,
                                   embedding_size,
+                                  args.drop_out_mc, args.repeat_mc,
                                   final_X_tr, final_y_tr,
                                   final_X_te, final_y_te,
                                   final_X_val, final_y_val,

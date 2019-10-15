@@ -192,7 +192,23 @@ def strategy_3(price,window):
     ans.loc[abs(ans) != 1] = 0
 
     return ans
-
+#This function will generate the predictions based on the 4rd strategy(volatility filter)
+def strategy_4(High, Low, Close,window,limiting_factor):
+    ans = copy(Close)
+    atr = ta.ATR(High,Low,Close,timeperiod = window)
+    HHH = Close.rolling(window).max()
+    LLL = Close.rolling(window).min()
+    HLGL = (HHH+LLL)*limiting_factor-(HHH-LLL)
+    ans.loc[HLGL>atr.shift(1)] = 1
+    ans.loc[HLGL<atr.shift(1)] = -1
+    ans.loc[abs(ans)!=1]=0
+    
+    return ans
+def strategy_5(Close,window):
+    ans = copy(Close)
+    ans = Close.rolling(window).std()
+    
+    return ans
 def strategy_6(High, Low, Close, window, limiting_factor):
     ATR = ta.ATR(High,Low,Close,timeperiod = window)
     MA = Close.rolling(window).mean()
