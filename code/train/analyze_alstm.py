@@ -176,6 +176,15 @@ def _get_stop_perf(perfs, stop, stop_window=10):
         raise NotImplementedError
 
 
+def _filter_parameter(para):
+    if para['batch'] == 256:
+        return True
+    elif para['hidden'] == 70:
+        return True
+    else:
+        return False
+
+
 def parse_performance(fnames, case_number=6, is_test=False):
     # parse performances
     paras = []
@@ -279,10 +288,10 @@ def get_performance_stop_epoch(paras, perfs, stops, stop_window=10):
         for i in range(len(paras)):
             print(paras[i])
             stop_perf = _get_stop_perf(perfs[i], stop, stop_window=stop_window)
-            print('va_loss:', stop_perf['va_loss'])
-            print('va_acc:', stop_perf['va_acc'])
-            print('te_loss:', stop_perf['te_loss'])
-            print('te_acc:', stop_perf['te_acc'])
+            print('va_loss:', stop_perf['va_loss'], np.mean(stop_perf['va_loss']))
+            print('va_acc:', stop_perf['va_acc'], np.mean(stop_perf['va_acc']))
+            print('te_loss:', stop_perf['te_loss'], np.mean(stop_perf['te_loss']))
+            print('te_acc:', stop_perf['te_acc'], np.mean(stop_perf['te_acc']))
             select_perfs.append(stop_perf)
         select_perfs_stops.append(select_perfs)
     return select_perfs_stops
@@ -319,6 +328,8 @@ def select_parameter_average_test_loss(ofname, paras, perfs, perfs_stops, stop, 
     # traverse all parameter combinations
     for i in range(len(paras)):
         print(paras[i])
+        if _filter_parameter(paras[i]):
+            continue
         fout.write(json.dumps(paras[i]).replace(',', '') + ',')
         stop_perf = perfs_stop[i]
         val_loss_mean = np.mean(stop_perf['va_loss'])
@@ -420,6 +431,8 @@ def select_parameter_test_loss_ratio(ofname, paras, perfs, perfs_stops, stop, st
     # traverse all parameter combinations
     for i in range(len(paras)):
         print(paras[i])
+        if _filter_parameter(paras[i]):
+            continue
         fout.write(json.dumps(paras[i]).replace(',', '') + ',')
         stop_perf = perfs_stop[i]
         val_loss_mean = np.mean(stop_perf['va_loss'])
