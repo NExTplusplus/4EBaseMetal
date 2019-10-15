@@ -18,7 +18,8 @@ from xgboost import plot_importance
 from sklearn import metrics
 from sklearn.model_selection import KFold
 from utils.version_control_functions import generate_version_params
-
+import scipy.stats as sct
+import math
 if __name__ == '__main__':
     desc = 'the logistic regression model'
     parser = argparse.ArgumentParser(description=desc)
