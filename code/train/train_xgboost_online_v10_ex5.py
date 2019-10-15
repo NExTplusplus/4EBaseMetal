@@ -133,7 +133,7 @@ if __name__ == '__main__':
                 final_y_va = []
                 final_X_te = None
                 final_y_te = None 
-                ts = copy(time_series.loc[split_date[0]:split_date[2]])
+                ts = copy(new_time_series.loc[split_date[0]:split_date[2]])
                 i = 0
                 for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
                     print(ground_truth)
