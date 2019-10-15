@@ -86,8 +86,8 @@ if __name__ == '__main__':
                 spot_price = spot_price[:]
                 spot_change = copy(spot_price)
                 for i in range(start_length,len(spot_change)):
-                    mean=np.nanmean(spot_change[i-start_length:i-args.steps])
-                    std=np.nanstd(spot_change[i-start_length:i-args.steps])
+                    mean=np.nanmean(spot_change[i-start_length:i-args.steps+1])
+                    std=np.nanstd(spot_change[i-start_length:i-args.steps+1])
                     threshold_1 = sct.norm.ppf(q=0.309,loc=mean,scale=std)
                     threshold_2 = sct.norm.ppf(q=0.691,loc=mean,scale=std)
                     if not math.isnan(spot_price[i]):
