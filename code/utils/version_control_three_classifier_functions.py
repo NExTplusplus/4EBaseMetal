@@ -109,7 +109,7 @@ def three_classifier_labelling(arguments,split_dates):
     val_end = split_dates[2]
     assert ground_truth_columns != []
     ans = []
-    for ground_truth in ground_truth_columns:
+    '''for ground_truth in ground_truth_columns:
         labels = copy(time_series[ground_truth])
         labels = np.log( labels.shift(-horizon) / labels )
         #print(split_dates)
@@ -129,8 +129,9 @@ def three_classifier_labelling(arguments,split_dates):
         val_labels[(val_labels > threshold_2)&(val_labels.index <= val_end)] = 1
         labels = labels.rename("Label")
         ans.append(labels)
-        #print(ans)
-    
+        #print(ans)'''
+    for ground_truth in ground_truth_columns:
+        ans.append(copy(time_series[ground_truth+"_label"]).rename("Label"))
     return ans
 
 def process_missing_value(arguments, version):

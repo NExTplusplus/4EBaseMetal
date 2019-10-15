@@ -66,6 +66,10 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     parameters['time_series'] = parameters['time_series'].loc[LME_dates]
     #do the three classifier
     parameters['labels'] = three_classifier_labelling(parameters,split_dates)
+    #print(parameters['labels'])
+    ground_truth_columns = parameters['ground_truth_columns']
+    for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
+        parameters['time_series'] = parameters['time_series'].drop([ground_truth+"_label"],axis=1)
     #print("the labels is {}".format(parameters['labels']))
     #parameters['labels'] = labelling(parameters, version_params['labelling'])
     #print("the labels is {}".format(parameters['labels']))

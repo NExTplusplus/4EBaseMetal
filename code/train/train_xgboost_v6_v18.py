@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import sys
 import json
@@ -6,7 +7,7 @@ import numpy as np
 import pandas as pd
 from copy import copy
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
-from data.load_data_three_class import load_data
+from data.load_data import load_data
 from model.logistic_regression import LogReg
 from utils.transform_data import flatten
 from utils.construct_data import rolling_half_year
@@ -17,9 +18,7 @@ from matplotlib import pyplot
 from xgboost import plot_importance
 from sklearn import metrics
 from sklearn.model_selection import KFold
-import scipy.stats as sct
 from utils.version_control_functions import generate_version_params
-import math
 
 if __name__ == '__main__':
     desc = 'the logistic regression model'
@@ -29,7 +28,7 @@ if __name__ == '__main__':
         help='configure file of the features to be read',
         default='exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf'
     )
-    parser.add_argument('-s','--steps',type=int,default=3,
+    parser.add_argument('-s','--steps',type=int,default=5,
                         help='steps in the future to be predicted')
     parser.add_argument('-gt', '--ground_truth', help='ground truth column',
                         type=str, default="LME_Co_Spot")
@@ -54,9 +53,7 @@ if __name__ == '__main__':
     parser.add_argument ('-out','--output',type = str, help='output file', default ="../../../Results/results")
     parser.add_argument('-o', '--action', type=str, default='train',
                         help='train, test, tune')
-    parser.add_argument('-xgb','--xgboost',type = int,help='if you want to train the xgboost you need to inform us of that',default=1)
-    parser.add_argument('-voting','--voting',type=str,help='there are five methods for voting: all,far,same,near,reverse')
-    parser.add_argument('-length','--length',type=int,help='it is the length of the data we want to train', default=10)
+    parser.add_argument('-xgb','--xgboost',type = int,help='if you want to train the xgboost you need to inform us of that',default=0)
     args = parser.parse_args()
     if args.ground_truth =='None':
         args.ground_truth = None
@@ -65,6 +62,10 @@ if __name__ == '__main__':
     with open(os.path.join(sys.path[0],args.data_configure_file)) as fin:
         fname_columns = json.load(fin)
     args.ground_truth = args.ground_truth.split(",")
+    #print("args.ground_truth is {}".format(args.ground_truth))
+    #import os
+    #os._exit(0)
+   
     if args.action == 'train':
         comparison = None
         n = 0
@@ -77,37 +78,15 @@ if __name__ == '__main__':
             elif args.source == "4E":
                 from utils.read_data import read_data_v5_4E
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
-            length = args.length
-            start_length = args.steps+250
-            new_time_series = copy(time_series)
-            for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
-                spot_price = copy(time_series[ground_truth])
-                spot_price = np.log( spot_price.shift(-args.steps) / spot_price )
-                spot_price = spot_price[:]
-                spot_change = copy(spot_price)
-                for i in range(start_length,len(spot_change)):
-                    mean=np.nanmean(spot_change[i-start_length:i-args.steps])
-                    std=np.nanstd(spot_change[i-start_length:i-args.steps])
-                    threshold_1 = sct.norm.ppf(q=0.309,loc=mean,scale=std)
-                    threshold_2 = sct.norm.ppf(q=0.691,loc=mean,scale=std)
-                    if not math.isnan(spot_price[i]):
-                        if spot_price[i]<=threshold_1:
-                            spot_price[i]=-1
-                        elif threshold_1<spot_price[i]<=threshold_2:
-                            spot_price[i]=0
-                        else:
-                            spot_price[i]=1
-                spot_price = spot_price.rename(ground_truth+"_label")
-                new_time_series = pd.concat([copy(new_time_series), spot_price],sort = True, axis = 1)
-                #print(new_time_series)
-            if length == 10:
-                split_dates = rolling_half_year("2005-01-01","2017-01-01",length)
-            else:
-                split_dates = rolling_half_year("2009-07-01","2017-01-01",length)
+            length = 5
+            split_dates = rolling_half_year("2009-07-01","2017-01-01",length)
             split_dates  =  split_dates[:]
             importance_list = []
             version_params=generate_version_params(args.version)
+
             for split_date in split_dates:
+                #print("the train date is {}".format(split_date[0]))
+                #print("the test date is {}".format(split_date[1]))
                 horizon = args.steps
                 norm_volume = "v1"
                 norm_3m_spread = "v1"
@@ -122,21 +101,24 @@ if __name__ == '__main__':
                 else:
                     norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
                                 'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False}
-                tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
-                                                'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
                 final_X_tr = []
                 final_y_tr = []
                 final_X_va = []
                 final_y_va = []
-                final_X_te = None
-                final_y_te = None 
-                ts = copy(new_time_series.loc[split_date[0]:split_date[2]])
+                final_X_te = []
+                final_y_te = [] 
+                tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
+                                                'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
+                ts = copy(time_series.loc[split_date[0]:split_date[2]])
                 i = 0
                 for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
                     print(ground_truth)
                     metal_id = [0,0,0,0,0,0]
                     metal_id[i] = 1
-                    X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),copy(LME_dates),horizon,[ground_truth],lag,copy(split_date),norm_params,tech_params,version_params)
+#                    lag_list = [x for x in range(lag+1) if x%5==0]
+#                    print(lag_list)
+#                    nth = len(lag_list)
+                    X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,split_date,norm_params,tech_params,version_params)
                     X_tr = np.concatenate(X_tr)
                     X_tr = X_tr.reshape(len(X_tr),lag*len(column_list[0]))
                     X_tr = np.append(X_tr,[metal_id]*len(X_tr),axis = 1)
@@ -152,13 +134,13 @@ if __name__ == '__main__':
                     i+=1
                 final_X_tr = [np.transpose(arr) for arr in np.dstack(final_X_tr)]
                 final_y_tr = [np.transpose(arr) for arr in np.dstack(final_y_tr)]
+                final_X_va = [np.transpose(arr) for arr in np.dstack(final_X_va)]
+                final_y_va = [np.transpose(arr) for arr in np.dstack(final_y_va)]
                 final_X_tr = np.reshape(final_X_tr,[np.shape(final_X_tr)[0]*np.shape(final_X_tr)[1],np.shape(final_X_tr)[2]])
                 final_y_tr = np.reshape(final_y_tr,[np.shape(final_y_tr)[0]*np.shape(final_y_tr)[1],np.shape(final_y_tr)[2]])
-                inal_X_va = [np.transpose(arr) for arr in np.dstack(final_X_va)]
-                final_y_va = [np.transpose(arr) for arr in np.dstack(final_y_va)]
                 final_X_va = np.reshape(final_X_va,[np.shape(final_X_va)[0]*np.shape(final_X_va)[1],np.shape(final_X_va)[2]])
                 final_y_va = np.reshape(final_y_va,[np.shape(final_y_va)[0]*np.shape(final_y_va)[1],np.shape(final_y_va)[2]])
-                #print()
+                
                 column_lag_list = []
                 column_name = []
                 for i in range(lag):
@@ -174,19 +156,9 @@ if __name__ == '__main__':
                 train_dataframe = pd.DataFrame(final_X_tr,columns=column_lag_list)
                 train_X = train_dataframe.loc[:,column_lag_list]
                 train_y = pd.DataFrame(final_y_tr,columns=['result'])
-                train = pd.concat([train_dataframe,train_y],axis=1)
-                train_X = train[(train['result']==-1) | (train['result']==1)].loc[:,column_lag_list]
-                train_y = train[(train['result']==-1) | (train['result']==1)].loc[:,['result']]
-                train_y = train_y.replace(-1,0)
+                
                 test_dataframe = pd.DataFrame(final_X_va,columns=column_lag_list)
-                test_y = pd.DataFrame(final_y_va,columns=['result'])
-                test = pd.concat([test_dataframe,test_y],axis=1)
-                test_X = test[(test['result']==-1) | (test['result']==1)].loc[:,column_lag_list]
-                test_y = test[(test['result']==-1) | (test['result']==1)].loc[:,['result']]
-                test_y = test_y.replace(-1,0)
-                final_y_va = np.array(test_y)
-                #print(final_y_va)
-                #print(len(final_y_va))
+                test_X = test_dataframe.loc[:,column_lag_list] 
                 n_splits=args.k_folds
                 for max_depth in [3,4,5]:
                     for learning_rate in [0.6,0.7,0.8,0.9]:
@@ -277,8 +249,6 @@ if __name__ == '__main__':
                                         else:
                                             final_list.append(0)
                                     #print("the lag is {}".format(lag))
-                                    print("the length of the data is {}".format(len(final_list)))
-                                    #print("the final list is {}".format(final_list))
                                     print("the all folder voting precision is {}".format(metrics.accuracy_score(final_y_va, final_list)))
                                     result = np.concatenate((folder_6,folder_7,folder_8,folder_9,folder_10),axis=1)
                                     final_list = []
@@ -389,3 +359,5 @@ if __name__ == '__main__':
                 print("the lag is {}".format(lag))
                 print("the train date is {}".format(split_date[0]))
                 print("the test date is {}".format(split_date[1]))
+
+

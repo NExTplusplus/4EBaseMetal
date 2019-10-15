@@ -279,10 +279,10 @@ def get_performance_stop_epoch(paras, perfs, stops, stop_window=10):
         for i in range(len(paras)):
             print(paras[i])
             stop_perf = _get_stop_perf(perfs[i], stop, stop_window=stop_window)
-            print('va_loss:', stop_perf['va_loss'])
-            print('va_acc:', stop_perf['va_acc'])
-            print('te_loss:', stop_perf['te_loss'])
-            print('te_acc:', stop_perf['te_acc'])
+            print('va_loss:', stop_perf['va_loss'], np.mean(stop_perf['va_loss']))
+            print('va_acc:', stop_perf['va_acc'], np.mean(stop_perf['va_acc']))
+            print('te_loss:', stop_perf['te_loss'], np.mean(stop_perf['te_loss']))
+            print('te_acc:', stop_perf['te_acc'], np.mean(stop_perf['te_acc']))
             select_perfs.append(stop_perf)
         select_perfs_stops.append(select_perfs)
     return select_perfs_stops
@@ -484,116 +484,7 @@ def report_test_performance(ofname, cases, perfs_stop):
     fout.close()
 
 
-def report_parameter_performance(ofname, paras, perfs_stop):
-    # get values for each parameter
-    para_values = {}
-    for para in paras:
-        for kv in para.items():
-            if kv[0] not in para_values.keys():
-                para_values[kv[0]] = [kv[1]]
-            elif kv[1] not in para_values[kv[0]]:
-                para_values[kv[0]].append(kv[1])
-
-    # report peformance by parameter values
-    for kv in para_values.items():
-        print(kv)
-        if len(kv[1]) == 1:
-            continue
-        else:
-            print(kv[0])
-
-        perf_values = []
-        para_values = []
-        for value in kv[1]:
-            perf_value = []
-            para_value = []
-            for para, perf in zip(paras, perfs_stop):
-                if para[kv[0]] == value:
-                    temp_para = copy.copy(para)
-                    temp_para.pop(kv[0])
-                    perf_value.append(copy.copy(perf))
-                    para_value.append(temp_para)
-            perf_values.append(perf_value)
-            para_values.append(para_value)
-            print('number of paras:', len(perf_value))
-
-        # check number of parameter combinations under each parameter value
-        for i in range(1, len(kv[1])):
-            assert len(para_values[i]) == len(para_values[i - 1]), 'lengths mismatch'
-
-        # check order of parameter combinations under each parameter value
-        for j in range(len(para_values[-1])):
-            for i in range(1, len(kv[1])):
-                assert para_values[i - 1][j] == para_values[i][j], \
-                    'order mismatch: ' + json.dumps(para_values[i - 1][j]) + \
-                    json.dumps(para_values[i][j])
-
-        # write out performance
-        fout = open(ofname + kv[0] + '.csv', 'w+')
-        fout.write('Parameter_Combination, ')
-        fout.write('_va_loss, '.join(list(map(str, kv[1]))))
-        fout.write(', ')
-        fout.write('_va_acc, '.join(list(map(str, kv[1]))))
-        fout.write(', ')
-        fout.write('_te_loss, '.join(list(map(str, kv[1]))))
-        fout.write(', ')
-        fout.write('_te_acc, '.join(list(map(str, kv[1]))))
-        fout.write(', ')
-        fout.write('_te_tp, '.join(list(map(str, kv[1]))))
-        fout.write('\n')
-
-        va_loss_mean = np.zeros(len(kv[1]), dtype=float)
-        va_acc_mean = np.zeros(len(kv[1]), dtype=float)
-        te_loss_mean = np.zeros(len(kv[1]), dtype=float)
-        te_acc_mean = np.zeros(len(kv[1]), dtype=float)
-        te_tp_mean = np.zeros(len(kv[1]), dtype=float)
-        for j in range(len(para_values[-1])):
-            fout.write(json.dumps(para_values[-1][j]).replace(',', ''))
-            # write validation loss
-            for i in range(len(kv[1])):
-                fout.write(', {:.6f}'.format(np.mean(perf_values[i][j]['va_loss'])))
-                va_loss_mean[i] += np.mean(perf_values[i][j]['va_loss'])
-
-            # write validation accuracy
-            for i in range(len(kv[1])):
-                fout.write(', {:.4f}'.format(np.mean(perf_values[i][j]['va_acc'])))
-                va_acc_mean[i] += np.mean(perf_values[i][j]['va_acc'])
-
-            # write testing loss
-            for i in range(len(kv[1])):
-                fout.write(', {:.6f}'.format(np.mean(perf_values[i][j]['te_loss'])))
-                te_loss_mean[i] += np.mean(perf_values[i][j]['te_loss'])
-
-            # write testing accuracy
-            for i in range(len(kv[1])):
-                fout.write(', {:.4f}'.format(np.mean(perf_values[i][j]['te_acc'])))
-                te_acc_mean[i] += np.mean(perf_values[i][j]['te_acc'])
-
-            # write testing accuracy tps
-            for i in range(len(kv[1])):
-                fout.write(', {:.4f}'.format(np.mean(perf_values[i][j]['tps'])))
-                te_tp_mean[i] += np.mean(perf_values[i][j]['tps'])
-
-            fout.write('\n')
-        fout.close()
-
-        # compare the performance of different values
-        print(kv[1])
-        print('va_loss:', va_loss_mean / len(para_values[-1]))
-        print('va_acc:', va_acc_mean / len(para_values[-1]))
-        print('te_loss:', te_loss_mean / len(para_values[-1]))
-        print('te_acc:', te_acc_mean / len(para_values[-1]))
-        print('te_tp:', te_tp_mean / len(para_values[-1]))
-        print('---------------------------------------------')
-
-
 if __name__ == '__main__':
-    '''
-        format of command: 
-            python script.py path file1 file2 ... action
-        action is an optional parameter for special analysis, which could be:
-            'para'
-    '''
     files = sys.argv
     print(sys.argv)
     exp_path = files[1]
@@ -601,25 +492,13 @@ if __name__ == '__main__':
     for ind, file in enumerate(files):
         if ind > 1:
             fnames.append(os.path.join(exp_path, file))
-    action = None
-    if files[-1] == 'para':
-        action = 'para'
-        fnames.pop()
     # fnames = ['/Users/ffl/Research/exp_4e/alstm_log_all/tune_alstm_h5.log']
-    # action = 'para'
-    print('fnames:', fnames)
+    print(fnames)
     stop_method = 'best_val'
     stop_methods = ['best_val']
-
-    # !!! should be exactly same as the "ground_truths_list" in train_alstm.py
-    cases = ['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot',
-             'LME_Zi_Spot', 'LME_Ti_Spot']
-    case_number = len(cases)
-
-    if 'tune' in fnames[-1] and not action == 'para':
+    if 'tune' in fnames[-1]:
         # report_performance(fnames, 6, ['best_val'])
-        # analyze the log of grid_search
-        paras, perfs = parse_performance(fnames, case_number)
+        paras, perfs = parse_performance(fnames, 6)
         perfs_stops = get_performance_stop_epoch(paras, perfs, stop_methods,
                                                  stop_window=10)
         select_parameter_average_test_loss(
@@ -631,10 +510,12 @@ if __name__ == '__main__':
             perfs_stops, stop_method, stop_methods
         )
     elif 'txt' in fnames[-1]:
-        # analyze the log of online_test
-        paras, perfs = parse_performance(fnames, case_number, is_test=True)
+        paras, perfs = parse_performance(fnames, 6, is_test=True)
         perfs_stops = get_performance_stop_epoch(paras, perfs, stop_methods,
                                                  stop_window=10)
+        # !!! should be exactly same as the "ground_truths_list" in train_alstm.py
+        cases = ['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot',
+         'LME_Zi_Spot', 'LME_Ti_Spot']
 
         perfs_stop = None
         for i, s in enumerate(stop_methods):
@@ -643,17 +524,5 @@ if __name__ == '__main__':
         print('case:', np.mean(perfs_stop['cases']))
         print('tp:', np.mean(perfs_stop['tps']))
         report_test_performance(fnames[-1].replace('.txt', '_test_perf.csv'), cases, perfs_stop)
-    elif 'tune' in fnames[-1] and action == 'para':
-        # analyze the log of grid_search, but report parameter comparison
-        paras, perfs = parse_performance(fnames, case_number)
-        perfs_stops = get_performance_stop_epoch(paras, perfs, stop_methods,
-                                                 stop_window=10)
-        perfs_stop = None
-        for i, s in enumerate(stop_methods):
-            if s == stop_method:
-                perfs_stop = perfs_stops[i]
-        report_parameter_performance(
-            fnames[-1].replace('.log', '_para_perf_'), paras, perfs_stop
-        )
     else:
         pass
