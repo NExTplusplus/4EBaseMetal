@@ -130,7 +130,7 @@ if __name__ == '__main__':
                 X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
                 test_dataframe = pd.DataFrame(X_va,columns=column_lag_list)
                 test_X = test_dataframe.loc[:,column_lag_list]
-                result_v5 = np.loadtxt(args.ground_truth[0]+"_horizon_"+str(horizon)+"_"+split_date[1]+"_"+"v5"+"_weight"+".txt")
+                result_v5 = np.loadtxt(args.ground_truth[0]+"_horizon_"+str(horizon)+"_"+split_date[1]+"_"+"v5"+"_weight_4"+".txt")
                 result_v7 = np.loadtxt(args.ground_truth[0]+"_horizon_"+str(horizon)+"_"+split_date[1]+"_"+"v7"+"_weight"+".txt")
                 if args.ground_truth[0].split("_")[1]=="Co":
                     result_v10 = np.loadtxt("LMCADY"+"_"+"horizon_"+str(horizon)+"_"+split_date[1]+"_v10"+"_striplag30_weight"+".txt")
