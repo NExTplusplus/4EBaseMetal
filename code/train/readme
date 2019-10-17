@@ -1,0 +1,1 @@
+This folder contains the code for training each machine learning model, each training file is used for different models. Note that the different version of different models (e.g., LSTM and AttLSTM) could be in different files.
