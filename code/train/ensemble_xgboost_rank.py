@@ -66,12 +66,14 @@ if __name__ == '__main__':
     # read data configure file
     with open(os.path.join(sys.path[0],args.data_configure_file)) as fin:
         fname_columns = json.load(fin)
+    # get the column from the config file
     args.ground_truth = args.ground_truth.split(",")
     if args.action == 'train':
         comparison = None
         n = 0
         for f in fname_columns:
             lag = args.lag
+            # detect which method we want to get the data
             if args.source == "NExT":
                 from utils.read_data import read_data_NExT
                 data_list, LME_dates = read_data_NExT(f, "2003-11-12")
@@ -79,8 +81,10 @@ if __name__ == '__main__':
             elif args.source == "4E":
                 from utils.read_data import read_data_v5_4E
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
+            # the length means the train set length
             length = 5
             split_dates = rolling_half_year("2009-07-01","2019-01-01",length)
+            # if we want to test we only need to get the last 4 set for testing
             split_dates  =  split_dates[-4:]
             importance_list = []
             version_params=generate_version_params(args.version)
