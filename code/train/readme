@@ -1,1 +1,71 @@
 This folder contains the code for training each machine learning model, each training file is used for different models. Note that the different version of different models (e.g., LSTM and AttLSTM) could be in different files.
+
+Files:
+analyze_alstm.py                      
+analyze_alstm_mc.py                   
+bilstm_train.py                       Implementation of training of Attention and Bi Directional LSTM Model only.
+ensemble_xgboost_rank.py              Implementation of ensemble method v2, documentation can be found in https://wiki.alphien.com/ALwiki/Ensemble_Documentation#General_Description.
+ensemble_xgboost_voting.py            Implementation of ensemble method v1, documentation can be found in https://wiki.alphien.com/ALwiki/Ensemble_Documentation#General_Description.
+grid_search.py                        Implementation of grid search for ALSTM.
+grid_search.pyc                     
+mean_movement.py                      Implementation of analysis of correlation between directional movement and mean deviation.
+model.joblib
+set_validation.py
+test_results.csv
+train_alstm.py                        (to be filled by fuli)
+train_alstm_mc.py                     (to be filled by fuli)
+train_alstm_mc_online.py              (to be filled by fuli)
+train_alstm_online.py                 (to be filled by fuli)
+train_log_reg.py                      Implementation of training of logistic regression with rolling validation.
+train_log_reg_ex1.py                  Implementation of training of logistic regression of experiment 1, which has labels based on spot price lagged a number of days before current timepoint.
+train_log_reg_ex2.py                  Implementation of training of logistic regression of experiment 2, which has labels of 3 classification.
+train_log_reg_rolling.py              Legacy document of training of logistic regression with rolling validation.
+train_log_reg_rolling_v7.py           Legacy document of training of logistic regression with rolling validation of version 7.
+train_log_reg_v10.py                  Implementation of training of logistic regression with rolling validation for v10.
+train_log_reg_v10_online.py           Implementation of online testing of logistic regression with rolling validation for v10.
+train_log_reg_v5_ex3.py               Legacy document of training of logistic regression of version 5 experiment 3.
+train_log_reg_v7_ex3.py               Legacy document of training of logistic regression of version 7 experiment 3.
+train_lstm_keras.py                   Legacy document of training of LSTM using keras.
+train_xgboost.py                      Legacy document of training of xgboost model.
+train_xgboost_choose_the_parameter.py Legacy document of training of xgboost model.
+train_xgboost_ensemble_rank_weight.py Implementation of online testing of ensemble of version 3, documentation can be found at https://wiki.alphien.com/ALwiki/Ensemble_Documentation#General_Description.
+train_xgboost_ensemble_v2.py            Implementation of training of ensemble of version 2, documentation can be found at https://wiki.alphien.com/ALwiki/Ensemble_Documentation#General_Description.
+train_xgboost_ensemble_v3.py            Implementation of training of ensemble of version 3, documentation can be found at https://wiki.alphien.com/ALwiki/Ensemble_Documentation#General_Description.
+train_xgboost_ensemble_v4.py            Copy of train_xgboost_ensemble_v3.py
+train_xgboost_ensemble_v5.py            Implementation of training of ensemble of method weight followed by voting.
+train_xgboost_ensemble_v6.py            Implementation of training of ensemble of method 
+train_xgboost_ensemble_v7.py            Implementation of training of ensemble of method
+train_xgboost_ensemble_v8.py            Implementation of training of ensemble of method
+train_xgboost_online.py                 Implementation of online testing of xgboost model with rolling validation and k fold.
+train_xgboost_online_ensemble.py        Implementation of online testing of ensemble for combination of xgboost v5 and v10 with voting.
+train_xgboost_online_ensemble_v1.py     Implementation of online testing of ensemble for combination of xgboost v5 and v10 with average voting.
+train_xgboost_online_v10.py             Implementation of online testing of xgboost model for version 10 with k fold.
+train_xgboost_online_v10_ex1.py         Implementation of online testing of xgboost model for version 10 without k fold.
+train_xgboost_online_v10_ex2.py         Implementation of online testing of xgboost model for version 10 with sorting with time before k fold.
+train_xgboost_online_v10_ex3.py         Implementation of online testing of xgboost model for version 10 with shuffling before k fold. 
+train_xgboost_online_v10_ex4.py         Implementation of online testing of xgboost model for version 10 with rolling validation of 10 year training.
+train_xgboost_online_v10_ex5.py         Implementation of online testing of xgboost model for version 10 with 3 classifier labels.
+train_xgboost_online_v14.py             Implementation of online testing of xgboost model for version 14 with k fold.
+train_xgboost_online_v18.py             Implementation of online testing of xgboost model for version 18 with k fold.
+train_xgboost_rolling-tune-parameter.py Legacy document of implementation of training of xgboost model with rolling validation.
+train_xgboost_rolling.py                Legacy document of implementation of online testing of xgboost model with rolling.
+train_xgboost_v1.py                     Legacy document of xgboost model.
+train_xgboost_v2.py                     Legacy document of xgboost model. 
+train_xgboost_v3.py                     Legacy document of xgboost model.
+train_xgboost_v4.py                     Legacy document of xgboost model.
+train_xgboost_v5.py                     Legacy document of xgboost model.
+train_xgboost_v6.py                     Implementation of training of xgboost model with rolling and k fold.
+train_xgboost_v6_v10.py                 Implementation of training of xgboost model with rolling and k fold for version 10.
+train_xgboost_v6_v10_ex1.py             Implementation of training of xgboost model with rolling for version 10.
+train_xgboost_v6_v10_ex2.py             Implementation of training of xgboost model with rolling and k fold and sorting with time before k fold for version 10.
+train_xgboost_v6_v10_ex3.py             Implementation of training of xgboost model with rolling and k fold and shuffling before k fold for version 10.
+train_xgboost_v6_v14.py                 Implementation of training of xgboost model with rolling and k fold for version 14.
+train_xgboost_v6_v18.py                 Implementation of training of xgboost model with rolling and k fold for version 18.
+train_xgboost_v7.py                     Implementation of tuning of k fold on xgboost model.
+train_xgboost_v8.py                     Implementation of training of xgboost model with rolling of 10 years training period and k fold.
+train_xgboost_v9.py                     Implementation of training of xgboost model with rolling and k fold with 3 classifer labels.
+trainer_id_embedding.py                 Legacy Document of id embedding.
+trainer_id_embedding_metal.py           Legacy Document of id embedding.
+try.R
+tune_alstm.py                           (to be filled by fuli)
+tune_alstm_mc.py                        (to be filled by fuli)
