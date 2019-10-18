@@ -63,9 +63,11 @@ if __name__ == '__main__':
     if args.ground_truth =='None':
         args.ground_truth = None
     os.chdir(os.path.abspath(sys.path[0]))
+    
     # read data configure file
     with open(os.path.join(sys.path[0],args.data_configure_file)) as fin:
         fname_columns = json.load(fin)
+    
     # get the column from the config file
     args.ground_truth = args.ground_truth.split(",")
     if args.action == 'train':
@@ -73,6 +75,7 @@ if __name__ == '__main__':
         n = 0
         for f in fname_columns:
             lag = args.lag
+            
             # detect which method we want to get the data
             if args.source == "NExT":
                 from utils.read_data import read_data_NExT
@@ -81,9 +84,11 @@ if __name__ == '__main__':
             elif args.source == "4E":
                 from utils.read_data import read_data_v5_4E
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
+            
             # the length means the train set length
             length = 5
             split_dates = rolling_half_year("2009-07-01","2019-01-01",length)
+            
             # if we want to test we only need to get the last 4 set for testing
             split_dates  =  split_dates[-4:]
             importance_list = []
@@ -97,6 +102,7 @@ if __name__ == '__main__':
                 len_ma = 5
                 len_update = 30
                 tol = 1e-7
+                
                 # this is a choice to detect whether we want to add another three times feature to model.
                 if args.xgboost==1:
                     print(args.xgboost)
@@ -126,10 +132,12 @@ if __name__ == '__main__':
                 X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
                 test_dataframe = pd.DataFrame(X_va,columns=column_lag_list)
                 test_X = test_dataframe.loc[:,column_lag_list] 
+                
                 # load the XGBoost V5 feature 10 folder probability
                 result_v5 = np.loadtxt(args.ground_truth[0]+"_horizon_"+str(horizon)+"_"+split_date[1]+"_v5"+"_weight_4"+".txt")
                 final_list_v5 = []
                 v5_voting_prob_list=[]
+                
                 # retrieve the probability result from the voting result
                 for j in range(len(result_v5)):
                     count_1=0
@@ -149,6 +157,7 @@ if __name__ == '__main__':
                     else:
                         v5_voting_prob_list.append(neg_list)
                         final_list_v5.append(0)
+                
                 #load the XGBoost V10 feature 10 folder probability
                 if args.ground_truth[0].split("_")[1]=="Co":
                     result_v10 = np.loadtxt("LMCADY"+"_"+"horizon_"+str(horizon)+"_"+split_date[1]+"_v10"+"_striplag30"+".txt")
@@ -164,6 +173,7 @@ if __name__ == '__main__':
                     result_v10 = np.loadtxt("LMPBDY"+"_"+"horizon_"+str(horizon)+"_"+split_date[1]+"_v10"+"_striplag30"+".txt")
                 final_list_v10=[]
                 v10_voting_prob_list=[]
+                
                 # retrieve the probability result from the voting result
                 for j in range(len(result_v10)):
                     count_1=0
@@ -183,10 +193,12 @@ if __name__ == '__main__':
                     else:
                         v10_voting_prob_list.append(neg_list)
                         final_list_v10.append(0)
+                
                 # load the XGBoost V7 feature 10 folder probability
                 result_v7 = np.loadtxt(args.ground_truth[0]+"_horizon_"+str(horizon)+"_"+split_date[1]+"_v7"+".txt")
                 final_list_v7=[]
                 v7_voting_prob_list=[]
+                
                 # retrieve the probability result from the voting result
                 for j in range(len(result_v7)):
                     count_1=0
@@ -206,6 +218,7 @@ if __name__ == '__main__':
                     else:
                         v7_voting_prob_list.append(neg_list)
                         final_list_v7.append(0)
+                
                 # load the LR V5 feature classifier
                 if args.ground_truth[0].split("_")[1]=="Co":
                     LR_v5 = pd.read_csv('~/NEXT/LMCADY'+"_h"+str(horizon)+"_v5res"+split_date[1]+".csv")
@@ -220,6 +233,7 @@ if __name__ == '__main__':
                 elif args.ground_truth[0].split("_")[1]=="Le":
                     LR_v5 = pd.read_csv('~/NEXT/LMPBDY'+"_h"+str(horizon)+"_v5resh"+str(horizon)+split_date[1]+".csv")
                 LR_v5_prediction_list = list(LR_v5['Prediction'])
+                
                 # load the LR V5 feature probability
                 if args.ground_truth[0].split("_")[1]=="Co":
                     LR_v5_prob = pd.read_csv('~/NEXT/LMCADY'+"_h"+str(horizon)+"_v5_probh"+str(horizon)+split_date[1]+".csv")
@@ -235,6 +249,7 @@ if __name__ == '__main__':
                     LR_v5_prob = pd.read_csv('~/NEXT/LMPBDY'+"_h"+str(horizon)+"_v5_probh"+str(horizon)+split_date[1]+".csv")
                 LR_v5_prediction_list = list(LR_v5['Prediction'])
                 LR_v5_prob_prediction_list = list(LR_v5_prob['Prediction'])
+                
                 # try the 4 model voting
                 for i in range(len(LR_v5_prediction_list)):
                     if LR_v5_prediction_list[i]==-1.0:
@@ -249,24 +264,29 @@ if __name__ == '__main__':
                             #print("the voting result can not get the result")
                             final_list.append(0)
                 final_average_list = []
+                
                 # the 4 models rank ensemble
                 for j in range(len(v7_voting_prob_list)):
                     result = 1
                     v7_item = 1
                     v5_item = 1
                     v10_item = 1
+                    
                     # transfer the XGBoost V7 feature probability to classifier
                     for item in v7_voting_prob_list[j]:
                         v7_item*=item
                     v7_item = math.pow(v7_item,1/len(v7_voting_prob_list[j]))
+                    
                     # transfer the XGBoost V5 feature probability to classifier
                     for item in v5_voting_prob_list[j]:
                         v5_item*=item
                     v5_item = math.pow(v5_item,1/len(v5_voting_prob_list[j]))
+                    
                     # transfer the XGBoost V10 feature probability to classifier
                     for item in v10_voting_prob_list[j]:
                         v10_item*=item
                     v10_item = math.pow(v10_item, 1/len(v10_voting_prob_list[j]))
+                    
                     # rank all the models together
                     result*=v7_item
                     result*=v5_item
