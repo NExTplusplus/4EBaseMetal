@@ -60,7 +60,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     parameters['time_series'] = deal_with_abnormal_value(parameters,version_params["deal_with_abnormal_value"])
     '''
     Extract the rows with dates where LME has trading operations
-    and generate labels
+    and generate labels and strategy signals
     '''
     LME_dates = sorted(set(LME_dates).intersection(parameters['time_series'].index.values.tolist()))
     parameters['time_series'] = parameters['time_series'].loc[LME_dates]
