@@ -101,6 +101,7 @@ if __name__ == '__main__':
                 len_ma = 5
                 len_update = 30
                 tol = 1e-7
+                # detect whether you want to add another three time features to model
                 if args.xgboost==1:
                     print(args.xgboost)
                     norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
@@ -302,6 +303,7 @@ if __name__ == '__main__':
                             result_lr_error.append(0)
                     final_list = []
                     true_result = []
+                    # we choose a specific window size to calculate the precision weight to ensemble the models results together
                     for i in range(window_size,len(y_va)):
                         true_result.append(y_va[i])
                         error_xgb_v5 = np.sum(result_v5_error[length:length+window_size])
@@ -329,6 +331,7 @@ if __name__ == '__main__':
                         result+=weight_xgb_v7*v7_item
                         result+=weight_xgb_v10*v10_item
                         result+=weight_lr*result_lr[i]
+                        # detect whether the result is 1 or 0
                         if result>0.5:
                             final_list.append(1)
                         else:
@@ -340,6 +343,7 @@ if __name__ == '__main__':
                     print("the train date is {}".format(split_date[0]))
                     print("the test date is {}".format(split_date[1]))
                 else:
+                    # the same as above
                     for i in range(len(result_v5)):
                         count_1=0
                         count_0=0
@@ -396,6 +400,7 @@ if __name__ == '__main__':
                         else:
                             result_lr_error.append(0)
                     final_list = []
+                    # the same as above
                     for i in range(len(y_va)):
                         error_xgb_v5 = np.sum(result_v5_error[length:length+window_size])
                         error_xgb_v7 = np.sum(result_v7_error[length:length+window_size])
