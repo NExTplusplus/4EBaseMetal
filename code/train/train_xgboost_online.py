@@ -122,6 +122,7 @@ if __name__ == '__main__':
                 test_X = test_dataframe.loc[:,column_lag_list] 
                 n_splits=args.k_folds
                 from sklearn.metrics import accuracy_score
+                # define the parameter of the xgboost
                 model = xgb.XGBClassifier(max_depth=args.max_depth,
                             learning_rate = args.learning_rate,
                             n_estimators=500,
@@ -137,6 +138,7 @@ if __name__ == '__main__':
                             scale_pos_weight=1,
                             seed=1440,
                             missing=None)
+                # define how much folders we want to split
                 folds = KFold(n_splits=n_splits)
                 scores = []
                 prediction = np.zeros((len(X_va), 1))
