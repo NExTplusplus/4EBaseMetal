@@ -109,8 +109,10 @@ if __name__ == '__main__':
     if args.action == 'train':
         comparison = None
         n = 0
+        #iterate over list of configurations
         for f in fname_columns:
             lag = args.lag
+            #read data
             if args.source == "NExT":
                 from utils.read_data import read_data_NExT
                 data_list, LME_dates = read_data_NExT(f, "2003-11-12")
@@ -118,6 +120,7 @@ if __name__ == '__main__':
             elif args.source == "4E":
                 from utils.read_data import read_data_v5_4E
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
+            #generate parameters for load data
             length = 5
             split_dates = rolling_half_year("2009-07-01","2017-01-01",length)
             split_dates  =  split_dates[:]
@@ -150,11 +153,14 @@ if __name__ == '__main__':
                                                 'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
                 ts = copy(time_series.loc[split_date[0]:split_date[2]])
                 i = 0
+                #iterate over different ground truths for data loading
                 for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
                     print(ground_truth)
                     metal_id = [0,0,0,0,0,0]
                     metal_id[i] = 1
+                    # load data
                     X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,split_date,norm_params,tech_params,version_params)
+                    #post load process and metal id extension
                     X_tr = np.concatenate(X_tr)
                     X_tr = X_tr.reshape(len(X_tr),lag*len(column_list[0]))
                     X_tr = np.append(X_tr,[metal_id]*len(X_tr),axis = 1)
@@ -168,6 +174,8 @@ if __name__ == '__main__':
                     final_X_va.append(X_va)
                     final_y_va.append(y_va)
                     i+=1
+                
+                #sort by time not metal
                 final_X_tr = [np.transpose(arr) for arr in np.dstack(final_X_tr)]
                 final_y_tr = [np.transpose(arr) for arr in np.dstack(final_y_tr)]
                 final_X_va = [np.transpose(arr) for arr in np.dstack(final_X_va)]
@@ -197,6 +205,8 @@ if __name__ == '__main__':
                 test_dataframe = pd.DataFrame(final_X_va,columns=column_lag_list)
                 test_X = test_dataframe.loc[:,column_lag_list] 
                 n_splits=args.k_folds
+                
+                #tune hyperparameter for xgboost
                 for max_depth in [3,4,5]:
                     for learning_rate in [0.6,0.7,0.8,0.9]:
                         for gamma in [0.6,0.7,0.8,0.9]:
@@ -223,6 +233,7 @@ if __name__ == '__main__':
                                     scores = []
                                     prediction = np.zeros((len(X_va), 1))
                                     folder_index = []
+                                    #only use last fold
                                     for fold_n, (train_index, valid_index) in enumerate(folds.split(train_X)):
                                         # print("the train_index is {}".format(train_index))
                                         # print("the test_index is {}".format(valid_index))
