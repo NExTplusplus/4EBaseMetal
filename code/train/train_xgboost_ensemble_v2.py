@@ -92,6 +92,7 @@ if __name__ == '__main__':
                 len_ma = 5
                 len_update = 30
                 tol = 1e-7
+                # detect whether we want to add another three time features to model
                 if args.xgboost==1:
                     print(args.xgboost)
                     norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
@@ -119,10 +120,13 @@ if __name__ == '__main__':
                 y_va = np.concatenate(y_va)
                 X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
                 test_dataframe = pd.DataFrame(X_va,columns=column_lag_list)
-                test_X = test_dataframe.loc[:,column_lag_list] 
+                test_X = test_dataframe.loc[:,column_lag_list]
+                # load the XGBoost V5 feature 10 folder probability
                 result_v5 = np.loadtxt(args.ground_truth[0]+"_horizon_"+str(horizon)+"_"+split_date[1]+"_v5"+".txt")
+                # load the XGBoost V5 feature 10 folder probability
                 final_list_v5 = []
                 v5_voting_prob_list=[]
+                # retrieve the probability result from the voting result
                 for j in range(len(result_v5)):
                     count_1=0
                     count_0=0
@@ -141,6 +145,7 @@ if __name__ == '__main__':
                     else:
                         v5_voting_prob_list.append(neg_list)
                         final_list_v5.append(0)
+                #load the XGBoost V10 feature 10 folder probability
                 if args.ground_truth[0].split("_")[1]=="Co":
                     result_v10 = np.loadtxt("LMCADY"+"_"+"horizon_"+str(horizon)+"_"+split_date[1]+"_v10"+"_striplag30"+".txt")
                 elif args.ground_truth[0].split("_")[1]=="Al":
@@ -153,6 +158,7 @@ if __name__ == '__main__':
                     result_v10 = np.loadtxt("LMZSDY"+"_"+"horizon_"+str(horizon)+"_"+split_date[1]+"_v10"+"_striplag30"+".txt")
                 elif args.ground_truth[0].split("_")[1]=="Le":
                     result_v10 = np.loadtxt("LMPBDY"+"_"+"horizon_"+str(horizon)+"_"+split_date[1]+"_v10"+"_striplag30"+".txt")
+                # retrieve the probability result from the voting result
                 final_list_v10=[]
                 v10_voting_prob_list=[]
                 for j in range(len(result_v10)):
@@ -173,7 +179,9 @@ if __name__ == '__main__':
                     else:
                         v10_voting_prob_list.append(neg_list)
                         final_list_v10.append(0)
+                # load the XGBoost V7 feature 10 folder probability
                 result_v7 = np.loadtxt(args.ground_truth[0]+"_horizon_"+str(horizon)+"_"+split_date[1]+"_v7"+".txt")
+                # retrieve the probability result from the voting result
                 final_list_v7=[]
                 v7_voting_prob_list=[]
                 for j in range(len(result_v7)):
@@ -194,6 +202,7 @@ if __name__ == '__main__':
                     else:
                         v7_voting_prob_list.append(neg_list)
                         final_list_v7.append(0)
+                # load the LR V5 feature classifier
                 if args.ground_truth[0].split("_")[1]=="Co":
                     LR_v5 = pd.read_csv('~/NEXT/LMCADY'+"_h"+str(horizon)+"_v5res"+split_date[1]+".csv")
                 elif args.ground_truth[0].split("_")[1]=="Al":
@@ -206,6 +215,7 @@ if __name__ == '__main__':
                     LR_v5 = pd.read_csv('~/NEXT/LMZSDY'+"_h"+str(horizon)+"_v5resh"+str(horizon)+split_date[1]+".csv")
                 elif args.ground_truth[0].split("_")[1]=="Le":
                     LR_v5 = pd.read_csv('~/NEXT/LMPBDY'+"_h"+str(horizon)+"_v5resh"+str(horizon)+split_date[1]+".csv")
+                # load the LR V5 feature probability
                 LR_v5_prediction_list = list(LR_v5['Prediction'])
                 if args.ground_truth[0].split("_")[1]=="Co":
                     LR_v5_prob = pd.read_csv('~/NEXT/LMCADY'+"_h"+str(horizon)+"_v5_probh"+str(horizon)+split_date[1]+".csv")
@@ -237,6 +247,7 @@ if __name__ == '__main__':
                 print("the XGBOOST v10 test precision is {}".format(metrics.accuracy_score(y_va, final_list_v10)))
                 print("the LR test precision is {}".format(metrics.accuracy_score(y_va, LR_v5_prediction_list)))
                 #print("the ensemble for V5 V7 V10 LR voting precision is {}".format(metrics.accuracy_score(y_va, final_list)))
+                # try the XGBoost V5 feature XGBoost V7 feature LR ensemble
                 final_list=[]
                 for j in range(len(final_list_v5)):
                     if (final_list_v5[j]+LR_v5_prediction_list[j]+final_list_v7[j])>=2:
@@ -245,6 +256,7 @@ if __name__ == '__main__':
                         final_list.append(0)
                 v5_v7_lr = final_list
                 print("the ensebmle for V5 V7 LR voting precision is {}".format(metrics.accuracy_score(y_va, final_list)))
+                # try the XGBoost V7 feature XGBoost V10 feature LR ensemble
                 final_list=[]
                 for j in range(len(final_list_v5)):
                     if (final_list_v10[j]+LR_v5_prediction_list[j]+final_list_v7[j])>=2:
@@ -253,6 +265,7 @@ if __name__ == '__main__':
                         final_list.append(0)
                 v7_v10_lr = final_list
                 print("the ensebmle for V7 V10 LR voting precision is {}".format(metrics.accuracy_score(y_va, final_list)))
+                # try the XGBoost V5 featur XGBoost V10 feature LR ensemble
                 final_list=[]
                 for j in range(len(final_list_v5)):
                     if (final_list_v10[j]+LR_v5_prediction_list[j]+final_list_v5[j])>=2:
@@ -261,13 +274,14 @@ if __name__ == '__main__':
                         final_list.append(0)
                 v5_v10_lr = final_list
                 print("the ensebmle for V5 V10 LR voting precision is {}".format(metrics.accuracy_score(y_va, final_list)))
+                # try the XGBoost V5 feature XGBoost V7 feature XGBoost V10 feature together
                 final_list = []
                 for i in range(len(v5_v7_lr)):
                     if (v5_v7_lr[i]+v5_v10_lr[i]+v7_v10_lr[i])>=2:
                         final_list.append(1)
                     else:
                         final_list.append(0)
-                print("the ensemble for V5 V7 V10 LR voting precision is {}".format(metrics.accuracy_score(y_va, final_list)))
+                print("the ensemble for V5 V7 V10 voting precision is {}".format(metrics.accuracy_score(y_va, final_list)))
                 '''final_average_list = []
                 for j in range(len(result_v7)):
                     result = 0
@@ -557,7 +571,7 @@ if __name__ == '__main__':
                     else:
                         final_average_list.append(0)
                 print("the ensemble for v5 v10 LR rank average precision is {}".format(metrics.accuracy_score(y_va, final_average_list)))'''
-                
+                # try the XGBoost V5 feature XGBoost V7 feature XGBoost V10 feature LR ensemble together
                 final_average_list = []
                 for j in range(len(v7_voting_prob_list)):
                     result = 0
@@ -580,6 +594,7 @@ if __name__ == '__main__':
                     else:
                         final_average_list.append(0)
                 print("the ensemble for v5 v7 v10 LR rank average precision is {}".format(metrics.accuracy_score(y_va, final_average_list)))
+                # try the XGBoost V5 feature XGBoost V7 feature XGBoost V10 feature ensemble
                 final_average_list = []
                 for j in range(len(v7_voting_prob_list)):
                     result = 0
@@ -595,6 +610,7 @@ if __name__ == '__main__':
                     else:
                         final_average_list.append(0)
                 print("the ensemble for v5 v7 v10 average precision is {}".format(metrics.accuracy_score(y_va, final_average_list)))
+                # try the XGBoost V5 feature XGBoost V7 feature LR ensemble
                 final_average_list = []
                 for j in range(len(v7_voting_prob_list)):
                     result = 0
@@ -613,6 +629,7 @@ if __name__ == '__main__':
                     else:
                         final_average_list.append(0)
                 print("the ensemble for v5 v7 LR rank average precision is {}".format(metrics.accuracy_score(y_va, final_average_list)))
+                # try the XGBoost V5 feature XGBoost V10 feature LR ensemble
                 final_average_list = []
                 for j in range(len(v10_voting_prob_list)):
                     result = 0
@@ -631,6 +648,7 @@ if __name__ == '__main__':
                     else:
                         final_average_list.append(0)
                 print("the ensemble for v5 v10 LR rank average precision is {}".format(metrics.accuracy_score(y_va, final_average_list)))
+                # try the XGBoost V7 feature XGBoost V10 feature LR ensemble
                 final_average_list = []
                 for j in range(len(v10_voting_prob_list)):
                     result = 0
@@ -650,6 +668,7 @@ if __name__ == '__main__':
                     else:
                         final_average_list.append(0)
                 print("the ensemble for v7 v10 LR rank average precision is {}".format(metrics.accuracy_score(y_va, final_average_list)))
+                # try the XGBoost V7 feature XGBoost V10 feature XGBoost V5 feature ensemble
                 final_average_list = []
                 for j in range(len(v7_voting_prob_list)):
                     result = 1
@@ -676,6 +695,7 @@ if __name__ == '__main__':
                     else:
                         final_average_list.append(0)
                 print("the ensemble for v5 v7 v10 LR rank rank precision is {}".format(metrics.accuracy_score(y_va, final_average_list)))
+                # try the XGBoost V7 feature  XGBoost V5 feature LR ensemble
                 final_average_list = []
                 for j in range(len(v7_voting_prob_list)):
                     result = 1
@@ -697,6 +717,7 @@ if __name__ == '__main__':
                     else:
                         final_average_list.append(0)
                 print("the ensemble for v5 v7 LR rank rank precision is {}".format(metrics.accuracy_score(y_va, final_average_list)))
+                # try the XGBoost V7 feature  XGBoost V10 feature LR ensemble
                 final_average_list = []
                 for j in range(len(v7_voting_prob_list)):
                     result = 1
@@ -718,6 +739,7 @@ if __name__ == '__main__':
                     else:
                         final_average_list.append(0)
                 print("the ensemble for v7 v10 LR rank rank precision is {}".format(metrics.accuracy_score(y_va, final_average_list)))
+                # try the XGBoost V5 feature  XGBoost V10 feature LR ensemble
                 final_average_list = []
                 for j in range(len(v7_voting_prob_list)):
                     result = 1
