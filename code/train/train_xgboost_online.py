@@ -63,6 +63,7 @@ if __name__ == '__main__':
     if args.ground_truth =='None':
         args.ground_truth = None
     os.chdir(os.path.abspath(sys.path[0]))
+    
     # read data configure file
     with open(os.path.join(sys.path[0],args.data_configure_file)) as fin:
         fname_columns = json.load(fin)
@@ -92,6 +93,8 @@ if __name__ == '__main__':
                 len_ma = 5
                 len_update = 30
                 tol = 1e-7
+                
+                # detect whether we want to add the time feature to the model
                 if args.xgboost==1:
                     print(args.xgboost)
                     norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
@@ -122,6 +125,7 @@ if __name__ == '__main__':
                 test_X = test_dataframe.loc[:,column_lag_list] 
                 n_splits=args.k_folds
                 from sklearn.metrics import accuracy_score
+                
                 # define the parameter of the xgboost
                 model = xgb.XGBClassifier(max_depth=args.max_depth,
                             learning_rate = args.learning_rate,
@@ -138,6 +142,7 @@ if __name__ == '__main__':
                             scale_pos_weight=1,
                             seed=1440,
                             missing=None)
+                
                 # define how much folders we want to split
                 folds = KFold(n_splits=n_splits)
                 scores = []
@@ -191,6 +196,7 @@ if __name__ == '__main__':
                     elif fold_n==9:
                         folder_10=y_pred
                         folder_10=folder_10.reshape(len(folder_10),1) 
+                
                 #calculate the all folder voting
                 if args.voting=='all':
                     result = np.concatenate((folder_1,folder_2,folder_3,folder_4,folder_5,folder_6,folder_7,folder_8,folder_9,folder_10),axis=1)
