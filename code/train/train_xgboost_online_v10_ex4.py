@@ -64,6 +64,7 @@ if __name__ == '__main__':
     if args.ground_truth =='None':
         args.ground_truth = None
     os.chdir(os.path.abspath(sys.path[0]))
+    
     # read data configure file
     with open(os.path.join(sys.path[0],args.data_configure_file)) as fin:
         fname_columns = json.load(fin)
@@ -80,6 +81,7 @@ if __name__ == '__main__':
             elif args.source == "4E":
                 from utils.read_data import read_data_v5_4E
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
+            
             #generate parameters for load data
             length = args.length
             if length == 10:
@@ -114,6 +116,7 @@ if __name__ == '__main__':
                 final_y_te = None 
                 ts = copy(time_series.loc[split_date[0]:split_date[2]])
                 i = 0
+                
                 #iterate over different ground truths
                 for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
                     print(ground_truth)
@@ -133,6 +136,7 @@ if __name__ == '__main__':
                     final_X_va.append(X_va)
                     final_y_va.append(y_va)
                     i+=1
+                
                 #shuffle by time
                 final_X_tr = [np.transpose(arr) for arr in np.dstack(final_X_tr)]
                 final_y_tr = [np.transpose(arr) for arr in np.dstack(final_y_tr)]
@@ -150,10 +154,12 @@ if __name__ == '__main__':
                 column_lag_list.append("Ti")
                 column_lag_list.append("Zi")
                 column_lag_list.append("Le")
+                
                 #print(column_lag_list)
                 train_dataframe = pd.DataFrame(final_X_tr,columns=column_lag_list)
                 train_X = train_dataframe.loc[:,column_lag_list]
                 train_y = pd.DataFrame(final_y_tr,columns=['result'])
+                
                 #iterate over ground truths for testing
                 for i,gt in enumerate(["LMCADY","LMAHDY","LMNIDY","LMSNDY","LMZSDY","LMPBDY"]):
                     print("ground truth is "+gt)
@@ -180,6 +186,7 @@ if __name__ == '__main__':
                     scores = []
                     prediction = np.zeros((len(X_va), 1))
                     folder_index = []
+                    
                     #generate k fold and train xgboost model
                     for fold_n, (train_index, valid_index) in enumerate(folds.split(train_X)):
                         #print("the train_index is {}".format(train_index))
@@ -229,6 +236,7 @@ if __name__ == '__main__':
                         elif fold_n==9:
                             folder_10=y_pred
                             folder_10=folder_10.reshape(len(folder_10),1) 
+                    
                     #calculate the all folder voting
                     if args.voting=='all':
                         result = np.concatenate((folder_1,folder_2,folder_3,folder_4,folder_5,folder_6,folder_7,folder_8,folder_9,folder_10),axis=1)
