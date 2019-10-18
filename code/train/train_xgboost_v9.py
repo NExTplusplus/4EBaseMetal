@@ -78,6 +78,8 @@ if __name__ == '__main__':
                 from utils.read_data import read_data_v5_4E
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
             length = args.length
+            
+            # label the movement to three classifier
             start_length = args.steps+250
             new_time_series = copy(time_series)
             for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
@@ -100,6 +102,8 @@ if __name__ == '__main__':
                 spot_price = spot_price.rename(ground_truth+"_label")
                 new_time_series = pd.concat([copy(new_time_series), spot_price],sort = True, axis = 1)
                 #print(new_time_series)
+            
+            #generate parameters for load data
             if length == 10:
                 split_dates = rolling_half_year("2005-01-01","2017-01-01",length)
             else:
@@ -132,6 +136,8 @@ if __name__ == '__main__':
                 final_y_te = None 
                 ts = copy(new_time_series.loc[split_date[0]:split_date[2]])
                 i = 0
+                
+                #iterate over different ground truths
                 for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
                     print(ground_truth)
                     metal_id = [0,0,0,0,0,0]
@@ -150,6 +156,8 @@ if __name__ == '__main__':
                     final_X_va.append(X_va)
                     final_y_va.append(y_va)
                     i+=1
+                
+                # stack all the data together
                 final_X_tr = [np.transpose(arr) for arr in np.dstack(final_X_tr)]
                 final_y_tr = [np.transpose(arr) for arr in np.dstack(final_y_tr)]
                 final_X_tr = np.reshape(final_X_tr,[np.shape(final_X_tr)[0]*np.shape(final_X_tr)[1],np.shape(final_X_tr)[2]])
@@ -188,6 +196,8 @@ if __name__ == '__main__':
                 #print(final_y_va)
                 #print(len(final_y_va))
                 n_splits=args.k_folds
+                
+                #tune hyperparameter for xgboost
                 for max_depth in [3,4,5]:
                     for learning_rate in [0.6,0.7,0.8,0.9]:
                         for gamma in [0.6,0.7,0.8,0.9]:
@@ -213,6 +223,8 @@ if __name__ == '__main__':
                                     scores = []
                                     prediction = np.zeros((len(X_va), 1))
                                     folder_index = []
+                                    
+                                    # split the data into ten folders
                                     for fold_n, (train_index, valid_index) in enumerate(folds.split(train_X)):
                                         #print("the train_index is {}".format(train_index))
                                         #print("the test_index is {}".format(valid_index))
