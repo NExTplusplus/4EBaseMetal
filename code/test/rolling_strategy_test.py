@@ -56,10 +56,12 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     ground_truth = args.ground_truth
-
+    
+    # read data configure file
     with open(os.path.join(sys.path[0],args.data_configure_file)) as fin:
         fname_columns = json.load(fin)[0]
 
+    #read data
     if args.source == "NExT":
         data_list, LME_dates = read_data_NExT(fname_columns, "2003-11-12")
         time_series = pd.concat(data_list, axis = 1, sort = True)
@@ -84,7 +86,9 @@ if __name__ == '__main__':
         'strat9_slow_length':[],'strat9_fast_length':[],'strat9_macd_length':[],'strat9_train_acc':[],'strat9_train_cov':[],'strat9_acc':[],'strat9_cov':[]
         }
 
+    #iterate over split_dates
     for split_date in split_dates:
+        #load data
         ts = time_series.loc[split_date[0]:split_date[2]]
         ts = deal_with_abnormal_value_v2(ts)
         LME_date = sorted(set(LME_dates).intersection(ts.index.values.tolist()))
@@ -95,17 +99,20 @@ if __name__ == '__main__':
         ts = process_missing_value_v3(ts)
         
         # ts = ts.loc[(ts.index >= split_date[0])&(ts.index <= split_date[1])]
+        # initialize strategy testing parameters
         strategy_params = {'sar':{'initial':0,'maximum':0},'rsi':{'window':0,'upper':0,'lower':0},'strat1':{'short window':0,"med window":0},'strat2':{'window':0},'strat3':{'window':0},'strat6':{'window':0,'limiting_factor':0},'strat7':{'window':0,'limiting_factor':0}, 'strat9':{'SlowLength':0,'FastLength':0,'MACDLength':0}}
         activation_params = {'sar':True,'rsi':False,'strat1':False,'strat2':False,'strat3':False, 'strat6':False, 'strat7':False, 'strat9': False}
         strat_results = {'sar':{'initial':[],'maximum':[]},'rsi':{'window':[],'upper':[],'lower':[]},'strat1':{'short window':[],"med window":[]},'strat2':{'window':[]},'strat3':{'high window':[], 'close window':[]},'strat6':{'window':[],'limiting_factor':[]},'strat7':{'window':[],'limiting_factor':[]}, 'strat9':{'SlowLength':[],'FastLength':[],'MACDLength':[]}}
         
+        ### test on training set
+        #test for sar
         print("sar")
         initial = np.arange(0.01,0.051,0.002)
         mx = np.arange(0.1,0.51,0.02)
         comb = product(initial,mx)
         sar = parallel_process(copy(ts), split_date, "sar", strat_results, ground_truth, strategy_params,activation_params,1,comb,args.min)
         
-        
+        #test for rsi
         print("rsi")
         activation_params['sar'] = False
         activation_params['rsi'] = True
@@ -115,6 +122,7 @@ if __name__ == '__main__':
         comb = product(window, upper,lower)
         rsi = parallel_process(copy(ts), split_date, "rsi", strat_results, ground_truth, strategy_params,activation_params,1,comb,args.min)
 
+        #test for strat1
         print("strat1")
         activation_params['rsi'] = False
         activation_params['strat1'] = True
@@ -123,6 +131,7 @@ if __name__ == '__main__':
         comb = product(short,med)
         strat1 = parallel_process(copy(ts), split_date, "strat1", strat_results, ground_truth, strategy_params,activation_params,1,comb,args.min)
         
+        #test for strat2
         print("strat2")
         activation_params['strat1'] = False
         activation_params['strat2'] = True
@@ -130,6 +139,7 @@ if __name__ == '__main__':
         comb = [[com] for com in comb]
         strat2 = parallel_process(copy(ts), split_date, "strat2", strat_results, ground_truth, strategy_params,activation_params,1,comb,args.min)
         
+        #test for strat3
         print("strat3")
         activation_params['strat2'] = False
         activation_params['strat3'] = True
@@ -137,6 +147,7 @@ if __name__ == '__main__':
         comb = [[com] for com in comb]
         strat3 = parallel_process(copy(ts), split_date, "strat3", strat_results, ground_truth, strategy_params,activation_params,1,comb,args.min)
         
+        #test for strat6
         print("strat6")
         activation_params['strat3'] = False
         activation_params['strat6'] = True
@@ -145,6 +156,7 @@ if __name__ == '__main__':
         comb = product(window,limiting_factor)
         strat6 = parallel_process(copy(ts), split_date, "strat6", strat_results, ground_truth, strategy_params,activation_params,1,comb,args.min)
         
+        #test for strat7
         print("strat7")
         activation_params['strat6'] = False
         activation_params['strat7'] = True
@@ -153,6 +165,7 @@ if __name__ == '__main__':
         comb = product(window,limiting_factor)
         strat7 = parallel_process(copy(ts), split_date, "strat7", strat_results, ground_truth, strategy_params,activation_params,1,comb,args.min)
         
+        #test for strat9
         print('strat9')
         activation_params['strat7'] = False
         activation_params['strat9'] = True
