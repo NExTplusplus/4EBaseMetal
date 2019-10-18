@@ -130,8 +130,11 @@ if __name__ == '__main__':
                 X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
                 test_dataframe = pd.DataFrame(X_va,columns=column_lag_list)
                 test_X = test_dataframe.loc[:,column_lag_list]
+                # load the XGBoost V5 feature 10 folder probability
                 result_v5 = np.loadtxt(args.ground_truth[0]+"_horizon_"+str(horizon)+"_"+split_date[1]+"_"+"v5"+"_weight_4"+".txt")
+                # load the XGBoost V7 feature 10 folder probability
                 result_v7 = np.loadtxt(args.ground_truth[0]+"_horizon_"+str(horizon)+"_"+split_date[1]+"_"+"v7"+"_weight"+".txt")
+                #load the XGBoost V10 feature 10 folder probability
                 if args.ground_truth[0].split("_")[1]=="Co":
                     result_v10 = np.loadtxt("LMCADY"+"_"+"horizon_"+str(horizon)+"_"+split_date[1]+"_v10"+"_striplag30_weight"+".txt")
                 elif args.ground_truth[0].split("_")[1]=="Al":
@@ -144,6 +147,7 @@ if __name__ == '__main__':
                     result_v10 = np.loadtxt("LMZSDY"+"_"+"horizon_"+str(horizon)+"_"+split_date[1]+"_v10"+"_striplag30_weight"+".txt")
                 elif args.ground_truth[0].split("_")[1]=="Le":
                     result_v10 = np.loadtxt("LMPBDY"+"_"+"horizon_"+str(horizon)+"_"+split_date[1]+"_v10"+"_striplag30_weight"+".txt")
+                # load the LR V5 feature classifier
                 if args.ground_truth[0].split("_")[1]=="Co":
                     if split_date[1]>='2017-01-03':
                         LR_v5 = pd.read_csv('~/NEXT/LMCADY'+"_h"+str(horizon)+"_v5_probh"+str(horizon)+split_date[1]+".csv")
@@ -175,6 +179,7 @@ if __name__ == '__main__':
                     else:
                         LR_v5 = pd.read_csv('~/NEXT/LMPBDY'+"_h"+str(horizon)+"_v5probh"+str(horizon)+split_date[1]+".csv")
                 result_lr = list(LR_v5['Prediction'])
+                # retrieve the probability result from the voting result
                 final_list_v5 = []
                 v5_voting_prob_list=[]
                 for j in range(len(result_v5)):
@@ -195,7 +200,7 @@ if __name__ == '__main__':
                     else:
                         v5_voting_prob_list.append(neg_list)
                         final_list_v5.append(0)
-
+                # retrieve the probability result from the voting result
                 final_list_v10=[]
                 v10_voting_prob_list=[]
                 for j in range(len(result_v10)):
@@ -216,7 +221,7 @@ if __name__ == '__main__':
                     else:
                         v10_voting_prob_list.append(neg_list)
                         final_list_v10.append(0)
-
+                # retrieve the probability result from the voting result
                 final_list_v7=[]
                 v7_voting_prob_list=[]
                 for j in range(len(result_v7)):
@@ -238,7 +243,7 @@ if __name__ == '__main__':
                         v7_voting_prob_list.append(neg_list)
                         final_list_v7.append(0)
 
-
+                # calculate the precision weight of the model
                 if len(result_v5_error)==0:
                     for i in range(len(result_v5)):
                         count_1=0
