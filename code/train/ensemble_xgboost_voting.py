@@ -63,6 +63,7 @@ if __name__ == '__main__':
     if args.ground_truth =='None':
         args.ground_truth = None
     os.chdir(os.path.abspath(sys.path[0]))
+    
     # read data configure file
     with open(os.path.join(sys.path[0],args.data_configure_file)) as fin:
         fname_columns = json.load(fin)
@@ -92,6 +93,7 @@ if __name__ == '__main__':
                 len_ma = 5
                 len_update = 30
                 tol = 1e-7
+                
                 # this is a choice to detect whether we want to add another three times feature to model.
                 if args.xgboost==1:
                     print(args.xgboost)
@@ -121,6 +123,7 @@ if __name__ == '__main__':
                 X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
                 test_dataframe = pd.DataFrame(X_va,columns=column_lag_list)
                 test_X = test_dataframe.loc[:,column_lag_list]
+                
                 #load the XGBoost V10 feature 10 folder probability
                 if args.ground_truth[0].split("_")[1]=="Co":
                     result_v10 = np.loadtxt("LMCADY"+"_"+"horizon_"+str(horizon)+"_"+split_date[1]+"_v10"+"_striplag30"+".txt")
@@ -134,6 +137,7 @@ if __name__ == '__main__':
                     result_v10 = np.loadtxt("LMZSDY"+"_"+"horizon_"+str(horizon)+"_"+split_date[1]+"_v10"+"_striplag30"+".txt")
                 elif args.ground_truth[0].split("_")[1]=="Le":
                     result_v10 = np.loadtxt("LMPBDY"+"_"+"horizon_"+str(horizon)+"_"+split_date[1]+"_v10"+"_striplag30"+".txt")
+                
                 # transfer the probability result to the voting result
                 final_list_v10=[]
                 for j in range(len(result_v10)):
@@ -148,9 +152,11 @@ if __name__ == '__main__':
                         final_list_v10.append(1)
                     else:
                         final_list_v10.append(0)
+                
                 # load the XGBoost V7 feature 10 folder probability
                 result_v7 = np.loadtxt(args.ground_truth[0]+"_horizon_"+str(horizon)+"_"+split_date[1]+"_v7"+".txt")
                 final_list_v7=[]
+                
                 # transfer the probability result to the voting result
                 for j in range(len(result_v7)):
                     count_1=0
@@ -164,6 +170,7 @@ if __name__ == '__main__':
                         final_list_v7.append(1)
                     else:
                         final_list_v7.append(0)
+                
                 # load the LR V5 feature classifier
                 if args.ground_truth[0].split("_")[1]=="Co":
                     LR_v5 = pd.read_csv('~/NEXT/LMCADY'+"_h"+str(horizon)+"_v5res"+split_date[1]+".csv")
@@ -178,6 +185,7 @@ if __name__ == '__main__':
                 elif args.ground_truth[0].split("_")[1]=="Le":
                     LR_v5 = pd.read_csv('~/NEXT/LMPBDY'+"_h"+str(horizon)+"_v5resh"+str(horizon)+split_date[1]+".csv")
                 LR_v5_prediction_list = list(LR_v5['Prediction'])
+                
                 # reshape the label -1 to 0
                 for i in range(len(LR_v5_prediction_list)):
                     if LR_v5_prediction_list[i]==-1.0:
@@ -194,6 +202,7 @@ if __name__ == '__main__':
                 print("the XGBOOST v10 test precision is {}".format(metrics.accuracy_score(y_va, final_list_v10)))
                 print("the LR test precision is {}".format(metrics.accuracy_score(y_va, LR_v5_prediction_list)))
                 final_list=[]
+                
                 # XGBoost V7 feature XGBoost V10 feature LR V5 feature vote for the result
                 for j in range(len(final_list_v5)):
                     if (final_list_v10[j]+LR_v5_prediction_list[j]+final_list_v7[j])>=2:
