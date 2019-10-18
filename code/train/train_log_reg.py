@@ -75,8 +75,10 @@ if __name__ == '__main__':
         if args.action == 'train':
             comparison = None
             n = 0
+            
             #iterate over list of configurations
             for f in fname_columns:
+                
                 #read data
                 if args.source =="NExT":
                     from utils.read_data import read_data_NExT
@@ -86,6 +88,7 @@ if __name__ == '__main__':
                     from utils.read_data import read_data_v5_4E
                     time_series, LME_dates = read_data_v5_4E("2003-11-12")
                 horizon = args.steps
+                
                 #generate parameters for load data
                 for lag in [5,10,20,30]:
                     for norm_volume in ["v1","v2"]:
@@ -109,6 +112,7 @@ if __name__ == '__main__':
                                     X_tr, y_tr, X_va, y_va, X_te, y_te,norm_params = load_data(ts,LME_dates, horizon, args.ground_truth, 
                                                                                                     lag, split_date, norm_params, 
                                                                                                     tech_params, version_params)
+                                    
                                     #post load processing
                                     for ind in range(len(X_tr)):
                                         neg_y_tr = y_tr[ind] - 1
