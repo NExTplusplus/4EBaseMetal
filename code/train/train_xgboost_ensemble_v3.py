@@ -64,6 +64,7 @@ if __name__ == '__main__':
     if args.ground_truth =='None':
         args.ground_truth = None
     os.chdir(os.path.abspath(sys.path[0]))
+    
     # read data configure file
     with open(os.path.join(sys.path[0],args.data_configure_file)) as fin:
         fname_columns = json.load(fin)
@@ -101,6 +102,8 @@ if __name__ == '__main__':
                 len_ma = 5
                 len_update = 30
                 tol = 1e-7
+                
+                #detect whether we want to add the time feature to the model
                 if args.xgboost==1:
                     print(args.xgboost)
                     norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
@@ -111,6 +114,8 @@ if __name__ == '__main__':
                 tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
                                                 'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
                 ts = copy(time_series.loc[split_date[0]:split_date[2]])
+                
+                #construct the data
                 X_tr, y_tr, X_va, y_va, X_te, y_te, norm_params,column_list = load_data(ts,LME_dates,horizon,args.ground_truth,lag,split_date,norm_params,tech_params,version_params)
                 column_lag_list = []
                 column_name = []
@@ -130,10 +135,13 @@ if __name__ == '__main__':
                 X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
                 test_dataframe = pd.DataFrame(X_va,columns=column_lag_list)
                 test_X = test_dataframe.loc[:,column_lag_list]
+                
                 # load the XGBoost V5 feature 10 folder probability
                 result_v5 = np.loadtxt(args.ground_truth[0]+"_horizon_"+str(horizon)+"_"+split_date[1]+"_"+"v5"+"_weight"+".txt")
+                
                 # load the XGBoost V7 feature 10 folder probability
                 result_v7 = np.loadtxt(args.ground_truth[0]+"_horizon_"+str(horizon)+"_"+split_date[1]+"_"+"v7"+"_weight"+".txt")
+                
                 # load the LR V5 feature classifier
                 if args.ground_truth[0].split("_")[1]=="Co":
                     result_v10 = np.loadtxt("LMCADY"+"_"+"horizon_"+str(horizon)+"_"+split_date[1]+"_v10"+"_striplag30_weight"+".txt")
@@ -147,6 +155,7 @@ if __name__ == '__main__':
                     result_v10 = np.loadtxt("LMZSDY"+"_"+"horizon_"+str(horizon)+"_"+split_date[1]+"_v10"+"_striplag30_weight"+".txt")
                 elif args.ground_truth[0].split("_")[1]=="Le":
                     result_v10 = np.loadtxt("LMPBDY"+"_"+"horizon_"+str(horizon)+"_"+split_date[1]+"_v10"+"_striplag30_weight"+".txt")
+                
                 # load the LR V5 feature probability
                 if args.ground_truth[0].split("_")[1]=="Co":
                     if split_date[1]>='2017-01-03':
@@ -179,6 +188,7 @@ if __name__ == '__main__':
                     else:
                         LR_v5 = pd.read_csv('~/NEXT/LMPBDY'+"_h"+str(horizon)+"_v5probh"+str(horizon)+split_date[1]+".csv")
                 result_lr = list(LR_v5['Prediction'])
+                
                 # retrieve the probability result from the voting result
                 final_list_v5 = []
                 v5_voting_prob_list=[]
@@ -305,6 +315,7 @@ if __name__ == '__main__':
                             result_lr_error.append(0)
                     final_list = []
                     true_result = []
+                    
                     # we choose a specific window size to calculate the precision weight to ensemble the models results together
                     for i in range(window_size,len(y_va)):
                         true_result.append(y_va[i])
@@ -333,6 +344,7 @@ if __name__ == '__main__':
                         result+=weight_xgb_v7*v7_item
                         result+=weight_xgb_v10*v10_item
                         result+=weight_lr*result_lr[i]
+                        
                         # detect whether the result is 1 or 0
                         if result>0.5:
                             final_list.append(1)
@@ -402,6 +414,7 @@ if __name__ == '__main__':
                         else:
                             result_lr_error.append(0)
                     final_list = []
+                    
                     # the same as above
                     for i in range(len(y_va)):
                         error_xgb_v5 = np.sum(result_v5_error[length:length+window_size])
