@@ -73,6 +73,7 @@ if __name__ == '__main__':
             elif args.source == "4E":
                 from utils.read_data import read_data_v5_4E
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
+            #generate parameters for load data
             length = 5
             split_dates = rolling_half_year("2009-07-01","2017-01-01",length)
             split_dates  =  split_dates[:]
@@ -100,6 +101,7 @@ if __name__ == '__main__':
                 tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
                                                 'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
                 ts = copy(time_series.loc[split_date[0]:split_date[2]])
+                # construct the data
                 X_tr, y_tr, X_va, y_va, X_te, y_te, norm_params,column_list = load_data(ts,LME_dates,horizon,args.ground_truth,lag,split_date,norm_params,tech_params,version_params)
                 print("the length of the test is {}".format(len(X_va[0])))
                 column_lag_list = []
@@ -120,6 +122,7 @@ if __name__ == '__main__':
                 test_dataframe = pd.DataFrame(X_va,columns=column_lag_list)
                 test_X = test_dataframe.loc[:,column_lag_list] 
                 n_splits=args.k_folds
+                # tuning the parameters of the xgboost
                 for max_depth in [3,4,5]:
                     for learning_rate in [0.6,0.7,0.8,0.9]:
                         for gamma in [0.6,0.7,0.8,0.9]:
@@ -145,6 +148,7 @@ if __name__ == '__main__':
                                     scores = []
                                     prediction = np.zeros((len(X_va), 1))
                                     folder_index = []
+                                    # split the data to 10 folders
                                     for fold_n, (train_index, valid_index) in enumerate(folds.split(train_X)):
                                         #print("the train_index is {}".format(train_index))
                                         #print("the test_index is {}".format(valid_index))
