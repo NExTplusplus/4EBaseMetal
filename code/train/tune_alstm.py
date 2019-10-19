@@ -54,6 +54,7 @@ if __name__ == '__main__':
         'batch': args.batch,
         'lag': args.lag
     }
+    
 
     grid_search_alstm(selected_parameters, parameter_values, init_para,
                 script=args.script, log_file=args.log, steps=args.steps)
