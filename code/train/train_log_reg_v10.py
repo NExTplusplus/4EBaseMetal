@@ -57,6 +57,7 @@ if __name__ == '__main__':
     if args.ground_truth =='None':
         args.ground_truth = None
     os.chdir(os.path.abspath(sys.path[0]))
+    
     # read data configure file
     with open(os.path.join(sys.path[0],args.data_configure_file)) as fin:
         fname_columns = json.load(fin)
@@ -109,9 +110,11 @@ if __name__ == '__main__':
     if args.action == 'train':
         comparison = None
         n = 0
+        
         #iterate over list of configurations
         for f in fname_columns:
             lag = args.lag
+            
             #read data
             if args.source == "NExT":
                 from utils.read_data import read_data_NExT
@@ -150,13 +153,16 @@ if __name__ == '__main__':
                                                 'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
                 ts = copy(time_series.loc[split_date[0]:split_date[2]])
                 i = 0
+                
                 #iterate over ground truths
                 for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
                     print(ground_truth)
                     metal_id = [0,0,0,0,0,0]
                     metal_id[i] = 1
+                    
                     #load data
                     X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,split_date,norm_params,tech_params,version_params)
+                    
                     #post load processing and metal id extension
                     X_tr = np.concatenate(X_tr)
                     X_tr = X_tr.reshape(len(X_tr),lag*len(column_list[0]))
