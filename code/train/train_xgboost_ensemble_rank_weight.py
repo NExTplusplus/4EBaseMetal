@@ -312,6 +312,7 @@ if __name__ == '__main__':
                             result_lr_error.append(0)
                     final_list = []
                     true_result = []
+                    probal = []
                     
                     # we choose a specific window size to calculate the precision weight to ensemble the models results together
                     for i in range(window_size,len(y_va)):
@@ -342,12 +343,16 @@ if __name__ == '__main__':
                         result+=weight_xgb_v10*v10_item
                         result+=weight_lr*result_lr[i]
                         # detect whether the result is 1 or 0
+                        #np.savetxt(args.ground_truth[0].split("_")[1]+"_"+split_date[2]+"_"+"ensemble"+".txt",result)
+                        probal.append(result)
+                        #probal.append(result)
                         if result>0.5:
                             final_list.append(1)
                         else:
                             final_list.append(0)
                         length+=1
-                    print("the weight ensebmle for V5 V10 LR rank rank precision is {}".format(metrics.accuracy_score(true_result, final_list)))
+                    np.savetxt(args.ground_truth[0].split("_")[1]+"_"+split_date[2]+"_"+lag+"_"+"ensemble"+".txt",probal)
+                    print("the weight ensebmle for V5 V7 V10 LR rank rank precision is {}".format(metrics.accuracy_score(true_result, final_list)))
                     print("the horizon is {}".format(horizon))
                     print("the lag is {}".format(lag))
                     print("the train date is {}".format(split_date[0]))
@@ -410,7 +415,7 @@ if __name__ == '__main__':
                         else:
                             result_lr_error.append(0)
                     final_list = []
-                    
+                    probal = []
                     # the same as above
                     for i in range(len(y_va)):
                         error_xgb_v5 = np.sum(result_v5_error[length:length+window_size])
@@ -438,12 +443,14 @@ if __name__ == '__main__':
                         result+=weight_xgb_v7*v7_item
                         result+=weight_xgb_v10*v10_item
                         result+=weight_lr*result_lr[i]
+                        probal.append(result)
                         if result>0.5:
                             final_list.append(1)
                         else:
                             final_list.append(0)
                         length+=1
-                    print("the weight ensebmle for V5 V10 LR rank rank precision is {}".format(metrics.accuracy_score(y_va, final_list)))
+                    np.savetxt(args.ground_truth[0].split("_")[1]+"_"+split_date[2]+"_"+lag+"_"+"ensemble"+".txt",probal)
+                    print("the weight ensebmle for V5 V7 V10 LR rank rank precision is {}".format(metrics.accuracy_score(y_va, final_list)))
                     print("the horizon is {}".format(horizon))
                     print("the lag is {}".format(lag))
                     print("the train date is {}".format(split_date[0]))
