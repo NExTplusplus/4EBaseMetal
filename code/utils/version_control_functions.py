@@ -14,7 +14,7 @@ def generate_version_params(version):
 
     if v == "v7":
         ans['technical_indication'] = "v2"
-    if v == "v9" or v == "v10" or v == "v11" or v == "v12" or v=="v14" or v=="v18":
+    if v == "v9" or v == "v10" or v == "v11" or v == "v12" or v=="v14" or v=="v18" or v=="v20":
         if v == "v9":
             ans["generate_strat_params"]="v1"
         elif v== "v10":
@@ -28,7 +28,9 @@ def generate_version_params(version):
             ans["construct"]="v2"
         elif v== 'v18':
             ans["generate_strat_params"]="v6"
-
+        elif v== 'v20':
+            ans["generate_strat_params"]="v7"
+            
         ans['strategy_signal'] = "v1"
         ans["technical_indication"] = None
         
@@ -55,15 +57,40 @@ def generate_strat_params(ground_truth,steps,version):
     if version is None:
         return None,None
     if version == "v1":
+        '''
+        generate strategy parameters for v9, which is single metal for coverage increment 0.1, minimum 0.1
+        '''
         return generate_strat_params_v1(ground_truth,steps)
     if version == "v2":
+        '''
+        generate strategy parameters for v10, which is multiple metals for coverage increment 0.1, minimum 0.1
+        '''
         return generate_strat_params_v2(ground_truth,steps)
     if version == "v3":
+        '''
+        generate strategy parameters for v11, which is single metal for coverage increment 1.0, minimum 0.1
+        '''
         return generate_strat_params_v3(ground_truth,steps)
     if version == "v4":
+        '''
+        generate strategy parameters for v12, which is multiple metals for coverage increment 1.0, minimum 0.1
+        '''  
         return generate_strat_params_v4(ground_truth,steps)
     if version == "v5":
+        '''
+            load strategy parameters for preprocessing version 14
+        '''
         return generate_strat_params_v5(ground_truth,steps)
+    if version == "v6":
+        '''
+            load strategy parameters for preprocessing version 18
+        '''
+        return generate_strat_params_v6(ground_truth,steps)
+    if version == "v7":
+        '''
+            load strategy parameters for preprocessing version 20
+        '''
+        return generate_strat_params_v7(ground_truth,steps)
 
 def deal_with_abnormal_value(arguments, version):
     time_series = arguments['time_series']

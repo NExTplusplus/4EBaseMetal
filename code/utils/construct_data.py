@@ -26,21 +26,21 @@ def generate_strat_params_v2(ground_truth,steps):
     with open(file_path+"/exp/strat_param_v10.conf") as f:
         all_params = json.load(f)
     strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
-    activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":False,"strat5":False,"strat6":True,"strat7":True,"strat8":False,"strat9":True}
+    activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":False,"strat5":False,"strat6":True,"strat7":True,"strat8":False,"strat9":True,"trend_1":False}
     return strat_params,activation_params
 
 def generate_strat_params_v3(ground_truth,steps):
     with open("exp/strat_param_v11.conf") as f:
         all_params = json.load(f)
     strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
-    activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":False,"strat5":False,"strat6":True,"strat7":True,"strat8":False,"strat9":True}
+    activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":False,"strat5":False,"strat6":True,"strat7":True,"strat8":False,"strat9":True,"trend_1":False}
     return strat_params,activation_params
 
 def generate_strat_params_v4(ground_truth,steps):
     with open("exp/strat_param_v12.conf") as f:
         all_params = json.load(f)
     strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
-    activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":False,"strat5":False,"strat6":True,"strat7":True,"strat8":False,"strat9":True}
+    activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":False,"strat5":False,"strat6":True,"strat7":True,"strat8":False,"strat9":True,"trend_1":False}
     return strat_params,activation_params
 
 def generate_strat_params_v5(ground_truth,steps):
@@ -48,16 +48,24 @@ def generate_strat_params_v5(ground_truth,steps):
     with open(os.path.join(sys.path[0],"exp/strat_param_v14.conf")) as f:
         all_params = json.load(f)
     strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
-    activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":False,"strat5":False,"strat6":True,"strat7":True,"strat8":True,"strat9":True}
+    activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":False,"strat5":False,"strat6":True,"strat7":True,"strat8":True,"strat9":True,"trend_1":False}
     return strat_params,activation_params
 def generate_strat_params_v6(ground_truth,steps):
     print("################generate_strat_params_v6##################")
     with open(os.path.join(sys.path[0],"exp/strat_param_v18.conf")) as f:
         all_params = json.load(f)
     strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
-    activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":True,"strat5":True,"strat6":True,"strat7":True,"strat8":False,"strat9":True}
+    activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":True,"strat5":True,"strat6":True,"strat7":True,"strat8":False,"strat9":True,"trend_1":False}
     return strat_params,activation_params
-    
+
+#load the strategy parameters for version 20
+def generate_strat_params_v7(ground_truth,steps):
+    print("################generate_strat_params_v7##################")
+    with open(os.path.join(sys.path[0],"exp/strat_param_v20.conf")) as f:
+        all_params = json.load(f)
+    strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
+    activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":False,"strat5":False,"strat6":True,"strat7":True,"strat8":False,"strat9":True,"trend_1":True}
+    return strat_params,activation_params    
 
 #the function is to deal with the abnormal data
 def deal_with_abnormal_value_v1(data):
@@ -477,6 +485,16 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
                 output_strat9 = one_hot(tmp)
                 output = pd.concat([output,output_strat9],sort = True, axis = 1)
                 
+            if activation_params["trend_1"]:
+                print("**********trend_1********")
+                act = copy(temp_act)
+                act['trend_1'] = True
+                comb = [[1],[3],[6]]
+                tmp = parallel_process(X, split_dates, "trend_1",strat_results,ground_truth,strategy_params,act,cov_inc,comb,mnm)
+                output_trend1 = one_hot(tmp)
+                output = pd.concat([output,output_trend1],sort = True, axis = 1)
+                
+                
             if gt+"_High" in cols and gt+"_Low" in cols and activation_params["strat6"]:
                 act = copy(temp_act)
                 act['strat6'] = True
@@ -497,7 +515,7 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
                 tmp = parallel_process(X, split_dates, "strat4",strat_results,ground_truth,strategy_params,act,cov_inc,comb,mnm)
                 output_strat4 = one_hot(tmp)
                 output = pd.concat([output,output_strat4],sort = True, axis = 1)
-
+            
     X = pd.concat([X,output],axis = 1, sort = True)
             
     return X

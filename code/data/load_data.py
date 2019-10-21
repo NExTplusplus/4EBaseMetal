@@ -70,6 +70,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     # save_data("i2",parameters['time_series'],parameters['time_series'].columns.values.tolist())
     parameters['time_series'] = strategy_signal(parameters,version_params['strategy_signal'])
     # save_data("i3",parameters['time_series'],parameters['time_series'].columns.values.tolist())
+    
     split_dates = reset_split_dates(parameters['time_series'],split_dates)
 
 

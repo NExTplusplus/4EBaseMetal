@@ -204,11 +204,15 @@ def strategy_4(High, Low, Close,window,limiting_factor):
     ans.loc[abs(ans)!=1]=0
     
     return ans
+#This function is used to calculate rolling std.
 def strategy_5(Close,window):
     ans = copy(Close)
     ans = Close.rolling(window).std()
     
     return ans
+
+#This function is used to construct long-short signal based on ATR.
+#Limiting_factor and window are inputs from config file.
 def strategy_6(High, Low, Close, window, limiting_factor):
     ATR = ta.ATR(High,Low,Close,timeperiod = window)
     MA = Close.rolling(window).mean()
@@ -219,8 +223,8 @@ def strategy_6(High, Low, Close, window, limiting_factor):
 
     return ans
 
-
-
+#This function is used to construct long-short signal based on bollinger band.
+#Limiting_factor and window are inputs from config file.
 def strategy_7(Close, window, limiting_factor):
     BB = bollinger(Close, window, limiting_factor)
     MA = Close.rolling(window).mean()
@@ -231,7 +235,8 @@ def strategy_7(Close, window, limiting_factor):
 
     return ans
 
-
+#This function is used to construct long-short signal based on MACD band.
+#FastLength, SlowLength and MACDLength are inputs from config file.
 def strategy_9(Close, FastLength, SlowLength, MACDLength):
     MACDValue = Close.rolling(FastLength).mean() - Close.rolling(SlowLength).mean()
     AvgMACD = MACDValue.rolling(MACDLength).mean()
@@ -243,6 +248,42 @@ def strategy_9(Close, FastLength, SlowLength, MACDLength):
 
     return ans
 
+#This function is used to construct features indicate the general trend of security price.
+#trend1: compare the price of last day and first day of target periods
+#trend2: compute the num of upward and downward movement.
+#num_of_month is input from config, 1,3,6 month.
+def trend_1(Date,Close,num_of_month):
+    
+    ans = pd.concat([Close,Close],axis = 1)
+    ans.columns = ["Trend1","Trend2"]
+    start_month = int(str(Date[0]).split('-')[1])
+    end_month = (start_month+num_of_month)%12
+    start = 0
+    end = 1
+    Return = (Close>Close.shift(1))*1
+    while(end<len(Date)):
+        
+        if int(str(Date[end]).split('-')[1])!=end_month:
+            end+=1
+        else:
+            ans.Trend1.iloc[start:end+1] = 2*(Close.iloc[end]>Close.iloc[start])-1
+            tmp = Return.iloc[start:end+1].sum()/(end-start)
+            if tmp>=0.5:
+                ans.Trend2.iloc[start:end+1] = 1
+            else:
+                ans.Trend2.iloc[start:end+1] = -1
+            start = end
+            start_month = int(str(Date[start]).split('-')[1])
+            end_month = (start_month+num_of_month)%12
+            if end_month == 0:
+                end_month = 12
+            end = start+1
+    tmp = ans[(ans.Trend1!=0) & (ans.Trend1!=1)]
+    ans.Trend1[(ans.Trend1!=0) & (ans.Trend1!=1)] = (tmp.Trend1.iloc[-1]>tmp.Trend1.iloc[0])*2-1
+    ans.Trend2[(ans.Trend2!=0) & (ans.Trend2!=1)] = (Return[-len(tmp):].sum()/len(tmp)>0.5)*2-1
+    return ans.Trend1,ans.Trend2    
+            
+    
 
 
 
