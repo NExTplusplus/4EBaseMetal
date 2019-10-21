@@ -64,6 +64,8 @@ def generate_strat_params(ground_truth,steps,version):
         return generate_strat_params_v4(ground_truth,steps)
     if version == "v5":
         return generate_strat_params_v5(ground_truth,steps)
+    if version == "v6":
+        return generate_strat_params_v6(ground_truth,steps)
 
 def deal_with_abnormal_value(arguments, version):
     time_series = arguments['time_series']
