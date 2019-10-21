@@ -54,6 +54,7 @@ def generate_strat_params_v6(ground_truth,steps):
     print("################generate_strat_params_v6##################")
     with open(os.path.join(sys.path[0],"exp/strat_param_v18.conf")) as f:
         all_params = json.load(f)
+    print(all_params)
     strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
     activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":True,"strat5":True,"strat6":True,"strat7":True,"strat8":False,"strat9":True}
     return strat_params,activation_params
