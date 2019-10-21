@@ -252,7 +252,12 @@ if __name__ == '__main__':
                     else:
                         v7_voting_prob_list.append(neg_list)
                         final_list_v7.append(0)
-
+                final_list_lr = []
+                for i in range(len(reuslt_lr)):
+                    if result_lr[i]>=0.5:
+                        final_list_lr.append(1)
+                    else:
+                        final_list_lr.append(0)
                 # calculate the precision weight of the model
                 if len(result_v5_error)==0:
                     for i in range(len(result_v5)):
@@ -317,10 +322,10 @@ if __name__ == '__main__':
                     # we choose a specific window size to calculate the precision weight to ensemble the models results together
                     for i in range(window_size,len(y_va)):
                         true_result.append(y_va[i])
-                        error_xgb_v5 = np.sum(result_v5_error[length:length+window_size])+1e-05
-                        error_xgb_v7 = np.sum(result_v7_error[length:length+window_size])+1e-05
-                        error_xgb_v10 = np.sum(result_v10_error[length:length+window_size])+1e-05
-                        error_lr = np.sum(result_lr_error[length:length+window_size])+1e-05
+                        error_xgb_v5 = np.sum(result_v5_error[length:length+window_size])
+                        error_xgb_v7 = np.sum(result_v7_error[length:length+window_size])
+                        error_xgb_v10 = np.sum(result_v10_error[length:length+window_size])
+                        error_lr = np.sum(result_lr_error[length:length+window_size])
                         weight_xgb_v5 = float(1/error_xgb_v5)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr)
                         weight_xgb_v7 = float(1/error_xgb_v7)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr)
                         weight_xgb_v10 = float(1/error_xgb_v10)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr)
@@ -348,10 +353,19 @@ if __name__ == '__main__':
                         #probal.append(result)
                         if result>0.5:
                             final_list.append(1)
-                        else:
+                        elif result<=0.5:
                             final_list.append(0)
+                        else:
+                            if error_xgb_v5==0:
+                                final_list.append(final_list_v5[i])
+                            elif error_xgb_v7==0:
+                                final_list.append(final_list_v7[i])
+                            elif error_xgb_v10==0:
+                                final_list.append(final_list_v10[i])
+                            elif error_lr==0:
+                                final_list.append(final_list_lr[i])
                         length+=1
-                    np.savetxt(args.ground_truth[0].split("_")[1]+"_"+split_date[1]+"_"+str(horizon)+"_"+"ensemble"+".txt",probal)
+                    np.savetxt(args.ground_truth[0].split("_")[1]+"_"+split_date[2]+"_"+lag+"_"+"ensemble"+".txt",probal)
                     print("the weight ensebmle for V5 V7 V10 LR rank rank precision is {}".format(metrics.accuracy_score(true_result, final_list)))
                     print("the horizon is {}".format(horizon))
                     print("the lag is {}".format(lag))
@@ -418,10 +432,10 @@ if __name__ == '__main__':
                     probal = []
                     # the same as above
                     for i in range(len(y_va)):
-                        error_xgb_v5 = np.sum(result_v5_error[length:length+window_size])+1e-05
-                        error_xgb_v7 = np.sum(result_v7_error[length:length+window_size])+1e-05
-                        error_xgb_v10 = np.sum(result_v10_error[length:length+window_size])+1e-05
-                        error_lr = np.sum(result_lr_error[length:length+window_size])+1e-05
+                        error_xgb_v5 = np.sum(result_v5_error[length:length+window_size])
+                        error_xgb_v7 = np.sum(result_v7_error[length:length+window_size])
+                        error_xgb_v10 = np.sum(result_v10_error[length:length+window_size])
+                        error_lr = np.sum(result_lr_error[length:length+window_size])
                         weight_xgb_v5 = float(1/error_xgb_v5)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr)
                         weight_xgb_v7 = float(1/error_xgb_v7)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr)
                         weight_xgb_v10 = float(1/error_xgb_v10)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr)
@@ -446,10 +460,19 @@ if __name__ == '__main__':
                         probal.append(result)
                         if result>0.5:
                             final_list.append(1)
-                        else:
+                        elif result<=0.5:
                             final_list.append(0)
+                        else:
+                            if error_xgb_v5==0:
+                                final_list.append(final_list_v5[i])
+                            elif error_xgb_v7==0:
+                                final_list.append(final_list_v7[i])
+                            elif error_xgb_v10==0:
+                                final_list.append(final_list_v10[i])
+                            elif error_lr==0:
+                                final_list.append(final_list_lr[i])
                         length+=1
-                    np.savetxt(args.ground_truth[0].split("_")[1]+"_"+split_date[1]+"_"+str(horizon)+"_"+"ensemble"+".txt",probal)
+                    np.savetxt(args.ground_truth[0].split("_")[1]+"_"+split_date[2]+"_"+lag+"_"+"ensemble"+".txt",probal)
                     print("the weight ensebmle for V5 V7 V10 LR rank rank precision is {}".format(metrics.accuracy_score(y_va, final_list)))
                     print("the horizon is {}".format(horizon))
                     print("the lag is {}".format(lag))

@@ -9,7 +9,7 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 from sklearn.metrics import accuracy_score, f1_score
 from copy import copy
-import psutil
+#import psutil
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 from data.load_data_v16_torch import load_data
 from model.model_embedding import MultiHeadAttention, attention, bilstm
@@ -23,13 +23,13 @@ random.seed(1)
 thresh = 0
 
 
-
+'''
 def memory_usage():
     pid = os.getpid()
     py = psutil.Process(pid=pid)
     memory_use = py.memory_info()[0]/2.**30
     print('memory useage:', memory_use)
-
+'''
 class Trainer:
     def __init__(self, input_dim, hidden_state, time_step, lr, dropout,
                  case_number, attention_size, embedding_size,
@@ -557,7 +557,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--data_configure_file', '-c', type=str,
         help='configure file of the features to be read',
-        default='exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf'
+        default='exp/online_v10.conf'
     )
     parser.add_argument('-gt', '--ground_truth', help='ground truth column',
                         type=str, default="LME_Co_Spot")

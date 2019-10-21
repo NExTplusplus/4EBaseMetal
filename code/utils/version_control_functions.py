@@ -3,6 +3,10 @@ from utils.read_data import process_missing_value_v3
 from utils.normalize_feature import log_1d_return
 
 def generate_version_params(version):
+    '''
+        input:  version : a string which refers to the version of data preprocessing required
+        output: ans     : a dictionary that holds the required version for each process within load data
+    '''
     ans = { "generate_strat_params":None,
             "deal_with_abnormal_value":"v2", "labelling":"v1", "process_missing_value":"v1", "strategy_signal":None,
             "normalize_without_1d_return": "v1", "technical_indication":"v1",
@@ -82,6 +86,7 @@ def generate_strat_params(ground_truth,steps,version):
         '''
         return generate_strat_params_v5(ground_truth,steps)
     if version == "v6":
+<<<<<<< HEAD
         '''
             load strategy parameters for preprocessing version 18
         '''
@@ -91,6 +96,9 @@ def generate_strat_params(ground_truth,steps,version):
             load strategy parameters for preprocessing version 20
         '''
         return generate_strat_params_v7(ground_truth,steps)
+=======
+        return generate_strat_params_v6(ground_truth,steps)
+>>>>>>> e8b632841a1fb68d93187e24f94357fb126683ad
 
 def deal_with_abnormal_value(arguments, version):
     time_series = arguments['time_series']

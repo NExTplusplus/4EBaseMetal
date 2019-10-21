@@ -76,12 +76,17 @@ if __name__ == '__main__':
     args = parser.parse_args()
     ground_truth = args.ground_truth
     all_strat_results = {"Co":{"1d":{},"3d":{},"5d":{}},"Al":{"1d":{},"3d":{},"5d":{}},"Zi":{"1d":{},"3d":{},"5d":{}},"Ti":{"1d":{},"3d":{},"5d":{}},"Le":{"1d":{},"3d":{},"5d":{}},"Ni":{"1d":{},"3d":{},"5d":{}}}
+    
+    # read data configure file
     with open(os.path.join(sys.path[0],args.data_configure_file)) as fin:
         fname_columns = json.load(fin)[0]
 
+    # iterate over prediction horizon
     for horizon in [1,3,5]:
+        
+        # read data
         if args.source == "NExT":
-            data_list, LME_dates = read_data_NExT(fname_columns, "2003-11-12")
+            data_list, LME_dates = read_data_NExT(fname_columns, "1993-11-12")
             time_series = pd.concat(data_list, axis = 1, sort = True)
             split_dates = ["2007-01-01","2017-01-01","2019-01-01"]
             test_split_dates = rolling_half_year(split_dates[0],split_dates[2],5)
@@ -93,6 +98,8 @@ if __name__ == '__main__':
             test_split_dates = test_split_dates[-4:]
         n = 0
         args.steps = horizon
+        
+        #load data
         time_series = deal_with_abnormal_value_v1(time_series)
         LME_dates = sorted(set(LME_dates).intersection(time_series.index.values.tolist()))
         time_series = time_series.loc[LME_dates]
@@ -102,17 +109,21 @@ if __name__ == '__main__':
         time_series = pd.concat(labels,axis = 1)
         ts = process_missing_value_v3(time_series)
         # ts = time_series.loc[(time_series.index >= split_date[0])&(time_series.index <= split_date[1])]
+        
+        # initialize strategy testing parameters
         strategy_params = {'sar':{'initial':[],'maximum':[]},'rsi':{'window':[],'upper':[],'lower':[]},'strat1':{'short window':[],"med window":[]},'strat2':{'window':[]},'strat3_high':{'window':[]},'strat3_close':{'window':[]},'strat6':{'window':[],'limiting_factor':[]},'strat7':{'window':[],'limiting_factor':[]}, 'strat9':{'SlowLength':[],'FastLength':[],'MACDLength':[]}}
         activation_params = {'sar':True,'rsi':False,'strat1':False,'strat2':False,'strat3_high':False,'strat3_close':False, 'strat6':False, 'strat7':False, 'strat9': False}
         strat_results = {'sar':{'initial':[],'maximum':[]},'rsi':{'window':[],'upper':[],'lower':[]},'strat1':{'short window':[],"med window":[]},'strat2':{'window':[]},'strat3_high':{'window':[]}, 'strat3_close':{'window':[]},'strat6':{'window':[],'limiting_factor':[]},'strat7':{'window':[],'limiting_factor':[]}, 'strat9':{'SlowLength':[],'FastLength':[],'MACDLength':[]}}
         
+        ### test on training set
+        #test for sar
         print("sar")
         initial = np.arange(0.01,0.051,0.002)
         mx = np.arange(0.1,0.51,0.02)
         comb = product(initial,mx)
         sar = parallel_process(copy(ts), split_dates, "sar", strat_results, ground_truth, strategy_params,activation_params,args.cov_increase,comb,args.min,"v2")
         
-        
+        #test for rsi
         print("rsi")
         activation_params['sar'] = False
         activation_params['rsi'] = True
@@ -122,6 +133,7 @@ if __name__ == '__main__':
         comb = product(window, upper,lower)
         rsi = parallel_process(copy(ts), split_dates, "rsi", strat_results, ground_truth, strategy_params,activation_params,args.cov_increase,comb,args.min,"v2")
 
+        #test for strat1
         print("strat1")
         activation_params['rsi'] = False
         activation_params['strat1'] = True
@@ -130,6 +142,7 @@ if __name__ == '__main__':
         comb = product(short,med)
         strat1 = parallel_process(copy(ts), split_dates, "strat1", strat_results, ground_truth, strategy_params,activation_params,args.cov_increase,comb,args.min,"v2")
         
+        #test for strat2
         print("strat2")
         activation_params['strat1'] = False
         activation_params['strat2'] = True
@@ -137,6 +150,7 @@ if __name__ == '__main__':
         comb = [[com] for com in comb]
         strat2 = parallel_process(copy(ts), split_dates, "strat2", strat_results, ground_truth, strategy_params,activation_params,args.cov_increase,comb,args.min,"v2")
 
+        #test for strat3 high
         print("strat3_high")
         activation_params['strat2'] = False
         activation_params['strat3_high'] = True
@@ -144,6 +158,7 @@ if __name__ == '__main__':
         comb = [[com] for com in comb]
         strat3 = parallel_process(copy(ts), split_dates, "strat3_high", strat_results, ground_truth, strategy_params,activation_params,args.cov_increase,comb,args.min,"v2")
 
+        #test for strat3 close
         print("strat3_close")
         activation_params['strat3_high'] = False
         activation_params['strat3_close'] = True
@@ -151,6 +166,7 @@ if __name__ == '__main__':
         comb = [[com] for com in comb]
         strat3 = parallel_process(copy(ts), split_dates, "strat3_close", strat_results, ground_truth, strategy_params,activation_params,args.cov_increase,comb,args.min,"v2")
 
+        #test for strat6
         print("strat6")
         activation_params['strat3_close'] = False
         activation_params['strat6'] = True
@@ -159,6 +175,7 @@ if __name__ == '__main__':
         comb = product(window,limiting_factor)
         strat6 = parallel_process(copy(ts), split_dates, "strat6", strat_results, ground_truth, strategy_params,activation_params,args.cov_increase,comb,args.min,"v2")
         
+        #test for strat7
         print("strat7")
         activation_params['strat6'] = False
         activation_params['strat7'] = True
@@ -167,13 +184,14 @@ if __name__ == '__main__':
         comb = product(window,limiting_factor)
         strat7 = parallel_process(copy(ts), split_dates, "strat7", strat_results, ground_truth, strategy_params,activation_params,args.cov_increase,comb,args.min,"v2")
         
+        #test for strat9
         print('strat9')
         activation_params['strat7'] = False
         activation_params['strat9'] = True
         comb = list(permutations(range(10,51,5),3))
         strat9 = parallel_process(copy(ts), split_dates, "strat9", strat_results, ground_truth, strategy_params,activation_params,args.cov_increase,comb,args.min,"v2")
         
-
+        ###test on test set
         ans = {'index':[],
                 'sar_initial':[],'sar_maximum':[],'sar_train_acc':[],'sar_train_cov':[],'sar_acc':[],'sar_cov':[],
                 'rsi_window':[],'rsi_upper':[],'rsi_lower':[],'rsi_train_acc':[],'rsi_train_cov':[],'rsi_acc':[],'rsi_cov':[],
@@ -185,19 +203,26 @@ if __name__ == '__main__':
                 'strat7_window':[],'strat7_limiting_factor':[],'strat7_train_acc':[],'strat7_train_cov':[],'strat7_acc':[],'strat7_cov':[],
                 'strat9_slow_length':[],'strat9_fast_length':[],'strat9_macd_length':[],'strat9_train_acc':[],'strat9_train_cov':[],'strat9_acc':[],'strat9_cov':[]
             }
+
+        #reset datatype
         for strat in strat_results.keys():
             for param in strat_results[strat].keys():
                 if "window" in param or "Length" in param or "upper" in param or "lower" in param:
                     strat_results[strat][param] = [int(el) for el in strat_results[strat][param]]
                 else:
                     strat_results[strat][param] = [float(el) for el in strat_results[strat][param]]
+        
         for metal in all_strat_results.keys():
             all_strat_results[metal][str(horizon)+"d"] = deepcopy(strat_results)
         mx = max([len(list(strat_results[strat].values())[0]) for strat in strat_results.keys()])
+
+        #iterate over split dates
         for test_split_date in test_split_dates:
             print(test_split_date)
             ans['index'] = ans['index']+[test_split_date[1]]*mx
             # ts = time_series.loc[(time_series.index >= test_split_date[1])&(time_series.index < test_split_date[2])]
+            
+            #output results for sar
             activation_params = {'sar':True,'rsi':False,'strat1':False,'strat2':False,'strat3_high':False, 'strat3_close':False,'strat6':False, 'strat7':False, 'strat9': False}
             for i in range(mx):
                 if i < len(strat_results['sar']['initial']):
@@ -218,7 +243,7 @@ if __name__ == '__main__':
                     ans['sar_acc'].append(None)
                     ans['sar_cov'].append(None)     
 
-            
+            #output results for rsi
             activation_params = {'sar':False,'rsi':True,'strat1':False,'strat2':False,'strat3_high':False, 'strat3_close':False,'strat6':False, 'strat7':False, 'strat9': False}
             for i in range(mx):
                 if i < len(strat_results['rsi']['window']):    
@@ -241,6 +266,7 @@ if __name__ == '__main__':
                     ans['rsi_acc'].append(None)
                     ans['rsi_cov'].append(None)
 
+            #output results for strat1
             activation_params = {'sar':False,'rsi':False,'strat1':True,'strat2':False,'strat3_high':False, 'strat3_close':False,'strat6':False, 'strat7':False, 'strat9': False}
             
             for i in range(mx):
@@ -261,6 +287,8 @@ if __name__ == '__main__':
                     ans['strat1_train_cov'].append(None)
                     ans['strat1_acc'].append(None)
                     ans['strat1_cov'].append(None)
+
+            #output results for strat2
             activation_params = {'sar':False,'rsi':False,'strat1':False,'strat2':True,'strat3_high':False, 'strat3_close':False,'strat6':False, 'strat7':False, 'strat9': False}
             
             for i in range(mx):
@@ -280,6 +308,7 @@ if __name__ == '__main__':
                     ans['strat2_acc'].append(None)
                     ans['strat2_cov'].append(None)
                 
+            #output results for strat3
             activation_params = {'sar':False,'rsi':False,'strat1':False,'strat2':False,'strat3_high':True, 'strat3_close':False,'strat6':False, 'strat7':False, 'strat9': False}
             
             for i in range(mx):
@@ -299,6 +328,7 @@ if __name__ == '__main__':
                     ans['strat3_high_acc'].append(None)
                     ans['strat3_high_cov'].append(None) 
         
+            #output results for strat3 close
             activation_params = {'sar':False,'rsi':False,'strat1':False,'strat2':False,'strat3_high':False, 'strat3_close':True,'strat6':False, 'strat7':False, 'strat9': False}
             
             for i in range(mx):
@@ -318,6 +348,7 @@ if __name__ == '__main__':
                     ans['strat3_close_acc'].append(None)
                     ans['strat3_close_cov'].append(None) 
             
+            #output results for strat6
             activation_params = {'sar':False,'rsi':False,'strat1':False,'strat2':False,'strat3_high':False, 'strat3_close':False,'strat6':True, 'strat7':False, 'strat9': False}
             
             for i in range(mx):
@@ -338,6 +369,8 @@ if __name__ == '__main__':
                     ans['strat6_train_cov'].append(None)
                     ans['strat6_acc'].append(None)
                     ans['strat6_cov'].append(None) 
+            
+            #output results for strat7
             activation_params = {'sar':False,'rsi':False,'strat1':False,'strat2':False,'strat3_high':False, 'strat3_close':False,'strat6':False, 'strat7':True, 'strat9': False}
             
             for i in range(mx):
@@ -359,6 +392,8 @@ if __name__ == '__main__':
                     ans['strat7_train_cov'].append(None)
                     ans['strat7_acc'].append(None)
                     ans['strat7_cov'].append(None) 
+            
+            #output results for strat9
             activation_params = {'sar':False,'rsi':False,'strat1':False,'strat2':False,'strat3_high':False, 'strat3_close':False,'strat6':False, 'strat7':False, 'strat9': True}
             
             for i in range(mx):

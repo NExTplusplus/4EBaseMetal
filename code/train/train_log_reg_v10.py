@@ -123,16 +123,17 @@ if __name__ == '__main__':
             elif args.source == "4E":
                 from utils.read_data import read_data_v5_4E
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
-            
-            #generate parameters for load data
+            # initialize parameters for load data
             length = 5
             split_dates = rolling_half_year("2009-07-01","2017-01-01",length)
             split_dates  =  split_dates[:]
             importance_list = []
             version_params=generate_version_params(args.version)
+            ans = {"C":[]}
             for split_date in split_dates:
                 #print("the train date is {}".format(split_date[0]))
                 #print("the test date is {}".format(split_date[1]))
+                #generate parameters for load data
                 horizon = args.steps
                 norm_volume = "v1"
                 norm_3m_spread = "v1"
@@ -140,13 +141,8 @@ if __name__ == '__main__':
                 len_ma = 5
                 len_update = 30
                 tol = 1e-7
-                if args.xgboost==1:
-                    print(args.xgboost)
-                    norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
-                                'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':True}
-                else:
-                    norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
-                                'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False}
+                norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
+                            'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False}
                 final_X_tr = []
                 final_y_tr = []
                 final_X_va = []
@@ -158,16 +154,16 @@ if __name__ == '__main__':
                 ts = copy(time_series.loc[split_date[0]:split_date[2]])
                 i = 0
                 
-                #iterate over different ground truths for data loading
+                #iterate over ground truths
                 for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
                     print(ground_truth)
                     metal_id = [0,0,0,0,0,0]
                     metal_id[i] = 1
                     
-                    # load data
+                    #load data
                     X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,split_date,norm_params,tech_params,version_params)
                     
-                    #post load process and metal id extension
+                    #post load processing and metal id extension
                     X_tr = np.concatenate(X_tr)
                     X_tr = X_tr.reshape(len(X_tr),lag*len(column_list[0]))
                     X_tr = np.append(X_tr,[metal_id]*len(X_tr),axis = 1)
@@ -182,7 +178,7 @@ if __name__ == '__main__':
                     final_y_va.append(y_va)
                     i+=1
                 
-                #sort by time not metal
+                #sort by time, not by metal
                 final_X_tr = [np.transpose(arr) for arr in np.dstack(final_X_tr)]
                 final_y_tr = [np.transpose(arr) for arr in np.dstack(final_y_tr)]
                 final_X_va = [np.transpose(arr) for arr in np.dstack(final_X_va)]
@@ -191,76 +187,22 @@ if __name__ == '__main__':
                 final_y_tr = np.reshape(final_y_tr,[np.shape(final_y_tr)[0]*np.shape(final_y_tr)[1],np.shape(final_y_tr)[2]])
                 final_X_va = np.reshape(final_X_va,[np.shape(final_X_va)[0]*np.shape(final_X_va)[1],np.shape(final_X_va)[2]])
                 final_y_va = np.reshape(final_y_va,[np.shape(final_y_va)[0]*np.shape(final_y_va)[1],np.shape(final_y_va)[2]])
-                
-                column_lag_list = []
-                column_name = []
-                for i in range(lag):
-                    for item in column_list[0]:
-                        new_item = item+"_"+str(lag-i)
-                        column_lag_list.append(new_item)
-                column_lag_list.append("Co")
-                column_lag_list.append("Al")
-                column_lag_list.append("Ni")
-                column_lag_list.append("Ti")
-                column_lag_list.append("Zi")
-                column_lag_list.append("Le")
-                train_dataframe = pd.DataFrame(final_X_tr,columns=column_lag_list)
-                # train_dataframe.to_csv("all_xgb_ex1.csv")
-                train_X = train_dataframe.loc[:,column_lag_list]
-                train_y = pd.DataFrame(final_y_tr,columns=['result'])
-                
-                test_dataframe = pd.DataFrame(final_X_va,columns=column_lag_list)
-                test_X = test_dataframe.loc[:,column_lag_list] 
-                n_splits=args.k_folds
-                
-                #tune hyperparameter for xgboost
-                for max_depth in [3,4,5]:
-                    for learning_rate in [0.6,0.7,0.8,0.9]:
-                        for gamma in [0.6,0.7,0.8,0.9]:
-                            for min_child_weight in [3,4,5,6]:
-                                for subsample in [0.6,0.7,0.85,0.9]:
-                                    from sklearn.metrics import accuracy_score
-                                    model = xgb.XGBClassifier(max_depth=max_depth,
-                                                learning_rate = learning_rate,
-                                                n_estimators=500,
-                                                silent=True,
-                                                nthread=10,
-                                                gamma=gamma,
-                                                min_child_weight=min_child_weight,
-                                                subsample=subsample,
-                                                colsample_bytree=0.7,
-                                                colsample_bylevel=1,
-                                                reg_alpha=0.0001,
-                                                reg_lambda=1,
-                                                scale_pos_weight=1,
-                                                seed=1440,
-                                                missing=None)
-                                    folds = KFold(n_splits=n_splits)
-                                    print(folds.split(train_X))
-                                    scores = []
-                                    prediction = np.zeros((len(X_va), 1))
-                                    folder_index = []
-                                    
-                                    #only use last fold
-                                    for fold_n, (train_index, valid_index) in enumerate(folds.split(train_X)):
-                                        # print("the train_index is {}".format(train_index))
-                                        # print("the test_index is {}".format(valid_index))
-                                        if fold_n != 9:
-                                            continue
-                                        X_train, X_valid = train_X[column_lag_list].iloc[train_index], train_X[column_lag_list].iloc[valid_index]
-                                        y_train, y_valid = train_y.iloc[train_index], train_y.iloc[valid_index]
-                                        model.fit(X_train, y_train,eval_metric='error',verbose=True,eval_set=[(X_valid,y_valid)],early_stopping_rounds=5)
-                                        y_pred_valid = model.predict(X_valid)
-                                        y_pred = model.predict_proba(test_X, ntree_limit=model.best_ntree_limit)[:, 1]
-                                        y_pred = y_pred.reshape(-1, 1)
-                                        y_pred = [1 if y > 0.5 else 0 for y in y_pred]
-                                    #print("the lag is {}".format(lag))
-                                    print("the all folder voting precision is {}".format(metrics.accuracy_score(final_y_va, y_pred)))
-                                    print("the max_depth is {}".format(max_depth))
-                                    print("the learning_rate is {}".format(learning_rate))
-                                    print("the gamma is {}".format(gamma))
-                                    print("the min_child_weight is {}".format(min_child_weight))
-                                    print("the subsample is {}".format(subsample))
-                print("the lag is {}".format(lag))
-                print("the train date is {}".format(split_date[0]))
-                print("the test date is {}".format(split_date[1]))
+
+                #tune logistic regression hyper parameter
+                for C in [0.00001,0.0001,0.001,0.01]:
+                    if C not in ans['C']:
+                        ans["C"].append(C)
+                    if split_date[1] not in ans.keys():
+                        ans[split_date[1]] = []
+            
+                    n+=1
+                    
+                    pure_LogReg = LogReg(parameters={})
+
+                    max_iter = args.max_iter
+                    parameters = {"penalty":"l2", "C":C, "solver":"lbfgs", "tol":tol,"max_iter":6*4*len(f)*max_iter, "verbose" : 0,"warm_start": False, "n_jobs": -1}
+                    pure_LogReg.train(final_X_tr,final_y_tr.flatten(), parameters)
+                    acc = pure_LogReg.test(final_X_va,final_y_va.flatten())
+                    ans[split_date[1]].append(acc)
+            print(ans)
+            pd.DataFrame(ans).to_csv("_".join(["log_reg",str(args.lag),str(args.steps)+".csv"]))

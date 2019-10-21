@@ -1,7 +1,7 @@
 import numpy as np
 
 
-
+# calculate objective function value for logistic regression according to sklearn
 def objective_function(estimator,X,y,C):
     t_coef = np.transpose(estimator.coef())
     rgl = np.dot(estimator.coef(),t_coef)/2
@@ -9,7 +9,7 @@ def objective_function(estimator,X,y,C):
     ans = cost+rgl
     return ans
 
-
+# calculate loss function value for logistic regression according to sklearn
 def loss_function(estimator,X,y):
     t_coef = np.transpose(estimator.coef())
     intercept = estimator.intercept_()

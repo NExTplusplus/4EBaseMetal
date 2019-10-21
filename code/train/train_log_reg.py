@@ -75,7 +75,11 @@ if __name__ == '__main__':
         if args.action == 'train':
             comparison = None
             n = 0
+            
+            #iterate over list of configurations
             for f in fname_columns:
+                
+                #read data
                 if args.source =="NExT":
                     from utils.read_data import read_data_NExT
                     data_list, LME_dates = read_data_NExT(f, "2003-11-12")
@@ -84,6 +88,8 @@ if __name__ == '__main__':
                     from utils.read_data import read_data_v5_4E
                     time_series, LME_dates = read_data_v5_4E("2003-11-12")
                 horizon = args.steps
+                
+                #generate parameters for load data
                 for lag in [5,10,20,30]:
                     for norm_volume in ["v1","v2"]:
                         for norm_ex in ["v1"]:
@@ -107,6 +113,7 @@ if __name__ == '__main__':
                                                                                                     lag, split_date, norm_params, 
                                                                                                     tech_params, version_params)
                                     
+                                    #post load processing
                                     for ind in range(len(X_tr)):
                                         neg_y_tr = y_tr[ind] - 1
                                         y_tr[ind] = y_tr[ind] + neg_y_tr
@@ -125,12 +132,11 @@ if __name__ == '__main__':
                                     y_tr = np.concatenate(y_tr)
                                     X_va = np.concatenate(X_va)
                                     y_va = np.concatenate(y_va)
-                                    for C in [0.00001,0.0001,0.001,0.01]:
-                                
-                                        n+=1
-                                        
-                                        pure_LogReg = LogReg(parameters={})
 
+                                    #tune hyperparameter for logistic regression
+                                    for C in [0.00001,0.0001,0.001,0.01]:
+                                        n+=1
+                                        pure_LogReg = LogReg(parameters={})
                                         max_iter = args.max_iter
                                         parameters = {"penalty":"l2", "C":C, "solver":"lbfgs", "tol":tol,"max_iter":6*4*len(f)*max_iter, "verbose" : 0,"warm_start": False, "n_jobs": -1}
                                         pure_LogReg.train(X_tr,y_tr.flatten(), parameters)

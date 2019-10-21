@@ -14,6 +14,7 @@ from sklearn import preprocessing
 import json
 import scipy.stats as sct
 
+#load the strategy parameters for version 9
 def generate_strat_params_v1(ground_truth,steps):
     with open("exp/strat_param_v9.conf") as f:
         all_params = json.load(f)
@@ -21,6 +22,7 @@ def generate_strat_params_v1(ground_truth,steps):
     activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":False,"strat5":False,"strat6":True,"strat7":True,"strat8":False,"strat9":True}
     return strat_params,activation_params
 
+#load the strategy parameters for version 10
 def generate_strat_params_v2(ground_truth,steps):
     file_path = ("/").join(exp_path.split("/")[:-1])
     with open(file_path+"/exp/strat_param_v10.conf") as f:
@@ -29,6 +31,7 @@ def generate_strat_params_v2(ground_truth,steps):
     activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":False,"strat5":False,"strat6":True,"strat7":True,"strat8":False,"strat9":True,"trend_1":False}
     return strat_params,activation_params
 
+#load the strategy parameters for version 11
 def generate_strat_params_v3(ground_truth,steps):
     with open("exp/strat_param_v11.conf") as f:
         all_params = json.load(f)
@@ -36,6 +39,7 @@ def generate_strat_params_v3(ground_truth,steps):
     activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":False,"strat5":False,"strat6":True,"strat7":True,"strat8":False,"strat9":True,"trend_1":False}
     return strat_params,activation_params
 
+#load the strategy parameters for version 12
 def generate_strat_params_v4(ground_truth,steps):
     with open("exp/strat_param_v12.conf") as f:
         all_params = json.load(f)
@@ -43,6 +47,7 @@ def generate_strat_params_v4(ground_truth,steps):
     activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":False,"strat5":False,"strat6":True,"strat7":True,"strat8":False,"strat9":True,"trend_1":False}
     return strat_params,activation_params
 
+#load the strategy parameters for version 14
 def generate_strat_params_v5(ground_truth,steps):
     print("################generate_strat_params_v5##################")
     with open(os.path.join(sys.path[0],"exp/strat_param_v14.conf")) as f:
@@ -50,10 +55,13 @@ def generate_strat_params_v5(ground_truth,steps):
     strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
     activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":False,"strat5":False,"strat6":True,"strat7":True,"strat8":True,"strat9":True,"trend_1":False}
     return strat_params,activation_params
+
+#load the strategy parameters for version 18
 def generate_strat_params_v6(ground_truth,steps):
     print("################generate_strat_params_v6##################")
     with open(os.path.join(sys.path[0],"exp/strat_param_v18.conf")) as f:
         all_params = json.load(f)
+    print(all_params)
     strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
     activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":True,"strat5":True,"strat6":True,"strat7":True,"strat8":False,"strat9":True,"trend_1":False}
     return strat_params,activation_params
@@ -172,7 +180,14 @@ def labelling_v1_ex1(X,horizon,ground_truth_columns,lag):
         ans.append(labels)
     return ans
 
+#this function is for 3 classification
 def labelling_v1_ex2(X,horizon,ground_truth_columns,val_end):
+    '''
+    X: timeseries
+    horizon: the time horizon
+    ground_truth_columns: the columns we predict
+    val_end: the last index of validation set to prevent data leakage
+    '''
     assert ground_truth_columns != []
     ans = []
     for ground_truth in ground_truth_columns:
@@ -366,7 +381,7 @@ def technical_indication_v2_ex3(X,train_end,params,ground_truth_columns):
                 
                 
     return X
-
+#generate strategy signals
 def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activation_params,cov_inc,mnm):
     
     strat_results = {'sar':{'initial':[],'maximum':[]},'rsi':{'window':[],'upper':[],'lower':[]},'strat1':{'short window':[],"med window":[]},'strat2':{'window':[]},'strat3_high':{'window':[]}, 'strat3_close':{'window':[]},'strat6':{'window':[],'limiting_factor':[]},'strat7':{'window':[],'limiting_factor':[]}, 'strat9':{'SlowLength':[],'FastLength':[],'MACDLength':[]}}
@@ -379,6 +394,8 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
     for key in temp_act.keys():
         temp_act[key] = False
     for col in cols:
+
+        #generate strategy 3 for High 
         if gt+"_High" == col and activation_params["strat3_high"]:
             act = copy(temp_act)
             act['strat3_high'] = True
@@ -388,7 +405,7 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
             output_strat3 = one_hot(tmp_pd)
             output = pd.concat([output,output_strat3],sort = True, axis = 1)
             tmp_pd = pd.DataFrame(index = X.index)
-            
+        #generate strategy 8
         if gt+"_Spread" == col and activation_params["strat8"]:
             act = copy(temp_act)
             act['strat8'] = True
@@ -403,6 +420,7 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
 
         if gt+"_Close" == col:
             setting = col[:-5]
+            #generate SAR
             if setting+"High" in cols and setting+"Low" in cols and activation_params['sar']:
                 act = copy(temp_act)
                 act['sar'] = True
@@ -413,7 +431,7 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
                 output_sar = one_hot(tmp_pd)
                 output = pd.concat([output,output_sar],sort = True, axis = 1)
                 tmp_pd = pd.DataFrame(index = X.index)
-                
+            #generate RSI
             if activation_params['rsi']:
                 act = copy(temp_act)
                 act['rsi'] = True
@@ -424,7 +442,7 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
                 tmp = parallel_process(X, split_dates, "rsi",strat_results,ground_truth,strategy_params,act,cov_inc,comb,mnm)
                 output_rsi = one_hot(tmp)
                 output = pd.concat([output,output_rsi],sort = True, axis = 1)
-                
+            #generate Strat 1
             if activation_params["strat1"]:
                 act = copy(temp_act)
                 act['strat1'] = True
@@ -434,7 +452,7 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
                 tmp = parallel_process(X, split_dates, "strat1",strat_results,ground_truth,strategy_params,act,cov_inc,comb,mnm)
                 output_strat1 = one_hot(tmp)
                 output = pd.concat([output,output_strat1],sort = True, axis = 1)
-
+            #generate strat2
             if activation_params["strat2"]:
                 act = copy(temp_act)
                 act['strat2'] = True
@@ -444,7 +462,7 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
                 output_strat2 = one_hot(tmp_pd)
                 output = pd.concat([output,output_strat2],sort = True, axis = 1)
                 tmp_pd = pd.DataFrame(index = X.index)
-
+            #generate strat3 Close
             if activation_params["strat3_close"]:
                 act = copy(temp_act)
                 act['strat3_close'] = True
@@ -454,7 +472,7 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
                 output_strat3 = one_hot(tmp_pd)
                 output = pd.concat([output,output_strat3],sort = True, axis = 1)
                 tmp_pd = pd.DataFrame(index = X.index)
-                
+            #generate strat5
             if activation_params["strat5"]:
                 print("**********strat5********")
                 act = copy(temp_act)
@@ -465,7 +483,7 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
                 #output_strat3 = one_hot(tmp_pd)
                 output = pd.concat([output,tmp_pd],sort = True, axis = 1)
                 tmp_pd = pd.DataFrame(index = X.index)
-                
+            #generate strat7
             if activation_params["strat7"]:
                 act = copy(temp_act)
                 act['strat7'] = True
@@ -476,7 +494,7 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
                 output_strat7 = one_hot(tmp_pd)
                 output = pd.concat([output,output_strat7],sort = True, axis = 1)
                 tmp_pd = pd.DataFrame(index = X.index)
-                
+            #generate strat9
             if activation_params["strat9"]:
                 act = copy(temp_act)
                 act['strat9'] = True
@@ -484,6 +502,7 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
                 tmp = parallel_process(X, split_dates, "strat9",strat_results,ground_truth,strategy_params,act,cov_inc,comb,mnm)
                 output_strat9 = one_hot(tmp)
                 output = pd.concat([output,output_strat9],sort = True, axis = 1)
+<<<<<<< HEAD
                 
             if activation_params["trend_1"]:
                 print("**********trend_1********")
@@ -495,6 +514,9 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
                 output = pd.concat([output,output_trend1],sort = True, axis = 1)
                 
                 
+=======
+            #generate strat6
+>>>>>>> e8b632841a1fb68d93187e24f94357fb126683ad
             if gt+"_High" in cols and gt+"_Low" in cols and activation_params["strat6"]:
                 act = copy(temp_act)
                 act['strat6'] = True
@@ -504,7 +526,7 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
                 tmp = parallel_process(X, split_dates, "strat6",strat_results,ground_truth,strategy_params,act,cov_inc,comb,mnm)
                 output_strat6 = one_hot(tmp)
                 output = pd.concat([output,output_strat6],sort = True, axis = 1)
-                
+            #generate strat4
             if gt+"_High" in cols and gt+"_Low" in cols and activation_params["strat4"]:
                 print("*********strat4********")
                 act = copy(temp_act)
@@ -520,6 +542,7 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
             
     return X
 
+# remove columns that hold the original values of Volume, OI, exchange rate and PVT
 def remove_unused_columns_v1(time_series,org_cols):
     for col in copy(time_series.columns):
         if "_Volume" in col or "_OI" in col or "CNYUSD" in col or "_PVT" in col:
@@ -528,12 +551,14 @@ def remove_unused_columns_v1(time_series,org_cols):
                 org_cols.remove(col)
     return time_series, org_cols
 
+# remove a list of columns with an additional label
 def remove_unused_columns_v2(time_series,org_cols):
     org_cols.append("Label")
     for col in copy(time_series.columns):
         if col in org_cols:
             time_series = time_series.drop(col, axis = 1)
     return time_series,org_cols
+
 
 def remove_unused_columns_v3(time_series,org_cols,ground_truth):
     print("#####################remove_unused_columns_v3#####################")
@@ -561,7 +586,13 @@ def scaling_v1(X,train_end):
     X = pd.DataFrame(scaler.transform(X), index = X.index, columns = X.columns)
     return X
 
+# scale all columns except for those in cat_cols
 def scaling_v2(X,train_end, cat_cols):
+    """
+    X:which equals the timeseries
+    train_end:string which we choose to define the time range
+    cat_cols:columns that are not to be scaled
+    """
     scaler = preprocessing.StandardScaler()
     cols = list(set(X.columns)-set(cat_cols))
 

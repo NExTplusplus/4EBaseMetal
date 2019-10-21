@@ -15,6 +15,15 @@ from itertools import permutations, product
 from copy import copy,deepcopy
 
 def strategy_testing(X,ground_truth,strategy_params,activation_params,cov = ""):
+    '''
+    input:  X                   : timeseries
+            ground_truth        : string containing the ground truth column
+            strategy_params     : dictionary holding the values for the parameters for all strategies
+            activation_params   : dictionary representing which strategies are to be calculated
+            cov                 : coverage
+
+    out:    X                   : timeseries that includes the strategies
+    '''
     cols = X.columns.values.tolist()
     ground_truth = ground_truth[:-5]
     for col in cols:
@@ -51,20 +60,36 @@ def strategy_testing(X,ground_truth,strategy_params,activation_params,cov = ""):
     return X
 
 def output(time_series,split_dates,ground_truth,strategy_params,activation_params,dc,check = True):
+    '''
+    input:  time_series         : time_series
+            split_dates         : a list of dates that hold the start of training set, validation set and testing set
+            ground_truth        : string containing the ground truth column
+            strategy_params     : dictionary holding the dummy value for strategies
+            activation_params   : dictionary representing which strategies are to be calculated
+            dc                  : dictionary holding the values for the parameters for all strategies
+            check               : if true calculates deviation from 0.5 in accuracy for training set, else calculates true accuracy of validation set
+    output: temp_list           : list holding the values of dc and the final accuracy calculated     
+    '''
     org_cols = set(time_series.columns.values.tolist()) - set(["Label"])
     strat = None
     sp = deepcopy(strategy_params)
+    #identify which strategy to calculate
     for key in activation_params.keys():
         if activation_params[key]:
             strat = key
     if strat is None:
         return 
     n = 0
+    #set the strategy parameters to values in dc
     for key in sp[strat]:
         sp[strat][key] = dc[key]
         n+=1
+    
+    # for strategy 9, remove those with slowlength smaller than fastlength
     if strat =='strat9' and sp[strat]['SlowLength'] < sp[strat]['FastLength']:
         return 
+    
+    #calculate strategies
     ts = strategy_testing(copy(time_series),ground_truth,sp, activation_params)
     ts = ts[sorted(list(set(ts.columns.values.tolist()) - org_cols))]
     temp_list = list(dc.values())
@@ -73,6 +98,7 @@ def output(time_series,split_dates,ground_truth,strategy_params,activation_param
     else:
         ts = ts[(ts.index >= split_dates[1])&(ts.index < split_dates[2])]
     
+    #calculate accuracy
     for col in ts.columns.values.tolist():
         if col == "Label":
             continue
@@ -97,9 +123,25 @@ def output(time_series,split_dates,ground_truth,strategy_params,activation_param
     
     return temp_list
 
+# tune for strategy parameters and output the timeseries based on the strategy parameters it generates
 def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_params,activation_params,cov_inc,combination,mnm,op= "v1"):    
+    '''
+    input:  ts                  : timeseries
+            split_dates         : a list of dates that hold the start of training set, validation set and testing set
+            strat               : strategy that will be activated
+            strat_results       : dictionary that holds the best strategy parameters across different strategies
+            ground_truth        : string containing the ground truth column
+            strategy_params     : dictionary holding the dummy value for strategies
+            activation_params   : dictionary representing which strategies are to be calculated
+            cov_inc             : coverage increment 
+            combination         : combination of parameter values to test
+            mnm                 : minimum coverage
+            op                  : v1 is for single metal, v2 is for multiple metals
+    output: ans                 : timeseries with strategies calculated with best strategy parameters 
+    '''
     strat_dc = [create_dc_from_comb(strat,strategy_params,comb) for comb in combination]
     strat_keys = list(strategy_params[strat].keys())
+    #parallel processing to test all combinations
     if len(strategy_params[strat][strat_keys[0]]) == 0:
         ls = [list([copy(ts),split_dates,ground_truth,strategy_params,activation_params,com]) for com in strat_dc]
         pool = pl()
@@ -121,6 +163,7 @@ def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_pa
         mx = mn+cov_inc
         while len(results.loc[cov_col>=mn]) > 0:
             temp_results = results[(cov_col<mx)&(cov_col>=mn)]
+            # for sar
             if strat == 'sar':
                 temp_results = temp_results.drop(2,axis = 1)
                 for col in temp_results.columns:
@@ -128,7 +171,7 @@ def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_pa
                 temp_results.columns = ["Initial","Maximum","Acc","Cov"]
                 strat_results['sar']['initial'].append(temp_results.loc[temp_results["Acc"].idxmax(),"Initial"])
                 strat_results['sar']['maximum'].append(temp_results.loc[temp_results["Acc"].idxmax(),"Maximum"])
-
+            # rsi
             elif strat =='rsi':
                 temp_results = (temp_results.drop(3,axis = 1))
                 for col in temp_results.columns:
@@ -137,7 +180,7 @@ def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_pa
                 strat_results['rsi']['window'].append(temp_results.loc[temp_results["Acc"].idxmax(),"Window"])
                 strat_results['rsi']['upper'].append(temp_results.loc[temp_results["Acc"].idxmax(),"Upper"])
                 strat_results['rsi']['lower'].append(temp_results.loc[temp_results["Acc"].idxmax(),"Lower"])
-
+            #strat1
             elif strat == 'strat1':
                 temp_results = (temp_results.drop(2,axis = 1))
                 for col in temp_results.columns:
@@ -145,28 +188,28 @@ def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_pa
                 temp_results.columns = ["Short Window","Med Window","Acc","Cov"]
                 strat_results['strat1']['short window'].append(temp_results.loc[temp_results["Acc"].idxmax(),"Short Window"])
                 strat_results['strat1']['med window'].append(temp_results.loc[temp_results["Acc"].idxmax(),"Med Window"])
-
+            #strat2
             elif strat == 'strat2':
                 temp_results = (temp_results.drop(1,axis = 1))
                 for col in temp_results.columns:
                     temp_results[col] = pd.to_numeric(temp_results[col])
                 temp_results.columns = ["Window","Acc","Cov"]
                 strat_results['strat2']['window'].append(temp_results.loc[temp_results["Acc"].idxmax(),"Window"])
-
+            #strat3 high
             elif strat == "strat3_high":
                 temp_results = (temp_results.drop(1,axis = 1))
                 for col in temp_results.columns:
                     temp_results[col] = pd.to_numeric(temp_results[col])
                 temp_results.columns = ["Window","Acc","Cov"]
                 strat_results['strat3_high']['window'].append(temp_results.loc[temp_results["Acc"].idxmax(),"Window"])
-            
+            #strat3 close          
             elif strat == "strat3_close":
                 temp_results = (temp_results.drop(1,axis = 1))
                 for col in temp_results.columns:
                     temp_results[col] = pd.to_numeric(temp_results[col])
                 temp_results.columns = ["Window","Acc","Cov"]
                 strat_results['strat3_close']['window'].append(temp_results.loc[temp_results["Acc"].idxmax(),"Window"])
-
+            #strat6
             elif strat == "strat6":
                 temp_results = (temp_results.drop(2,axis = 1))
                 for col in temp_results.columns:
@@ -174,7 +217,7 @@ def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_pa
                 temp_results.columns = ["Window","Limiting Factor","Acc","Cov"]
                 strat_results['strat6']['window'].append(temp_results.loc[temp_results["Acc"].idxmax(),"Window"])
                 strat_results['strat6']['limiting_factor'].append(temp_results.loc[temp_results["Acc"].idxmax(),"Limiting Factor"])
-
+            #strat7
             elif strat == "strat7":
                 temp_results = (temp_results.drop(2,axis = 1))
                 for col in temp_results.columns:
@@ -182,7 +225,7 @@ def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_pa
                 temp_results.columns = ["Window","Limiting Factor","Acc","Cov"]
                 strat_results['strat7']['window'].append(temp_results.loc[temp_results["Acc"].idxmax(),"Window"])
                 strat_results['strat7']['limiting_factor'].append(temp_results.loc[temp_results["Acc"].idxmax(),"Limiting Factor"])
-
+            #strat9
             elif strat == "strat9":
                 temp_results = (temp_results.drop(3,axis = 1))
                 for col in temp_results.columns:
@@ -197,6 +240,7 @@ def parallel_process(ts,split_dates,strat,strat_results,ground_truth,strategy_pa
     else:
         strat_results[strat] = strategy_params[strat]
 
+    #generate time series
     keys = list(strategy_params[strat].keys())
     org_cols = set(ts.columns.values.tolist())
     ans = None
@@ -324,6 +368,7 @@ def post_process(ts,split_dates,strat,strat_results,ground_truth,strategy_params
         
     return ans
 
+# create dictionary from the combinations
 def create_dc_from_comb(strat,strategy_params,combination):
     ans = {}
     strat_keys = list(strategy_params[strat].keys())
@@ -331,7 +376,18 @@ def create_dc_from_comb(strat,strategy_params,combination):
         ans[strat_keys[i]] = combination[i]
     return ans
 
+# output for v10
 def output_v2(time_series,split_dates,ground_truth,strategy_params,activation_params,dc,check = True):
+    '''
+    input:  time_series         : time_series
+            split_dates         : a list of dates that hold the start of training set, validation set and testing set
+            ground_truth        : string containing the ground truth column
+            strategy_params     : dictionary holding the dummy value for strategies
+            activation_params   : dictionary representing which strategies are to be calculated
+            dc                  : dictionary holding the values for the parameters for all strategies
+            check               : if true calculates deviation from 0.5 in accuracy for training set, else calculates true accuracy of validation set
+    output: temp_list           : list holding the values of dc and the final accuracy calculated     
+    '''
     org_cols = set(time_series.columns.values.tolist())
     strat = None
     sp = deepcopy(strategy_params)
@@ -365,6 +421,7 @@ def output_v2(time_series,split_dates,ground_truth,strategy_params,activation_pa
     else:
         ts = ts[(ts.index >= split_dates[1])&(ts.index < split_dates[2])]
     ts = ts.reset_index(drop = True)
+    #calculate accuracy
     for col in ts.columns.values.tolist():
         if "Label" == col:
             continue
