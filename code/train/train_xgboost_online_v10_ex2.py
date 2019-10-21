@@ -63,6 +63,7 @@ if __name__ == '__main__':
     if args.ground_truth =='None':
         args.ground_truth = None
     os.chdir(os.path.abspath(sys.path[0]))
+
     # read data configure file
     with open(os.path.join(sys.path[0],args.data_configure_file)) as fin:
         fname_columns = json.load(fin)
@@ -74,6 +75,7 @@ if __name__ == '__main__':
         #iterate over list of configurations
         for f in fname_columns:
             lag = args.lag
+
             #read data
             if args.source == "NExT":
                 from utils.read_data import read_data_NExT
@@ -82,6 +84,7 @@ if __name__ == '__main__':
             elif args.source == "4E":
                 from utils.read_data import read_data_v5_4E
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
+
             #generate parameters for load data
             length = 5
             split_dates = rolling_half_year("2009-07-01","2019-01-01",length)
@@ -113,13 +116,16 @@ if __name__ == '__main__':
                 final_y_te = None 
                 ts = copy(time_series.loc[split_date[0]:split_date[2]])
                 i = 0
+
                 #iterate over different ground truths for data loading
                 for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
                     print(ground_truth)
                     metal_id = [0,0,0,0,0,0]
                     metal_id[i] = 1
+
                     #load data
                     X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,split_date,norm_params,tech_params,version_params)
+                    
                     #post load process and metal id extension
                     X_tr = np.concatenate(X_tr)
                     X_tr = X_tr.reshape(len(X_tr),lag*len(column_list[0]))
@@ -183,6 +189,7 @@ if __name__ == '__main__':
                     scores = []
                     prediction = np.zeros((len(X_va), 1))
                     folder_index = []
+                    
                     #generate k fold and train xgboost model
                     for fold_n, (train_index, valid_index) in enumerate(folds.split(train_X)):
                         #print("the train_index is {}".format(train_index))
@@ -250,6 +257,7 @@ if __name__ == '__main__':
                                 final_list.append(0)
                         #print("the lag is {}".format(lag))
                         print("the all folder voting precision is {}".format(metrics.accuracy_score(final_y_va[i], final_list)))
+                    
                     #calculate the near folder voting
                     elif args.voting=='near':
                         result = np.concatenate((folder_6,folder_7,folder_8,folder_9,folder_10),axis=1)
@@ -267,6 +275,7 @@ if __name__ == '__main__':
                             else:
                                 final_list.append(0)
                         print("the near precision is {}".format(metrics.accuracy_score(final_y_va[i], final_list)))
+                    
                     #calculate the far folder voting
                     elif args.voting=='far':
                         result = np.concatenate((folder_1,folder_2,folder_3,folder_4,folder_5),axis=1)
@@ -284,6 +293,7 @@ if __name__ == '__main__':
                             else:
                                 final_list.append(0)
                         print("the far precision is {}".format(metrics.accuracy_score(final_y_va[i], final_list)))
+                    
                     #calculate the same folder voting
                     else:
                         if split_date[1].split("-")[1]=='01':
@@ -303,6 +313,7 @@ if __name__ == '__main__':
                                     final_list.append(0)
                             #print("the lag is {}".format(lag))
                             print("the same precision is {}".format(metrics.accuracy_score(final_y_va[i], final_list)))
+                            
                             #calculate the reverse folder voting
                             result = np.concatenate((folder_2,folder_4,folder_6,folder_8,folder_10),axis=1)
                             final_list = []
@@ -321,6 +332,7 @@ if __name__ == '__main__':
                             #print("the lag is {}".format(lag))
                             print("the reverse precision is {}".format(metrics.accuracy_score(final_y_va[i], final_list)))
                         else:
+                            
                             #calculate the same folder voting
                             result = np.concatenate((folder_2,folder_4,folder_6,folder_8,folder_10),axis=1)
                             final_list = []
@@ -338,6 +350,7 @@ if __name__ == '__main__':
                                     final_list.append(0)
                             #print("the lag is {}".format(lag))
                             print("the same precision is {}".format(metrics.accuracy_score(final_y_va[i], final_list)))
+                            
                             #calculate the reverse folder voting
                             result = np.concatenate((folder_1,folder_3,folder_5,folder_7,folder_9),axis=1)
                             final_list = []

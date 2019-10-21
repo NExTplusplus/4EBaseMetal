@@ -56,6 +56,7 @@ if __name__ == '__main__':
     if args.ground_truth =='None':
         args.ground_truth = None
     os.chdir(os.path.abspath(sys.path[0]))
+    
     # read data configure file
     with open(os.path.join(sys.path[0],args.data_configure_file)) as fin:
         fname_columns = json.load(fin)
@@ -66,6 +67,7 @@ if __name__ == '__main__':
     for f in fname_columns:
         ans = {'test_date':[],'hp':[]}
         lag = args.lag
+        
         #read data
         if args.source == "NExT":
             from utils.read_data import read_data_NExT
@@ -80,6 +82,7 @@ if __name__ == '__main__':
         split_dates = rolling_half_year("2009-07-01","2019-01-01",length)
         split_dates  =  split_dates[-4:]
         version_params=generate_version_params(args.version)
+        
         #iterate over split dates
         for split_date in split_dates:
             horizon = args.steps
@@ -99,6 +102,7 @@ if __name__ == '__main__':
             final_y_pred = pd.DataFrame()
             final_y_va = []
             ts = copy(time_series.loc[split_date[0]:split_date[2]])
+            
             # iterate over prediction horizon
             for a,h in enumerate([1,3,5]):
                 temp_y_tr = []
@@ -110,14 +114,17 @@ if __name__ == '__main__':
                 corr_col = []
                 y_ = []
                 dates = pd.DataFrame(index = LME_dates)
+                
                 #iterate over different ground truths 
                 for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
                     print(ground_truth,h)
                     corr_col.append(ground_truth+str(h))
                     metal_id = [0,0,0,0,0,0]
                     metal_id[i] = 1
+                    
                     # load data
                     X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,h,[ground_truth],lag[a],split_date,norm_params,tech_params,version_params)
+                    
                     # post load process and metal id extension
                     y_tr = np.concatenate(y_tr)
                     y_va = np.concatenate(y_va)
@@ -163,9 +170,11 @@ if __name__ == '__main__':
             #post process
             for hp in np.arange(0.00,0.5,0.05):
                 corrected_y_pred = pd.DataFrame()
+                
                 #calculate matrix to be solved
                 W = get_W(final_y_tr,hp,args.W_version)
                 original_prediction = deepcopy(final_y_pred)
+                
                 #generate corrected prediction
                 for j in range(len(final_y_pred)):
                     y = prediction_correction(W,original_prediction.iloc[j,:])
@@ -176,6 +185,7 @@ if __name__ == '__main__':
                             corrected_y_pred.loc[corrected_y_pred.index[j],k] = 1
                         else:
                             corrected_y_pred.loc[corrected_y_pred.index[j],k] = 0
+                
                 #calculate accuracy
                 acc = np.sum(np.array(final_y_va == corrected_y_pred), axis = 0)/len(final_y_va.index)
                 ans['hp'].append(hp)

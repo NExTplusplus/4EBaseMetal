@@ -76,12 +76,14 @@ if __name__ == '__main__':
     args = parser.parse_args()
     ground_truth = args.ground_truth
     all_strat_results = {"Co":{"1d":{},"3d":{},"5d":{}},"Al":{"1d":{},"3d":{},"5d":{}},"Zi":{"1d":{},"3d":{},"5d":{}},"Ti":{"1d":{},"3d":{},"5d":{}},"Le":{"1d":{},"3d":{},"5d":{}},"Ni":{"1d":{},"3d":{},"5d":{}}}
+    
     # read data configure file
     with open(os.path.join(sys.path[0],args.data_configure_file)) as fin:
         fname_columns = json.load(fin)[0]
 
     # iterate over prediction horizon
     for horizon in [1,3,5]:
+        
         # read data
         if args.source == "NExT":
             data_list, LME_dates = read_data_NExT(fname_columns, "1993-11-12")
@@ -96,6 +98,7 @@ if __name__ == '__main__':
             test_split_dates = test_split_dates[-4:]
         n = 0
         args.steps = horizon
+        
         #load data
         time_series = deal_with_abnormal_value_v1(time_series)
         LME_dates = sorted(set(LME_dates).intersection(time_series.index.values.tolist()))
@@ -106,6 +109,7 @@ if __name__ == '__main__':
         time_series = pd.concat(labels,axis = 1)
         ts = process_missing_value_v3(time_series)
         # ts = time_series.loc[(time_series.index >= split_date[0])&(time_series.index <= split_date[1])]
+        
         # initialize strategy testing parameters
         strategy_params = {'sar':{'initial':[],'maximum':[]},'rsi':{'window':[],'upper':[],'lower':[]},'strat1':{'short window':[],"med window":[]},'strat2':{'window':[]},'strat3_high':{'window':[]},'strat3_close':{'window':[]},'strat6':{'window':[],'limiting_factor':[]},'strat7':{'window':[],'limiting_factor':[]}, 'strat9':{'SlowLength':[],'FastLength':[],'MACDLength':[]}}
         activation_params = {'sar':True,'rsi':False,'strat1':False,'strat2':False,'strat3_high':False,'strat3_close':False, 'strat6':False, 'strat7':False, 'strat9': False}
@@ -217,6 +221,7 @@ if __name__ == '__main__':
             print(test_split_date)
             ans['index'] = ans['index']+[test_split_date[1]]*mx
             # ts = time_series.loc[(time_series.index >= test_split_date[1])&(time_series.index < test_split_date[2])]
+            
             #output results for sar
             activation_params = {'sar':True,'rsi':False,'strat1':False,'strat2':False,'strat3_high':False, 'strat3_close':False,'strat6':False, 'strat7':False, 'strat9': False}
             for i in range(mx):

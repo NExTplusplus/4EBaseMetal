@@ -111,8 +111,10 @@ if __name__ == '__main__':
     if args.action == 'train':
         comparison = None
         n = 0
+        #iterate over list of configurations
         for f in fname_columns:
             lag = args.lag
+            #read data
             if args.source == "NExT":
                 from utils.read_data import read_data_NExT
                 data_list, LME_dates = read_data_NExT(f, "2003-11-12")
@@ -120,6 +122,7 @@ if __name__ == '__main__':
             elif args.source == "4E":
                 from utils.read_data import read_data_v5_4E
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
+            # initialize parameters for load data
             length = 5
             split_dates = rolling_half_year("2009-07-01","2019-01-01",length)
             split_dates  =  split_dates[-4:]
@@ -153,11 +156,14 @@ if __name__ == '__main__':
                                                 'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
                 ts = copy(time_series.loc[split_date[0]:split_date[2]])
                 i = 0
+                #iterate over ground truths
                 for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
                     print(ground_truth)
                     metal_id = [0,0,0,0,0,0]
                     metal_id[i] = 1
+                    #load data
                     X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,split_date,norm_params,tech_params,version_params)
+                    #post load processing and metal id extension
                     X_tr = np.concatenate(X_tr)
                     X_tr = X_tr.reshape(len(X_tr),lag*len(column_list[0]))
                     X_tr = np.append(X_tr,[metal_id]*len(X_tr),axis = 1)
@@ -171,6 +177,8 @@ if __name__ == '__main__':
                     final_X_va.append(X_va)
                     final_y_va.append(y_va)
                     i+=1
+                
+                #sort by time not by metal
                 final_X_tr = [np.transpose(arr) for arr in np.dstack(final_X_tr)]
                 final_y_tr = [np.transpose(arr) for arr in np.dstack(final_y_tr)]
                 # final_X_va = [np.transpose(arr) for arr in np.dstack(final_X_va)]
@@ -189,6 +197,7 @@ if __name__ == '__main__':
                 pure_LogReg = LogReg(parameters={})
                 parameters = {"penalty":"l2", "C":args.C, "solver":"lbfgs", "tol":tol,"max_iter":6*4*len(f)*max_iter, "verbose" : 0,"warm_start": False, "n_jobs": -1}
                 pure_LogReg.train(final_X_tr,final_y_tr.flatten(), parameters)
+                #iterate over ground truths for testing
                 for i,gt in enumerate(["LMCADY","LMAHDY","LMNIDY","LMSNDY","LMZSDY","LMPBDY"]):
                     
                     if split_date[1] not in ans.keys():
