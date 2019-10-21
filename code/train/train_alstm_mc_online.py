@@ -576,7 +576,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--data_configure_file', '-c', type=str,
         help='configure file of the features to be read',
-        default='exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf'
+        default='exp/online_v10.conf'
     )
     parser.add_argument('-gt', '--ground_truth', help='ground truth column',
                         type=str, default="LME_Co_Spot")

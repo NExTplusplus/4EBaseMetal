@@ -3,6 +3,10 @@ from utils.read_data import process_missing_value_v3
 from utils.normalize_feature import log_1d_return
 
 def generate_version_params(version):
+    '''
+        input:  version : a string which refers to the version of data preprocessing required
+        output: ans     : a dictionary that holds the required version for each process within load data
+    '''
     ans = { "generate_strat_params":None,
             "deal_with_abnormal_value":"v2", "labelling":"v1", "process_missing_value":"v1", "strategy_signal":None,
             "normalize_without_1d_return": "v1", "technical_indication":"v1",
@@ -55,14 +59,29 @@ def generate_strat_params(ground_truth,steps,version):
     if version is None:
         return None,None
     if version == "v1":
+        '''
+        generate strategy parameters for v9, which is single metal for coverage increment 0.1, minimum 0.1
+        '''
         return generate_strat_params_v1(ground_truth,steps)
     if version == "v2":
+        '''
+        generate strategy parameters for v10, which is multiple metals for coverage increment 0.1, minimum 0.1
+        '''
         return generate_strat_params_v2(ground_truth,steps)
     if version == "v3":
+        '''
+        generate strategy parameters for v11, which is single metal for coverage increment 1.0, minimum 0.1
+        '''
         return generate_strat_params_v3(ground_truth,steps)
     if version == "v4":
+        '''
+        generate strategy parameters for v12, which is multiple metals for coverage increment 1.0, minimum 0.1
+        '''  
         return generate_strat_params_v4(ground_truth,steps)
     if version == "v5":
+        '''
+            load strategy parameters for preprocessing version 14
+        '''
         return generate_strat_params_v5(ground_truth,steps)
     if version == "v6":
         return generate_strat_params_v6(ground_truth,steps)

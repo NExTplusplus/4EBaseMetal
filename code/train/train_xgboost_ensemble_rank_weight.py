@@ -64,6 +64,7 @@ if __name__ == '__main__':
     if args.ground_truth =='None':
         args.ground_truth = None
     os.chdir(os.path.abspath(sys.path[0]))
+    
     # read data configure file
     with open(os.path.join(sys.path[0],args.data_configure_file)) as fin:
         fname_columns = json.load(fin)
@@ -101,6 +102,8 @@ if __name__ == '__main__':
                 len_ma = 5
                 len_update = 30
                 tol = 1e-7
+                
+                # detect whether you want to add another three time features to model
                 if args.xgboost==1:
                     print(args.xgboost)
                     norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
@@ -130,8 +133,14 @@ if __name__ == '__main__':
                 X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
                 test_dataframe = pd.DataFrame(X_va,columns=column_lag_list)
                 test_X = test_dataframe.loc[:,column_lag_list]
-                result_v5 = np.loadtxt(args.ground_truth[0]+"_horizon_"+str(horizon)+"_"+split_date[1]+"_"+"v5"+"_weight"+".txt")
+                
+                # load the XGBoost V5 feature 10 folder probability
+                result_v5 = np.loadtxt(args.ground_truth[0]+"_horizon_"+str(horizon)+"_"+split_date[1]+"_"+"v5"+"_weight_4"+".txt")
+                
+                # load the XGBoost V7 feature 10 folder probability
                 result_v7 = np.loadtxt(args.ground_truth[0]+"_horizon_"+str(horizon)+"_"+split_date[1]+"_"+"v7"+"_weight"+".txt")
+                
+                #load the XGBoost V10 feature 10 folder probability
                 if args.ground_truth[0].split("_")[1]=="Co":
                     result_v10 = np.loadtxt("LMCADY"+"_"+"horizon_"+str(horizon)+"_"+split_date[1]+"_v10"+"_striplag30_weight"+".txt")
                 elif args.ground_truth[0].split("_")[1]=="Al":
@@ -144,6 +153,8 @@ if __name__ == '__main__':
                     result_v10 = np.loadtxt("LMZSDY"+"_"+"horizon_"+str(horizon)+"_"+split_date[1]+"_v10"+"_striplag30_weight"+".txt")
                 elif args.ground_truth[0].split("_")[1]=="Le":
                     result_v10 = np.loadtxt("LMPBDY"+"_"+"horizon_"+str(horizon)+"_"+split_date[1]+"_v10"+"_striplag30_weight"+".txt")
+                
+                # load the LR V5 feature classifier
                 if args.ground_truth[0].split("_")[1]=="Co":
                     if split_date[1]>='2017-01-03':
                         LR_v5 = pd.read_csv('~/NEXT/LMCADY'+"_h"+str(horizon)+"_v5_probh"+str(horizon)+split_date[1]+".csv")
@@ -175,6 +186,8 @@ if __name__ == '__main__':
                     else:
                         LR_v5 = pd.read_csv('~/NEXT/LMPBDY'+"_h"+str(horizon)+"_v5probh"+str(horizon)+split_date[1]+".csv")
                 result_lr = list(LR_v5['Prediction'])
+                
+                # retrieve the probability result from the voting result
                 final_list_v5 = []
                 v5_voting_prob_list=[]
                 for j in range(len(result_v5)):
@@ -195,7 +208,8 @@ if __name__ == '__main__':
                     else:
                         v5_voting_prob_list.append(neg_list)
                         final_list_v5.append(0)
-
+                
+                # retrieve the probability result from the voting result
                 final_list_v10=[]
                 v10_voting_prob_list=[]
                 for j in range(len(result_v10)):
@@ -216,7 +230,8 @@ if __name__ == '__main__':
                     else:
                         v10_voting_prob_list.append(neg_list)
                         final_list_v10.append(0)
-
+                
+                # retrieve the probability result from the voting result
                 final_list_v7=[]
                 v7_voting_prob_list=[]
                 for j in range(len(result_v7)):
@@ -238,7 +253,7 @@ if __name__ == '__main__':
                         v7_voting_prob_list.append(neg_list)
                         final_list_v7.append(0)
 
-
+                # calculate the precision weight of the model
                 if len(result_v5_error)==0:
                     for i in range(len(result_v5)):
                         count_1=0
@@ -297,6 +312,9 @@ if __name__ == '__main__':
                             result_lr_error.append(0)
                     final_list = []
                     true_result = []
+                    probal = []
+                    
+                    # we choose a specific window size to calculate the precision weight to ensemble the models results together
                     for i in range(window_size,len(y_va)):
                         true_result.append(y_va[i])
                         error_xgb_v5 = np.sum(result_v5_error[length:length+window_size])
@@ -324,17 +342,23 @@ if __name__ == '__main__':
                         result+=weight_xgb_v7*v7_item
                         result+=weight_xgb_v10*v10_item
                         result+=weight_lr*result_lr[i]
+                        # detect whether the result is 1 or 0
+                        #np.savetxt(args.ground_truth[0].split("_")[1]+"_"+split_date[2]+"_"+"ensemble"+".txt",result)
+                        probal.append(result)
+                        #probal.append(result)
                         if result>0.5:
                             final_list.append(1)
                         else:
                             final_list.append(0)
                         length+=1
-                    print("the weight ensebmle for V5 V10 LR rank rank precision is {}".format(metrics.accuracy_score(true_result, final_list)))
+                    np.savetxt(args.ground_truth[0].split("_")[1]+"_"+split_date[2]+"_"+lag+"_"+"ensemble"+".txt",probal)
+                    print("the weight ensebmle for V5 V7 V10 LR rank rank precision is {}".format(metrics.accuracy_score(true_result, final_list)))
                     print("the horizon is {}".format(horizon))
                     print("the lag is {}".format(lag))
                     print("the train date is {}".format(split_date[0]))
                     print("the test date is {}".format(split_date[1]))
                 else:
+                    # the same as above
                     for i in range(len(result_v5)):
                         count_1=0
                         count_0=0
@@ -391,6 +415,8 @@ if __name__ == '__main__':
                         else:
                             result_lr_error.append(0)
                     final_list = []
+                    probal = []
+                    # the same as above
                     for i in range(len(y_va)):
                         error_xgb_v5 = np.sum(result_v5_error[length:length+window_size])
                         error_xgb_v7 = np.sum(result_v7_error[length:length+window_size])
@@ -417,12 +443,14 @@ if __name__ == '__main__':
                         result+=weight_xgb_v7*v7_item
                         result+=weight_xgb_v10*v10_item
                         result+=weight_lr*result_lr[i]
+                        probal.append(result)
                         if result>0.5:
                             final_list.append(1)
                         else:
                             final_list.append(0)
                         length+=1
-                    print("the weight ensebmle for V5 V10 LR rank rank precision is {}".format(metrics.accuracy_score(y_va, final_list)))
+                    np.savetxt(args.ground_truth[0].split("_")[1]+"_"+split_date[2]+"_"+lag+"_"+"ensemble"+".txt",probal)
+                    print("the weight ensebmle for V5 V7 V10 LR rank rank precision is {}".format(metrics.accuracy_score(y_va, final_list)))
                     print("the horizon is {}".format(horizon))
                     print("the lag is {}".format(lag))
                     print("the train date is {}".format(split_date[0]))
