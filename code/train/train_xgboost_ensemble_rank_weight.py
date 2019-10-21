@@ -317,10 +317,10 @@ if __name__ == '__main__':
                     # we choose a specific window size to calculate the precision weight to ensemble the models results together
                     for i in range(window_size,len(y_va)):
                         true_result.append(y_va[i])
-                        error_xgb_v5 = np.sum(result_v5_error[length:length+window_size])
-                        error_xgb_v7 = np.sum(result_v7_error[length:length+window_size])
-                        error_xgb_v10 = np.sum(result_v10_error[length:length+window_size])
-                        error_lr = np.sum(result_lr_error[length:length+window_size])
+                        error_xgb_v5 = np.sum(result_v5_error[length:length+window_size])+1e-05
+                        error_xgb_v7 = np.sum(result_v7_error[length:length+window_size])+1e-05
+                        error_xgb_v10 = np.sum(result_v10_error[length:length+window_size])+1e-05
+                        error_lr = np.sum(result_lr_error[length:length+window_size])+1e-05
                         weight_xgb_v5 = float(1/error_xgb_v5)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr)
                         weight_xgb_v7 = float(1/error_xgb_v7)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr)
                         weight_xgb_v10 = float(1/error_xgb_v10)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr)
@@ -418,10 +418,10 @@ if __name__ == '__main__':
                     probal = []
                     # the same as above
                     for i in range(len(y_va)):
-                        error_xgb_v5 = np.sum(result_v5_error[length:length+window_size])
-                        error_xgb_v7 = np.sum(result_v7_error[length:length+window_size])
-                        error_xgb_v10 = np.sum(result_v10_error[length:length+window_size])
-                        error_lr = np.sum(result_lr_error[length:length+window_size])
+                        error_xgb_v5 = np.sum(result_v5_error[length:length+window_size])+1e-05
+                        error_xgb_v7 = np.sum(result_v7_error[length:length+window_size])+1e-05
+                        error_xgb_v10 = np.sum(result_v10_error[length:length+window_size])+1e-05
+                        error_lr = np.sum(result_lr_error[length:length+window_size])+1e-05
                         weight_xgb_v5 = float(1/error_xgb_v5)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr)
                         weight_xgb_v7 = float(1/error_xgb_v7)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr)
                         weight_xgb_v10 = float(1/error_xgb_v10)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr)
