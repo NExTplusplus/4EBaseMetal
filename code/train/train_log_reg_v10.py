@@ -120,6 +120,7 @@ if __name__ == '__main__':
             elif args.source == "4E":
                 from utils.read_data import read_data_v5_4E
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
+            # initialize parameters for load data
             length = 5
             split_dates = rolling_half_year("2009-07-01","2017-01-01",length)
             split_dates  =  split_dates[:]
