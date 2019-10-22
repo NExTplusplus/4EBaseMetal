@@ -502,8 +502,8 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
                 tmp = parallel_process(X, split_dates, "strat9",strat_results,ground_truth,strategy_params,act,cov_inc,comb,mnm)
                 output_strat9 = one_hot(tmp)
                 output = pd.concat([output,output_strat9],sort = True, axis = 1)
-<<<<<<< HEAD
                 
+            #generate strat trend_! 
             if activation_params["trend_1"]:
                 print("**********trend_1********")
                 act = copy(temp_act)
@@ -514,9 +514,8 @@ def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activa
                 output = pd.concat([output,output_trend1],sort = True, axis = 1)
                 
                 
-=======
+
             #generate strat6
->>>>>>> e8b632841a1fb68d93187e24f94357fb126683ad
             if gt+"_High" in cols and gt+"_Low" in cols and activation_params["strat6"]:
                 act = copy(temp_act)
                 act['strat6'] = True
