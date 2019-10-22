@@ -18,7 +18,7 @@ def generate_version_params(version):
 
     if v == "v7":
         ans['technical_indication'] = "v2"
-    if v == "v9" or v == "v10" or v == "v11" or v == "v12" or v=="v14" or v=="v18" or v=="v20":
+    if v == "v9" or v == "v10" or v == "v11" or v == "v12" or v=="v14" or v=="v18" or v=="v20" or v=="v22":
         if v == "v9":
             ans["generate_strat_params"]="v1"
         elif v== "v10":
@@ -34,11 +34,13 @@ def generate_version_params(version):
             ans["generate_strat_params"]="v6"
         elif v== 'v20':
             ans["generate_strat_params"]="v7"
+        elif v== 'v22':
+            ans["generate_strat_params"]="v8"
             
         ans['strategy_signal'] = "v1"
         ans["technical_indication"] = None
         
-        if v=='v14':
+        if v=='v14' or v=='v22':
             ans["remove_unused_columns"] = "v3"
             ans["price_normalization"] = "v2"
         else: 
@@ -96,6 +98,12 @@ def generate_strat_params(ground_truth,steps,version):
             load strategy parameters for preprocessing version 20
         '''
         return generate_strat_params_v7(ground_truth,steps)
+    
+    if version == "v8":
+        '''
+            load strategy parameters for preprocessing version 22
+        '''
+        return generate_strat_params_v8(ground_truth,steps)
     
 
 def deal_with_abnormal_value(arguments, version):

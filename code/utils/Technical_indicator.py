@@ -252,35 +252,58 @@ def strategy_9(Close, FastLength, SlowLength, MACDLength):
 #trend1: compare the price of last day and first day of target periods
 #trend2: compute the num of upward and downward movement.
 #num_of_month is input from config, 1,3,6 month.
+
 def trend_1(Date,Close,num_of_month):
-    
+    '''
+    EXAMPLE:
+    num_of_month = 1
+    start_month:Aug 
+    end_month = Sep
+    target_month = Oct
+    (start,end) = [1st Aug,1st Sep)
+    (end,target) = [1st Sep,1st Oct)
+    '''
     ans = pd.concat([Close,Close],axis = 1)
     ans.columns = ["Trend1","Trend2"]
-    start_month = int(str(Date[0]).split('-')[1])
+    start_month = int(str(Date[0]).split('-')[1])    
     end_month = (start_month+num_of_month)%12
+    target_month = (end_month+num_of_month)%12
     start = 0
     end = 1
+    target = 30
     Return = (Close>Close.shift(1))*1
-    while(end<len(Date)):
+    while(target<len(Date)):
         
-        if int(str(Date[end]).split('-')[1])!=end_month:
+        if (int(str(Date[end]).split('-')[1])!=end_month and (int(str(Date[target]).split('-')[1])!=target_month)):
             end+=1
+            target+=1
+        elif (int(str(Date[target]).split('-')[1])==target_month) and (int(str(Date[end]).split('-')[1])!=end_month):
+            end+=1
+        elif (int(str(Date[target]).split('-')[1])!=target_month) and int(str(Date[end]).split('-')[1])==end_month:
+            target+=1
         else:
-            ans.Trend1.iloc[start:end+1] = 2*(Close.iloc[end]>Close.iloc[start])-1
-            tmp = Return.iloc[start:end+1].sum()/(end-start)
+            if start==0:
+                ans.Trend1.iloc[start:end] = None
+                ans.Trend2.iloc[start:end]= None            
+            ans.Trend1.iloc[end:target] = 2*(Close.iloc[end-1]>Close.iloc[start])-1
+
+            tmp = Return.iloc[start:end].sum()/(end-start)
             if tmp>=0.5:
-                ans.Trend2.iloc[start:end+1] = 1
+                ans.Trend2.iloc[end:target] = 1
             else:
-                ans.Trend2.iloc[start:end+1] = -1
+                ans.Trend2.iloc[end:target] = -1
             start = end
             start_month = int(str(Date[start]).split('-')[1])
             end_month = (start_month+num_of_month)%12
             if end_month == 0:
                 end_month = 12
-            end = start+1
-    tmp = ans[(ans.Trend1!=0) & (ans.Trend1!=1)]
-    ans.Trend1[(ans.Trend1!=0) & (ans.Trend1!=1)] = (tmp.Trend1.iloc[-1]>tmp.Trend1.iloc[0])*2-1
-    ans.Trend2[(ans.Trend2!=0) & (ans.Trend2!=1)] = (Return[-len(tmp):].sum()/len(tmp)>0.5)*2-1
+            target_month = (end_month+num_of_month)%12
+            if target_month ==0:
+                target_month = 12
+            end = target
+            
+    ans.Trend1[end:] = (Close.iloc[end-1]>Close.iloc[start])*2-1
+    ans.Trend2[end:] = (Return[start:end].sum()/(end-start)>0.5)*2-1
     return ans.Trend1,ans.Trend2    
             
     
