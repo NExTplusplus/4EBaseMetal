@@ -123,6 +123,7 @@ if __name__ == '__main__':
             elif args.source == "4E":
                 from utils.read_data import read_data_v5_4E
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
+            
             # initialize parameters for load data
             length = 5
             split_dates = rolling_half_year("2009-07-01","2017-01-01",length)
@@ -133,6 +134,7 @@ if __name__ == '__main__':
             for split_date in split_dates:
                 #print("the train date is {}".format(split_date[0]))
                 #print("the test date is {}".format(split_date[1]))
+                
                 #generate parameters for load data
                 horizon = args.steps
                 norm_volume = "v1"
@@ -205,4 +207,4 @@ if __name__ == '__main__':
                     acc = pure_LogReg.test(final_X_va,final_y_va.flatten())
                     ans[split_date[1]].append(acc)
             print(ans)
-            pd.DataFrame(ans).to_csv("_".join(["log_reg",str(args.lag),str(args.steps)+".csv"]))
+            pd.DataFrame(ans).to_csv("_".join(["log_reg",args.version,str(args.lag),str(args.steps)+".csv"]))

@@ -4,7 +4,7 @@ import json
 import argparse
 import numpy as np
 import pandas as pd
-from copy import copy
+from copy import copy,deepcopy
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 from data.load_data import load_data
 from model.logistic_regression import LogReg
@@ -18,6 +18,7 @@ from xgboost import plot_importance
 from sklearn import metrics
 from sklearn.model_selection import KFold
 from utils.version_control_functions import generate_version_params
+
 
 if __name__ == '__main__':
     desc = 'the logistic regression model'
@@ -111,9 +112,11 @@ if __name__ == '__main__':
     if args.action == 'train':
         comparison = None
         n = 0
+
         #iterate over list of configurations
         for f in fname_columns:
             lag = args.lag
+
             #read data
             if args.source == "NExT":
                 from utils.read_data import read_data_NExT
@@ -122,10 +125,11 @@ if __name__ == '__main__':
             elif args.source == "4E":
                 from utils.read_data import read_data_v5_4E
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
+
             # initialize parameters for load data
             length = 5
             split_dates = rolling_half_year("2009-07-01","2019-01-01",length)
-            split_dates  =  split_dates[-4:]
+            split_dates  =  split_dates[:]
             importance_list = []
             version_params=generate_version_params(args.version)
             ans = {"C":[],"ground_truth":[]}
@@ -156,13 +160,16 @@ if __name__ == '__main__':
                                                 'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
                 ts = copy(time_series.loc[split_date[0]:split_date[2]])
                 i = 0
+
                 #iterate over ground truths
                 for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
                     print(ground_truth)
                     metal_id = [0,0,0,0,0,0]
                     metal_id[i] = 1
+
                     #load data
                     X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,split_date,norm_params,tech_params,version_params)
+                    
                     #post load processing and metal id extension
                     X_tr = np.concatenate(X_tr)
                     X_tr = X_tr.reshape(len(X_tr),lag*len(column_list[0]))
@@ -197,14 +204,19 @@ if __name__ == '__main__':
                 pure_LogReg = LogReg(parameters={})
                 parameters = {"penalty":"l2", "C":args.C, "solver":"lbfgs", "tol":tol,"max_iter":6*4*len(f)*max_iter, "verbose" : 0,"warm_start": False, "n_jobs": -1}
                 pure_LogReg.train(final_X_tr,final_y_tr.flatten(), parameters)
+                
                 #iterate over ground truths for testing
                 for i,gt in enumerate(["LMCADY","LMAHDY","LMNIDY","LMSNDY","LMZSDY","LMPBDY"]):
-                    
+                    dates = deepcopy(LME_dates)
+                    dates = pd.DataFrame(dates,columns = ["Date"])
+                    dates.set_index("Date")
                     if split_date[1] not in ans.keys():
                         ans[split_date[1]] = []
                     if gt not in ans["ground_truth"]:
                         ans["ground_truth"].append(gt)
+                    prob = pure_LogReg.predict_proba(final_X_va[i])[:,1]
+                    np.savetxt(gt+str(args.steps)+"_"+split_date[1]+"_probability.csv",prob,delimiter = ",")
                     acc = pure_LogReg.test(final_X_va[i],final_y_va[i].flatten())
                     ans[split_date[1]].append(acc)
             ans["C"] = 6*ans["C"]
-            pd.DataFrame(ans).to_csv("_".join(["log_reg",str(args.lag),str(args.steps)+".csv"]))
+            pd.DataFrame(ans).to_csv("_".join(["log_reg_online",args.version,str(args.lag),str(args.steps)+".csv"]))
