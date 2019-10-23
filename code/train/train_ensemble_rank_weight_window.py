@@ -367,6 +367,8 @@ if __name__ == '__main__':
                             print("the weight ensebmle for V5 V7 V10 LR weigth rank rank precision is {}".format(metrics.accuracy_score(true_result, final_list)))
                             print("the horizon is {}".format(horizon))
                             print("the lag is {}".format(lag))
+                            print("the window size is {}".format(window_size))
+                            print("the beta is {}".format(beta))
                             print("the train date is {}".format(split_date[0]))
                             print("the test date is {}".format(split_date[1]))
                         else:
@@ -469,5 +471,7 @@ if __name__ == '__main__':
                             print("the weight ensebmle for V5 V7 V10 LR weight rank rank precision is {}".format(metrics.accuracy_score(y_va, final_list)))
                             print("the horizon is {}".format(horizon))
                             print("the lag is {}".format(lag))
+                            print("the window size is {}".format(window_size))
+                            print("the beta is {}".format(beta))
                             print("the train date is {}".format(split_date[0]))
                             print("the test date is {}".format(split_date[1]))
