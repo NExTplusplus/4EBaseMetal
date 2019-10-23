@@ -363,7 +363,7 @@ if __name__ == '__main__':
                                 else:
                                     final_list.append(0)
                                 length+=1
-                            np.savetxt(args.ground_truth[0].split("_")[1]+"_"+split_date[2]+"_"+lag+"_"+"ensemble"+".txt",probal)
+                            #np.savetxt(args.ground_truth[0].split("_")[1]+"_"+split_date[2]+"_"+lag+"_"+"ensemble"+".txt",probal)
                             print("the weight ensebmle for V5 V7 V10 LR weigth rank rank precision is {}".format(metrics.accuracy_score(true_result, final_list)))
                             print("the horizon is {}".format(horizon))
                             print("the lag is {}".format(lag))
@@ -465,7 +465,7 @@ if __name__ == '__main__':
                                 else:
                                     final_list.append(0)
                                 length+=1
-                            np.savetxt(args.ground_truth[0].split("_")[1]+"_"+split_date[2]+"_"+lag+"_"+"ensemble"+".txt",probal)
+                            #np.savetxt(args.ground_truth[0].split("_")[1]+"_"+split_date[2]+"_"+lag+"_"+"ensemble"+".txt",probal)
                             print("the weight ensebmle for V5 V7 V10 LR weight rank rank precision is {}".format(metrics.accuracy_score(y_va, final_list)))
                             print("the horizon is {}".format(horizon))
                             print("the lag is {}".format(lag))
