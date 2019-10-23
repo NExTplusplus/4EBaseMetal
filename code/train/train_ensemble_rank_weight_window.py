@@ -432,10 +432,10 @@ if __name__ == '__main__':
                             probal = []
                             # the same as above
                             for i in range(len(y_va)):
-                                error_xgb_v5 = np.sum(result_v5_error[length:length+window_size])
-                                error_xgb_v7 = np.sum(result_v7_error[length:length+window_size])
-                                error_xgb_v10 = np.sum(result_v10_error[length:length+window_size])
-                                error_lr = np.sum(result_lr_error[length:length+window_size])
+                                error_xgb_v5 = np.sum(result_v5_error[length:length+window_size])+1e-05
+                                error_xgb_v7 = np.sum(result_v7_error[length:length+window_size])+1e-05
+                                error_xgb_v10 = np.sum(result_v10_error[length:length+window_size])+1e-05
+                                error_lr = np.sum(result_lr_error[length:length+window_size])+1e-05
                                 weight_xgb_v5 = result_v5_previous_weight[length]*beta+(1-beta)*float(1/error_xgb_v5)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr)
                                 weight_xgb_v7 = result_v7_previous_weight[length]*beta+(1-beta)*float(1/error_xgb_v7)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr)
                                 weight_xgb_v10 = result_v10_previous_weight[length]*beta+(1-beta)*float(1/error_xgb_v10)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr)
