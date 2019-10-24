@@ -93,6 +93,7 @@ if __name__ == '__main__':
             result_v7_error = []
             result_v10_error = []
             result_lr_error = []
+            result_lr_v10_error = []
             length=0
             for split_date in split_dates:
                 horizon = args.steps
@@ -190,6 +191,17 @@ if __name__ == '__main__':
                 # load the LR V10 feature classifier
                 if args.ground_truth[0].split("_")[1]=="Co":
                     LR_v10 = pd.read_csv("data/LR_probility/"+'LMCADY'+str(horizon)+"_"+split_date[1]+"_probability"+".csv")
+                elif args.ground_truth[0].split("_")[1]=="Al":
+                    LR_v10 = pd.read_csv("data/LR_probility/"+'LMAHDY'+str(horizon)+"_"+split_date[1]+"_probability"+".csv")
+                elif args.ground_truth[0].split("_")[1]=="Ni":
+                    LR_v10 = pd.read_csv("data/LR_probility/"+'LMNIDY'+str(horizon)+"_"+split_date[1]+"_probability"+".csv")
+                elif args.ground_truth[0].split("_")[1]=="Ti":
+                    LR_v10 = pd.read_csv("data/LR_probility/"+'LMSNDY'+str(horizon)+"_"+split_date[1]+"_probability"+".csv")
+                elif args.ground_truth[0].split("_")[1]=="Zi":
+                    LR_v10 = pd.read_csv("data/LR_probility/"+'LMZSDY'+str(horizon)+"_"+split_date[1]+"_probability"+".csv")
+                elif args.ground_truth[0].split("_")[1]=="Le":
+                    LR_v10 = pd.read_csv("data/LR_probility/"+'LMPBDY'+str(horizon)+"_"+split_date[1]+"_probability"+".csv")
+                result_lr_v10 = list(LR_v10['Prediction'])
 
                 # retrieve the probability result from the voting result
                 final_list_v5 = []
@@ -260,6 +272,7 @@ if __name__ == '__main__':
                 # calculate the precision weight of the model
                 if len(result_v5_error)==0:
                     for i in range(len(result_v5)):
+                        
                         count_1=0
                         count_0=0
                         for item in result_v5[i]:
@@ -275,6 +288,7 @@ if __name__ == '__main__':
                             result_v5_error.append(1)
                         else:
                             result_v5_error.append(0)
+                        
                         count_1=0
                         count_0=0
                         for item in result_v7[i]:
@@ -290,6 +304,7 @@ if __name__ == '__main__':
                             result_v7_error.append(1)
                         else:
                             result_v7_error.append(0)
+                        
                         count_1=0
                         count_0=0
                         for item in result_v10[i]:
@@ -305,6 +320,7 @@ if __name__ == '__main__':
                             result_v10_error.append(1)
                         else:
                             result_v10_error.append(0)
+                        
                         for item in result_lr:
                             if item > 0.5:
                                 result=1
@@ -314,6 +330,17 @@ if __name__ == '__main__':
                             result_lr_error.append(1)
                         else:
                             result_lr_error.append(0)
+
+                        for item in result_lr_v10:
+                            if item > 0.5:
+                                result=1
+                            else:
+                                result=0
+                        if y_va[i]!=result:
+                            result_lr_v10_error.append(1)
+                        else:
+                            result_lr_v10_error.append(0)
+                    
                     final_list = []
                     true_result = []
                     probal = []
@@ -321,14 +348,16 @@ if __name__ == '__main__':
                     # we choose a specific window size to calculate the precision weight to ensemble the models results together
                     for i in range(window_size,len(y_va)):
                         true_result.append(y_va[i])
-                        error_xgb_v5 = np.sum(result_v5_error[length:length+window_size])
-                        error_xgb_v7 = np.sum(result_v7_error[length:length+window_size])
-                        error_xgb_v10 = np.sum(result_v10_error[length:length+window_size])
-                        error_lr = np.sum(result_lr_error[length:length+window_size])
-                        weight_xgb_v5 = float(1/error_xgb_v5)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr)
-                        weight_xgb_v7 = float(1/error_xgb_v7)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr)
-                        weight_xgb_v10 = float(1/error_xgb_v10)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr)
-                        weight_lr = float(1/error_lr)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr)
+                        error_xgb_v5 = np.sum(result_v5_error[length:length+window_size])+1e-05
+                        error_xgb_v7 = np.sum(result_v7_error[length:length+window_size])+1e-05
+                        error_xgb_v10 = np.sum(result_v10_error[length:length+window_size])+1e-05
+                        error_lr = np.sum(result_lr_error[length:length+window_size])+1e-05
+                        error_lr_v10 = np.sum(result_lr_v10_error[length:length+window_size])+1e-05
+                        weight_xgb_v5 = float(1/error_xgb_v5)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr+1/error_lr_v10)
+                        weight_xgb_v7 = float(1/error_xgb_v7)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr+1/error_lr_v10)
+                        weight_xgb_v10 = float(1/error_xgb_v10)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr+1/error_lr_v10)
+                        weight_lr = float(1/error_lr)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr+1/error_lr_v10)
+                        weight_lr_v10 = float(1/error_lr)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr+1/error_lr_v10)
                         result=0
                         v5_item=1
                         v7_item=1
@@ -346,6 +375,7 @@ if __name__ == '__main__':
                         result+=weight_xgb_v7*v7_item
                         result+=weight_xgb_v10*v10_item
                         result+=weight_lr*result_lr[i]
+                        result+=weight_lr_v10*result_lr_v10[i]
                         # detect whether the result is 1 or 0
                         #np.savetxt(args.ground_truth[0].split("_")[1]+"_"+split_date[2]+"_"+"ensemble"+".txt",result)
                         probal.append(result)
@@ -355,7 +385,7 @@ if __name__ == '__main__':
                         else:
                             final_list.append(0)
                         length+=1
-                    np.savetxt(args.ground_truth[0].split("_")[1]+"_"+split_date[2]+"_"+lag+"_"+"ensemble"+".txt",probal)
+                    #np.savetxt(args.ground_truth[0].split("_")[1]+"_"+split_date[2]+"_"+lag+"_"+"ensemble"+".txt",probal)
                     print("the weight ensebmle for V5 V7 V10 LR rank rank precision is {}".format(metrics.accuracy_score(true_result, final_list)))
                     print("the horizon is {}".format(horizon))
                     print("the lag is {}".format(lag))
@@ -422,14 +452,16 @@ if __name__ == '__main__':
                     probal = []
                     # the same as above
                     for i in range(len(y_va)):
-                        error_xgb_v5 = np.sum(result_v5_error[length:length+window_size])
-                        error_xgb_v7 = np.sum(result_v7_error[length:length+window_size])
-                        error_xgb_v10 = np.sum(result_v10_error[length:length+window_size])
-                        error_lr = np.sum(result_lr_error[length:length+window_size])
-                        weight_xgb_v5 = float(1/error_xgb_v5)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr)
-                        weight_xgb_v7 = float(1/error_xgb_v7)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr)
-                        weight_xgb_v10 = float(1/error_xgb_v10)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr)
-                        weight_lr = float(1/error_lr)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr)
+                        error_xgb_v5 = np.sum(result_v5_error[length:length+window_size])+1e-05
+                        error_xgb_v7 = np.sum(result_v7_error[length:length+window_size])+1e-05
+                        error_xgb_v10 = np.sum(result_v10_error[length:length+window_size])+1e-05
+                        error_lr = np.sum(result_lr_error[length:length+window_size])+1e-05
+                        error_lr_v10 = np.sum(result_lr_v10_error[length:length+window_size])+1e-05
+                        weight_xgb_v5 = float(1/error_xgb_v5)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr+1/error_lr_v10)
+                        weight_xgb_v7 = float(1/error_xgb_v7)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr+1/error_lr_v10)
+                        weight_xgb_v10 = float(1/error_xgb_v10)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr+1/error_lr_v10)
+                        weight_lr = float(1/error_lr)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr+1/error_lr_v10)
+                        weight_lr_v10 = float(1/error_lr)/(1/error_xgb_v5+1/error_xgb_v7+1/error_xgb_v10+1/error_lr+1/error_lr_v10)
                         result=0
                         v5_item=1
                         v7_item=1
@@ -447,13 +479,14 @@ if __name__ == '__main__':
                         result+=weight_xgb_v7*v7_item
                         result+=weight_xgb_v10*v10_item
                         result+=weight_lr*result_lr[i]
+                        result+=weight_lr_v10*result_lr_v10[i]
                         probal.append(result)
                         if result>0.5:
                             final_list.append(1)
                         else:
                             final_list.append(0)
                         length+=1
-                    np.savetxt(args.ground_truth[0].split("_")[1]+"_"+split_date[2]+"_"+lag+"_"+"ensemble"+".txt",probal)
+                    #np.savetxt(args.ground_truth[0].split("_")[1]+"_"+split_date[2]+"_"+lag+"_"+"ensemble"+".txt",probal)
                     print("the weight ensebmle for V5 V7 V10 LR rank rank precision is {}".format(metrics.accuracy_score(y_va, final_list)))
                     print("the horizon is {}".format(horizon))
                     print("the lag is {}".format(lag))
