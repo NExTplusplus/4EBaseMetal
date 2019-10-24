@@ -72,8 +72,8 @@ if __name__ == '__main__':
     args.ground_truth = args.ground_truth.split(",")
     window_size = args.window_size
     beta = args.weight
-    for beta in [0.1,0.3,0.5,0.7,0.9]:
-        for window_size in [5,10,15,20]:
+    for beta in [0.05,0.1,0.15,0.2]:
+        for window_size in [1,3,5,7]:
             length = 0
             if args.action == 'train':
                 comparison = None
