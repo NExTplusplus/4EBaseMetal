@@ -177,9 +177,15 @@ def _get_stop_perf(perfs, stop, stop_window=10):
 
 
 def _filter_parameter(para):
-    if para['batch'] == 256:
+    if not para['batch'] == 512:
         return True
-    elif para['hidden'] == 70:
+    elif para['hidden'] > 50 or para['hidden'] < 20:
+        return True
+    elif para['embedding_size'] > 20:
+        return True
+    elif para['drop_out'] < 0.1:
+        return True
+    elif para['lag'] < 3 or para['lag'] > 5:
         return True
     else:
         return False
@@ -196,6 +202,7 @@ def parse_performance(fnames, case_number=6, is_test=False):
     for fname in fnames:
         with open(fname) as fin:
             lines = fin.readlines()
+            paras_count = 0
             for ind, line in enumerate(lines):
                 line = line.replace('\'', '"')
                 # the start of a hyper-parameter combination
@@ -203,7 +210,8 @@ def parse_performance(fnames, case_number=6, is_test=False):
                         (is_test and 'drop_out=' in line):
                     # insert the performance of the previous parameter
                     # combination into the list
-                    if not len(paras) == 0:
+                    # if not len(paras) == 0:
+                    if not paras_count == 0:
                         val_perfs_rolling.append(val_perfs)
                         tes_perfs_rolling.append(tes_perfs)
                         perfs.append([val_perfs_rolling, tes_perfs_rolling])
@@ -214,6 +222,7 @@ def parse_performance(fnames, case_number=6, is_test=False):
                     else:
                         para = json.loads(line)
                     paras.append(para)
+                    paras_count += 1
 
                     val_perfs_rolling = []
                     tes_perfs_rolling = []
@@ -259,7 +268,7 @@ def parse_performance(fnames, case_number=6, is_test=False):
                     val_perfs_rolling.append(val_perfs)
                     tes_perfs_rolling.append(tes_perfs)
                     perfs.append([val_perfs_rolling, tes_perfs_rolling])
-
+        print(len(paras), len(perfs))
     assert len(paras) == len(perfs), 'length of paras and perfs do not ' \
                                      'mathch %d VS %d' % (len(paras), len(perfs))
 
@@ -298,6 +307,7 @@ def get_performance_stop_epoch(paras, perfs, stops, stop_window=10):
 
 
 def select_parameter_average_test_loss(ofname, paras, perfs, perfs_stops, stop, stops):
+    print('output file name:', ofname)
     if stop not in stops:
         print('unexpected stop method: ', stop)
         exit(1)
@@ -381,6 +391,7 @@ def select_parameter_average_test_loss(ofname, paras, perfs, perfs_stops, stop, 
 
 
 def select_parameter_test_loss_ratio(ofname, paras, perfs, perfs_stops, stop, stops):
+    print('output file name:', ofname)
     if stop not in stops:
         print('unexpected stop method: ', stop)
         exit(1)
@@ -501,6 +512,8 @@ def report_parameter_performance(ofname, paras, perfs_stop):
     # get values for each parameter
     para_values = {}
     for para in paras:
+        if _filter_parameter(para):
+            continue
         for kv in para.items():
             if kv[0] not in para_values.keys():
                 para_values[kv[0]] = [kv[1]]
