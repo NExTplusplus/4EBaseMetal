@@ -57,6 +57,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     '''
     deal with the abnormal data which we found in the data. 
     '''
+    print(split_dates)
     parameters['time_series'] = deal_with_abnormal_value(parameters,version_params["deal_with_abnormal_value"])
     '''
     Extract the rows with dates where LME has trading operations
@@ -74,8 +75,9 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     #print("the parameter['labels'] is {}".format(parameters['labels']))
     #print(parameters[].shape[0])
     #os.exit(0)
-
+    parameters['time_series'].head(5).to_csv("head.csv")
     parameters['time_series'] = process_missing_value(parameters,version_params['process_missing_value'])
+    print(parameters['time_series'].head(5))
     #print("the parameter['labels'] is {}".format(parameters['labels']))
     parameters['org_cols'] = time_series.columns.values.tolist()
     # save_data("i2",parameters['time_series'],parameters['time_series'].columns.values.tolist())
@@ -83,7 +85,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     #print("the parameter['labels'] is {}".format(parameters['labels']))
     # save_data("i3",parameters['time_series'],parameters['time_series'].columns.values.tolist())
     split_dates = reset_split_dates(parameters['time_series'],split_dates)
-
+    print(split_dates)
 
     '''
     Normalize, create technical indicators, handle outliers and rescale data
