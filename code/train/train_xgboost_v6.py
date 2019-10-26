@@ -100,7 +100,7 @@ if __name__ == '__main__':
                                 'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False}
                 tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
                                                 'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
-                ts = copy(time_series.loc[split_date[0]:split_date[s+1][2]])
+                ts = copy(time_series.loc[split_date[0]:split_dates[s+1][2]])
                 # construct the data
                 X_tr, y_tr, X_va, y_va, X_te, y_te, norm_params,column_list = load_data(ts,LME_dates,horizon,args.ground_truth,lag,split_date,norm_params,tech_params,version_params)
                 print("the length of the test is {}".format(len(X_va[0])))

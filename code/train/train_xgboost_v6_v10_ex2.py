@@ -155,7 +155,7 @@ if __name__ == '__main__':
                 final_y_te = [] 
                 tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
                                                 'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
-                ts = copy(time_series.loc[split_date[0]:split_date[s+1][2]])
+                ts = copy(time_series.loc[split_date[0]:split_dates[s+1][2]])
                 i = 0
                 
                 #iterate over different ground truths for data loading
