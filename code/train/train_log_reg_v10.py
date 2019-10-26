@@ -126,7 +126,7 @@ if __name__ == '__main__':
             
             # initialize parameters for load data
             length = 5
-            split_dates = rolling_half_year("2009-07-01","2017-01-01",length)
+            split_dates = rolling_half_year("2009-07-01","2017-07-01",length)
             split_dates  =  split_dates[:]
             importance_list = []
             version_params=generate_version_params(args.version)
