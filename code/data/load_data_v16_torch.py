@@ -58,6 +58,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     '''
     deal with the abnormal data which we found in the data. 
     '''
+    print(split_dates)
     parameters['time_series'] = deal_with_abnormal_value(parameters,version_params["deal_with_abnormal_value"])
     '''
     Extract the rows with dates where LME has trading operations
