@@ -128,12 +128,12 @@ if __name__ == '__main__':
 
             # initialize parameters for load data
             length = 5
-            split_dates = rolling_half_year("2009-07-01","2019-01-01",length)
+            split_dates = rolling_half_year("2009-07-01","2019-07-01",length)
             split_dates  =  split_dates[:]
             importance_list = []
             version_params=generate_version_params(args.version)
             ans = {"C":[],"ground_truth":[]}
-            for split_date in split_dates:
+            for s, split_date in enumerate(split_dates[:-1]):
                 #print("the train date is {}".format(split_date[0]))
                 #print("the test date is {}".format(split_date[1]))
                 horizon = args.steps
@@ -158,7 +158,7 @@ if __name__ == '__main__':
                 final_y_te = [] 
                 tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
                                                 'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
-                ts = copy(time_series.loc[split_date[0]:split_date[2]])
+                ts = copy(time_series.loc[split_date[0]:split_dates[s+1][2]])
                 i = 0
 
                 #iterate over ground truths
@@ -215,7 +215,8 @@ if __name__ == '__main__':
                     if gt not in ans["ground_truth"]:
                         ans["ground_truth"].append(gt)
                     prob = pure_LogReg.predict_proba(final_X_va[i])[:,1]
-                    np.savetxt(gt+str(args.steps)+"_"+split_date[1]+"_probability.csv",prob,delimiter = ",")
+                    np.savetxt(gt+str(args.steps)+"_"+split_date[1]+"_lr_v10_probability.csv",prob,delimiter = ",")
+                    # np.savetxt(gt+str(args.steps)+"_"+split_date[1]+"_label.csv",final_y_va[i],delimiter = ",")
                     acc = pure_LogReg.test(final_X_va[i],final_y_va[i].flatten())
                     ans[split_date[1]].append(acc)
             ans["C"] = 6*ans["C"]
