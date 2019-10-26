@@ -301,11 +301,10 @@ if __name__ == '__main__':
                             result_v10_error.append(1)
                         else:
                             result_v10_error.append(0)
-                        for item in result_lr:
-                            if item > 0.5:
-                                result=1
-                            else:
-                                result=0
+                        if result_lr[i] > 0.5:
+                            result=1
+                        else:
+                            result=0
                         if y_va[i]!=result:
                             result_lr_error.append(1)
                         else:
@@ -405,11 +404,10 @@ if __name__ == '__main__':
                             result_v10_error.append(1)
                         else:
                             result_v10_error.append(0)
-                        for item in result_lr:
-                            if item > 0.5:
-                                result=1
-                            else:
-                                result=0
+                        if result_lr[i] > 0.5:
+                            result=1
+                        else:
+                            result=0
                         if y_va[i]!=result:
                             result_lr_error.append(1)
                         else:
