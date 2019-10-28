@@ -114,7 +114,7 @@ if __name__ == '__main__':
                 final_y_va = []
                 final_X_te = None
                 final_y_te = None 
-                ts = copy(time_series.loc[split_date[0]:split_date[s+1][2]])
+                ts = copy(time_series.loc[split_date[0]:split_dates[s+1][2]])
                 i = 0
 
                 #iterate over different ground truths for data loading

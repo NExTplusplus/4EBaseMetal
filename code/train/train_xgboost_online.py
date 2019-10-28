@@ -81,11 +81,11 @@ if __name__ == '__main__':
                 from utils.read_data import read_data_v5_4E
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
             length = 5
-            split_dates = rolling_half_year("2009-07-01","2019-01-01",length)
-            split_dates  =  split_dates[-4:]
+            split_dates = rolling_half_year("2009-07-01","2019-07-01",length)
+            split_dates  =  split_dates[:]
             importance_list = []
             version_params=generate_version_params(args.version)
-            for split_date in split_dates:
+            for s, split_date in enumerate(split_dates[:-1]):
                 horizon = args.steps
                 norm_volume = "v1"
                 norm_3m_spread = "v1"
@@ -104,7 +104,7 @@ if __name__ == '__main__':
                                 'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False}
                 tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
                                                 'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
-                ts = copy(time_series.loc[split_date[0]:split_date[2]])
+                ts = copy(time_series.loc[split_date[0]:split_dates[s+1][2]])
                 X_tr, y_tr, X_va, y_va, X_te, y_te, norm_params,column_list = load_data(ts,LME_dates,horizon,args.ground_truth,lag,split_date,norm_params,tech_params,version_params)
                 column_lag_list = []
                 column_name = []
@@ -200,6 +200,7 @@ if __name__ == '__main__':
                 #calculate the all folder voting
                 if args.voting=='all':
                     result = np.concatenate((folder_1,folder_2,folder_3,folder_4,folder_5,folder_6,folder_7,folder_8,folder_9,folder_10),axis=1)
+                    np.save_txt(ground_truth+"_h"+str(args.steps)+"_"+split_date[1]+"_xgboost_"+args.version+".txt",result)
                     final_list = []
                     for j in range(len(result)):
                         count_1=0
