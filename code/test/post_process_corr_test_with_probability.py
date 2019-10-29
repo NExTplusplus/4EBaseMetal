@@ -50,7 +50,9 @@ if __name__ == '__main__':
                         help='train, test, tune')
     parser.add_argument('-voting','--voting',type=str,help='there are five methods for voting: all,far,same,near,reverse', default = "all")
     
-    parser.add_argument('-w','--W_version',type=int,help='there are five methods for voting: all,far,same,near,reverse', default = 1)
+    parser.add_argument('-w','--W_version',type=int,help='W version', default = 1)
+    parser.add_argument('-cp','--corr_period',type=int,help='period length to calculate correlation', default = None)
+    parser.add_argument('-lim','--limit',type=float,help='limit for correlation', default = 0.1)
     args = parser.parse_args()
     
     if args.ground_truth =='None':
@@ -80,7 +82,7 @@ if __name__ == '__main__':
         #generate parameters for load data
         length = 5
         split_dates = rolling_half_year("2009-07-01","2019-01-01",length)
-        split_dates  =  split_dates[-4:]
+        split_dates  =  split_dates[:]
         version_params=generate_version_params(args.version)
         
         #iterate over split dates
@@ -105,6 +107,8 @@ if __name__ == '__main__':
             
             # iterate over prediction horizon
             for a,h in enumerate([1,3,5]):
+                if a == 0 or a == 1:
+                    continue
                 temp_y_tr = []
                 temp_y_va = []
                 temp_X_te = None
@@ -138,41 +142,34 @@ if __name__ == '__main__':
                 final_y_tr = pd.concat([final_y_tr,to_be_concat], axis = 1)
 
                 #load precalculated probabilities
-                co_pred = np.loadtxt("LMCADY_horizon_"+str(h)+"_"+split_date[1]+"_v10_striplag30.txt")            
-                al_pred = np.loadtxt("LMAHDY_horizon_"+str(h)+"_"+split_date[1]+"_v10_striplag30.txt")            
-                ni_pred = np.loadtxt("LMNIDY_horizon_"+str(h)+"_"+split_date[1]+"_v10_striplag30.txt")            
-                ti_pred = np.loadtxt("LMSNDY_horizon_"+str(h)+"_"+split_date[1]+"_v10_striplag30.txt")            
-                zi_pred = np.loadtxt("LMZSDY_horizon_"+str(h)+"_"+split_date[1]+"_v10_striplag30.txt")            
-                le_pred = np.loadtxt("LMPBDY_horizon_"+str(h)+"_"+split_date[1]+"_v10_striplag30.txt")   
+                co_pred = np.loadtxt("mingwei_prob/Co_"+split_date[1]+"_"+str(h)+"_5_"+"ensemble.txt")            
+                al_pred = np.loadtxt("mingwei_prob/Al_"+split_date[1]+"_"+str(h)+"_5_"+"ensemble.txt")            
+                ni_pred = np.loadtxt("mingwei_prob/Ni_"+split_date[1]+"_"+str(h)+"_5_"+"ensemble.txt")            
+                ti_pred = np.loadtxt("mingwei_prob/Ti_"+split_date[1]+"_"+str(h)+"_5_"+"ensemble.txt")            
+                zi_pred = np.loadtxt("mingwei_prob/Zi_"+split_date[1]+"_"+str(h)+"_5_"+"ensemble.txt")            
+                le_pred = np.loadtxt("mingwei_prob/Le_"+split_date[1]+"_"+str(h)+"_5_"+"ensemble.txt")   
 
                 #iterate over ground truths for prediction generation
+                count = 0
                 for metal, pred in enumerate([co_pred,al_pred
                 ,ni_pred,ti_pred,zi_pred,le_pred]):
                     arr = []
                     for j in pred:
-                        count_1 = []
-                        count_0 = []
-                        for k in j: 
-                            if k > 0.5:
-                                count_1.append(k)
-                            else:
-                                count_0.append(k)
-                        if len(count_1) > len(count_0):
-                            arr.append(np.average(count_1))
-                        else:
-                            arr.append(np.average(count_0))
+                        arr.append(j)
                     final_y_pred = pd.concat([final_y_pred, pd.DataFrame({corr_col[metal]:arr})], axis = 1)
-
+            print(count)
             final_y_tr.dropna(inplace = True)
             final_y_va = [s.flatten() for s in final_y_va]
-            final_y_va = pd.DataFrame(np.transpose(np.array(final_y_va)),columns = final_y_pred.columns.values.tolist(),index =final_y_pred.index)
-                
+            final_y_va = pd.DataFrame(np.transpose(np.array(final_y_va)[:,(-len(final_y_pred.index)):]),columns = final_y_pred.columns.values.tolist(),index =final_y_pred.index)
+            print(split_date)
+
             #post process
             for hp in np.arange(0.00,0.5,0.05):
                 corrected_y_pred = pd.DataFrame()
                 
                 #calculate matrix to be solved
-                W = get_W(final_y_tr,hp,args.W_version)
+                W = get_W(final_y_tr,hp,args.W_version,args.limit,args.corr_period)
+                W_ = get_W(final_y_va,hp,args.W_version,args.limit,args.corr_period)
                 original_prediction = deepcopy(final_y_pred)
                 
                 #generate corrected prediction
@@ -197,5 +194,6 @@ if __name__ == '__main__':
                         ans[k].append(acc[i])
         ans = pd.DataFrame(ans)
         ans = ans[["hp","test_date"]+sorted(ans.columns)[:-2]]
-        ans.to_csv("corr_test_with_prob"+str(args.lag)+str(args.W_version)+".csv")    
+        ans.to_csv("corr_test_with_prob_online"+str(args.limit)+"_"+str(args.corr_period)+"_"+str(args.W_version)+".csv")    
+
             

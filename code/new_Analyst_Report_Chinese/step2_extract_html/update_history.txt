@@ -1,0 +1,14 @@
+#update date: 2019-10-05
+This time will update the following things:
+
+1) Adding the date extracter, replace the original version of the online version code.
+
+   In this version, the html extracter will extract the date from the html accordingly, if update, need to check the error, if error appears, please check the
+   error_log.json, and try to find the correct xpath for the date of the report.
+
+2)Combining the original Step 2 and Step 3.
+
+   In this version, we will combine the html extrater and the recommend extracter, no difference, but just combine in a file.
+
+P.S.This version is based on the online version of Duncheng in the github, and after this version, we will continue to optimize based on the version wrote by Jiaxian
+#######################################################################################################################################################################

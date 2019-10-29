@@ -1,0 +1,17 @@
+#update date : 2019-10-03
+This time will update the following things:
+
+1) Adding the early stop for the crawler. When the url is already in the table, then we will stop crawling from this page, but this page desn't bother to complete crawling.
+
+2) Revise the "keyword_report" for the company "ΩıÃ©", from "Õ≠ –‘Á∆¿" to "Õ≠", which can get more html.
+
+3) The operation for the time-out error. Once the time-out error appears, we will include it into the error_list, and when you run the code, you can have the error msg and the error file.
+
+P.S. This version is based on the online version of Duncheng in the github, and after this version, we will continue to optimize based on the version wrote by Jiaxian
+#######################################################################################################################################################################
+
+#update date : 2019-10-23
+This time will update the following things:
+1) lengthen the sleep time of the request in the crawler for safe.
+
+P.S. This time update is compliance to the Robot agreement on the crawler.

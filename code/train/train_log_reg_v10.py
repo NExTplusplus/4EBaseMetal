@@ -123,16 +123,18 @@ if __name__ == '__main__':
             elif args.source == "4E":
                 from utils.read_data import read_data_v5_4E
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
+            
             # initialize parameters for load data
             length = 5
-            split_dates = rolling_half_year("2009-07-01","2017-01-01",length)
+            split_dates = rolling_half_year("2009-07-01","2017-07-01",length)
             split_dates  =  split_dates[:]
             importance_list = []
             version_params=generate_version_params(args.version)
             ans = {"C":[]}
-            for split_date in split_dates:
+            for s, split_date in enumerate(split_dates):
                 #print("the train date is {}".format(split_date[0]))
                 #print("the test date is {}".format(split_date[1]))
+                
                 #generate parameters for load data
                 horizon = args.steps
                 norm_volume = "v1"
@@ -151,7 +153,7 @@ if __name__ == '__main__':
                 final_y_te = [] 
                 tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
                                                 'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
-                ts = copy(time_series.loc[split_date[0]:split_date[2]])
+                ts = copy(time_series.loc[split_date[0]:split_dates[s+1][2]])
                 i = 0
                 
                 #iterate over ground truths
@@ -205,4 +207,4 @@ if __name__ == '__main__':
                     acc = pure_LogReg.test(final_X_va,final_y_va.flatten())
                     ans[split_date[1]].append(acc)
             print(ans)
-            pd.DataFrame(ans).to_csv("_".join(["log_reg",str(args.lag),str(args.steps)+".csv"]))
+            pd.DataFrame(ans).to_csv("_".join(["log_reg",args.version,str(args.lag),str(args.steps)+".csv"]))

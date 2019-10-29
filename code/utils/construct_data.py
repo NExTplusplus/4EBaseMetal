@@ -19,7 +19,7 @@ def generate_strat_params_v1(ground_truth,steps):
     with open("exp/strat_param_v9.conf") as f:
         all_params = json.load(f)
     strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
-    activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":False,"strat5":False,"strat6":True,"strat7":True,"strat8":False,"strat9":True}
+    activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":False,"strat5":False,"strat6":True,"strat7":True,"strat8":False,"strat9":True,"trend_1":False}
     return strat_params,activation_params
 
 #load the strategy parameters for version 10
@@ -41,7 +41,8 @@ def generate_strat_params_v3(ground_truth,steps):
 
 #load the strategy parameters for version 12
 def generate_strat_params_v4(ground_truth,steps):
-    with open("exp/strat_param_v12.conf") as f:
+    file_path = ("/").join(exp_path.split("/")[:-1])
+    with open(file_path+"/exp/strat_param_v10.conf") as f:
         all_params = json.load(f)
     strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
     activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":False,"strat5":False,"strat6":True,"strat7":True,"strat8":False,"strat9":True,"trend_1":False}
