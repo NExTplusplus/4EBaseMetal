@@ -81,7 +81,14 @@ if __name__ == '__main__':
             elif args.source == "4E":
                 from utils.read_data import read_data_v5_4E
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
-            
+            from utils.read_data import read_data_NExT
+            data_list, NEXT_LME_dates = read_data_NExT(f, "2003-11-12")
+            print("the LME dates is {}".format(NEXT_LME_dates))
+            from utils.read_data import read_data_v5_4E
+            time_series, E_LME_dates = read_data_v5_4E("2003-11-12")
+            print("the 4E LME_dates is {}".format(E_LME_dates))
+            print(NEXT_LME_dates==E_LME_dates)
+            print()
             #generate parameters for load data
             length = args.length
             if length == 10:

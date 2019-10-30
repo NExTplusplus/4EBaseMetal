@@ -318,7 +318,6 @@ def trend_ex1(Close,num_of_days):
     
     return ans.Trend1,ans.Trend2
 
-def trend_ex2(Close,num_of_days,lag):
     
 
 
