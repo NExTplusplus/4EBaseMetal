@@ -84,11 +84,6 @@ if __name__ == '__main__':
             elif args.source == "4E":
                 from utils.read_data import read_data_v5_4E
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
-            from utils.read_data import read_data_NExT
-            data_list, LME_dates_next = read_data_NExT(f,"2003-11-12")
-            from utils.read_data import read_data_v5_4E
-            time_series, LME_dates_4e = read_data_v5_4E("2003-11-12")
-            print(LME_dates_4e==LME_dates_next)
             #generate parameters for load data
             length = 5
             split_dates = rolling_half_year("2009-07-01","2019-01-01",length)
