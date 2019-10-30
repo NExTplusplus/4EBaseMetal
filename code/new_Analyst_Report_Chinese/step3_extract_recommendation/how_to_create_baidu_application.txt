@@ -1,0 +1,11 @@
+1) input url https://login.bce.baidu.com/?account=&redirect=http%3A%2F%2Fconsole.bce.baidu.com%2F%3Ffromai%3D1#/aip/overview
+
+2) sign in a baidu account or login your account if you already have one.
+
+3) click the '自然语言处理' in the menu on the left
+
+4) choose to create an application or '创建应用'
+
+5) fill in the info of the application, (for the api selection, just default) after that, you can click 'create'
+
+6) choose to view the application, then you can have the AppID, API Key, and Secret Key(it is automatically hidden, just click to show)
