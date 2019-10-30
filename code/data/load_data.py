@@ -73,7 +73,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     # we construct the signal strategy of LME
     parameters['time_series'] = strategy_signal(parameters,version_params['strategy_signal'])
     # save_data("i3",parameters['time_series'],parameters['time_series'].columns.values.tolist())
-    
+    # reset the split date before dealing with the abnormal value
     split_dates = reset_split_dates(parameters['time_series'],split_dates)
 
 
@@ -82,6 +82,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     '''
     parameters['cat_cols'] = []
     parameters['time_series'], parameters['norm_check'] = normalize_without_1d_return(parameters, version_params['normalize_without_1d_return'])
+    # construct the techincal indicator of COMEX and LME.Because we use the LME dates so we will lose some comex's information
     parameters['time_series'] = technical_indication(parameters, version_params['technical_indication'])
     # save_data("i4",parameters['time_series'],parameters['time_series'].columns.values.tolist())
     if parameters['norm_params']['xgboost']:
