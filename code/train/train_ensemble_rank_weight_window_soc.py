@@ -25,7 +25,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--data_configure_file', '-c', type=str,
         help='configure file of the features to be read',
-        default='exp/online_v10.conf'
+        default='exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf'
     )
     parser.add_argument('-s','--steps',type=int,default=5,
                         help='steps in the future to be predicted')
@@ -72,8 +72,8 @@ if __name__ == '__main__':
     args.ground_truth = args.ground_truth.split(",")
     window_size = args.window_size
     beta = args.weight
-    for beta in [0.1,0.3,0.5,0.7,0.9]:
-        for window_size in [5,10,15,20]:
+    for beta in [0.05,0.1,0.15,0.2]:
+        for window_size in [1,3,5,7]:
             length = 0
             if args.action == 'train':
                 comparison = None
@@ -166,49 +166,49 @@ if __name__ == '__main__':
                         
                         if args.ground_truth[0].split("_")[1]=="Co":
                             if split_date[1]>='2017-01-03':
-                                LR_v5 = pd.read_csv("data/LR_probility/"+'LMCADY'+"_h"+str(horizon)+"_v5_probh"+str(horizon)+split_date[1]+".csv")
+                                LR_v5 = pd.read_csv("data/LR_probability/"+'LMCADY'+"_h"+str(horizon)+"_v5_probh"+str(horizon)+split_date[1]+".csv")
                             else:
-                                LR_v5 = pd.read_csv("data/LR_probility/"+'LMCADY'+"_h"+str(horizon)+"_v5probh"+str(horizon)+split_date[1]+".csv")
+                                LR_v5 = pd.read_csv("data/LR_probability/"+'LMCADY'+"_h"+str(horizon)+"_v5probh"+str(horizon)+split_date[1]+".csv")
                         elif args.ground_truth[0].split("_")[1]=="Al":
                             if split_date[1]>='2017-01-03':
-                                LR_v5 = pd.read_csv("data/LR_probility/"+'LMAHDY'+"_h"+str(horizon)+"_v5_probh"+str(horizon)+split_date[1]+".csv")
+                                LR_v5 = pd.read_csv("data/LR_probability/"+'LMAHDY'+"_h"+str(horizon)+"_v5_probh"+str(horizon)+split_date[1]+".csv")
                             else:
-                                LR_v5 = pd.read_csv("data/LR_probility/"+'LMAHDY'+"_h"+str(horizon)+"_v5probh"+str(horizon)+split_date[1]+".csv")
+                                LR_v5 = pd.read_csv("data/LR_probability/"+'LMAHDY'+"_h"+str(horizon)+"_v5probh"+str(horizon)+split_date[1]+".csv")
                         elif args.ground_truth[0].split("_")[1]=="Ni":
                             if split_date[1]>='2017-01-03':
-                                LR_v5 = pd.read_csv("data/LR_probility/"+'LMNIDY'+"_h"+str(horizon)+"_v5_probh"+str(horizon)+split_date[1]+".csv")
+                                LR_v5 = pd.read_csv("data/LR_probability/"+'LMNIDY'+"_h"+str(horizon)+"_v5_probh"+str(horizon)+split_date[1]+".csv")
                             else:
-                                LR_v5 = pd.read_csv("data/LR_probility/"+'LMNIDY'+"_h"+str(horizon)+"_v5probh"+str(horizon)+split_date[1]+".csv")
+                                LR_v5 = pd.read_csv("data/LR_probability/"+'LMNIDY'+"_h"+str(horizon)+"_v5probh"+str(horizon)+split_date[1]+".csv")
                         elif args.ground_truth[0].split("_")[1]=="Ti":
                             if split_date[1]>='2017-01-03':
-                                LR_v5 = pd.read_csv("data/LR_probility/"+'LMSNDY'+"_h"+str(horizon)+"_v5_probh"+str(horizon)+split_date[1]+".csv")
+                                LR_v5 = pd.read_csv("data/LR_probability/"+'LMSNDY'+"_h"+str(horizon)+"_v5_probh"+str(horizon)+split_date[1]+".csv")
                             else:
-                                LR_v5 = pd.read_csv("data/LR_probility/"+'LMSNDY'+"_h"+str(horizon)+"_v5probh"+str(horizon)+split_date[1]+".csv")
+                                LR_v5 = pd.read_csv("data/LR_probability/"+'LMSNDY'+"_h"+str(horizon)+"_v5probh"+str(horizon)+split_date[1]+".csv")
                         elif args.ground_truth[0].split("_")[1]=="Zi":
                             if split_date[1]>='2017-01-03':
-                                LR_v5 = pd.read_csv("data/LR_probility/"+'LMZSDY'+"_h"+str(horizon)+"_v5_probh"+str(horizon)+split_date[1]+".csv")
+                                LR_v5 = pd.read_csv("data/LR_probability/"+'LMZSDY'+"_h"+str(horizon)+"_v5_probh"+str(horizon)+split_date[1]+".csv")
                             else:
-                                LR_v5 = pd.read_csv("data/LR_probility/"+'LMZSDY'+"_h"+str(horizon)+"_v5probh"+str(horizon)+split_date[1]+".csv")
+                                LR_v5 = pd.read_csv("data/LR_probability/"+'LMZSDY'+"_h"+str(horizon)+"_v5probh"+str(horizon)+split_date[1]+".csv")
                         elif args.ground_truth[0].split("_")[1]=="Le":
                             if split_date[1]>='2017-01-03':
-                                LR_v5 = pd.read_csv("data/LR_probility/"+'LMPBDY'+"_h"+str(horizon)+"_v5_probh"+str(horizon)+split_date[1]+".csv")
+                                LR_v5 = pd.read_csv("data/LR_probability/"+'LMPBDY'+"_h"+str(horizon)+"_v5_probh"+str(horizon)+split_date[1]+".csv")
                             else:
-                                LR_v5 = pd.read_csv("data/LR_probility/"+'LMPBDY'+"_h"+str(horizon)+"_v5probh"+str(horizon)+split_date[1]+".csv")
+                                LR_v5 = pd.read_csv("data/LR_probability/"+'LMPBDY'+"_h"+str(horizon)+"_v5probh"+str(horizon)+split_date[1]+".csv")
                         result_lr = list(LR_v5['Prediction'])
                         
                         # load the LR V10 feature classifier
                         if args.ground_truth[0].split("_")[1]=="Co":
-                            LR_v10 = pd.read_csv("data/LR_probility/"+'LMCADY'+str(horizon)+"_"+split_date[1]+"_probability"+".csv")
+                            LR_v10 = pd.read_csv("data/LR_probability/"+'LMCADY'+str(horizon)+"_"+split_date[1]+"_probability"+".csv")
                         elif args.ground_truth[0].split("_")[1]=="Al":
-                            LR_v10 = pd.read_csv("data/LR_probility/"+'LMAHDY'+str(horizon)+"_"+split_date[1]+"_probability"+".csv")
+                            LR_v10 = pd.read_csv("data/LR_probability/"+'LMAHDY'+str(horizon)+"_"+split_date[1]+"_probability"+".csv")
                         elif args.ground_truth[0].split("_")[1]=="Ni":
-                            LR_v10 = pd.read_csv("data/LR_probility/"+'LMNIDY'+str(horizon)+"_"+split_date[1]+"_probability"+".csv")
+                            LR_v10 = pd.read_csv("data/LR_probability/"+'LMNIDY'+str(horizon)+"_"+split_date[1]+"_probability"+".csv")
                         elif args.ground_truth[0].split("_")[1]=="Ti":
-                            LR_v10 = pd.read_csv("data/LR_probility/"+'LMSNDY'+str(horizon)+"_"+split_date[1]+"_probability"+".csv")
+                            LR_v10 = pd.read_csv("data/LR_probability/"+'LMSNDY'+str(horizon)+"_"+split_date[1]+"_probability"+".csv")
                         elif args.ground_truth[0].split("_")[1]=="Zi":
-                            LR_v10 = pd.read_csv("data/LR_probility/"+'LMZSDY'+str(horizon)+"_"+split_date[1]+"_probability"+".csv")
+                            LR_v10 = pd.read_csv("data/LR_probability/"+'LMZSDY'+str(horizon)+"_"+split_date[1]+"_probability"+".csv")
                         elif args.ground_truth[0].split("_")[1]=="Le":
-                            LR_v10 = pd.read_csv("data/LR_probility/"+'LMPBDY'+str(horizon)+"_"+split_date[1]+"_probability"+".csv")
+                            LR_v10 = pd.read_csv("data/LR_probability/"+'LMPBDY'+str(horizon)+"_"+split_date[1]+"_probability"+".csv")
                         result_lr_v10 = list(LR_v10['Prediction'])
                         
                         # retrieve the probability result from the voting result

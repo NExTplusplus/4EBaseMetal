@@ -305,9 +305,20 @@ def trend_1(Date,Close,num_of_month):
     ans.Trend1[end:] = (Close.iloc[end-1]>Close.iloc[start])*2-1
     ans.Trend2[end:] = (Return[start:end].sum()/(end-start)>0.5)*2-1
     return ans.Trend1,ans.Trend2    
-            
-    
 
+def trend_ex1(Close,num_of_days):
+    ans = pd.concat([Close,Close],axis = 1)
+    ans.columns = ["Trend1","Trend2"]
+    Return = (Close>Close.shift(1))*1
+    for i in range(num_of_days,len(ans.Trend1)):
+        ans.Trend1.iloc[i] = (Return.iloc[i-num_of_days:i+1].sum()/(num_of_days+1)>0.5)*2-1
+        ans.Trend2.iloc[i] = (Close.iloc[i]>Close.iloc[i-num_of_days])*2-1
+    ans.Trend1.iloc[:num_of_days] = None
+    ans.Trend2.iloc[:num_of_days] = None
+    
+    return ans.Trend1,ans.Trend2
+
+    
 
 
 

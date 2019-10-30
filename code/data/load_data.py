@@ -54,6 +54,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
                     'ground_truth_columns': ground_truth_columns, 'lags': lags, 'split_dates':split_dates,
                     'norm_params':norm_params, 'tech_params': tech_params}
     parameters['strat_params'],parameters['activation_params'] = generate_strat_params(ground_truth_columns[0], horizon, version_params['generate_strat_params'])
+    original_test_date = split_dates[2]
     '''
     deal with the abnormal data which we found in the data. 
     '''
@@ -89,7 +90,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     # save_data("i5",parameters['time_series'],parameters['time_series'].columns.values.tolist())
     parameters['time_series'] = price_normalization(parameters,version_params['price_normalization'])
     parameters['time_series'] = process_missing_value(parameters, version_params['process_missing_value'])
-    split_dates = reset_split_dates(time_series,split_dates)
+    split_dates = reset_split_dates(parameters['time_series'],split_dates)
     
     for col in parameters['time_series'].columns.values.tolist():
         if len(parameters['time_series'][col].unique().tolist()) <= 3:
@@ -134,7 +135,10 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
         tra_ind = lags - 1
     val_ind = parameters['time_series'][0].index.get_loc(split_dates[1])
     assert val_ind >= lags - 1, 'without training data'
-    tes_ind = parameters['time_series'][0].index.get_loc(split_dates[2])
+    if split_dates[2] == original_test_date:
+        tes_ind = parameters['time_series'][0].index.get_loc(split_dates[2])
+    else:
+        tes_ind = parameters['time_series'][0].index.get_loc(split_dates[2])+1
 
     X_tr = []
     y_tr = []

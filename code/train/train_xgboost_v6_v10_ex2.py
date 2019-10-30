@@ -126,11 +126,11 @@ if __name__ == '__main__':
             
             #generate parameters for load data
             length = 5
-            split_dates = rolling_half_year("2009-07-01","2017-01-01",length)
+            split_dates = rolling_half_year("2009-07-01","2017-07-01",length)
             split_dates  =  split_dates[:]
             importance_list = []
             version_params=generate_version_params(args.version)
-            for split_date in split_dates:
+            for s, split_date in enumerate(split_dates[:-1]):
                 #print("the train date is {}".format(split_date[0]))
                 #print("the test date is {}".format(split_date[1]))
                 horizon = args.steps
@@ -155,7 +155,7 @@ if __name__ == '__main__':
                 final_y_te = [] 
                 tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
                                                 'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
-                ts = copy(time_series.loc[split_date[0]:split_date[2]])
+                ts = copy(time_series.loc[split_date[0]:split_dates[s+1][2]])
                 i = 0
                 
                 #iterate over different ground truths for data loading

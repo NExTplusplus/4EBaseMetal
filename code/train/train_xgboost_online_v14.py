@@ -5,6 +5,13 @@ Created on Wed Sep 25 14:49:49 2019
 @author: think
 """
 
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Sep 25 14:49:49 2019
+
+@author: think
+"""
+
 import os
 import sys
 import json
@@ -54,7 +61,7 @@ if __name__ == '__main__':
         '-k','--k_folds', type=int, default = 10, help='number of folds to conduct cross validation'
     )
     parser.add_argument(
-        '-v','--version', help='version', type = str, default = 'v7'
+        '-v','--version', help='version', type = str, default = 'v14'
     )
     parser.add_argument ('-out','--output',type = str, help='output file', default ="../../../Results/results")
     parser.add_argument('-o', '--action', type=str, default='train',
@@ -65,7 +72,7 @@ if __name__ == '__main__':
     parser.add_argument('-gamma','--gamma',type=float,help='feed the parameter into the model',default=0)
     parser.add_argument('-min_child','--min_child',type=int,help='feed the parameter into the model',default=0)
     parser.add_argument('-subsample','--subsample',type=float,help='feed the parameter into the model',default=0)
-    parser.add_argument('-voting','--voting',type=str,help='there are five methods for voting: all,far,same,near,reverse')
+    parser.add_argument('-voting','--voting',type=str,help='there are five methods for voting: all,far,same,near,reverse',default='all')
     args = parser.parse_args()
     if args.ground_truth =='None':
         args.ground_truth = None
@@ -123,11 +130,11 @@ if __name__ == '__main__':
                     metal_id[i] = 1
                     X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,split_date,norm_params,tech_params,version_params)
                     X_tr = np.concatenate(X_tr)
-                    X_tr = X_tr.reshape(len(X_tr),int(lag/5+1)*len(column_list[0]))
+                    X_tr = X_tr.reshape(len(X_tr),lag*len(column_list[0]))
                     X_tr = np.append(X_tr,[metal_id]*len(X_tr),axis = 1)
                     y_tr = np.concatenate(y_tr)
                     X_va = np.concatenate(X_va)
-                    X_va = X_va.reshape(len(X_va),int(lag/5+1)*len(column_list[0]))
+                    X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
                     X_va = np.append(X_va,[metal_id]*len(X_va),axis = 1)
                     y_va = np.concatenate(y_va)
                     final_X_tr.append(X_tr)
@@ -142,8 +149,8 @@ if __name__ == '__main__':
                 
                 column_lag_list = []
                 column_name = []
-                l = [x for x in range(lag+1) if x%5==0]
-                for i in l:
+                #l = [x for x in range(lag+1) if x%5==0]
+                for i in range(lag):
                     for item in column_list[0]:
                         new_item = item+"_"+str(lag-i)
                         column_lag_list.append(new_item)

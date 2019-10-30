@@ -186,18 +186,6 @@ if __name__ == '__main__':
                     LR_v5 = pd.read_csv('~/NEXT/LMPBDY'+"_h"+str(horizon)+"_v5resh"+str(horizon)+split_date[1]+".csv")
                 LR_v5_prediction_list = list(LR_v5['Prediction'])
                 
-                # reshape the label -1 to 0
-                for i in range(len(LR_v5_prediction_list)):
-                    if LR_v5_prediction_list[i]==-1.0:
-                        LR_v5_prediction_list[i]=0.0
-                    final_list=[]
-                    for j in range(len(final_list_v5)):
-                        if (final_list_v5[j]+final_list_v10[j]+LR_v5_prediction_list[j]+final_list_v7[j])>2:
-                            final_list.append(1)
-                        elif (final_list_v5[j]+final_list_v10[j]+LR_v5_prediction_list[j]+final_list_v7[j])<2:
-                            final_list.append(0)
-                        else:
-                            final_list.append(0)
                 print("the XGBOOST v7 test precision is {}".format(metrics.accuracy_score(y_va, final_list_v7)))
                 print("the XGBOOST v10 test precision is {}".format(metrics.accuracy_score(y_va, final_list_v10)))
                 print("the LR test precision is {}".format(metrics.accuracy_score(y_va, LR_v5_prediction_list)))
