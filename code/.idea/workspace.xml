@@ -10,90 +10,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="load_data_v16_torch.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/data/load_data_v16_torch.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="67" column="40" lean-forward="false" selection-start-line="67" selection-start-column="40" selection-end-line="67" selection-end-column="40" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="train_alstm.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/train/train_alstm.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="14498">
-              <caret line="659" column="34" lean-forward="false" selection-start-line="659" selection-start-column="16" selection-end-line="659" selection-end-column="34" />
-              <folding>
-                <element signature="e#16#35#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="analyze_alstm.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/train/analyze_alstm.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="8162">
-              <caret line="515" column="20" lean-forward="false" selection-start-line="515" selection-start-column="20" selection-end-line="515" selection-end-column="20" />
-              <folding>
-                <element signature="e#0#11#0" expanded="true" />
-                <element signature="e#658#939#0" expanded="false" />
-                <element signature="e#981#1159#0" expanded="false" />
-                <element signature="e#1202#1563#0" expanded="false" />
-                <element signature="e#1619#6514#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="version_control_functions_torch.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/utils/version_control_functions_torch.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="267">
-              <caret line="250" column="4" lean-forward="false" selection-start-line="250" selection-start-column="4" selection-end-line="250" selection-end-column="4" />
-              <folding>
-                <element signature="e#0#34#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="tune_alstm.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/train/tune_alstm.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="583">
-              <caret line="55" column="5" lean-forward="false" selection-start-line="55" selection-start-column="5" selection-end-line="55" selection-end-column="5" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="tune_alstm_mc.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/train/tune_alstm_mc.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="352">
-              <caret line="16" column="56" lean-forward="false" selection-start-line="16" selection-start-column="56" selection-end-line="16" selection-end-column="56" />
-              <folding>
-                <element signature="e#0#15#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="analyze_alstm_mc.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/train/analyze_alstm_mc.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="494">
-              <caret line="655" column="12" lean-forward="false" selection-start-line="655" selection-start-column="12" selection-end-line="655" selection-end-column="12" />
-              <folding>
-                <element signature="e#0#11#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="train_alstm_mc.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/train/train_alstm_mc.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -106,23 +22,23 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="model_embedding_mc.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/model/model_embedding_mc.py">
+      <file leaf-file-name="train_alstm_mc_cla.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/train/train_alstm_mc_cla.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5">
-              <caret line="8" column="11" lean-forward="false" selection-start-line="8" selection-start-column="11" selection-end-line="8" selection-end-column="11" />
+            <state relative-caret-position="323">
+              <caret line="504" column="54" lean-forward="false" selection-start-line="504" selection-start-column="54" selection-end-line="504" selection-end-column="54" />
               <folding>
-                <element signature="e#16#35#0" expanded="true" />
+                <element signature="e#4787#10048#1" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="train_alstm_online.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/train/train_alstm_online.py">
+      <file leaf-file-name="Technical_indicator.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/utils/Technical_indicator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="258">
-              <caret line="674" column="50" lean-forward="false" selection-start-line="628" selection-start-column="16" selection-end-line="628" selection-end-column="26" />
+            <state relative-caret-position="-5650">
+              <caret line="29" column="11" lean-forward="false" selection-start-line="29" selection-start-column="4" selection-end-line="29" selection-end-column="11" />
               <folding />
             </state>
           </provider>
@@ -150,16 +66,33 @@
       <find>indicator</find>
       <find>stra</find>
       <find>join</find>
-      <find>pool</find>
       <find>torch_labelling</find>
+      <find>pool</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/train/analyze_alstm.py" />
+        <option value="$PROJECT_DIR$/train/train_alstm_mc_cla.py" />
       </list>
     </option>
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes />
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -317,14 +250,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/train/train_lstm.py" />
-    <entry file="file://$PROJECT_DIR$/utils/normalize_feature.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="11" column="17" lean-forward="false" selection-start-line="11" selection-start-column="4" selection-end-line="11" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/utils/read_data.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="234">
@@ -446,13 +371,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/utils/Technical_indicator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="384">
-          <caret line="29" column="11" lean-forward="false" selection-start-line="29" selection-start-column="4" selection-end-line="29" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/data/load_rnn.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="476">
@@ -528,120 +446,120 @@
         <state relative-caret-position="-1329">
           <caret line="351" column="16" lean-forward="true" selection-start-line="351" selection-start-column="16" selection-end-line="351" selection-end-column="16" />
           <folding>
-            <marker date="1571927788722" expanded="true" signature="1359:1714" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="1765:2120" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="2171:2612" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="2701:4128" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="2783:2850" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="3063:3641" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="3097:3641" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="3134:3641" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="3731:4042" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="3843:4042" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="4168:5211" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="4250:4317" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="4530:5108" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="4564:5108" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="4601:5108" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="5316:5636" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="5499:5613" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="5748:6172" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="5753:5877" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1571927788722" expanded="true" signature="5974:6157" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="6231:6760" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="6236:6424" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1571927788722" expanded="true" signature="6521:6745" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="6823:7735" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="6920:7715" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="7856:11556" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="7861:8055" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1571927788722" expanded="true" signature="8199:8260" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="8334:11516" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="8417:8626" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="8721:9270" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="8789:9270" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="9386:9900" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="9456:9900" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="10037:11516" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="10130:10795" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="10851:11516" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="11622:12043" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="11707:12016" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="12189:12734" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="12359:12721" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="12413:12721" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="12454:12721" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="12910:13490" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="13084:13477" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="13169:13477" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="13210:13477" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="13561:15537" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="13566:13737" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1571927788722" expanded="true" signature="13907:15494" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="14030:15196" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="14375:14770" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="14867:15196" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="15240:15494" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="15305:15494" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="15539:15684" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="15758:17868" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="15763:15934" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1571927788722" expanded="true" signature="16108:17821" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="16236:17821" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="16284:17385" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="16653:16939" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="17044:17385" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="17437:17821" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="17624:17821" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="26356:26434" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="18667:24325" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="18734:19192" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="19269:19823" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="19855:24325" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="19980:20501" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="20559:21064" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="21125:21612" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="21657:22138" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="22189:22681" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="22726:23275" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="23336:23731" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="23837:24325" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="26487:26770" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="26529:26737" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="26610:26737" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="26823:27012" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="26894:26980" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="27078:27694" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="27273:27624" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="27302:27391" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="27405:27624" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="27783:28075" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="27788:27895" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1571927788722" expanded="true" signature="31089:31365" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="31440:32605" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="31457:31995" ph="'''...'''" />
-            <marker date="1571927788722" expanded="true" signature="32037:32135" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="32350:32584" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="32428:32584" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="32677:34203" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="32773:33536" ph="'''...'''" />
-            <marker date="1571927788722" expanded="true" signature="33625:33724" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="33947:34182" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="34025:34182" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="34279:35488" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="34296:34834" ph="'''...'''" />
-            <marker date="1571927788722" expanded="true" signature="34876:34974" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="35189:35367" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="35267:35367" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="35544:36509" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="35549:35951" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1571927788722" expanded="true" signature="36109:36333" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="36579:36994" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="36584:36669" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1571927788722" expanded="true" signature="37091:38072" ph="&quot;&quot;&quot;data process...&quot;&quot;&quot;" />
-            <marker date="1571927788722" expanded="true" signature="38348:38499" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="38638:38785" ph="..." />
-            <marker date="1571927788722" expanded="true" signature="38889:39020" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="1359:1714" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="1765:2120" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="2315:2756" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="2845:4272" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="2927:2994" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="3207:3785" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="3241:3785" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="3278:3785" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="3875:4186" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="3987:4186" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="4312:5355" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="4394:4461" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="4674:5252" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="4708:5252" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="4745:5252" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="5460:5780" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="5643:5757" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="5892:6316" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="5897:6021" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1572339526969" expanded="true" signature="6118:6301" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="6375:6904" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="6380:6568" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1572339526969" expanded="true" signature="6665:6889" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="6967:7879" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="7064:7859" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="8000:11700" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="8005:8199" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1572339526969" expanded="true" signature="8343:8404" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="8478:11660" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="8561:8770" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="8865:9414" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="8933:9414" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="9530:10044" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="9600:10044" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="10181:11660" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="10274:10939" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="10995:11660" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="11766:12187" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="11851:12160" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="12333:12878" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="12503:12865" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="12557:12865" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="12598:12865" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="13054:13634" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="13228:13621" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="13313:13621" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="13354:13621" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="13705:15681" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="13710:13881" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1572339526969" expanded="true" signature="14051:15638" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="14174:15340" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="14519:14914" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="15011:15340" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="15384:15638" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="15449:15638" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="15683:15828" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="15902:18012" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="15907:16078" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1572339526969" expanded="true" signature="16252:17965" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="16380:17965" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="16428:17529" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="16797:17083" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="17188:17529" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="17581:17965" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="17768:17965" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="26500:26578" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="18811:24469" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="18878:19336" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="19413:19967" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="19999:24469" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="20124:20645" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="20703:21208" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="21269:21756" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="21801:22282" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="22333:22825" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="22870:23419" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="23480:23875" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="23981:24469" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="26631:26914" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="26673:26881" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="26754:26881" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="26967:27156" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="27038:27124" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="27222:27838" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="27417:27768" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="27446:27535" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="27549:27768" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="27927:28219" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="27932:28039" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1572339526969" expanded="true" signature="31233:31509" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="31584:32749" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="31601:32139" ph="'''...'''" />
+            <marker date="1572339526969" expanded="true" signature="32181:32279" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="32494:32728" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="32572:32728" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="32821:34347" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="32917:33680" ph="'''...'''" />
+            <marker date="1572339526969" expanded="true" signature="33769:33868" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="34091:34326" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="34169:34326" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="34423:35632" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="34440:34978" ph="'''...'''" />
+            <marker date="1572339526969" expanded="true" signature="35020:35118" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="35333:35511" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="35411:35511" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="35688:36653" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="35693:36095" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1572339526969" expanded="true" signature="36253:36477" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="36723:37138" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="36728:36813" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1572339526969" expanded="true" signature="37235:38216" ph="&quot;&quot;&quot;data process...&quot;&quot;&quot;" />
+            <marker date="1572339526969" expanded="true" signature="38492:38643" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="38782:38929" ph="..." />
+            <marker date="1572339526969" expanded="true" signature="39033:39164" ph="..." />
           </folding>
         </state>
       </provider>
@@ -658,8 +576,58 @@
         <state relative-caret-position="494">
           <caret line="655" column="12" lean-forward="false" selection-start-line="655" selection-start-column="12" selection-end-line="655" selection-end-column="12" />
           <folding>
-            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#0#11#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../exp_4e/ensemble/retrain_ensemble.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-10549">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/train/analyze_alstm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="122">
+          <caret line="179" column="32" lean-forward="true" selection-start-line="179" selection-start-column="32" selection-end-line="179" selection-end-column="32" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#658#939#0" expanded="false" />
+            <element signature="e#981#1159#0" expanded="false" />
+            <element signature="e#1202#1563#0" expanded="false" />
+            <element signature="e#1619#6514#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/train/train_alstm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="14498">
+          <caret line="659" column="34" lean-forward="false" selection-start-line="659" selection-start-column="16" selection-end-line="659" selection-end-column="34" />
+          <folding>
+            <element signature="e#16#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/version_control_functions_torch.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="267">
+          <caret line="250" column="4" lean-forward="false" selection-start-line="250" selection-start-column="4" selection-end-line="250" selection-end-column="4" />
+          <folding>
+            <element signature="e#0#34#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/load_data_v16_torch.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="158">
+          <caret line="68" column="40" lean-forward="false" selection-start-line="68" selection-start-column="40" selection-end-line="68" selection-end-column="40" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -677,26 +645,6 @@
           <caret line="16" column="56" lean-forward="false" selection-start-line="16" selection-start-column="56" selection-end-line="16" selection-end-column="56" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train/train_alstm_mc.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8734">
-          <caret line="397" column="40" lean-forward="false" selection-start-line="388" selection-start-column="16" selection-end-line="397" selection-end-column="40" />
-          <folding>
-            <element signature="e#16#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train/train_alstm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="14498">
-          <caret line="659" column="34" lean-forward="false" selection-start-line="659" selection-start-column="16" selection-end-line="659" selection-end-column="34" />
-          <folding>
-            <element signature="e#16#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -719,35 +667,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/utils/version_control_functions_torch.py">
+    <entry file="file://$PROJECT_DIR$/train/train_alstm_mc.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="267">
-          <caret line="250" column="4" lean-forward="false" selection-start-line="250" selection-start-column="4" selection-end-line="250" selection-end-column="4" />
+        <state relative-caret-position="8734">
+          <caret line="397" column="40" lean-forward="false" selection-start-line="388" selection-start-column="16" selection-end-line="397" selection-end-column="40" />
           <folding>
-            <element signature="e#0#34#0" expanded="true" />
+            <element signature="e#16#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data/load_data_v16_torch.py">
+    <entry file="file://$PROJECT_DIR$/train/train_alstm_mc_cla.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="67" column="40" lean-forward="false" selection-start-line="67" selection-start-column="40" selection-end-line="67" selection-end-column="40" />
+        <state relative-caret-position="323">
+          <caret line="504" column="54" lean-forward="false" selection-start-line="504" selection-start-column="54" selection-end-line="504" selection-end-column="54" />
+          <folding>
+            <element signature="e#4787#10048#1" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/Technical_indicator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-5650">
+          <caret line="29" column="11" lean-forward="false" selection-start-line="29" selection-start-column="4" selection-end-line="29" selection-end-column="11" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train/analyze_alstm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8162">
-          <caret line="515" column="20" lean-forward="false" selection-start-line="515" selection-start-column="20" selection-end-line="515" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-            <element signature="e#658#939#0" expanded="false" />
-            <element signature="e#981#1159#0" expanded="false" />
-            <element signature="e#1202#1563#0" expanded="false" />
-            <element signature="e#1619#6514#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
