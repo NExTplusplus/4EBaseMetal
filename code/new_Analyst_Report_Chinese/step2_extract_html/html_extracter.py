@@ -112,6 +112,10 @@ class html_extracter:
             func = lambda x: BeautifulSoup(x).find("div", {"class": "about_text1"}).text
         elif 'thanf' in keyword:
             func = lambda x: BeautifulSoup(x).find("p", {"class": "text-justify"}).text
+        elif 'scqh' in keyword:
+            func = lambda x: BeautifulSoup(x).find('div', {'class':'jjyw-article clearfix'}).text
+        elif 'xinhu' in keyword:
+            func = lambda x: BeautifulSoup(x).find('div', {'class':'content_show'}).text
         else:
             raise Exception('Website not in choose_func please add it accordingly')
         return func
@@ -251,9 +255,16 @@ class html_extracter:
             elif 'rdqh' in keyword:
                 res = BeautifulSoup(html).find('div', {'class': 'work_article'}).find('span')
                 res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
-    
+
             elif 'thanf' in keyword:
                 res = BeautifulSoup(html).find('div', {'class':'service-content'}).find('h2')
+                res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
+                
+            elif 'xinhu' in keyword:
+                res = BeautifulSoup(html).find('p', {'class':'tc mgt10'}).find('span', {'class':'light_gray'})
+                res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
+            elif 'scqh' in keyword:
+                res = BeautifulSoup(html).find('div', {'class':'jjyw-top clearfix'}).find('p')
                 res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
         except:
             res = 'error_page'
