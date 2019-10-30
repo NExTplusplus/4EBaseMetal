@@ -58,6 +58,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     '''
     deal with the abnormal data which we found in the data. 
     '''
+    
     parameters['time_series'] = deal_with_abnormal_value(parameters,version_params["deal_with_abnormal_value"])
     '''
     Extract the rows with dates where LME has trading operations
@@ -68,7 +69,8 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     parameters['labels'] = labelling(parameters, version_params['labelling'])
     parameters['time_series'] = process_missing_value(parameters,version_params['process_missing_value'])
     parameters['org_cols'] = time_series.columns.values.tolist()
-    # save_data("i2",parameters['time_series'],parameters['time_series'].columns.values.tolist())
+
+    # we construct the signal strategy of LME
     parameters['time_series'] = strategy_signal(parameters,version_params['strategy_signal'])
     # save_data("i3",parameters['time_series'],parameters['time_series'].columns.values.tolist())
     
