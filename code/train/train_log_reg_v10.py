@@ -163,7 +163,7 @@ if __name__ == '__main__':
                     metal_id[i] = 1
                     
                     #load data
-                    X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,split_date,norm_params,tech_params,version_params)
+                    X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,copy(split_date),norm_params,tech_params,version_params)
                     
                     #post load processing and metal id extension
                     X_tr = np.concatenate(X_tr)
