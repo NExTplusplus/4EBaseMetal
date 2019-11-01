@@ -131,7 +131,7 @@ if __name__ == '__main__':
             importance_list = []
             version_params=generate_version_params(args.version)
             ans = {"C":[]}
-            for s, split_date in enumerate(split_dates):
+            for s, split_date in enumerate(split_dates[:-1]):
                 #print("the train date is {}".format(split_date[0]))
                 #print("the test date is {}".format(split_date[1]))
                 
@@ -194,8 +194,9 @@ if __name__ == '__main__':
                 for C in [0.00001,0.0001,0.001,0.01]:
                     if C not in ans['C']:
                         ans["C"].append(C)
-                    if split_date[1] not in ans.keys():
-                        ans[split_date[1]] = []
+                    if split_date[1]+"_acc" not in ans.keys():
+                        ans[split_date[1]+"_acc"] = []
+                        ans[split_date[1]+"_length"] = []
             
                     n+=1
                     
@@ -205,6 +206,22 @@ if __name__ == '__main__':
                     parameters = {"penalty":"l2", "C":C, "solver":"lbfgs", "tol":tol,"max_iter":6*4*len(f)*max_iter, "verbose" : 0,"warm_start": False, "n_jobs": -1}
                     pure_LogReg.train(final_X_tr,final_y_tr.flatten(), parameters)
                     acc = pure_LogReg.test(final_X_va,final_y_va.flatten())
-                    ans[split_date[1]].append(acc)
-            print(ans)
+                    ans[split_date[1]+"_acc"].append(acc)
+                    ans[split_date[1]+"_length"].append(len(final_y_va))
+            ans = pd.DataFrame(ans)
+            ave = None
+            length = None
+            for col in ans.columns.values.tolist():
+                if "_acc" in col:
+                    if ave is None:
+                        ave = ans.loc[:,col]*ans.loc[:,col[:-3]+"length"]
+                        length = ans.loc[:,col[:-3]+"length"]
+                    else:
+                        ave = ave + ans.loc[:,col]*ans.loc[:,col[:-3]+"length"]
+                        length = length + ans.loc[:,col[:-3]+"length"]
+            ave = ave/length
+            ans = pd.concat([ans,pd.DataFrame({"average": ave})],axis = 1)
+            ans.sort_values(by= "average",ascending = False)
+
+
             pd.DataFrame(ans).to_csv("_".join(["log_reg",args.version,str(args.lag),str(args.steps)+".csv"]))
