@@ -4,7 +4,7 @@ import json
 import argparse
 import numpy as np
 import pandas as pd
-from copy import copy
+from copy import copy,deepcopy
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 from data.load_data import load_data
 from model.logistic_regression import LogReg
@@ -18,6 +18,7 @@ from xgboost import plot_importance
 from sklearn import metrics
 from sklearn.model_selection import KFold
 from utils.version_control_functions import generate_version_params
+
 
 if __name__ == '__main__':
     desc = 'the logistic regression model'
@@ -52,12 +53,13 @@ if __name__ == '__main__':
     parser.add_argument ('-out','--output',type = str, help='output file', default ="../../../Results/results")
     parser.add_argument('-o', '--action', type=str, default='train',
                         help='train, test, tune')
+    parser.add_argument('-C', '--C', type=float, default=0.001,
+                        help='lambda inverse')
     parser.add_argument('-xgb','--xgboost',type = int,help='if you want to train the xgboost you need to inform us of that',default=0)
     args = parser.parse_args()
     if args.ground_truth =='None':
         args.ground_truth = None
     os.chdir(os.path.abspath(sys.path[0]))
-    
     # read data configure file
     with open(os.path.join(sys.path[0],args.data_configure_file)) as fin:
         fname_columns = json.load(fin)
@@ -110,11 +112,11 @@ if __name__ == '__main__':
     if args.action == 'train':
         comparison = None
         n = 0
-        
+
         #iterate over list of configurations
         for f in fname_columns:
             lag = args.lag
-            
+
             #read data
             if args.source == "NExT":
                 from utils.read_data import read_data_NExT
@@ -129,16 +131,14 @@ if __name__ == '__main__':
             time_series = time_series[columns]
             # initialize parameters for load data
             length = 5
-            split_dates = rolling_half_year("2009-07-01","2017-07-01",length)
+            split_dates = rolling_half_year("2009-07-01","2019-07-01",length)
             split_dates  =  split_dates[:]
             importance_list = []
             version_params=generate_version_params(args.version)
-            ans = {"C":[]}
+            ans = {"C":[],"ground_truth":args.ground_truth}
             for s, split_date in enumerate(split_dates[:-1]):
                 #print("the train date is {}".format(split_date[0]))
                 #print("the test date is {}".format(split_date[1]))
-                
-                #generate parameters for load data
                 horizon = args.steps
                 norm_volume = "v1"
                 norm_3m_spread = "v1"
@@ -146,8 +146,13 @@ if __name__ == '__main__':
                 len_ma = 5
                 len_update = 30
                 tol = 1e-7
-                norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
-                            'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False}
+                if args.xgboost==1:
+                    print(args.xgboost)
+                    norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
+                                'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':True}
+                else:
+                    norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
+                                'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False}
                 final_X_tr = []
                 final_y_tr = []
                 final_X_va = []
@@ -157,74 +162,36 @@ if __name__ == '__main__':
                 tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
                                                 'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
                 ts = copy(time_series.loc[split_date[0]:split_dates[s+1][2]])
-                i = 0
-                
-                #iterate over ground truths
-                for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
-                    print(ground_truth)
-                    metal_id = [0,0,0,0,0,0]
-                    metal_id[i] = 1
-                    
-                    #load data
-                    X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,copy(split_date),norm_params,tech_params,version_params)
-                    
-                    #post load processing and metal id extension
-                    X_tr = np.concatenate(X_tr)
-                    X_tr = X_tr.reshape(len(X_tr),lag*len(column_list[0]))
-                    X_tr = np.append(X_tr,[metal_id]*len(X_tr),axis = 1)
-                    y_tr = np.concatenate(y_tr)
-                    X_va = np.concatenate(X_va)
-                    X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
-                    X_va = np.append(X_va,[metal_id]*len(X_va),axis = 1)
-                    y_va = np.concatenate(y_va)
-                    final_X_tr.append(X_tr)
-                    final_y_tr.append(y_tr)
-                    final_X_va.append(X_va)
-                    final_y_va.append(y_va)
-                    i+=1
-                
-                #sort by time, not by metal
-                final_X_tr = [np.transpose(arr) for arr in np.dstack(final_X_tr)]
-                final_y_tr = [np.transpose(arr) for arr in np.dstack(final_y_tr)]
-                final_X_va = [np.transpose(arr) for arr in np.dstack(final_X_va)]
-                final_y_va = [np.transpose(arr) for arr in np.dstack(final_y_va)]
-                final_X_tr = np.reshape(final_X_tr,[np.shape(final_X_tr)[0]*np.shape(final_X_tr)[1],np.shape(final_X_tr)[2]])
-                final_y_tr = np.reshape(final_y_tr,[np.shape(final_y_tr)[0]*np.shape(final_y_tr)[1],np.shape(final_y_tr)[2]])
-                final_X_va = np.reshape(final_X_va,[np.shape(final_X_va)[0]*np.shape(final_X_va)[1],np.shape(final_X_va)[2]])
-                final_y_va = np.reshape(final_y_va,[np.shape(final_y_va)[0]*np.shape(final_y_va)[1],np.shape(final_y_va)[2]])
 
-                #tune logistic regression hyper parameter
-                for C in [0.00001,0.0001,0.001,0.01]:
-                    if C not in ans['C']:
-                        ans["C"].append(C)
-                    if split_date[1]+"_acc" not in ans.keys():
-                        ans[split_date[1]+"_acc"] = []
-                        ans[split_date[1]+"_length"] = []
+                #load data
+                X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,horizon,args.ground_truth,lag,copy(split_date),norm_params,tech_params,version_params)
+                
+                #post load processing and metal id extension
+                X_tr = np.concatenate(X_tr)
+                X_tr = X_tr.reshape(len(X_tr),lag*len(column_list[0]))
+                y_tr = np.concatenate(y_tr)
+                X_va = np.concatenate(X_va)
+                X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
+                y_va = np.concatenate(y_va)
+                final_X_tr.append(X_tr)
+                final_y_tr.append(y_tr)
+                final_X_va.append(X_va)
+                final_y_va.append(y_va)
             
-                    n+=1
-                    
-                    pure_LogReg = LogReg(parameters={})
 
-                    max_iter = args.max_iter
-                    parameters = {"penalty":"l2", "C":C, "solver":"lbfgs", "tol":tol,"max_iter":6*4*len(f)*max_iter, "verbose" : 0,"warm_start": False, "n_jobs": -1}
-                    pure_LogReg.train(final_X_tr,final_y_tr.flatten(), parameters)
-                    acc = pure_LogReg.test(final_X_va,final_y_va.flatten())
-                    ans[split_date[1]+"_acc"].append(acc)
-                    ans[split_date[1]+"_length"].append(len(final_y_va))
-            ans = pd.DataFrame(ans)
-            ave = None
-            length = None
-            for col in ans.columns.values.tolist():
-                if "_acc" in col:
-                    if ave is None:
-                        ave = ans.loc[:,col]*ans.loc[:,col[:-3]+"length"]
-                        length = ans.loc[:,col[:-3]+"length"]
-                    else:
-                        ave = ave + ans.loc[:,col]*ans.loc[:,col[:-3]+"length"]
-                        length = length + ans.loc[:,col[:-3]+"length"]
-            ave = ave/length
-            ans = pd.concat([ans,pd.DataFrame({"average": ave})],axis = 1)
-            ans.sort_values(by= "average",ascending = False)
-
-
-            pd.DataFrame(ans).to_csv("_".join(["log_reg_all",args.version,str(args.lag),str(args.steps)+".csv"]))
+                n+=1
+                if args.C not in ans["C"]:
+                    ans["C"].append(args.C)
+                max_iter = args.max_iter
+                pure_LogReg = LogReg(parameters={})
+                parameters = {"penalty":"l2", "C":args.C, "solver":"lbfgs", "tol":tol,"max_iter":6*4*len(f)*max_iter, "verbose" : 0,"warm_start": False, "n_jobs": -1}
+                pure_LogReg.train(X_tr,y_tr.flatten(), parameters)
+                
+                #iterate over ground truths for testing
+                if split_date[1] not in ans.keys():
+                    ans[split_date[1]] = []
+                prob = pure_LogReg.predict_proba(X_va)[:,1]
+                np.savetxt(args.ground_truth[0]+str(args.steps)+"_"+split_date[1]+"_lr_"+args.version+"_probability.csv",prob,delimiter = ",")
+                acc = pure_LogReg.test(X_va,y_va.flatten())
+                ans[split_date[1]].append(acc)
+            pd.DataFrame(ans).to_csv("_".join(["log_reg_online",args.version,str(args.lag),str(args.steps)+".csv"]))

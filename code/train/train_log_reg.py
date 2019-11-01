@@ -168,7 +168,6 @@ if __name__ == '__main__':
                 X_va = np.concatenate(X_va)
                 X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
                 y_va = np.concatenate(y_va)
-                i+=1
 
                 #tune logistic regression hyper parameter
                 for C in [0.00001,0.0001,0.001,0.01]:
@@ -204,4 +203,4 @@ if __name__ == '__main__':
             ans.sort_values(by= "average",ascending = False)
 
 
-            pd.DataFrame(ans).to_csv("_".join(["log_reg",args.version,str(args.lag),str(args.steps)+".csv"]))
+            pd.DataFrame(ans).to_csv("_".join(["log_reg",args.ground_truth[0],args.version,str(args.lag),str(args.steps)+".csv"]))
