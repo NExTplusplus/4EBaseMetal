@@ -589,7 +589,7 @@ if __name__ == '__main__':
         '-l','--lag', type=int, default=4, help='lag'
     )
     parser.add_argument(
-        '-v','--version', help='version', type = str, default = 'v10'
+        '-v','--version', help='version', type = str, default = 'v16'
     )
     parser.add_argument('-o', '--action', type=str, default='train',
                         help='train, test, tune')
