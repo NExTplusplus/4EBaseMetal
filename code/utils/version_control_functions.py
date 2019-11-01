@@ -131,6 +131,13 @@ def labelling(arguments, version):
         standard labelling
         '''
         return labelling_v1(time_series, arguments['horizon'], arguments['ground_truth_columns'])
+    
+    elif version == "v2":
+        """
+        construct the torch version
+        """
+        return labelling_v2(time_series, arguments['horizon'], arguments['ground_truth_columns'])
+    
     elif version == "v1_ex1":
         '''
         labelling increases and decreases respective to some price before current time point.
