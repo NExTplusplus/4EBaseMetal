@@ -117,7 +117,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     else:
         # parameters['time_series'].insert(0,ground_truth_columns[0],parameters['time_series'].pop(ground_truth_columns[0]),allow_duplicates = True)
         parameters['time_series'] = [parameters['time_series']]
-        parameters['all_cols'].append(parameters['time_series'][0].columns)
+        parameters['all_cols'].append(parameters['time_series'][0].columns.tolist())
     parameters['all_cols'][0].append('Spot_price')
     
     
