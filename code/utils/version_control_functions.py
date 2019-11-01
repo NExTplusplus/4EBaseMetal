@@ -254,6 +254,24 @@ def price_normalization(arguments, version):
         DXY log returns
         '''
         return log_1d_return(time_series,["DXY"])
+def spot_price_normalization(arguments):
+    time_series = arguments['time_series']
+    ans=[]
+    spot_price = copy(time_series['spot_price'])
+    if type(spot_price)== np.ndarray:
+        spot_price = np.log(np.true_divide(spot_price[1:], spot_price[:-1]))
+        # scale the data
+        spot_price = spot_price * (1.0 / 3.0 / np.nanstd(spot_price))
+    else:
+        spot_price.values[1:] = np.log(np.true_divide(spot_price.values[1:],
+                                                spot_price.values[:-1]))
+        # scale the data
+        spot_price = spot_price.div(3 * np.nanstd(spot_price.values[1:]))
+
+    spot_price = spot_price.rename("Spot_price")
+    ans.append(spot_price)
+    return ans    
+
     
 def insert_date_into_feature(arguments):
     time_series = arguments['time_series']
