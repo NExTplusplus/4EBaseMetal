@@ -618,7 +618,7 @@ if __name__ == '__main__':
                 exit(0)
 
             length = 5
-            split_dates = rolling_half_year("2009-07-01","2019-01-01",length)
+            split_dates = rolling_half_year("2009-07-01","2019-07-01",length)
             # split_dates = split_dates[:]
             split_dates = split_dates[-5:-1]
             importance_list = []
