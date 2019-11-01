@@ -170,6 +170,52 @@ def labelling_v1(X,horizon, ground_truth_columns):
         ans.append(labels)
     return ans
 
+def labelling_v2(X,horizon, ground_truth_columns):
+    """
+    X: which quals the timeseries
+    horizon: the time horizon
+    ground_truth_columns: the column we predict
+    """
+    assert ground_truth_columns != []
+    ans=[]
+    for ground in ground_truth_columns:
+        #print(ground)
+        labels = copy(X[ground])
+        #labels = copy(X)
+        # print(labels)
+        # print('+++++++++++++++')
+        '''
+        old code from Jiangeng
+        if type(labels)==np.ndarray:
+            labels = np.true_divide(labels[arguments['horizon']:], labels[:-arguments['horizon']])-1
+        else:
+            labels.values[arguments['horizon']:]=np.true_divide(labels.values[arguments['horizon']:], labels.values[:-arguments['horizon']])-1
+        '''
+
+        price_changes = labels.shift(-horizon) - labels
+        # print(price_changes.divide(labels))
+        labels = price_changes.divide(labels)
+
+        # scaling the label with standard division
+        print(np.nanstd(labels.values))
+        labels = labels.div(3 * np.nanstd(labels.values))
+
+        # print('----------------')
+        # labels.values[:] = np.true_divide(price_changes.values[:], labels.values[:])
+        ###############################
+        # to replace the old code (Fuli)
+        ###############################
+        # print(labels)
+        #if type(spot_price)== np.ndarray:
+        #    spot_price = np.log(np.true_divide(spot_price[1:], spot_price[:-1]))
+        #else:
+        #    spot_price.values[1:] = np.log(np.true_divide(spot_price.values[1:],
+        #                                            spot_price.values[:-1]))
+        labels = labels.rename("Label")
+        ans.append(labels)
+    return ans
+
+
 def labelling_v1_ex1(X,horizon,ground_truth_columns,lag):
     '''
     X: timeseries

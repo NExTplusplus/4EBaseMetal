@@ -18,7 +18,7 @@ def generate_version_params(version):
 
     if v == "v7":
         ans['technical_indication'] = "v2"
-    if v == "v9" or v == "v10" or v == "v11" or v == "v12" or v=="v14" or v=="v18" or v=="v20" or v=="v22":
+    if v == "v9" or v == "v10" or v == "v11" or v == "v12" or v=="v14" or v=="v16" or v=="v18" or v=="v20" or v=="v22":
         if v == "v9":
             ans["generate_strat_params"]="v1"
         elif v== "v10":
@@ -30,6 +30,9 @@ def generate_version_params(version):
         elif v== 'v14':
             ans["generate_strat_params"]="v5"
             ans["construct"]="v2"
+        elif v=='v16':
+            ans["generate_strat_params"]="v2"
+            ans['labelling'] = "v2"
         elif v== 'v18':
             ans["generate_strat_params"]="v6"
         elif v== 'v20':
@@ -128,6 +131,13 @@ def labelling(arguments, version):
         standard labelling
         '''
         return labelling_v1(time_series, arguments['horizon'], arguments['ground_truth_columns'])
+    
+    elif version == "v2":
+        """
+        construct the torch version
+        """
+        return labelling_v2(time_series, arguments['horizon'], arguments['ground_truth_columns'])
+    
     elif version == "v1_ex1":
         '''
         labelling increases and decreases respective to some price before current time point.
@@ -244,6 +254,24 @@ def price_normalization(arguments, version):
         DXY log returns
         '''
         return log_1d_return(time_series,["DXY"])
+def spot_price_normalization(arguments):
+    time_series = arguments['time_series']
+    ans=[]
+    spot_price = copy(time_series['spot_price'])
+    if type(spot_price)== np.ndarray:
+        spot_price = np.log(np.true_divide(spot_price[1:], spot_price[:-1]))
+        # scale the data
+        spot_price = spot_price * (1.0 / 3.0 / np.nanstd(spot_price))
+    else:
+        spot_price.values[1:] = np.log(np.true_divide(spot_price.values[1:],
+                                                spot_price.values[:-1]))
+        # scale the data
+        spot_price = spot_price.div(3 * np.nanstd(spot_price.values[1:]))
+
+    spot_price = spot_price.rename("Spot_price")
+    ans.append(spot_price)
+    return ans    
+
     
 def insert_date_into_feature(arguments):
     time_series = arguments['time_series']

@@ -66,6 +66,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     '''
     LME_dates = sorted(set(LME_dates).intersection(parameters['time_series'].index.values.tolist()))
     parameters['time_series'] = parameters['time_series'].loc[LME_dates]
+    parameters['spot_price'] = spot_price_normalization(parameters)
     parameters['labels'] = labelling(parameters, version_params['labelling'])
     parameters['time_series'] = process_missing_value(parameters,version_params['process_missing_value'])
     parameters['org_cols'] = time_series.columns.values.tolist()
@@ -117,6 +118,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
         # parameters['time_series'].insert(0,ground_truth_columns[0],parameters['time_series'].pop(ground_truth_columns[0]),allow_duplicates = True)
         parameters['time_series'] = [parameters['time_series']]
         parameters['all_cols'].append(parameters['time_series'][0].columns)
+    parameters['all_cols'][0].append('Spot_price')
     
     
 
@@ -124,6 +126,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     Merge labels with time series dataframe
     '''
     for ind in range(len(parameters['time_series'])):
+        parameters['time_series'][ind] = pd.concat([parameters['time_series'][ind], parameters['spot_price'][ind]],sort = True, axis = 1)
         parameters['time_series'][ind] = pd.concat([parameters['time_series'][ind], parameters['labels'][ind]],sort = True, axis = 1)
         
         parameters['time_series'][ind] = process_missing_value_v3(parameters['time_series'][ind])
