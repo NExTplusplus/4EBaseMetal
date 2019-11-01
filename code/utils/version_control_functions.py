@@ -18,7 +18,7 @@ def generate_version_params(version):
 
     if v == "v7":
         ans['technical_indication'] = "v2"
-    if v == "v9" or v == "v10" or v == "v11" or v == "v12" or v=="v14" or v=="v18" or v=="v20" or v=="v22":
+    if v == "v9" or v == "v10" or v == "v11" or v == "v12" or v=="v14" or v=="v16" or v=="v18" or v=="v20" or v=="v22":
         if v == "v9":
             ans["generate_strat_params"]="v1"
         elif v== "v10":
@@ -30,6 +30,9 @@ def generate_version_params(version):
         elif v== 'v14':
             ans["generate_strat_params"]="v5"
             ans["construct"]="v2"
+        elif v=='v16':
+            ans["generate_strat_params"]="v2"
+            ans['labelling'] = "v2"
         elif v== 'v18':
             ans["generate_strat_params"]="v6"
         elif v== 'v20':
