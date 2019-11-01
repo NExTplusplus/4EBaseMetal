@@ -8,7 +8,7 @@ import torch.nn as nn
 from sklearn.metrics import accuracy_score
 from copy import copy
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
-from data.load_data_v16_torch import load_data
+from data.load_data import load_data
 from model.model_embedding_mc import bilstm
 from utils.construct_data import rolling_half_year
 from utils.version_control_functions import generate_version_params
@@ -576,7 +576,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--data_configure_file', '-c', type=str,
         help='configure file of the features to be read',
-        default='exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf'
+        default='exp/online_v10.conf'
     )
     parser.add_argument('-gt', '--ground_truth', help='ground truth column',
                         type=str, default="LME_Co_Spot")
@@ -593,9 +593,6 @@ if __name__ == '__main__':
     )
     parser.add_argument('-o', '--action', type=str, default='train',
                         help='train, test, tune')
-    #parser.add_argument('-xgb','--xgboost',type = int,help='if you want to train the xgboost you need to inform us of that',default=0)
-    parser.add_argument('-torch', '--torch', type=int, default=1,
-                        help='if you want to train the torch you need to set this parameter to 1')
     args = parser.parse_args()
     if args.ground_truth =='None':
         args.ground_truth = None
@@ -640,11 +637,11 @@ if __name__ == '__main__':
                 exit(0)
 
             length = 5
-            split_dates = rolling_half_year("2009-07-01","2017-01-01",length)
+            split_dates = rolling_half_year("2009-07-01","2017-07-01",length)
             # split_dates = split_dates[:]
             importance_list = []
             version_params=generate_version_params(args.version)
-            for split_date in split_dates:
+            for s, split_date in enumerate(split_dates[:-1]):
                 horizon = args.steps
                 norm_volume = "v1"
                 norm_3m_spread = "v1"
@@ -685,7 +682,7 @@ if __name__ == '__main__':
                     spot_list = np.array(new_time_series[ground_truth])
                     new_time_series['spot_price'] = spot_list
 
-                    ts = new_time_series.loc[split_date[0]:split_date[2]]
+                    ts = new_time_series.loc[split_date[0]:split_dates[s+1][2]]
 
                     X_tr, y_tr, \
                     X_va, y_va, \
@@ -693,7 +690,7 @@ if __name__ == '__main__':
                     norm_check, column_list = load_data(
                         copy(ts), LME_dates, horizon, [ground_truth], lag,
                         copy(split_date), norm_params, tech_params,
-                        version_params, torch
+                        version_params
                     )
 
                     '''
