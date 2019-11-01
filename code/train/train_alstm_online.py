@@ -618,7 +618,7 @@ if __name__ == '__main__':
                 exit(0)
 
             length = 5
-            split_dates = rolling_half_year("2009-07-01","2019-01-01",length)
+            split_dates = rolling_half_year("2009-07-01","2019-07-01",length)
             # split_dates = split_dates[:]
             split_dates = split_dates[-5:-1]
             importance_list = []
@@ -631,13 +631,16 @@ if __name__ == '__main__':
                 len_ma = 5
                 len_update = 30
                 tol = 1e-7
+                """
                 if args.torch==1:
                     norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
                                 'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False, 'torch':True}
                 else:
                     norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
                                 'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False, 'torch':False}
-
+                """
+                norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
+                                'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False}
                 tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
                                                 'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
                 final_X_tr = []
