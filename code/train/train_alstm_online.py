@@ -11,7 +11,7 @@ from sklearn.metrics import accuracy_score, f1_score
 from copy import copy
 #import psutil
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
-from data.load_data_v16_torch import load_data
+from data.load_data import load_data
 from model.model_embedding import MultiHeadAttention, attention, bilstm
 from utils.construct_data import rolling_half_year
 from utils.version_control_functions import generate_version_params
@@ -570,13 +570,10 @@ if __name__ == '__main__':
         '-l','--lag', type=int, default=4, help='lag'
     )
     parser.add_argument(
-        '-v','--version', help='version', type = str, default = 'v10'
+        '-v','--version', help='version', type = str, default = 'v16'
     )
     parser.add_argument('-o', '--action', type=str, default='train',
                         help='train, test, tune')
-    #parser.add_argument('-xgb','--xgboost',type = int,help='if you want to train the xgboost you need to inform us of that',default=0)
-    parser.add_argument('-torch', '--torch', type=int, default=1,
-                        help='if you want to train the torch you need to set this parameter to 1')
     args = parser.parse_args()
     if args.ground_truth =='None':
         args.ground_truth = None
@@ -623,10 +620,10 @@ if __name__ == '__main__':
             length = 5
             split_dates = rolling_half_year("2009-07-01","2019-01-01",length)
             # split_dates = split_dates[:]
-            split_dates = split_dates[-4:]
+            split_dates = split_dates[-5:-1]
             importance_list = []
             version_params=generate_version_params(args.version)
-            for split_date in split_dates:
+            for s, split_date in enumerate(split_dates[:-1]):
                 horizon = args.steps
                 norm_volume = "v1"
                 norm_3m_spread = "v1"
@@ -667,7 +664,7 @@ if __name__ == '__main__':
                     spot_list = np.array(new_time_series[ground_truth])
                     new_time_series['spot_price'] = spot_list
 
-                    ts = new_time_series.loc[split_date[0]:split_date[2]]
+                    ts = new_time_series.loc[split_date[0]:split_dates[s+1][2]]
 
                     X_tr, y_tr, \
                     X_va, y_va, \
@@ -675,7 +672,7 @@ if __name__ == '__main__':
                     norm_check, column_list = load_data(
                         copy(ts), LME_dates, horizon, [ground_truth], lag,
                         copy(split_date), norm_params, tech_params,
-                        version_params, torch
+                        version_params
                     )
 
                     '''
