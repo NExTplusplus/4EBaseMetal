@@ -117,7 +117,7 @@ if __name__ == '__main__':
         #iterate over list of configurations
         for f in fname_columns:
             lag = args.lag
-
+            temp, stopholder = read_data_NExT(f, "2003-11-12")
             #read data
             if args.source == "NExT":
                 data_list, LME_dates = read_data_NExT(f, "2003-11-12")
@@ -125,7 +125,7 @@ if __name__ == '__main__':
             elif args.source == "4E":
                 from utils.read_data import read_data_v5_4E
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
-            temp, stopholder = read_data_NExT(f, "2003-11-12")
+            
             temp = pd.concat(temp, axis = 1, sort = True)
             columns = temp.columns.values.tolist()
             time_series = time_series[columns]
@@ -223,4 +223,4 @@ if __name__ == '__main__':
                     acc = pure_LogReg.test(final_X_va[i],final_y_va[i].flatten())
                     ans[split_date[1]].append(acc)
             ans["C"] = 6*ans["C"]
-            pd.DataFrame(ans).to_csv("_".join(["log_reg_online",args.version,str(args.lag),str(args.steps)+".csv"]))
+            pd.DataFrame(ans).to_csv("_".join(["log_reg_online",args.version,str(args.ground_truth[0]),str(args.steps)+".csv"]))
