@@ -191,7 +191,7 @@ if __name__ == '__main__':
                 if split_date[1] not in ans.keys():
                     ans[split_date[1]] = []
                 prob = pure_LogReg.predict_proba(X_va)[:,1]
-                np.savetxt(args.ground_truth[0]+str(args.steps)+"_"+split_date[1]+"_lr_"+args.version+"_probability.csv",prob,delimiter = ",")
+                np.savetxt(args.ground_truth[0]+str(args.steps)+"_"+split_date[1]+"_lr_"+args.version+"_probability.txt",prob)
                 acc = pure_LogReg.test(X_va,y_va.flatten())
                 ans[split_date[1]].append(acc)
             pd.DataFrame(ans).to_csv("_".join(["log_reg_online",args.version,str(args.ground_truth[0]),str(args.steps)+".csv"]))

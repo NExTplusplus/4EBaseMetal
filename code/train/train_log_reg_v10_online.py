@@ -218,7 +218,7 @@ if __name__ == '__main__':
                     if gt not in ans["ground_truth"]:
                         ans["ground_truth"].append(gt)
                     prob = pure_LogReg.predict_proba(final_X_va[i])[:,1]
-                    np.savetxt(gt+str(args.steps)+"_"+split_date[1]+"_lr_"+args.version+"_probability.csv",prob,delimiter = ",")
+                    np.savetxt(gt+str(args.steps)+"_"+split_date[1]+"_lr_"+args.version+"_probability.txt",prob)
                     # np.savetxt(gt+str(args.steps)+"_"+split_date[1]+"_label.csv",final_y_va[i],delimiter = ",")
                     acc = pure_LogReg.test(final_X_va[i],final_y_va[i].flatten())
                     ans[split_date[1]].append(acc)
