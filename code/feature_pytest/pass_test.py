@@ -217,7 +217,7 @@ def test_two():
                             print("version is {}".format(version))
                             print("the split date is {}".format(split_date))
                             print("the horizon is {}".format(horizon))
-
+                            final_y_va = final_y_va.flatten()
                             assert ((final_X_tr == true_data_x_tr).all())
                             assert ((final_y_tr == true_data_y_tr).all())
                             assert ((final_X_va == true_data_x_va).all())
