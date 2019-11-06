@@ -194,7 +194,7 @@ if __name__ == '__main__':
                 final_y_va = np.reshape(final_y_va,[np.shape(final_y_va)[0]*np.shape(final_y_va)[1],np.shape(final_y_va)[2]])
 
                 #tune logistic regression hyper parameter
-                for C in [0.00001,0.0001,0.001,0.01]:
+                for C in [0.0001,0.001,0.01,0.1,1.0,10,100]:
                     if C not in ans['C']:
                         ans["C"].append(C)
                     if split_date[1]+"_acc" not in ans.keys():

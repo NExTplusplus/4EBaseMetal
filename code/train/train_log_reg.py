@@ -170,7 +170,7 @@ if __name__ == '__main__':
                 y_va = np.concatenate(y_va)
 
                 #tune logistic regression hyper parameter
-                for C in [0.00001,0.0001,0.001,0.01]:
+                for C in [0.0001,0.001,0.01,0.1,1.0,10.0,100.0]:
                     if C not in ans['C']:
                         ans["C"].append(C)
                     if split_date[1]+"_acc" not in ans.keys():
