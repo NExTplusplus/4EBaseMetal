@@ -123,7 +123,7 @@ def test_two():
     action = "train"
     os.chdir(os.path.abspath(sys.path[0]))
     # read data configure file
-    data_configure_file = 'exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf'
+    data_configure_file = 'exp/online_v10.conf'
     with open(os.path.join(sys.path[0],data_configure_file)) as fin:
         fname_columns = json.load(fin)
     if action == 'train':
@@ -217,7 +217,7 @@ def test_two():
                             print("version is {}".format(version))
                             print("the split date is {}".format(split_date))
                             print("the horizon is {}".format(horizon))
-
+                            final_y_va = final_y_va.flatten()
                             assert ((final_X_tr == true_data_x_tr).all())
                             assert ((final_y_tr == true_data_y_tr).all())
                             assert ((final_X_va == true_data_x_va).all())

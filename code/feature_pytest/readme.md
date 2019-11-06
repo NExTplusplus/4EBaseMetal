@@ -6,11 +6,11 @@ pip install -U pytest
 
 ----test method
 after installing the pytest. You can run the below command to test all the feature:
-pytest pass_test.py
+pytest -v -s pass_test.py
 
 ----test specific method
 if you want to test the specific method:
-#only test the test_one
-pytest pass_test.py::test_one
-#only test the test_two 
-pytest pass_test.py::test_two
+--only test the test_one:
+pytest -v -s pass_test.py::test_one
+--only test the test_two: 
+pytest -v -s pass_test.py::test_two
