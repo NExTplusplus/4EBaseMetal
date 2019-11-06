@@ -123,7 +123,7 @@ def test_two():
     action = "train"
     os.chdir(os.path.abspath(sys.path[0]))
     # read data configure file
-    data_configure_file = 'exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf'
+    data_configure_file = 'exp/online_v10.conf'
     with open(os.path.join(sys.path[0],data_configure_file)) as fin:
         fname_columns = json.load(fin)
     if action == 'train':
