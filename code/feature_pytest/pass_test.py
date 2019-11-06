@@ -99,9 +99,13 @@ def test_one():
                             X_tr = np.concatenate(X_tr)
                             X_tr = X_tr.reshape(len(X_tr),lag*len(column_list[0]))
                             y_tr = np.concatenate(y_tr)
+                            y_tr = y_tr.reshape(1,len(X_tr))
+                            #print(y_tr)
                             X_va = np.concatenate(X_va)
-                            y_va = np.concatenate(y_va)
                             X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
+                            y_va = np.concatenate(y_va)
+                            y_va = y_va.reshape(1,len(X_va))
+                            #X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
                             """
                             after loading the feature, we now check whether the accurate feature is same with the feature from the load data
                             """
@@ -109,10 +113,11 @@ def test_one():
                             print("the split date is {}".format(split_date))
                             print("the horizon is {}".format(horizon))
                             print("the metal is {}".format(ground_truth))
-                            assert X_tr.all() == true_data_x_tr.all()
-                            assert y_tr.all() == true_data_y_tr.all()
-                            assert X_va.all() == true_data_x_va.all()
-                            assert y_va.all() == true_data_y_va.all()
+                            #print(X_tr == true_data_x_tr)
+                            assert ((X_tr == true_data_x_tr).all())
+                            assert ((y_tr == true_data_y_tr).all())
+                            assert ((X_va == true_data_x_va).all())
+                            assert ((y_va == true_data_y_va).all())
 
 def test_two():
     action = "train"
