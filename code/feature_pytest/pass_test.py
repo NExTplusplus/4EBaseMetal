@@ -76,14 +76,16 @@ def test_one():
                             len_ma = 5
                             len_update = 30
                             tol = 1e-7
-                            
+                            """
                             if version=="v7":
                                 norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
                                             'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':True}
                             else:
                                 norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
                                             'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False}
-                            
+                            """
+                            norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
+                                            'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False}
                             tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
                                                             'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
                             
@@ -152,12 +154,7 @@ def test_one():
                             len_ma = 5
                             len_update = 30
                             tol = 1e-7
-                            
-                            if version=="v7":
-                                norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
-                                            'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':True}
-                            else:
-                                norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
+                            norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
                                             'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False}
                             
                             tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
@@ -176,6 +173,9 @@ def test_one():
                             X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
                             y_va = np.concatenate(y_va)
                             y_va = y_va.reshape(1,len(X_va))
+                            #print(y_va)
+                            #y_va[1]=3
+                            #print(y_va)
                             #X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
                             """
                             after loading the feature, we now check whether the accurate feature is same with the feature from the load data
@@ -189,6 +189,8 @@ def test_one():
                             assert ((y_tr == true_data_y_tr).all())
                             assert ((X_va == true_data_x_va).all())
                             assert ((y_va == true_data_y_va).all())
+
+
 
 def test_two():
     action = "train"
@@ -288,6 +290,7 @@ def test_two():
                             print("version is {}".format(version))
                             print("the split date is {}".format(split_date))
                             print("the horizon is {}".format(horizon))
+                            final_y_tr = final_y_tr.flatten()
                             final_y_va = final_y_va.flatten()
                             assert ((final_X_tr == true_data_x_tr).all())
                             assert ((final_y_tr == true_data_y_tr).all())
