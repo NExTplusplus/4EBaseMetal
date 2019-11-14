@@ -435,6 +435,66 @@ def technical_indication_v2_ex3(X,train_end,params,ground_truth_columns):
                 
                 
     return X
+
+def technical_indication_v3(X,train_end,params,ground_truth_columns):
+    """
+    X: which equals the timeseries
+    train_end: string which we use to define the range we use to train
+    params: A dictionary we use to feed the parameter
+    """
+    print('====================================technical indicator_v3========================================')
+    cols = X.columns.values.tolist()
+    for col in cols:
+        setting = col[:-5]
+        ground_truth = ground_truth_columns[0][4:6]
+        if setting+"Close" == col or setting+'_Spot' == col:
+        
+            for i in range(len(params['Win_EMA'])):
+                X[col+"_EMA"+str(params['Win_EMA'][i])] = ema(copy(X[col]),params['Win_EMA'][i])
+                X[col+"_WMA"+str(params['Win_EMA'][i])] = wma(copy(X[col]),params['Win_EMA'][i])
+                
+            for i in range(len(params['Win_Bollinger'])):
+                X[col+"_bollinger"+str(params['Win_Bollinger'][i])] = bollinger(copy(X[col]),params['Win_Bollinger'][i])
+            
+            for i in range(len(params['Win_MOM'])):
+                X[col+"_Mom"+str(params['Win_MOM'][i])] = mom(copy(X[col]),params['Win_MOM'][i])
+            
+            for i in range(len(params['PPO_Fast'])):
+                X[col+"_PPO"+str(params['PPO_Fast'][i])] = ppo(copy(X[col]),params['PPO_Fast'][i],params['PPO_Slow'][i])
+            
+            for i in range(len(params['Win_RSI'])):
+                X[col+"_RSI"+str(params['Win_RSI'][i])] = rsi(copy(X[col]),params['Win_RSI'][i])
+                
+            if setting+"Close" == col and setting+"Volume" in cols:
+                print("+".join((col,setting+"Volume"))+"=>"+"+".join((setting+"PVT",setting+"divPVT")))
+                X[setting+"PVT"] = pvt(copy(X.index),copy(X[col]),copy(X[setting+"Volume"]))
+                X[setting+"divPVT"] = divergence_pvt(copy(X[col]),copy(X[setting+"Volume"]),train_end, 
+                                                            params = params)
+            
+            if setting + 'Close' == col and setting+'High' in cols and setting+'Low' in cols:
+    
+                for i in range(len(params['Win_NATR'])):    
+                    X[setting+'NATR'+str(params['Win_NATR'][i])] = natr(X[setting+"High"],X[setting+"Low"],X[col],params['Win_NATR'][i])
+                
+                for i in range(len(params['Win_CCI'])):
+                    X[setting+'CCI'+str(params['Win_CCI'][i])] = cci(X[setting+"High"],X[setting+"Low"],X[col],params['Win_CCI'][i])
+                    
+                for i in range(len(params['Win_VBM'])):    
+                    X[setting+'VBM'+str(params['Win_VBM'][i])] = VBM(X[setting+"High"],X[setting+"Low"],X[col],params['Win_VBM'][i],params['v_VBM'][i])
+                
+                for i in range(len(params['Win_ADX'])):
+                    X[setting+'ADX'+str(params['Win_ADX'][i])] = ADX(X[setting+"High"],X[setting+"Low"],X[col],params['Win_ADX'][i])
+                    
+                X[setting+'SAR'] = SAR(X[setting+"High"],X[setting+"Low"],X[col],params['acc_initial'],params['acc_maximum'])
+        
+        if setting+"_Open" == col:
+            if setting+'High' in cols and setting+'Low' in cols:
+                for i in range(len(params['Win_VSD'])):
+                    X[setting+"VSD"+str(params['Win_VSD'][i])] = vsd(X[setting+"High"],X[setting+"Low"],X[col],params['Win_VSD'][i])
+            
+                
+    return X
+
 #generate strategy signals
 def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activation_params,cov_inc,mnm):
     
@@ -627,6 +687,20 @@ def remove_unused_columns_v3(time_series,org_cols,ground_truth):
                 time_series = time_series.drop(col,axis = 1)
     print(time_series.columns)       
     return time_series,org_cols
+# remove a list of columns with an additional label v3, simplified version of v7
+# keep both original indicators and technical indicators for LME_ground_truth
+def remove_unused_columns_v4(time_series,org_cols,ground_truth):
+    print("#####################remove_unused_columns_v4#####################")
+    target = ground_truth[0][:-5]
+    print("target",target)
+    for col in copy(time_series.columns):
+        if target not in col or col==target+'_OI' or col==target+'_Volume':
+            time_series = time_series.drop(col,axis = 1)
+            if col in org_cols:
+                org_cols.remove(col)
+
+    print(time_series.columns)
+    return time_series,org_cols
 
 #this function is to scale the data use the standardscaler
 def scaling_v1(X,train_end):
@@ -702,6 +776,37 @@ def construct_v2(time_series, ground_truth, start_ind, end_ind, T, h):
         like lag1-lag10.
     '''
     lags = [x for x in range(0,T+1) if x%5==0]
+    for ind in range(start_ind, end_ind):
+        if not time_series.iloc[[ind-x for x in lags]].isnull().values.any():
+            num += 1
+    X = np.zeros([num, len(lags), time_series.shape[1]], dtype=np.float32)
+    y = np.zeros([num, 1], dtype=np.float32)
+    #construct the data by the time index
+    sample_ind = 0
+    for ind in range(start_ind, end_ind):
+        if not time_series.iloc[[ind-x for x in lags]].isnull().values.any():
+            X[sample_ind] = time_series.values[[ind-x for x in lags], :]
+            y[sample_ind, 0] = ground_truth.values[ind]
+            sample_ind += 1
+    
+
+    return X,y
+
+def construct_v3(time_series, ground_truth, start_ind, end_ind, T, h):
+    print("#########################construct_v3############################")
+    num = 0
+    '''
+        convert 2d numpy array of time series data into 3d numpy array, with extra dimension for lags, i.e.
+        input of (n_samples, n_features) becomes (n_samples, T, n_features)
+        time_series (2d np.array): financial time series data
+        ground_truth (1d np.array): column which is used as ground truth
+        start_index (string): string which is the date that we wish to begin including from.
+        end_index (string): string which is the date that we wish to include last.
+        T (int): number of lags
+        Considering the auto-correlaiton between features will weaken the power of XGBoost Model,
+        only use the feature of current time point.
+    '''
+    lags = [0]
     for ind in range(start_ind, end_ind):
         if not time_series.iloc[[ind-x for x in lags]].isnull().values.any():
             num += 1
