@@ -16,8 +16,11 @@ def generate_version_params(version):
     v = ver[0]
     ex = ver[1] if len(ver) > 1 else None
 
-    if v == "v7":
+    if v == "v7" or v=="v3":
         ans['technical_indication'] = "v2"
+        if v=="v3":
+            ans['remove_unused_columns'] = "v4"
+    
     if v == "v9" or v == "v10" or v == "v11" or v == "v12" or v=="v14" or v=="v16" or v=="v18" or v=="v20" or v=="v22":
         if v == "v9":
             ans["generate_strat_params"]="v1"
@@ -52,7 +55,15 @@ def generate_version_params(version):
             ans["price_normalization"] = None
             
         ans["scaling"] = None
-
+        
+    if v=="v24":
+        ans['technical_indication'] = "v3"
+        ans['remove_unused_columns'] = "v2"
+        ans["construct"]="v3"
+        ans["normalize_without_1d_return"] = None
+        ans["price_normalization"] = None
+        ans["scaling"] = None
+        
     if ex == "ex1":
         ans['labelling'] = "v1_ex1"
     if ex == "ex2":
@@ -213,6 +224,12 @@ def technical_indication(arguments, version):
         '''
         return technical_indication_v2_ex3(time_series,time_series.index.get_loc(arguments['split_dates'][1]),
                                         arguments['tech_params'],arguments['ground_truth_columns'])
+    elif version == "v3":
+        '''
+        automated generation of technical indicators for all possible combinations (only LME Ground Truth)
+        '''
+        return technical_indication_v3(time_series,time_series.index.get_loc(arguments['split_dates'][1]),
+                                        arguments['tech_params'],arguments['ground_truth_columns'])
     
 
 
@@ -237,6 +254,14 @@ def remove_unused_columns(arguments, version,ground_truth):
         '''
         print("Remove Columns Version3")
         return remove_unused_columns_v3(time_series,arguments['org_cols'],ground_truth)
+    if version == "v4":
+        '''
+        remove columns that will not be used in model
+        '''
+        print("Remove Columns Version4")
+        print("ground_truth",ground_truth)
+    
+        return remove_unused_columns_v4(time_series,arguments['org_cols'],ground_truth)
 
 
 
@@ -315,6 +340,13 @@ def construct(ind, arguments, version):
         construct ndarray for discrete lags
         '''
         return construct_v2(time_series[ind][arguments['all_cols'][ind]], time_series[ind]["Label"], 
+                    arguments['start_ind'], arguments['end_ind'], 
+                    arguments['lags'], arguments['horizon'])
+    elif version == "v3":
+        '''
+        construct ndarray for no lag
+        '''
+        return construct_v3(time_series[ind][arguments['all_cols'][ind]], time_series[ind]["Label"], 
                     arguments['start_ind'], arguments['end_ind'], 
                     arguments['lags'], arguments['horizon'])
 
