@@ -765,6 +765,7 @@ class Logistic_online():
 			tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
 											'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
 			ts = copy(time_series.loc[split_dates[0]:split_dates[2]])
+			date_list = time_series.loc[split_dates[1]:split_dates[2]].index.values.tolist()
 			for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
 				print(ground_truth)
 				metal_id = [0,0,0,0,0,0]
@@ -801,4 +802,12 @@ class Logistic_online():
 				if gt==self.gt:
 					#model = pure_LogReg.load(self.version, self.gt, self.horizon, self.lag)
 					prob = model.predict(final_X_va[i])
-			return prob
+					final_list = []
+					piece_list = []
+					for i,date in enumerate(date_list):
+						piece_list.append(date)
+						piece_list.append(prob[i])
+						final_list.append(piece_list)
+						piece_list=[]
+					final_dataframe = pd.DataFrame(final_list, columns=['date','result'])
+					return final_dataframe
