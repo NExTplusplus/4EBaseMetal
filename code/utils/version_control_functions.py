@@ -7,7 +7,7 @@ def generate_version_params(version):
         input:  version : a string which refers to the version of data preprocessing required
         output: ans     : a dictionary that holds the required version for each process within load data
     '''
-    ans = { "generate_strat_params":None,
+    ans = { "generate_norm_params":"v1","generate_tech_params":"v1","generate_strat_params":None,
             "deal_with_abnormal_value":"v2", "labelling":"v1", "process_missing_value":"v1", "strategy_signal":None,
             "normalize_without_1d_return": "v1", "technical_indication":"v1",
             "remove_unused_columns":"v1", "price_normalization":"v1", "scaling":"v1",
@@ -15,7 +15,6 @@ def generate_version_params(version):
     ver = version.split("_")
     v = ver[0]
     ex = ver[1] if len(ver) > 1 else None
-
     if v == "v7" or v=="v3":
         ans['technical_indication'] = "v2"
         if v=="v3":
@@ -56,7 +55,8 @@ def generate_version_params(version):
             
         ans["scaling"] = None
         
-    if v=="v24":
+    if v=="v23":
+        ans["generate_tech_params"]:"v2"
         ans['technical_indication'] = "v3"
         ans['remove_unused_columns'] = "v2"
         ans["construct"]="v3"
@@ -72,6 +72,18 @@ def generate_version_params(version):
     if ex == "ex3":
         ans['technical_indication'] = ans['technical_indication']+"_ex3"
     return ans
+
+def generate_norm_params(version):
+    if version == "v1":
+        return {'vol_norm':'v1','ex_spread_norm':'v1','spot_spread_norm':'v1','len_ma':5,'len_update':30,'both':3,'strength':0.01,'xgboost':False}
+def generate_tech_params(version):
+    if version == "v1":
+        return {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
+    elif version == "v2":
+        return {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':[12,26,40,65,125],'Win_Bollinger':[5,10,15,20,30,65],
+                               'Win_MOM':[5,10,15,26,40,65,125],'PPO_Fast':[12,22],'PPO_Slow':[26,65],'Win_NATR':[14,26,65,125],'Win_VBM':[12,22],'v_VBM':[26,65],
+                               'acc_initial':0.02,'acc_maximum':0.2,'Win_CCI':[12,26,40,65,125],'Win_ADX':[14,26,40,54,125],'Win_RSI':[14,26,40,54,125]}
+
 
 def generate_strat_params(ground_truth,steps,version):
     if version is None:
