@@ -92,7 +92,7 @@ if __name__ == '__main__':
             ans = None
             temp_ans = {}
             all_file = []
-            ground_truth_columns = copy(ground_truth_list)
+            ground_truth_columns = copy(args.ground_truth_list)
             for h in args.step_list:
                 for gt in ground_truth_columns:
                     path = gt+"_xgboost_h"+h+"_"+version+"_1718.txt"
