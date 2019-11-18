@@ -88,11 +88,11 @@ class Logistic_online():
 						print("the data is not enough for training")
 						os.exit(0)
 					else:
-						start_year = int(year)-10
+						start_year = int(year)-8
 						start_time = str(start_year)+"-07-01"
 						end_time = str(today)
 				else:
-					start_year = int(year)-10
+					start_year = int(year)-8
 					start_time = str(start_year)+"-07-01"
 					end_time = str(today)
 			else:
@@ -103,13 +103,13 @@ class Logistic_online():
 						os.exit(0)
 					else:
 						year = str(today).split("-")[0]
-						start_year = int(year)-9
+						start_year = int(year)-7
 						end_year = int(year)
 						start_time = str(start_year)+"-01-01"
 						end_time = str(end_year)+"-07-01"
 				else:
 					year = str(today).split("-")[0]
-					start_year = int(year)-9
+					start_year = int(year)-7
 					end_year = int(year)
 					start_time = str(start_year)+"-01-01"
 					end_time = str(end_year)+"-07-01"
@@ -219,11 +219,11 @@ class Logistic_online():
 						print("the data is not enough for training")
 						os.exit(0)
 					else:
-						start_year = int(year)-10
+						start_year = int(year)-8
 						start_time = str(start_year)+"-07-01"
 						end_time = str(today)
 				else:
-					start_year = int(year)-10
+					start_year = int(year)-8
 					start_time = str(start_year)+"-07-01"
 					end_time = str(today)
 			else:
@@ -234,18 +234,18 @@ class Logistic_online():
 						os.exit(0)
 					else:
 						year = str(today).split("-")[0]
-						start_year = int(year)-9
+						start_year = int(year)-7
 						end_year = int(year)
 						start_time = str(start_year)+"-01-01"
 						end_time = str(end_year)+"-07-01"
 				else:
 					year = str(today).split("-")[0]
-					start_year = int(year)-9
+					start_year = int(year)-7
 					end_year = int(year)
 					start_time = str(start_year)+"-01-01"
 					end_time = str(end_year)+"-07-01"
 			length = 5
-			split_dates = rolling_half_year("2009-07-01","2017-07-01",length)
+			split_dates = rolling_half_year(start_time,end_time,length)
 			split_dates  =  split_dates[:]
 			importance_list = []
 			"""
