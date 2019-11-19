@@ -42,13 +42,16 @@ if __name__ == '__main__':
                 if version in ["v10","v12"]:
                     ground_truth_list = ["all"]
                     exp = "exp/online_v10.conf"
+                    train = "code/train/train_log_reg_v10_online.py"
                 elif version in ["v5","v7"]:
                     exp = "exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf"
+                    train = "code/train/train_log_reg_online.py"
                 elif version in ["v3"]:
                     exp = "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf"
+                    train = "code/train/train_log_reg_online.py"
                 elif version in ["v9"]:
                     exp = "exp/online_v10.conf"
-
+                    train = "code/train/train_log_reg_online.py"
                 for gt in ground_truth_list:
                     for h in args.step_list:
                         total = pd.DataFrame()
@@ -76,7 +79,7 @@ if __name__ == '__main__':
                         temp = pd.DataFrame({"true_average":np.true_divide(temp_arr['average'],temp_arr['length'])})
                         ans = pd.concat([total,temp],axis = 1).sort_values(by = ["true_average","lag","C"], ascending = [False,True,True])
 
-                        out.write("python train_data.py "+" ".join(["-sou",args.source,"-v",version,"-c",exp,"-s",h,"-l",str(ans.iloc[0,0]),"-C",str(ans.iloc[0,2]),"-gt",gt,"-xgb",str(xgb),">",gt+"_"+h+"_"+version+"_1718.txt", "2>&1", "&"]))
+                        out.write("python "+train+" ".join(["-sou",args.source,"-v",version,"-c",exp,"-s",h,"-l",str(ans.iloc[0,0]),"-C",str(ans.iloc[0,2]),"-gt",gt,"-xgb",str(xgb),">",gt+"_"+h+"_"+version+"_1718.txt", "2>&1", "&"]))
                         out.write("\n")
                         i+=1
                         if i%9 == 0:

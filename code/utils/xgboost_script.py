@@ -5,8 +5,6 @@ from multiprocessing import Pool as pl
 from itertools import product
 import argparse
 import os
-import sys
-sys.insert(0,os.path.abspath(sys.path[0],"..",".."))
 
 if __name__ == '__main__':
     desc = 'the script for XGBoost'
@@ -55,13 +53,17 @@ if __name__ == '__main__':
                 xgb = 0
                 if version in ["v10","v12"]:
                     ground_truth_list = ["all"]
+                    train = "code/train/train_xgboost_online_v10_ex2.py"
                     exp = "exp/online_v10.conf"
                 elif version in ["v5","v7"]:
                     exp = "exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf"
+                    train = "code/train/train_xgboost_online.py"
                 elif version in ["v3"]:
                     exp = "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf"
+                    train = "code/train/train_xgboost_online.py"
                 elif version in ["v9"]:
                     exp = "exp/online_v10.conf"
+                    train = "code/train/train_xgboost_online.py"
 
                 for gt in ground_truth_list:
                     for h in args.step_list:
@@ -70,7 +72,7 @@ if __name__ == '__main__':
                             f = pd.read_csv(os.path.join(args.path,'_'.join([gt.split("_")[1],version,lag,"h"+h])+".csv").iloc[:5,:])
                             total = pd.concat([total,f],axis = 0)
                         total = total.sort_values(by=['result','lag','max_depth','learning_rate','gamma','min_child_weigh','subsample'],ascending=[False,True,True,True,True,True,True]).reset_index(drop = True)
-                        out.write(" ".join(["python xgboost.py",
+                        out.write(" ".join(["python",train,
                           "-gt",gt,
                           "-l",str(total.iloc[0,0]),
                           "-s",h,
@@ -99,7 +101,7 @@ if __name__ == '__main__':
             for h in args.step_list:
                 for gt in ground_truth_columns:
                     for lag in args.lag_list:
-                        path = gt.split("_")[1]+"_l"+lag+"_h"+h+"_"+version+"_1718.txt"
+                        path = gt.split("_")[1]+"_h"+h+"_"+version+"_1718.txt"
                         sub_file = []
                         all_voting_Str = 'the all folder voting precision is'
                         lag_Str = 'the lag is'
