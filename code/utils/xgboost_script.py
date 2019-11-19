@@ -5,19 +5,21 @@ from multiprocessing import Pool as pl
 from itertools import product
 import argparse
 import os
+import sys
+sys.insert(0,os.path.abspath(sys.path[0],"..",".."))
 
 if __name__ == '__main__':
     desc = 'the script for XGBoost'
     parser = argparse.ArgumentParser(description=desc)
-    parser.add_argument('-s','--step_list',type=str,default="1",
+    parser.add_argument('-s','--step_list',type=str,default="1,3,5",
                         help='list of horizons to be calculated, separated by ","')
     parser.add_argument('-gt', '--ground_truth_list', help='list of ground truths, separated by ","',
-                        type=str, default="LME_Co_Spot")
+                        type=str, default="LME_Co_Spot,LME_Al_Spot,LME_Ni_Spot,LME_Ti_Spot,LME_Zi_Spot,LME_Le_Spot")
     parser.add_argument(
         '-sou','--source', help='source of data to be inserted into commands', type = str, default = "4E"
     )
     parser.add_argument(
-        '-l','--lag_list', type=str, default = 5, help='list of lags, separated by ","'
+        '-l','--lag_list', type=str, default = '1,5,10,20', help='list of lags, separated by ","'
     )
     parser.add_argument(
         '-v','--version_list', help='list of versions, separated by ","', type = str, default = 'v10'
@@ -25,6 +27,7 @@ if __name__ == '__main__':
     parser.add_argument ('-out','--output',type = str, help='output file', default ="../../../Results/results")
     parser.add_argument('-o', '--action', type=str, default='commands',
                         help='tuning,commands, testing')
+    parser.add_argument('-p','--path',type =str, help='path to 4EBaseMetal folder',default ='NEXT/4EBaseMetal')
 
     args = parser.parse_args()
     args.step_list = args.step_list.split(",")
@@ -37,7 +40,7 @@ if __name__ == '__main__':
         path_list = []
         combinations = product(args.ground_truth_list,args.lag_list,args.step_list,args.version_list)
         for c in combinations:
-            path_list.append("_".join(c[0].split("_")[1],"xgboost","l"+c[1],"h"+c[2],c[3])+".txt")
+            path_list.append(os.path.join(args.path,"_".join(c[0].split("_")[1],"xgboost","l"+c[1],"h"+c[2],c[3])+".txt"))
         pool = pl()
         results = pool.starmap_async(retrieve_top,path_list)
         pool.close()
@@ -64,7 +67,7 @@ if __name__ == '__main__':
                     for h in args.step_list:
                         total = pd.DataFrame()
                         for lag in args.lag_list:
-                            f = pd.read_csv('_'.join([gt.split("_")[1],version,lag,"h"+h])+".csv").iloc[:5,:]
+                            f = pd.read_csv(os.path.join(args.path,'_'.join([gt.split("_")[1],version,lag,"h"+h])+".csv").iloc[:5,:])
                             total = pd.concat([total,f],axis = 0)
                         total = total.sort_values(by=['result','lag','max_depth','learning_rate','gamma','min_child_weigh','subsample'],ascending=[False,True,True,True,True,True,True]).reset_index(drop = True)
                         out.write(" ".join(["python xgboost.py",
@@ -95,26 +98,27 @@ if __name__ == '__main__':
             ground_truth_columns = copy(args.ground_truth_list)
             for h in args.step_list:
                 for gt in ground_truth_columns:
-                    path = gt+"_xgboost_h"+h+"_"+version+"_1718.txt"
-                    sub_file = []
-                    all_voting_Str = 'the all folder voting precision is'
-                    lag_Str = 'the lag is'
-                    if path in os.listdir(os.path.join(os.curdir,"xgboost_res")):
-                        with open(os.path.join(os.curdir,"xgboost_res",path),"r") as f:
-                            lines = f.readlines()
-                            for i,line in enumerate(lines):
-                                if all_voting_Str.lower() in line.lower():
-                                    file = []
-                                    file.append(float(line.strip("\n").split(" ")[-1]))
-                                    sub_file.append(file)
-                                    if lag_Str.lower() in lines[i+1].lower():
-                                        for result in sub_file:
-                                            result.append(lines[i+1].strip("\n").split(" ")[-1])
-                                            result.append(lines[i+3].strip("\n").split(" ")[-1])
-                                        all_file+=sub_file
-                                        sub_file = []
-                    else:
-                        continue
+                    for lag in args.lag_list:
+                        path = gt.split("_")[1]+"_l"+lag+"_h"+h+"_"+version+"_1718.txt"
+                        sub_file = []
+                        all_voting_Str = 'the all folder voting precision is'
+                        lag_Str = 'the lag is'
+                        if path in os.listdir(args.path):
+                            with open(os.path.join(args.path,path),"r") as f:
+                                lines = f.readlines()
+                                for i,line in enumerate(lines):
+                                    if all_voting_Str.lower() in line.lower():
+                                        file = []
+                                        file.append(float(line.strip("\n").split(" ")[-1]))
+                                        sub_file.append(file)
+                                        if lag_Str.lower() in lines[i+1].lower():
+                                            for result in sub_file:
+                                                result.append(lines[i+1].strip("\n").split(" ")[-1])
+                                                result.append(lines[i+3].strip("\n").split(" ")[-1])
+                                            all_file+=sub_file
+                                            sub_file = []
+                        else:
+                            continue
             for arr in all_file:
                 if arr[2] not in temp_ans.keys():
                     temp_ans[arr[2]] = [arr[0]]
