@@ -100,27 +100,26 @@ if __name__ == '__main__':
             ground_truth_columns = copy(args.ground_truth_list)
             for h in args.step_list:
                 for gt in ground_truth_columns:
-                    for lag in args.lag_list:
-                        path = gt.split("_")[1]+"_h"+h+"_"+version+"_1718.txt"
-                        sub_file = []
-                        all_voting_Str = 'the all folder voting precision is'
-                        lag_Str = 'the lag is'
-                        if path in os.listdir(args.path):
-                            with open(os.path.join(args.path,path),"r") as f:
-                                lines = f.readlines()
-                                for i,line in enumerate(lines):
-                                    if all_voting_Str.lower() in line.lower():
-                                        file = []
-                                        file.append(float(line.strip("\n").split(" ")[-1]))
-                                        sub_file.append(file)
-                                        if lag_Str.lower() in lines[i+1].lower():
-                                            for result in sub_file:
-                                                result.append(lines[i+1].strip("\n").split(" ")[-1])
-                                                result.append(lines[i+3].strip("\n").split(" ")[-1])
-                                            all_file+=sub_file
-                                            sub_file = []
-                        else:
-                            continue
+                    path = gt.split("_")[1]+"_h"+h+"_"+version+"_1718.txt"
+                    sub_file = []
+                    all_voting_Str = 'the all folder voting precision is'
+                    lag_Str = 'the lag is'
+                    if path in os.listdir(args.path):
+                        with open(os.path.join(args.path,path),"r") as f:
+                            lines = f.readlines()
+                            for i,line in enumerate(lines):
+                                if all_voting_Str.lower() in line.lower():
+                                    file = []
+                                    file.append(float(line.strip("\n").split(" ")[-1]))
+                                    sub_file.append(file)
+                                    if lag_Str.lower() in lines[i+1].lower():
+                                        for result in sub_file:
+                                            result.append(lines[i+1].strip("\n").split(" ")[-1])
+                                            result.append(lines[i+3].strip("\n").split(" ")[-1])
+                                        all_file+=sub_file
+                                        sub_file = []
+                    else:
+                        continue
             for arr in all_file:
                 if arr[2] not in temp_ans.keys():
                     temp_ans[arr[2]] = [arr[0]]

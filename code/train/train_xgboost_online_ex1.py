@@ -108,45 +108,22 @@ if __name__ == '__main__':
                                 'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False}
                 tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
                                                 'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
-                final_X_tr = []
-                final_y_tr = []
-                final_X_va = []
-                final_y_va = []
-                final_X_te = []
-                final_y_te = [] 
+
                 ts = copy(time_series.loc[split_date[0]:split_dates[s+1][2]])
                 i = 0
 
-                #iterate over different ground truths
-                for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
-                    print(ground_truth)
-                    metal_id = [0,0,0,0,0,0]
-                    metal_id[i] = 1
 
-                    #load data
-                    X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,split_date,norm_params,tech_params,version_params)
+                #load data
+                X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,split_date,norm_params,tech_params,version_params)
 
-                    #post load process and metal id extension
-                    X_tr = np.concatenate(X_tr)
-                    X_tr = X_tr.reshape(len(X_tr),lag*len(column_list[0]))
-                    X_tr = np.append(X_tr,[metal_id]*len(X_tr),axis = 1)
-                    y_tr = np.concatenate(y_tr)
-                    X_va = np.concatenate(X_va)
-                    X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
-                    X_va = np.append(X_va,[metal_id]*len(X_va),axis = 1)
-                    y_va = np.concatenate(y_va)
-                    final_X_tr.append(X_tr)
-                    final_y_tr.append(y_tr)
-                    final_X_va.append(X_va)
-                    final_y_va.append(y_va)
-                    i+=1
-                
-
-                #sort by time not metal
-                final_X_tr = [np.transpose(arr) for arr in np.dstack(final_X_tr)]
-                final_y_tr = [np.transpose(arr) for arr in np.dstack(final_y_tr)]
-                final_X_tr = np.reshape(final_X_tr,[np.shape(final_X_tr)[0]*np.shape(final_X_tr)[1],np.shape(final_X_tr)[2]])
-                final_y_tr = np.reshape(final_y_tr,[np.shape(final_y_tr)[0]*np.shape(final_y_tr)[1],np.shape(final_y_tr)[2]])
+                #post load process and metal id extension
+                X_tr = np.concatenate(X_tr)
+                X_tr = X_tr.reshape(len(X_tr),lag*len(column_list[0]))
+                y_tr = np.concatenate(y_tr)
+                X_va = np.concatenate(X_va)
+                X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
+                y_va = np.concatenate(y_va)
+                i+=1
 
                 
                 column_lag_list = []
@@ -155,59 +132,51 @@ if __name__ == '__main__':
                     for item in column_list[0]:
                         new_item = item+"_"+str(lag-i)
                         column_lag_list.append(new_item)
-                column_lag_list.append("Co")
-                column_lag_list.append("Al")
-                column_lag_list.append("Ni")
-                column_lag_list.append("Ti")
-                column_lag_list.append("Zi")
-                column_lag_list.append("Le")
-                train_dataframe = pd.DataFrame(final_X_tr,columns=column_lag_list)
+                train_dataframe = pd.DataFrame(X_tr,columns=column_lag_list)
                 train_X = train_dataframe.loc[:,column_lag_list]
-                train_y = pd.DataFrame(final_y_tr,columns=['result'])
+                train_y = pd.DataFrame(y_tr,columns=['result'])
                 
 
                 #iterate over ground truths for testing
-                for i,gt in enumerate(["LMCADY","LMAHDY","LMNIDY","LMSNDY","LMZSDY","LMPBDY"]):
-                    print("ground truth is "+gt)
-                    test_dataframe = pd.DataFrame(final_X_va[i],columns=column_lag_list)
-                    test_X = test_dataframe.loc[:,column_lag_list] 
-                    n_splits=args.k_folds
-                    from sklearn.metrics import accuracy_score
-                    model = xgb.XGBClassifier(max_depth=args.max_depth,
-                                learning_rate = args.learning_rate,
-                                n_estimators=500,
-                                silent=True,
-                                nthread=10,
-                                gamma=args.gamma,
-                                min_child_weight=args.min_child,
-                                subsample=args.subsample,
-                                colsample_bytree=0.7,
-                                colsample_bylevel=1,
-                                reg_alpha=0.0001,
-                                reg_lambda=1,
-                                scale_pos_weight=1,
-                                seed=1440,
-                                missing=None)
-                    folds = KFold(n_splits=n_splits)
-                    scores = []
-                    prediction = np.zeros((len(X_va), 1))
-                    folder_index = []
+                test_dataframe = pd.DataFrame(X_va,columns=column_lag_list)
+                test_X = test_dataframe.loc[:,column_lag_list] 
+                n_splits=args.k_folds
+                from sklearn.metrics import accuracy_score
+                model = xgb.XGBClassifier(max_depth=args.max_depth,
+                            learning_rate = args.learning_rate,
+                            n_estimators=500,
+                            silent=True,
+                            nthread=10,
+                            gamma=args.gamma,
+                            min_child_weight=args.min_child,
+                            subsample=args.subsample,
+                            colsample_bytree=0.7,
+                            colsample_bylevel=1,
+                            reg_alpha=0.0001,
+                            reg_lambda=1,
+                            scale_pos_weight=1,
+                            seed=1440,
+                            missing=None)
+                folds = KFold(n_splits=n_splits)
+                scores = []
+                prediction = np.zeros((len(X_va), 1))
+                folder_index = []
 
-                    #only use last fold
-                    for fold_n, (train_index, valid_index) in enumerate(folds.split(train_X)):
-                    #print("the train_index is {}".format(train_index))
-                    #print("the test_index is {}".format(valid_index))
-                        if fold_n != 9:
-                            continue
-                        X_train, X_valid = train_X[column_lag_list].iloc[train_index], train_X[column_lag_list].iloc[valid_index]
-                        y_train, y_valid = train_y.iloc[train_index], train_y.iloc[valid_index]
-                        model.fit(X_train, y_train,eval_metric='error',verbose=True,eval_set=[(X_valid,y_valid)],early_stopping_rounds=5)
-                        y_pred_valid = model.predict(X_valid)
-                        y_pred = model.predict_proba(test_X, ntree_limit=model.best_ntree_limit)[:, 1]
-                        y_pred = y_pred.reshape(-1, 1)
-                        y_pred = [1 if y > 0.5 else 0 for y in y_pred]
-                    #print("the lag is {}".format(lag))
-                    print("the all folder voting precision is {}".format(metrics.accuracy_score(final_y_va[i], y_pred)))
+                #only use last fold
+                for fold_n, (train_index, valid_index) in enumerate(folds.split(train_X)):
+                #print("the train_index is {}".format(train_index))
+                #print("the test_index is {}".format(valid_index))
+                    if fold_n != 9:
+                        continue
+                    X_train, X_valid = train_X[column_lag_list].iloc[train_index], train_X[column_lag_list].iloc[valid_index]
+                    y_train, y_valid = train_y.iloc[train_index], train_y.iloc[valid_index]
+                    model.fit(X_train, y_train,eval_metric='error',verbose=True,eval_set=[(X_valid,y_valid)],early_stopping_rounds=5)
+                    y_pred_valid = model.predict(X_valid)
+                    y_pred = model.predict_proba(test_X, ntree_limit=model.best_ntree_limit)[:, 1]
+                    y_pred = y_pred.reshape(-1, 1)
+                    y_pred = [1 if y > 0.5 else 0 for y in y_pred]
+                #print("the lag is {}".format(lag))
+                print("the all folder voting precision is {}".format(metrics.accuracy_score(y_va, y_pred)))
                 print("the lag is {}".format(lag))
                 print("the train date is {}".format(split_date[0]))
                 print("the test date is {}".format(split_date[1]))

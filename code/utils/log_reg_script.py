@@ -24,7 +24,7 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--action', type=str, default='commands',
                         help='commands, testing')
                         
-    parser.add_argument('-p','--path',type =str, help='path to 4EBaseMetal folder',default ='NEXT/4EBaseMetal')
+    parser.add_argument('-p','--path',type =str, help='path to 4EBaseMetal folder',default ='/NEXT/4EBaseMetal')
 
     args = parser.parse_args()
     args.step_list = args.step_list.split(",")
