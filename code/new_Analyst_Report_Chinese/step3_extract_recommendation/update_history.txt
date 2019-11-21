@@ -1,0 +1,9 @@
+#update date: 2019-10-09
+This time will update the following things:
+
+1) Do the post-process for the recommend table, such as, excluding the recommend containg the data table, excluding the irrelerant text.
+
+2) Use the Aip to get the sentiment score, and insert this score into the database.
+
+P.S. this version doesn't have the online version, so jiaxian will keep updatung this for the following time.
+#######################################################################################################################################################################

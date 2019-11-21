@@ -12,3 +12,10 @@ This time will update the following things:
 
 P.S.This version is based on the online version of Duncheng in the github, and after this version, we will continue to optimize based on the version wrote by Jiaxian
 #######################################################################################################################################################################
+
+#update date: 2019-10-30
+This time will update the following things:
+
+1) update the way of extract the date and content of the company called 'Ê×´´' and 'ÐÂºþ'.
+
+#######################################################################################################################################################################

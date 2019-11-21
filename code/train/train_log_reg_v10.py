@@ -123,7 +123,10 @@ if __name__ == '__main__':
             elif args.source == "4E":
                 from utils.read_data import read_data_v5_4E
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
-            
+            temp, stopholder = read_data_NExT(f, "2003-11-12")
+            temp = pd.concat(temp, axis = 1, sort = True)
+            columns = temp.columns.values.tolist()
+            time_series = time_series[columns]
             # initialize parameters for load data
             length = 5
             split_dates = rolling_half_year("2009-07-01","2017-07-01",length)
@@ -131,7 +134,7 @@ if __name__ == '__main__':
             importance_list = []
             version_params=generate_version_params(args.version)
             ans = {"C":[]}
-            for s, split_date in enumerate(split_dates):
+            for s, split_date in enumerate(split_dates[:-1]):
                 #print("the train date is {}".format(split_date[0]))
                 #print("the test date is {}".format(split_date[1]))
                 
@@ -163,7 +166,7 @@ if __name__ == '__main__':
                     metal_id[i] = 1
                     
                     #load data
-                    X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,split_date,norm_params,tech_params,version_params)
+                    X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,copy(split_date),norm_params,tech_params,version_params)
                     
                     #post load processing and metal id extension
                     X_tr = np.concatenate(X_tr)
@@ -191,11 +194,12 @@ if __name__ == '__main__':
                 final_y_va = np.reshape(final_y_va,[np.shape(final_y_va)[0]*np.shape(final_y_va)[1],np.shape(final_y_va)[2]])
 
                 #tune logistic regression hyper parameter
-                for C in [0.00001,0.0001,0.001,0.01]:
+                for C in [0.0001,0.001,0.01,0.1,1.0,10,100]:
                     if C not in ans['C']:
                         ans["C"].append(C)
-                    if split_date[1] not in ans.keys():
-                        ans[split_date[1]] = []
+                    if split_date[1]+"_acc" not in ans.keys():
+                        ans[split_date[1]+"_acc"] = []
+                        ans[split_date[1]+"_length"] = []
             
                     n+=1
                     
@@ -205,6 +209,22 @@ if __name__ == '__main__':
                     parameters = {"penalty":"l2", "C":C, "solver":"lbfgs", "tol":tol,"max_iter":6*4*len(f)*max_iter, "verbose" : 0,"warm_start": False, "n_jobs": -1}
                     pure_LogReg.train(final_X_tr,final_y_tr.flatten(), parameters)
                     acc = pure_LogReg.test(final_X_va,final_y_va.flatten())
-                    ans[split_date[1]].append(acc)
-            print(ans)
-            pd.DataFrame(ans).to_csv("_".join(["log_reg",args.version,str(args.lag),str(args.steps)+".csv"]))
+                    ans[split_date[1]+"_acc"].append(acc)
+                    ans[split_date[1]+"_length"].append(len(final_y_va))
+            ans = pd.DataFrame(ans)
+            ave = None
+            length = None
+            for col in ans.columns.values.tolist():
+                if "_acc" in col:
+                    if ave is None:
+                        ave = ans.loc[:,col]*ans.loc[:,col[:-3]+"length"]
+                        length = ans.loc[:,col[:-3]+"length"]
+                    else:
+                        ave = ave + ans.loc[:,col]*ans.loc[:,col[:-3]+"length"]
+                        length = length + ans.loc[:,col[:-3]+"length"]
+            ave = ave/length
+            ans = pd.concat([ans,pd.DataFrame({"average": ave})],axis = 1)
+            ans.sort_values(by= "average",ascending = False)
+
+
+            pd.DataFrame(ans).to_csv("_".join(["log_reg_all",args.version,str(args.lag),str(args.steps)+".csv"]))

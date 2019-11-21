@@ -11,6 +11,7 @@ from model.logistic_regression import LogReg
 from utils.transform_data import flatten
 from utils.construct_data import rolling_half_year
 from utils.log_reg_functions import objective_function, loss_function
+from utils.read_data import read_data_NExT
 import warnings
 import xgboost as xgb
 from matplotlib import pyplot
@@ -73,13 +74,17 @@ if __name__ == '__main__':
         n = 0
         for f in fname_columns:
             lag = args.lag
+            temp, stopholder = read_data_NExT(f, "2003-11-12")
             if args.source == "NExT":
-                from utils.read_data import read_data_NExT
                 data_list, LME_dates = read_data_NExT(f, "2003-11-12")
                 time_series = pd.concat(data_list, axis = 1, sort = True)
             elif args.source == "4E":
                 from utils.read_data import read_data_v5_4E
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
+            
+            temp = pd.concat(temp, axis = 1, sort = True)
+            columns = temp.columns.values.tolist()
+            time_series = time_series[columns]
             length = 5
             split_dates = rolling_half_year("2009-07-01","2019-07-01",length)
             split_dates  =  split_dates[:]
@@ -105,7 +110,7 @@ if __name__ == '__main__':
                 tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
                                                 'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
                 ts = copy(time_series.loc[split_date[0]:split_dates[s+1][2]])
-                X_tr, y_tr, X_va, y_va, X_te, y_te, norm_params,column_list = load_data(ts,LME_dates,horizon,args.ground_truth,lag,split_date,norm_params,tech_params,version_params)
+                X_tr, y_tr, X_va, y_va, X_te, y_te, norm_params,column_list = load_data(ts,LME_dates,horizon,args.ground_truth,lag,copy(split_date),norm_params,tech_params,version_params)
                 column_lag_list = []
                 column_name = []
                 for i in range(lag):

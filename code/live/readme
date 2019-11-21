@@ -1,0 +1,23 @@
+This folder contains the live code for training each machine learning model, tuning each model best parameter and test each model lively.
+
+if you want to use the model in live folder, you need to do the below three steps:
+1. make a file under code folder, such as train_data.py
+2. import the model in new file
+3. run the folder in command and input the parameter:
+python train_data.py -s 3 -gt LME_Co_Spot -max_iter 100 -sou NExT -l 5 -v "v9" -o "train" -d '2016-05-01' -C 0.001
+
+If you run the test you can see the result like below:
+         date  result
+0   2016-01-04     1.0
+1   2016-01-05     1.0
+2   2016-01-06     1.0
+3   2016-01-07     1.0
+4   2016-01-08     0.0
+..         ...     ...
+78  2016-04-25     0.0
+79  2016-04-26     0.0
+80  2016-04-27     1.0
+81  2016-04-28     1.0
+82  2016-04-29     0.0
+
+The meaning of the above result=1.0, for example, is that you input horizon=3 in command and the result of 2016-04-29 means the price in 2016-05-02 is higher than price in 2016-04-29.

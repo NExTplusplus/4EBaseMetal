@@ -7,7 +7,7 @@ def generate_version_params(version):
         input:  version : a string which refers to the version of data preprocessing required
         output: ans     : a dictionary that holds the required version for each process within load data
     '''
-    ans = { "generate_strat_params":None,
+    ans = { "generate_norm_params":"v1","generate_tech_params":"v1","generate_strat_params":None,
             "deal_with_abnormal_value":"v2", "labelling":"v1", "process_missing_value":"v1", "strategy_signal":None,
             "normalize_without_1d_return": "v1", "technical_indication":"v1",
             "remove_unused_columns":"v1", "price_normalization":"v1", "scaling":"v1",
@@ -15,10 +15,12 @@ def generate_version_params(version):
     ver = version.split("_")
     v = ver[0]
     ex = ver[1] if len(ver) > 1 else None
-
-    if v == "v7":
+    if v == "v7" or v=="v3":
         ans['technical_indication'] = "v2"
-    if v == "v9" or v == "v10" or v == "v11" or v == "v12" or v=="v14" or v=="v18" or v=="v20" or v=="v22":
+        if v=="v3":
+            ans['remove_unused_columns'] = "v4"
+    
+    if v == "v9" or v == "v10" or v == "v11" or v == "v12" or v=="v14" or v=="v16" or v=="v18" or v=="v20" or v=="v22":
         if v == "v9":
             ans["generate_strat_params"]="v1"
         elif v== "v10":
@@ -30,6 +32,9 @@ def generate_version_params(version):
         elif v== 'v14':
             ans["generate_strat_params"]="v5"
             ans["construct"]="v2"
+        elif v=='v16':
+            ans["generate_strat_params"]="v2"
+            ans['labelling'] = "v2"
         elif v== 'v18':
             ans["generate_strat_params"]="v6"
         elif v== 'v20':
@@ -49,7 +54,16 @@ def generate_version_params(version):
             ans["price_normalization"] = None
             
         ans["scaling"] = None
-
+        
+    if v=="v23":
+        ans["generate_tech_params"]:"v2"
+        ans['technical_indication'] = "v3"
+        ans['remove_unused_columns'] = "v2"
+        ans["construct"]="v3"
+        ans["normalize_without_1d_return"] = None
+        ans["price_normalization"] = None
+        ans["scaling"] = None
+        
     if ex == "ex1":
         ans['labelling'] = "v1_ex1"
     if ex == "ex2":
@@ -58,6 +72,18 @@ def generate_version_params(version):
     if ex == "ex3":
         ans['technical_indication'] = ans['technical_indication']+"_ex3"
     return ans
+
+def generate_norm_params(version):
+    if version == "v1":
+        return {'vol_norm':'v1','ex_spread_norm':'v1','spot_spread_norm':'v1','len_ma':5,'len_update':30,'both':3,'strength':0.01,'xgboost':False}
+def generate_tech_params(version):
+    if version == "v1":
+        return {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
+    elif version == "v2":
+        return {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':[12,26,40,65,125],'Win_Bollinger':[5,10,15,20,30,65],
+                               'Win_MOM':[5,10,15,26,40,65,125],'PPO_Fast':[12,22],'PPO_Slow':[26,65],'Win_NATR':[14,26,65,125],'Win_VBM':[12,22],'v_VBM':[26,65],
+                               'acc_initial':0.02,'acc_maximum':0.2,'Win_CCI':[12,26,40,65,125],'Win_ADX':[14,26,40,54,125],'Win_RSI':[14,26,40,54,125]}
+
 
 def generate_strat_params(ground_truth,steps,version):
     if version is None:
@@ -128,6 +154,13 @@ def labelling(arguments, version):
         standard labelling
         '''
         return labelling_v1(time_series, arguments['horizon'], arguments['ground_truth_columns'])
+    
+    elif version == "v2":
+        """
+        construct the torch version
+        """
+        return labelling_v2(time_series, arguments['horizon'], arguments['ground_truth_columns'])
+    
     elif version == "v1_ex1":
         '''
         labelling increases and decreases respective to some price before current time point.
@@ -203,6 +236,12 @@ def technical_indication(arguments, version):
         '''
         return technical_indication_v2_ex3(time_series,time_series.index.get_loc(arguments['split_dates'][1]),
                                         arguments['tech_params'],arguments['ground_truth_columns'])
+    elif version == "v3":
+        '''
+        automated generation of technical indicators for all possible combinations (only LME Ground Truth)
+        '''
+        return technical_indication_v3(time_series,time_series.index.get_loc(arguments['split_dates'][1]),
+                                        arguments['tech_params'],arguments['ground_truth_columns'])
     
 
 
@@ -227,6 +266,14 @@ def remove_unused_columns(arguments, version,ground_truth):
         '''
         print("Remove Columns Version3")
         return remove_unused_columns_v3(time_series,arguments['org_cols'],ground_truth)
+    if version == "v4":
+        '''
+        remove columns that will not be used in model
+        '''
+        print("Remove Columns Version4")
+        print("ground_truth",ground_truth)
+    
+        return remove_unused_columns_v4(time_series,arguments['org_cols'],ground_truth)
 
 
 
@@ -244,6 +291,24 @@ def price_normalization(arguments, version):
         DXY log returns
         '''
         return log_1d_return(time_series,["DXY"])
+def spot_price_normalization(arguments):
+    time_series = arguments['time_series']
+    ans=[]
+    spot_price = copy(time_series['spot_price'])
+    if type(spot_price)== np.ndarray:
+        spot_price = np.log(np.true_divide(spot_price[1:], spot_price[:-1]))
+        # scale the data
+        spot_price = spot_price * (1.0 / 3.0 / np.nanstd(spot_price))
+    else:
+        spot_price.values[1:] = np.log(np.true_divide(spot_price.values[1:],
+                                                spot_price.values[:-1]))
+        # scale the data
+        spot_price = spot_price.div(3 * np.nanstd(spot_price.values[1:]))
+
+    spot_price = spot_price.rename("Spot_price")
+    ans.append(spot_price)
+    return ans    
+
     
 def insert_date_into_feature(arguments):
     time_series = arguments['time_series']
@@ -287,6 +352,13 @@ def construct(ind, arguments, version):
         construct ndarray for discrete lags
         '''
         return construct_v2(time_series[ind][arguments['all_cols'][ind]], time_series[ind]["Label"], 
+                    arguments['start_ind'], arguments['end_ind'], 
+                    arguments['lags'], arguments['horizon'])
+    elif version == "v3":
+        '''
+        construct ndarray for no lag
+        '''
+        return construct_v3(time_series[ind][arguments['all_cols'][ind]], time_series[ind]["Label"], 
                     arguments['start_ind'], arguments['end_ind'], 
                     arguments['lags'], arguments['horizon'])
 

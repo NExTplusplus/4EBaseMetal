@@ -11,6 +11,7 @@ from model.logistic_regression import LogReg
 from utils.transform_data import flatten
 from utils.construct_data import rolling_half_year
 from utils.log_reg_functions import objective_function, loss_function
+from utils.read_data import read_data_NExT
 import warnings
 import xgboost as xgb
 from matplotlib import pyplot
@@ -116,16 +117,18 @@ if __name__ == '__main__':
         #iterate over list of configurations
         for f in fname_columns:
             lag = args.lag
-
+            temp, stopholder = read_data_NExT(f, "2003-11-12")
             #read data
             if args.source == "NExT":
-                from utils.read_data import read_data_NExT
                 data_list, LME_dates = read_data_NExT(f, "2003-11-12")
                 time_series = pd.concat(data_list, axis = 1, sort = True)
             elif args.source == "4E":
                 from utils.read_data import read_data_v5_4E
                 time_series, LME_dates = read_data_v5_4E("2003-11-12")
-
+            
+            temp = pd.concat(temp, axis = 1, sort = True)
+            columns = temp.columns.values.tolist()
+            time_series = time_series[columns]
             # initialize parameters for load data
             length = 5
             split_dates = rolling_half_year("2009-07-01","2019-07-01",length)
@@ -168,7 +171,7 @@ if __name__ == '__main__':
                     metal_id[i] = 1
 
                     #load data
-                    X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,split_date,norm_params,tech_params,version_params)
+                    X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,copy(split_date),norm_params,tech_params,version_params)
                     
                     #post load processing and metal id extension
                     X_tr = np.concatenate(X_tr)
@@ -215,9 +218,9 @@ if __name__ == '__main__':
                     if gt not in ans["ground_truth"]:
                         ans["ground_truth"].append(gt)
                     prob = pure_LogReg.predict_proba(final_X_va[i])[:,1]
-                    np.savetxt(gt+str(args.steps)+"_"+split_date[1]+"_lr_v10_probability.csv",prob,delimiter = ",")
+                    np.savetxt(gt+str(args.steps)+"_"+split_date[1]+"_lr_"+args.version+"_probability.txt",prob)
                     # np.savetxt(gt+str(args.steps)+"_"+split_date[1]+"_label.csv",final_y_va[i],delimiter = ",")
                     acc = pure_LogReg.test(final_X_va[i],final_y_va[i].flatten())
                     ans[split_date[1]].append(acc)
             ans["C"] = 6*ans["C"]
-            pd.DataFrame(ans).to_csv("_".join(["log_reg_online",args.version,str(args.lag),str(args.steps)+".csv"]))
+            pd.DataFrame(ans).to_csv("_".join(["log_reg_online",args.version,str(args.ground_truth[0]),str(args.steps)+".csv"]))

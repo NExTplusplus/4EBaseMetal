@@ -16,8 +16,7 @@ import scipy.stats as sct
 
 #load the strategy parameters for version 9
 def generate_strat_params_v1(ground_truth,steps):
-    file_path = ("/").join(exp_path.split("/")[:-1])
-    with open(file_path+"/exp/strat_param_v9.conf") as f:
+    with open(os.path.join(sys.path[0],"exp","strat_param_v9.conf")) as f:
         all_params = json.load(f)
     strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
     activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":False,"strat5":False,"strat6":True,"strat7":True,"strat8":False,"strat9":True,"trend_1":False}
@@ -25,8 +24,7 @@ def generate_strat_params_v1(ground_truth,steps):
 
 #load the strategy parameters for version 10
 def generate_strat_params_v2(ground_truth,steps):
-    file_path = ("/").join(exp_path.split("/")[:-1])
-    with open(file_path+"/exp/strat_param_v10.conf") as f:
+    with open(os.path.join(sys.path[0],"exp","strat_param_v10.conf")) as f:
         all_params = json.load(f)
     strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
     activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":False,"strat5":False,"strat6":True,"strat7":True,"strat8":False,"strat9":True,"trend_1":False}
@@ -34,7 +32,7 @@ def generate_strat_params_v2(ground_truth,steps):
 
 #load the strategy parameters for version 11
 def generate_strat_params_v3(ground_truth,steps):
-    with open("exp/strat_param_v11.conf") as f:
+    with open(os.path.join(sys.path[0],"exp","strat_param_v11.conf")) as f:
         all_params = json.load(f)
     strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
     activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":False,"strat5":False,"strat6":True,"strat7":True,"strat8":False,"strat9":True,"trend_1":False}
@@ -42,8 +40,7 @@ def generate_strat_params_v3(ground_truth,steps):
 
 #load the strategy parameters for version 12
 def generate_strat_params_v4(ground_truth,steps):
-    file_path = ("/").join(exp_path.split("/")[:-1])
-    with open(file_path+"/exp/strat_param_v12.conf") as f:
+    with open(os.path.join(sys.path[0],"exp","strat_param_v12.conf")) as f:
         all_params = json.load(f)
     strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
     activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":False,"strat5":False,"strat6":True,"strat7":True,"strat8":False,"strat9":True,"trend_1":False}
@@ -52,7 +49,7 @@ def generate_strat_params_v4(ground_truth,steps):
 #load the strategy parameters for version 14
 def generate_strat_params_v5(ground_truth,steps):
     print("################generate_strat_params_v5##################")
-    with open(os.path.join(sys.path[0],"exp/strat_param_v14.conf")) as f:
+    with open(os.path.join(sys.path[0],"exp","strat_param_v14.conf")) as f:
         all_params = json.load(f)
     strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
     activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":False,"strat5":False,"strat6":True,"strat7":True,"strat8":True,"strat9":True,"trend_1":False}
@@ -61,7 +58,7 @@ def generate_strat_params_v5(ground_truth,steps):
 #load the strategy parameters for version 18
 def generate_strat_params_v6(ground_truth,steps):
     print("################generate_strat_params_v6##################")
-    with open(os.path.join(sys.path[0],"exp/strat_param_v18.conf")) as f:
+    with open(os.path.join(sys.path[0],"exp","strat_param_v18.conf")) as f:
         all_params = json.load(f)
     print(all_params)
     strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
@@ -71,7 +68,7 @@ def generate_strat_params_v6(ground_truth,steps):
 #load the strategy parameters for version 20
 def generate_strat_params_v7(ground_truth,steps):
     print("################generate_strat_params_v7##################")
-    with open(os.path.join(sys.path[0],"exp/strat_param_v20.conf")) as f:
+    with open(os.path.join(sys.path[0],"exp","strat_param_v20.conf")) as f:
         all_params = json.load(f)
     strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
     activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":False,"strat5":False,"strat6":True,"strat7":True,"strat8":False,"strat9":True,"trend_1":True}
@@ -80,7 +77,7 @@ def generate_strat_params_v7(ground_truth,steps):
 #load the strategy parameters for version 22
 def generate_strat_params_v8(ground_truth,steps):
     print("################generate_strat_params_v8##################")
-    with open(os.path.join(sys.path[0],"exp/strat_param_v20.conf")) as f:
+    with open(os.path.join(sys.path[0],"exp","strat_param_v22.conf")) as f:
         all_params = json.load(f)
     strat_params = all_params[ground_truth.split("_")[1]][str(steps)+"d"]
     activation_params = {"sar":True,"rsi":True,"strat1":True,"strat2":True,"strat3_high":True,"strat3_close":True,"strat4":True,"strat5":True,"strat6":True,"strat7":True,"strat8":True,"strat9":True,"trend_1":True}
@@ -173,6 +170,52 @@ def labelling_v1(X,horizon, ground_truth_columns):
         ans.append(labels)
     return ans
 
+def labelling_v2(X,horizon, ground_truth_columns):
+    """
+    X: which quals the timeseries
+    horizon: the time horizon
+    ground_truth_columns: the column we predict
+    """
+    assert ground_truth_columns != []
+    ans=[]
+    for ground in ground_truth_columns:
+        #print(ground)
+        labels = copy(X[ground])
+        #labels = copy(X)
+        # print(labels)
+        # print('+++++++++++++++')
+        '''
+        old code from Jiangeng
+        if type(labels)==np.ndarray:
+            labels = np.true_divide(labels[arguments['horizon']:], labels[:-arguments['horizon']])-1
+        else:
+            labels.values[arguments['horizon']:]=np.true_divide(labels.values[arguments['horizon']:], labels.values[:-arguments['horizon']])-1
+        '''
+
+        price_changes = labels.shift(-horizon) - labels
+        # print(price_changes.divide(labels))
+        labels = price_changes.divide(labels)
+
+        # scaling the label with standard division
+        print(np.nanstd(labels.values))
+        labels = labels.div(3 * np.nanstd(labels.values))
+
+        # print('----------------')
+        # labels.values[:] = np.true_divide(price_changes.values[:], labels.values[:])
+        ###############################
+        # to replace the old code (Fuli)
+        ###############################
+        # print(labels)
+        #if type(spot_price)== np.ndarray:
+        #    spot_price = np.log(np.true_divide(spot_price[1:], spot_price[:-1]))
+        #else:
+        #    spot_price.values[1:] = np.log(np.true_divide(spot_price.values[1:],
+        #                                            spot_price.values[:-1]))
+        labels = labels.rename("Label")
+        ans.append(labels)
+    return ans
+
+
 def labelling_v1_ex1(X,horizon,ground_truth_columns,lag):
     '''
     X: timeseries
@@ -237,11 +280,11 @@ def normalize_without_1d_return_v1(timeseries,train_end, params):
     #normalize the data based on the specific column
     for col in cols:
         #use the normalize_OI function to deal with the OI
-        if "OI" in col:
+        if col[:-2]+"OI" == col:
             print("Normalizing OI:"+"=>".join((col,col[:-2]+"nOI")))
             timeseries[col[:-2]+"nOI"] = normalize_OI(copy(timeseries[col]),train_end,strength = params['strength'], both = params['both'])
         #use the normalize_volume function to deal with the volume
-        if "Volume" in col:
+        if col[:-6]+"Volume" == col:
             setting = col[:-6]
             if setting+"OI" in cols:
                 ans["nVol"] = True
@@ -250,7 +293,7 @@ def normalize_without_1d_return_v1(timeseries,train_end, params):
                                                         len_ma = params['len_ma'],version = params['vol_norm'], 
                                                         strength = params['strength'], both = params['both'])
         #use the normalize_3mspot_spread function to create 3 month close to spot spread
-        if "Close" in col:
+        if col[:-5]+"Close" == col:
             setting = col[:-5]
             if setting+"Spot" in cols:
                 ans["nSpread"] = True
@@ -259,7 +302,7 @@ def normalize_without_1d_return_v1(timeseries,train_end, params):
                                                                 len_update=params['len_update'],
                                                                 version = params['spot_spread_norm'])
         #use the normalize_3mspot_spread_ex function to create cross exchange spread
-        if "SHFE" in col and "Close" in col and ex:
+        if "SHFE" == col[:4] and "Close" == col[-5:] and ex:
             metal = col.split("_")[1]
             if "_".join(("LME",metal,"Spot")) in cols:
                 ans["nEx"] = True
@@ -296,7 +339,7 @@ def technical_indication_v1(X,train_end,params,ground_truth):
     cols = X.columns.values.tolist()
     for col in cols:
         setting = col[:-5]
-        if 'Close' in col:
+        if setting + 'Close' == col:
             if setting+'Volume' in cols:
                  print("+".join((col,setting+"Volume"))+"=>"+(setting+"divPVT"))
                  X[setting+"divPVT"] = divergence_pvt(copy(X[col]),copy(X[setting+"Volume"]),train_end, 
@@ -327,25 +370,25 @@ def technical_indication_v2(X,train_end,params,ground_truth_columns):
     for col in cols:
         setting = col[:-5]
         ground_truth = ground_truth_columns[0][4:6]
-        if "Close" in col or 'Spot' in col:
+        if setting+"Close" == col or setting+'_Spot' == col:
             X[col+"_EMA"] = ema(copy(X[col]),params['Win_EMA'])
             X[col+"_bollinger"] = bollinger(copy(X[col]),params['Win_Bollinger'])
             X[col+"_PPO"] = ppo(copy(X[col]),params['Fast'],params['Slow'])
             X[col+"_RSI"] = rsi(copy(X[col]))
                 
-            if "Close" in col and setting+"Volume" in cols:
+            if setting+"Close" == col and setting+"Volume" in cols:
                 
                 print("+".join((col,setting+"Volume"))+"=>"+"+".join((setting+"PVT",setting+"divPVT")))
                 X[setting+"PVT"] = pvt(copy(X.index),copy(X[col]),copy(X[setting+"Volume"]))
                 X[setting+"divPVT"] = divergence_pvt(copy(X[col]),copy(X[setting+"Volume"]),train_end, 
                                                             params = params)
             
-            if 'Close' in col and setting+'High' in cols and setting+'Low' in cols:
+            if setting + 'Close' == col and setting+'High' in cols and setting+'Low' in cols:
                 X[setting+'NATR'] = natr(X[setting+"High"],X[setting+"Low"],X[col],params['Win_NATR'])
                 X[setting+'VBM'] = vbm(X[setting+"High"],X[setting+"Low"],X[col],params['Win_VBM'])
                 X[setting+'SAR'] = sar(X[setting+"High"],X[setting+"Low"],X[col],params['acc_initial'],params['acc_maximum'])
         
-        if setting+"Open" in cols:
+        if setting+"_Open" == col:
             if setting+'High' in cols and setting+'Low' in cols:
                 for i in range(len(params['Win_VSD'])):
                     X[setting+"VSD"+str(params['Win_VSD'][i])] = vsd(X[setting+"High"],X[setting+"Low"],X[col],params['Win_VSD'][i])
@@ -392,6 +435,66 @@ def technical_indication_v2_ex3(X,train_end,params,ground_truth_columns):
                 
                 
     return X
+
+def technical_indication_v3(X,train_end,params,ground_truth_columns):
+    """
+    X: which equals the timeseries
+    train_end: string which we use to define the range we use to train
+    params: A dictionary we use to feed the parameter
+    """
+    print('====================================technical indicator_v3========================================')
+    cols = X.columns.values.tolist()
+    for col in cols:
+        setting = col[:-5]
+        ground_truth = ground_truth_columns[0][4:6]
+        if setting+"Close" == col or setting+'_Spot' == col:
+        
+            for i in range(len(params['Win_EMA'])):
+                X[col+"_EMA"+str(params['Win_EMA'][i])] = ema(copy(X[col]),params['Win_EMA'][i])
+                X[col+"_WMA"+str(params['Win_EMA'][i])] = wma(copy(X[col]),params['Win_EMA'][i])
+                
+            for i in range(len(params['Win_Bollinger'])):
+                X[col+"_bollinger"+str(params['Win_Bollinger'][i])] = bollinger(copy(X[col]),params['Win_Bollinger'][i])
+            
+            for i in range(len(params['Win_MOM'])):
+                X[col+"_Mom"+str(params['Win_MOM'][i])] = mom(copy(X[col]),params['Win_MOM'][i])
+            
+            for i in range(len(params['PPO_Fast'])):
+                X[col+"_PPO"+str(params['PPO_Fast'][i])] = ppo(copy(X[col]),params['PPO_Fast'][i],params['PPO_Slow'][i])
+            
+            for i in range(len(params['Win_RSI'])):
+                X[col+"_RSI"+str(params['Win_RSI'][i])] = rsi(copy(X[col]),params['Win_RSI'][i])
+                
+            if setting+"Close" == col and setting+"Volume" in cols:
+                print("+".join((col,setting+"Volume"))+"=>"+"+".join((setting+"PVT",setting+"divPVT")))
+                X[setting+"PVT"] = pvt(copy(X.index),copy(X[col]),copy(X[setting+"Volume"]))
+                X[setting+"divPVT"] = divergence_pvt(copy(X[col]),copy(X[setting+"Volume"]),train_end, 
+                                                            params = params)
+            
+            if setting + 'Close' == col and setting+'High' in cols and setting+'Low' in cols:
+    
+                for i in range(len(params['Win_NATR'])):    
+                    X[setting+'NATR'+str(params['Win_NATR'][i])] = natr(X[setting+"High"],X[setting+"Low"],X[col],params['Win_NATR'][i])
+                
+                for i in range(len(params['Win_CCI'])):
+                    X[setting+'CCI'+str(params['Win_CCI'][i])] = cci(X[setting+"High"],X[setting+"Low"],X[col],params['Win_CCI'][i])
+                    
+                for i in range(len(params['Win_VBM'])):    
+                    X[setting+'VBM'+str(params['Win_VBM'][i])] = VBM(X[setting+"High"],X[setting+"Low"],X[col],params['Win_VBM'][i],params['v_VBM'][i])
+                
+                for i in range(len(params['Win_ADX'])):
+                    X[setting+'ADX'+str(params['Win_ADX'][i])] = ADX(X[setting+"High"],X[setting+"Low"],X[col],params['Win_ADX'][i])
+                    
+                X[setting+'SAR'] = SAR(X[setting+"High"],X[setting+"Low"],X[col],params['acc_initial'],params['acc_maximum'])
+        
+        if setting+"_Open" == col:
+            if setting+'High' in cols and setting+'Low' in cols:
+                for i in range(len(params['Win_VSD'])):
+                    X[setting+"VSD"+str(params['Win_VSD'][i])] = vsd(X[setting+"High"],X[setting+"Low"],X[col],params['Win_VSD'][i])
+            
+                
+    return X
+
 #generate strategy signals
 def strategy_signal_v1(X,split_dates,ground_truth_columns,strategy_params,activation_params,cov_inc,mnm):
     
@@ -584,6 +687,20 @@ def remove_unused_columns_v3(time_series,org_cols,ground_truth):
                 time_series = time_series.drop(col,axis = 1)
     print(time_series.columns)       
     return time_series,org_cols
+# remove a list of columns with an additional label v3, simplified version of v7
+# keep both original indicators and technical indicators for LME_ground_truth
+def remove_unused_columns_v4(time_series,org_cols,ground_truth):
+    print("#####################remove_unused_columns_v4#####################")
+    target = ground_truth[0][:-5]
+    print("target",target)
+    for col in copy(time_series.columns):
+        if target not in col or col==target+'_OI' or col==target+'_Volume':
+            time_series = time_series.drop(col,axis = 1)
+            if col in org_cols:
+                org_cols.remove(col)
+
+    print(time_series.columns)
+    return time_series,org_cols
 
 #this function is to scale the data use the standardscaler
 def scaling_v1(X,train_end):
@@ -659,6 +776,37 @@ def construct_v2(time_series, ground_truth, start_ind, end_ind, T, h):
         like lag1-lag10.
     '''
     lags = [x for x in range(0,T+1) if x%5==0]
+    for ind in range(start_ind, end_ind):
+        if not time_series.iloc[[ind-x for x in lags]].isnull().values.any():
+            num += 1
+    X = np.zeros([num, len(lags), time_series.shape[1]], dtype=np.float32)
+    y = np.zeros([num, 1], dtype=np.float32)
+    #construct the data by the time index
+    sample_ind = 0
+    for ind in range(start_ind, end_ind):
+        if not time_series.iloc[[ind-x for x in lags]].isnull().values.any():
+            X[sample_ind] = time_series.values[[ind-x for x in lags], :]
+            y[sample_ind, 0] = ground_truth.values[ind]
+            sample_ind += 1
+    
+
+    return X,y
+
+def construct_v3(time_series, ground_truth, start_ind, end_ind, T, h):
+    print("#########################construct_v3############################")
+    num = 0
+    '''
+        convert 2d numpy array of time series data into 3d numpy array, with extra dimension for lags, i.e.
+        input of (n_samples, n_features) becomes (n_samples, T, n_features)
+        time_series (2d np.array): financial time series data
+        ground_truth (1d np.array): column which is used as ground truth
+        start_index (string): string which is the date that we wish to begin including from.
+        end_index (string): string which is the date that we wish to include last.
+        T (int): number of lags
+        Considering the auto-correlaiton between features will weaken the power of XGBoost Model,
+        only use the feature of current time point.
+    '''
+    lags = [0]
     for ind in range(start_ind, end_ind):
         if not time_series.iloc[[ind-x for x in lags]].isnull().values.any():
             num += 1

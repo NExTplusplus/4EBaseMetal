@@ -87,11 +87,11 @@ if __name__ == '__main__':
 
             #generate parameters for load data
             length = 5
-            split_dates = rolling_half_year("2009-07-01","2019-01-01",length)
-            split_dates  =  split_dates[-4:]
+            split_dates = rolling_half_year("2009-07-01","2019-07-01",length)
+            split_dates  =  split_dates[:]
             importance_list = []
             version_params=generate_version_params(args.version)
-            for split_date in split_dates:
+            for s,split_date in enumerate(split_dates[:-1]):
                 horizon = args.steps
                 norm_volume = "v1"
                 norm_3m_spread = "v1"
@@ -114,7 +114,7 @@ if __name__ == '__main__':
                 final_y_va = []
                 final_X_te = []
                 final_y_te = [] 
-                ts = copy(time_series.loc[split_date[0]:split_date[2]])
+                ts = copy(time_series.loc[split_date[0]:split_dates[s+1][2]])
                 i = 0
 
                 #iterate over different ground truths

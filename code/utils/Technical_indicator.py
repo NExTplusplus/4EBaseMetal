@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from itertools import accumulate
 from copy import copy
+import talib as ta
 
 # This function will calculate Price Volume Trend as mentioned in google drive/ technical indicator for more explanations
 # close is the column for closing price and volume is the column for volume.
@@ -88,7 +89,6 @@ def bollinger(Close,window, limiting_factor = 2):
     
     return bollinger
 
-import talib as ta
 
 #This function will calculate the Normalized Average True Range
 #High is a series of high price per day, so on so as
@@ -107,6 +107,33 @@ def ema(Close,window = 12):
     
     return ema
 
+def wma(Close,window):
+    ans = copy(Close)
+    ans = ta.WMA(Close,timeperiod = window)
+    ans = ans/Close
+    
+    return ans[window:]
+
+def mom(Close,window = 5):
+    ans = copy(Close)
+    ans = ta.MOM(Close,timeperiod = window)
+    ans = ans/Close
+    return ans[window:]
+
+def SAR(High,Low,Close,initial=0.02,maximum = 0.2):
+    ans = copy(Close)
+    ans = ta.SAR(High,Low,acceleration = initial, maximum = maximum)
+    return ans[1:]
+
+def cci(High,Low,Close,window):
+    ans = copy(Close)
+    ans = ta.CCI(High,Low,Close,timeperiod = window)
+    return ans[window:]
+
+def ADX(High,Low,Close,window):
+    ans = copy(High)
+    ans = ta.ADX(High,Low,Close,timeperiod = window)
+    return ans[window:]
 #This function will calculate the percntage price oscillator.
 #Close is a series of close price.Both fast and slow are integer.
 #PPO measures the difference between two moving averages as a percnetage of the larger moving average.
@@ -126,7 +153,10 @@ def vbm(High,Low,Close,window):
     vbm = (Close - Close.shift(window))/atr
     
     return vbm
-
+def VBM(High,Low,Close,window,v):
+    atr = ta.ATR(High,Low,Close,timeperiod = window)
+    ans = (Close - Close.shift(v))/atr
+    return ans[max(window,v):]
 #This function will calculate the "Stop and Reverse",
 #Which is used to determine trend direnction and potential reversals in price.
 #High is a series of high price, so on so as

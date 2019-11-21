@@ -53,11 +53,14 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     parameters = {'time_series':time_series, 'LME_dates': LME_dates, 'horizon': horizon, 
                     'ground_truth_columns': ground_truth_columns, 'lags': lags, 'split_dates':split_dates,
                     'norm_params':norm_params, 'tech_params': tech_params}
+    parameters['norm_params'] = generate_norm_params(version_params['generate_norm_params'])
+    parameters['tech_params'] = generate_tech_params(version_params['generate_tech_params'])
     parameters['strat_params'],parameters['activation_params'] = generate_strat_params(ground_truth_columns[0], horizon, version_params['generate_strat_params'])
     original_test_date = split_dates[2]
     '''
     deal with the abnormal data which we found in the data. 
     '''
+    
     parameters['time_series'] = deal_with_abnormal_value(parameters,version_params["deal_with_abnormal_value"])
     '''
     Extract the rows with dates where LME has trading operations
@@ -65,13 +68,16 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     '''
     LME_dates = sorted(set(LME_dates).intersection(parameters['time_series'].index.values.tolist()))
     parameters['time_series'] = parameters['time_series'].loc[LME_dates]
+    if version_params['labelling']=='v2':
+        parameters['spot_price'] = spot_price_normalization(parameters)
     parameters['labels'] = labelling(parameters, version_params['labelling'])
     parameters['time_series'] = process_missing_value(parameters,version_params['process_missing_value'])
     parameters['org_cols'] = time_series.columns.values.tolist()
-    # save_data("i2",parameters['time_series'],parameters['time_series'].columns.values.tolist())
+
+    # we construct the signal strategy of LME
     parameters['time_series'] = strategy_signal(parameters,version_params['strategy_signal'])
     # save_data("i3",parameters['time_series'],parameters['time_series'].columns.values.tolist())
-    
+    # reset the split date before dealing with the abnormal value
     split_dates = reset_split_dates(parameters['time_series'],split_dates)
 
 
@@ -80,12 +86,14 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     '''
     parameters['cat_cols'] = []
     parameters['time_series'], parameters['norm_check'] = normalize_without_1d_return(parameters, version_params['normalize_without_1d_return'])
+    # construct the techincal indicator of COMEX and LME.Because we use the LME dates so we will lose some comex's information
     parameters['time_series'] = technical_indication(parameters, version_params['technical_indication'])
     # save_data("i4",parameters['time_series'],parameters['time_series'].columns.values.tolist())
     if parameters['norm_params']['xgboost']:
         print("xgboost")
         parameters['cat_cols'] = ['day','month']
         parameters['time_series'] = insert_date_into_feature(parameters)
+    # remove the unused feature includes the unused column and the original useless feature
     parameters['time_series'], parameters['org_cols'] = remove_unused_columns(parameters, version_params['remove_unused_columns'],ground_truth_columns)
     # save_data("i5",parameters['time_series'],parameters['time_series'].columns.values.tolist())
     parameters['time_series'] = price_normalization(parameters,version_params['price_normalization'])
@@ -112,7 +120,9 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     else:
         # parameters['time_series'].insert(0,ground_truth_columns[0],parameters['time_series'].pop(ground_truth_columns[0]),allow_duplicates = True)
         parameters['time_series'] = [parameters['time_series']]
-        parameters['all_cols'].append(parameters['time_series'][0].columns)
+        parameters['all_cols'].append(parameters['time_series'][0].columns.tolist())
+    if version_params['labelling']=='v2': 
+        parameters['all_cols'][0].append('Spot_price')
     
     
 
@@ -120,6 +130,8 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     Merge labels with time series dataframe
     '''
     for ind in range(len(parameters['time_series'])):
+        if version_params['labelling']=='v2': 
+            parameters['time_series'][ind] = pd.concat([parameters['time_series'][ind], parameters['spot_price'][ind]],sort = True, axis = 1)
         parameters['time_series'][ind] = pd.concat([parameters['time_series'][ind], parameters['labels'][ind]],sort = True, axis = 1)
         
         parameters['time_series'][ind] = process_missing_value_v3(parameters['time_series'][ind])
