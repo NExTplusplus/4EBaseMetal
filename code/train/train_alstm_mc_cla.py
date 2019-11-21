@@ -483,7 +483,7 @@ class Trainer:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Train the bi-LSTM + attention-based model on stock')
     parser.add_argument(
-        '-e', '--epoch', type=int, default=50,
+        '-e', '--epoch', type=int, default=30,
         help='the number of epochs')
     parser.add_argument(
         '-b', '--batch', type=int, default=512,
@@ -502,14 +502,14 @@ if __name__ == '__main__':
         help='the model name(after encoder/decoder)'
     )
     parser.add_argument(
-        '-hidden','--hidden_state',type=int, default=30,
+        '-hidden','--hidden_state',type=int, default=20,
         help='number of hidden_state of encoder/decoder'
     )
     parser.add_argument(
         '-split', '--split', type=float, default=0.9,
         help='the split ratio of validation set')
     parser.add_argument(
-        '-d','--drop_out', type=float, default = 0.3,
+        '-d','--drop_out', type=float, default = 0.5,
         help='the dropout rate of LSTM network'
     )
     parser.add_argument(
@@ -553,7 +553,7 @@ if __name__ == '__main__':
         '-sou','--source', help='source of data', type = str, default = "NExT"
     )
     parser.add_argument(
-        '-l','--lag', type=int, default=4, help='lag'
+        '-l','--lag', type=int, default=3, help='lag'
     )
     parser.add_argument(
         '-v','--version', help='version', type = str, default = 'v10'
@@ -691,23 +691,26 @@ if __name__ == '__main__':
                     y_te = y_va
 
                     # transfer to label i.e., 1/0
-                    for i in range(len(y_ta)):
-                        if y_ta[i][0] >= thresh:
-                            y_ta[i][0] = 1
+                    for ind in range(len(y_ta)):
+                        if y_ta[ind][0] >= thresh:
+                            y_ta[ind][0] = 1
                         else:
-                            y_ta[i][0] = 0
+                            y_ta[ind][0] = 0
+                    y_ta = y_ta.astype(int)
 
-                    for i in range(len(y_val)):
-                        if y_val[i][0] >= thresh:
-                            y_val[i][0] = 1
+                    for ind in range(len(y_val)):
+                        if y_val[ind][0] >= thresh:
+                            y_val[ind][0] = 1
                         else:
-                            y_val[i][0] = 0
+                            y_val[ind][0] = 0
+                    y_val = y_val.astype(int)
 
-                    for i in range(len(y_te)):
-                        if y_te[i][0] >= thresh:
-                            y_te[i][0] = 1
+                    for ind in range(len(y_te)):
+                        if y_te[ind][0] >= thresh:
+                            y_te[ind][0] = 1
                         else:
-                            y_te[i][0] = 0
+                            y_te[ind][0] = 0
+                    y_te = y_te.astype(int)
 
                     ###############################
                     # to replace the old code (Fuli)

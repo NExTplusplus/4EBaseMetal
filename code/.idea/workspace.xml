@@ -1,50 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="41ddc252-e321-42e1-b306-0aa2468465ca" name="Default" comment="" />
-    <option name="TRACKING_ENABLED" value="true" />
+    <list default="true" id="41ddc252-e321-42e1-b306-0aa2468465ca" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train/train_alstm_mc_cla.py" beforeDir="false" afterPath="$PROJECT_DIR$/train/train_alstm_mc_cla.py" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="train_alstm_mc.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/train/train_alstm_mc.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="8734">
-              <caret line="397" column="40" lean-forward="false" selection-start-line="388" selection-start-column="16" selection-end-line="397" selection-end-column="40" />
-              <folding>
-                <element signature="e#16#35#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="train_alstm_mc_cla.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/train/train_alstm_mc_cla.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="504" column="54" lean-forward="false" selection-start-line="504" selection-start-column="54" selection-end-line="504" selection-end-column="54" />
-              <folding>
-                <element signature="e#4787#10048#1" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Technical_indicator.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/utils/Technical_indicator.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-5650">
-              <caret line="29" column="11" lean-forward="false" selection-start-line="29" selection-start-column="4" selection-end-line="29" selection-end-column="11" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -70,14 +36,11 @@
       <find>pool</find>
     </findStrings>
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/train/analyze_alstm.py" />
-        <option value="$PROJECT_DIR$/train/train_alstm_mc_cla.py" />
-      </list>
-    </option>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="ProjectId" id="1T9UA7wrzte8jN9yQuuhftx6wVB" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <flattenPackages />
@@ -95,8 +58,9 @@
     <panes />
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -110,66 +74,85 @@
       </list>
     </option>
   </component>
-  <component name="ShelveChangesManager" show_recycled="false">
-    <option name="remove_strategy" value="false" />
+  <component name="RunManager" selected="Python.train_alstm_mc">
+    <configuration name="train_alstm_mc" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="code" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/train" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/train/train_alstm_mc.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="train_alstm_mc_cla" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="code" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/train" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/train/train_alstm_mc_cla.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.train_alstm_mc_cla" />
+      <item itemvalue="Python.train_alstm_mc" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.train_alstm_mc" />
+        <item itemvalue="Python.train_alstm_mc_cla" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
   </component>
   <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="41ddc252-e321-42e1-b306-0aa2468465ca" name="Default" comment="" />
+      <created>1572870630504</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1572870630504</updated>
+    </task>
     <servers />
   </component>
-  <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="true" />
-    <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20517051" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32964602" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.41863355" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32964602" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20517051" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.41863355" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-    </layout>
-    <layout-to-restore>
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32964602" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20517051" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.41863355" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-    </layout-to-restore>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -234,10 +217,22 @@
           <line>552</line>
           <option name="timeStamp" value="88" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/train/train_alstm_mc_cla.py</url>
+          <line>304</line>
+          <option name="timeStamp" value="89" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/train/train_alstm_mc_cla.py</url>
+          <line>721</line>
+          <option name="timeStamp" value="90" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/train/train_alstm_mc.py</url>
+          <line>801</line>
+          <option name="timeStamp" value="92" />
+        </line-breakpoint>
       </breakpoints>
-      <breakpoints-dialog>
-        <breakpoints-dialog />
-      </breakpoints-dialog>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
@@ -245,455 +240,6 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="89" />
     </breakpoint-manager>
-    <watches-manager />
-  </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/utils/read_data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="9" column="3" lean-forward="false" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/load_rnn.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="624">
-          <caret line="24" column="72" lean-forward="false" selection-start-line="24" selection-start-column="61" selection-end-line="24" selection-end-column="72" />
-          <folding>
-            <element signature="e#0#21#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/lstm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/base_predictor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="156">
-          <caret line="6" column="61" lean-forward="false" selection-start-line="6" selection-start-column="61" selection-end-line="6" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train/train_lstm.py" />
-    <entry file="file://$PROJECT_DIR$/data/load_rnn.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="4" column="27" lean-forward="false" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="27" />
-          <folding>
-            <element signature="e#0#21#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train/train_lstm.py" />
-    <entry file="file://$PROJECT_DIR$/data/load_rnn.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="104">
-          <caret line="4" column="27" lean-forward="false" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="27" />
-          <folding>
-            <element signature="e#0#21#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train/base_predictor.py" />
-    <entry file="file://$PROJECT_DIR$/train/lstm.py" />
-    <entry file="file://$PROJECT_DIR$/train/train_lstm.py" />
-    <entry file="file://$PROJECT_DIR$/data/load_rnn.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="4" column="27" lean-forward="false" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="27" />
-          <folding>
-            <element signature="e#0#21#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train/lstm.py" />
-    <entry file="file://$PROJECT_DIR$/train/base_predictor.py" />
-    <entry file="file://$PROJECT_DIR$/../../AWS/train/lstm.py" />
-    <entry file="file://$PROJECT_DIR$/test/try.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydev_bundle/pydev_monkey_qt.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="70" column="0" lean-forward="false" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/normalize_feature.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3510">
-          <caret line="135" column="0" lean-forward="false" selection-start-line="135" selection-start-column="0" selection-end-line="135" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/base_predictor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="156">
-          <caret line="6" column="61" lean-forward="false" selection-start-line="6" selection-start-column="61" selection-end-line="6" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train/train_lstm.py" />
-    <entry file="file://$PROJECT_DIR$/test/keras_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="494">
-          <caret line="37" column="23" lean-forward="false" selection-start-line="37" selection-start-column="23" selection-end-line="37" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/Technical indicator.py" />
-    <entry file="file://$PROJECT_DIR$/model/logistic_regression.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train/train_log_reg.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="878">
-          <caret line="82" column="37" lean-forward="false" selection-start-line="82" selection-start-column="36" selection-end-line="82" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/load_rnn.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="106" column="4" lean-forward="false" selection-start-line="106" selection-start-column="4" selection-end-line="106" selection-end-column="4" />
-          <folding>
-            <element signature="e#0#21#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/evaluator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="338">
-          <caret line="13" column="4" lean-forward="false" selection-start-line="13" selection-start-column="4" selection-end-line="13" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/lstm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="878">
-          <caret line="164" column="37" lean-forward="false" selection-start-line="164" selection-start-column="37" selection-end-line="164" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/load_data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="530">
-          <caret line="123" column="83" lean-forward="true" selection-start-line="123" selection-start-column="83" selection-end-line="123" selection-end-column="83" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train/train_xgboost_v6_v10_ex2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="52">
-          <caret line="113" column="37" lean-forward="true" selection-start-line="113" selection-start-column="37" selection-end-line="113" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train/train_xgboost_online_v10_ex2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="134" column="16" lean-forward="false" selection-start-line="134" selection-start-column="16" selection-end-line="134" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Library/Caches/PyCharmCE2017.2/python_stubs/1892274852/numpy/core/_multiarray_umath.py" />
-    <entry file="file://$PROJECT_DIR$/utils/read_data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="201" column="4" lean-forward="false" selection-start-line="201" selection-start-column="4" selection-end-line="201" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/load_data_v5.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1698">
-          <caret line="80" column="22" lean-forward="true" selection-start-line="80" selection-start-column="22" selection-end-line="80" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train/trainer.py" />
-    <entry file="file://$PROJECT_DIR$/../../mced/gcn/gcn/grid_search.py" />
-    <entry file="file://$PROJECT_DIR$/model/model_embedding.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="154" column="30" lean-forward="true" selection-start-line="154" selection-start-column="30" selection-end-line="154" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/construct_data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1329">
-          <caret line="351" column="16" lean-forward="true" selection-start-line="351" selection-start-column="16" selection-end-line="351" selection-end-column="16" />
-          <folding>
-            <marker date="1572339526969" expanded="true" signature="1359:1714" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="1765:2120" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="2315:2756" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="2845:4272" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="2927:2994" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="3207:3785" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="3241:3785" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="3278:3785" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="3875:4186" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="3987:4186" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="4312:5355" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="4394:4461" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="4674:5252" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="4708:5252" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="4745:5252" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="5460:5780" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="5643:5757" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="5892:6316" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="5897:6021" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1572339526969" expanded="true" signature="6118:6301" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="6375:6904" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="6380:6568" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1572339526969" expanded="true" signature="6665:6889" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="6967:7879" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="7064:7859" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="8000:11700" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="8005:8199" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1572339526969" expanded="true" signature="8343:8404" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="8478:11660" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="8561:8770" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="8865:9414" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="8933:9414" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="9530:10044" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="9600:10044" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="10181:11660" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="10274:10939" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="10995:11660" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="11766:12187" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="11851:12160" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="12333:12878" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="12503:12865" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="12557:12865" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="12598:12865" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="13054:13634" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="13228:13621" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="13313:13621" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="13354:13621" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="13705:15681" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="13710:13881" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1572339526969" expanded="true" signature="14051:15638" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="14174:15340" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="14519:14914" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="15011:15340" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="15384:15638" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="15449:15638" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="15683:15828" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="15902:18012" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="15907:16078" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1572339526969" expanded="true" signature="16252:17965" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="16380:17965" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="16428:17529" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="16797:17083" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="17188:17529" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="17581:17965" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="17768:17965" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="26500:26578" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="18811:24469" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="18878:19336" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="19413:19967" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="19999:24469" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="20124:20645" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="20703:21208" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="21269:21756" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="21801:22282" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="22333:22825" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="22870:23419" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="23480:23875" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="23981:24469" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="26631:26914" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="26673:26881" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="26754:26881" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="26967:27156" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="27038:27124" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="27222:27838" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="27417:27768" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="27446:27535" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="27549:27768" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="27927:28219" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="27932:28039" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1572339526969" expanded="true" signature="31233:31509" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="31584:32749" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="31601:32139" ph="'''...'''" />
-            <marker date="1572339526969" expanded="true" signature="32181:32279" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="32494:32728" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="32572:32728" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="32821:34347" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="32917:33680" ph="'''...'''" />
-            <marker date="1572339526969" expanded="true" signature="33769:33868" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="34091:34326" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="34169:34326" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="34423:35632" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="34440:34978" ph="'''...'''" />
-            <marker date="1572339526969" expanded="true" signature="35020:35118" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="35333:35511" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="35411:35511" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="35688:36653" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="35693:36095" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1572339526969" expanded="true" signature="36253:36477" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="36723:37138" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="36728:36813" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1572339526969" expanded="true" signature="37235:38216" ph="&quot;&quot;&quot;data process...&quot;&quot;&quot;" />
-            <marker date="1572339526969" expanded="true" signature="38492:38643" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="38782:38929" ph="..." />
-            <marker date="1572339526969" expanded="true" signature="39033:39164" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train/grid_search.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="679">
-          <caret line="75" column="9" lean-forward="false" selection-start-line="75" selection-start-column="9" selection-end-line="75" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train/analyze_alstm_mc.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="494">
-          <caret line="655" column="12" lean-forward="false" selection-start-line="655" selection-start-column="12" selection-end-line="655" selection-end-column="12" />
-          <folding>
-            <element signature="e#0#11#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../exp_4e/ensemble/retrain_ensemble.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-10549">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train/analyze_alstm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="122">
-          <caret line="179" column="32" lean-forward="true" selection-start-line="179" selection-start-column="32" selection-end-line="179" selection-end-column="32" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-            <element signature="e#658#939#0" expanded="false" />
-            <element signature="e#981#1159#0" expanded="false" />
-            <element signature="e#1202#1563#0" expanded="false" />
-            <element signature="e#1619#6514#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train/train_alstm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="14498">
-          <caret line="659" column="34" lean-forward="false" selection-start-line="659" selection-start-column="16" selection-end-line="659" selection-end-column="34" />
-          <folding>
-            <element signature="e#16#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/version_control_functions_torch.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="267">
-          <caret line="250" column="4" lean-forward="false" selection-start-line="250" selection-start-column="4" selection-end-line="250" selection-end-column="4" />
-          <folding>
-            <element signature="e#0#34#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/load_data_v16_torch.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="158">
-          <caret line="68" column="40" lean-forward="false" selection-start-line="68" selection-start-column="40" selection-end-line="68" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train/tune_alstm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="583">
-          <caret line="55" column="5" lean-forward="false" selection-start-line="55" selection-start-column="5" selection-end-line="55" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train/tune_alstm_mc.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="16" column="56" lean-forward="false" selection-start-line="16" selection-start-column="56" selection-end-line="16" selection-end-column="56" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/model_embedding_mc.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5">
-          <caret line="8" column="11" lean-forward="false" selection-start-line="8" selection-start-column="11" selection-end-line="8" selection-end-column="11" />
-          <folding>
-            <element signature="e#16#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train/train_alstm_online.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="258">
-          <caret line="674" column="50" lean-forward="false" selection-start-line="628" selection-start-column="16" selection-end-line="628" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train/train_alstm_mc.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8734">
-          <caret line="397" column="40" lean-forward="false" selection-start-line="388" selection-start-column="16" selection-end-line="397" selection-end-column="40" />
-          <folding>
-            <element signature="e#16#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train/train_alstm_mc_cla.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="504" column="54" lean-forward="false" selection-start-line="504" selection-start-column="54" selection-end-line="504" selection-end-column="54" />
-          <folding>
-            <element signature="e#4787#10048#1" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/Technical_indicator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-5650">
-          <caret line="29" column="11" lean-forward="false" selection-start-line="29" selection-start-column="4" selection-end-line="29" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
   </component>
 </project>
