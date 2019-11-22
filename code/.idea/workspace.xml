@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="41ddc252-e321-42e1-b306-0aa2468465ca" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/train/train_alstm_mc_cla.py" beforeDir="false" afterPath="$PROJECT_DIR$/train/train_alstm_mc_cla.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -12,51 +10,11 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>LME_dates</find>
-      <find>rolling_half_year</find>
-      <find>split</find>
-      <find>column_lag_list = []</find>
-      <find>split_date</find>
-      <find>spot_list</find>
-      <find>scaling</find>
-      <find>Label</find>
-      <find>sys.</find>
-      <find>strategy</find>
-      <find>zip</find>
-      <find>division</find>
-      <find>path</find>
-      <find>nanstd</find>
-      <find>dropout</find>
-      <find>indicator</find>
-      <find>stra</find>
-      <find>join</find>
-      <find>torch_labelling</find>
-      <find>pool</find>
-    </findStrings>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="ProjectId" id="1T9UA7wrzte8jN9yQuuhftx6wVB" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
-  <component name="ProjectView">
-    <navigator proportions="" version="1">
-      <flattenPackages />
-      <showMembers />
-      <showModules />
-      <showLibraryContents />
-      <hideEmptyPackages />
-      <abbreviatePackageNames />
-      <autoscrollToSource />
-      <autoscrollFromSource />
-      <sortByType />
-      <manualOrder />
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes />
-  </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -74,7 +32,28 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.train_alstm_mc">
+  <component name="RunManager" selected="Python.cross_momentum_strategy">
+    <configuration name="cross_momentum_strategy" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="code" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../.." />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../../cross_momentum_strategy.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="train_alstm_mc" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="code" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -120,9 +99,11 @@
     <list>
       <item itemvalue="Python.train_alstm_mc_cla" />
       <item itemvalue="Python.train_alstm_mc" />
+      <item itemvalue="Python.cross_momentum_strategy" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.cross_momentum_strategy" />
         <item itemvalue="Python.train_alstm_mc" />
         <item itemvalue="Python.train_alstm_mc_cla" />
       </list>
@@ -231,6 +212,26 @@
           <url>file://$PROJECT_DIR$/train/train_alstm_mc.py</url>
           <line>801</line>
           <option name="timeStamp" value="92" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../../cross_momentum_strategy.py</url>
+          <line>24</line>
+          <option name="timeStamp" value="96" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../../cross_momentum_strategy.py</url>
+          <line>35</line>
+          <option name="timeStamp" value="97" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../../cross_momentum_strategy.py</url>
+          <line>63</line>
+          <option name="timeStamp" value="98" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../../cross_momentum_strategy.py</url>
+          <line>77</line>
+          <option name="timeStamp" value="99" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
