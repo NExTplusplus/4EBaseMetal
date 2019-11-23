@@ -222,7 +222,7 @@ for horizon in [1,3,5]:
 						#print(window)
 						#print(result_v3_error[length:length+window])
 						#print(error_lr_v3)
-						"""
+						
 						error_lr_v3 = np.sum(result_v3_error[length:length+window])+1e-06
 						error_lr_v5 = np.sum(result_v5_error[length:length+window])+1e-06
 						error_lr_v7 = np.sum(result_v7_error[length:length+window])+1e-06
@@ -230,8 +230,8 @@ for horizon in [1,3,5]:
 						error_lr_v10 = np.sum(result_v10_error[length:length+window])+1e-06
 						error_lr_v12 = np.sum(result_v12_error[length:length+window])+1e-06
 						error_lr_v24 = np.sum(result_v24_error[length:length+window])+1e-06	
-						"""
-						"""			
+						
+									
 						accuracy_list = []
 						accuracy_list.append((1,error_lr_v3))
 						accuracy_list.append((2,error_lr_v5))
@@ -242,31 +242,31 @@ for horizon in [1,3,5]:
 						accuracy_list.append((7,error_lr_v24))
 						accuracy_list.sort(reverse=False, key=lambda x: x[1])
 
-						"""
-						accuracy = ((np.sum(result_v7_error[length:length+window]))/window)
-						if accuracy>0.4:
-							final_list_1.append(final_list_v7[i])
-						else:
-							if final_list_v7[i]==0:
-								final_list_1.append(1)
-							else:
-								final_list_1.append(0)
+						
+						#accuracy = ((np.sum(result_v7_error[length:length+window]))/window)
+						#if accuracy>0.4:
+						#	final_list_1.append(final_list_v7[i])
+						#else:
+						#	if final_list_v7[i]==0:
+						#		final_list_1.append(1)
+						#	else:
+						#		final_list_1.append(0)
 						#print(accuracy_list)
 						#print(accuracy_list)
-						#minor = accuracy_list[-1][1]
+						minor = accuracy_list[-1][1]
 						#print(minor)
 						#print(minor)
-						#delete_list = []
-						#for item in accuracy_list:
-						#	if item[1]==minor:
-						#		delete_list.append(item)
+						delete_list = []
+						for item in accuracy_list:
+							if item[1]==minor:
+								delete_list.append(item)
 						#print(delete_list)
-						#delete_length = len(delete_list)
-						#number = np.random.randint(0,delete_length)-1
+						delete_length = len(delete_list)
+						number = np.random.randint(0,delete_length)-1
 						#print(number)
-						#delete_number = delete_list[number][0]
+						delete_number = delete_list[number][0]
 						#print(delete_number)
-						#result = 0
+						result = 0
 						#print(delete_number)
 						"""
 						if delete_number==1:
@@ -367,7 +367,105 @@ for horizon in [1,3,5]:
 							result+=weight_lr_v10*final_list_v10[i]
 							weight_lr_v12 = float(error_lr_v12)/fenmu
 							result+=weight_lr_v12*final_list_v12[i]	
-						"""																																
+						"""
+						if delete_number==1:
+							fenmu = 1/error_lr_v5+1/error_lr_v7+1/error_lr_v9+1/error_lr_v10+1/error_lr_v12+1/error_lr_v24
+							weight_lr_v5 = float(1/error_lr_v5)/fenmu
+							result+=weight_lr_v5*final_list_v5[i]
+							weight_lr_v7 = float(1/error_lr_v7)/fenmu
+							result+=weight_lr_v7*final_list_v7[i]
+							weight_lr_v9 = float(1/error_lr_v9)/fenmu
+							result+=weight_lr_v9*final_list_v9[i]
+							weight_lr_v10 = float(1/error_lr_v10)/fenmu
+							result+=weight_lr_v10*final_list_v10[i]
+							weight_lr_v12 = float(1/error_lr_v12)/fenmu
+							result+=weight_lr_v12*final_list_v12[i]
+							weight_lr_v24 = float(1/error_lr_v24)/fenmu
+							result+=weight_lr_v24*final_list_v24[i]																												
+						elif delete_number==2:
+							fenmu = 1/error_lr_v3+1/error_lr_v7+1/error_lr_v9+1/error_lr_v10+1/error_lr_v12+1/error_lr_v24
+							weight_lr_v3 = float(1/error_lr_v3)/fenmu
+							result+=weight_lr_v3*final_list_v3[i]
+							weight_lr_v7 = float(1/error_lr_v7)/fenmu
+							result+=weight_lr_v7*final_list_v7[i]
+							weight_lr_v9 = float(1/error_lr_v9)/fenmu
+							result+=weight_lr_v9*final_list_v9[i]
+							weight_lr_v10 = float(1/error_lr_v10)/fenmu
+							result+=weight_lr_v10*final_list_v10[i]
+							weight_lr_v12 = float(1/error_lr_v12)/fenmu
+							result+=weight_lr_v12*final_list_v12[i]
+							weight_lr_v24 = float(1/error_lr_v24)/fenmu
+							result+=weight_lr_v24*final_list_v24[i]								
+						elif delete_number==3:
+							fenmu = 1/error_lr_v3+1/error_lr_v5+1/error_lr_v9+1/error_lr_v10+1/error_lr_v12+1/error_lr_v24
+							weight_lr_v3 = float(1/error_lr_v3)/fenmu
+							result+=weight_lr_v3*final_list_v3[i]
+							weight_lr_v5 = float(1/error_lr_v5)/fenmu
+							result+=weight_lr_v5*final_list_v5[i]
+							weight_lr_v9 = float(1/error_lr_v9)/fenmu
+							result+=weight_lr_v9*final_list_v9[i]
+							weight_lr_v10 = float(1/error_lr_v10)/fenmu
+							result+=weight_lr_v10*final_list_v10[i]
+							weight_lr_v12 = float(1/error_lr_v12)/fenmu
+							result+=weight_lr_v12*final_list_v12[i]
+							weight_lr_v24 = float(1/error_lr_v24)/fenmu
+							result+=weight_lr_v24*final_list_v24[i]
+						elif delete_number==4:
+							fenmu = 1/error_lr_v3+1/error_lr_v5+1/error_lr_v7+1/error_lr_v10+1/error_lr_v12+1/error_lr_v24
+							weight_lr_v3 = float(1/error_lr_v3)/fenmu
+							result+=weight_lr_v3*final_list_v3[i]
+							weight_lr_v5 = float(1/error_lr_v5)/fenmu
+							result+=weight_lr_v5*final_list_v5[i]
+							weight_lr_v7 = float(1/error_lr_v7)/fenmu
+							result+=weight_lr_v7*final_list_v7[i]
+							weight_lr_v10 = float(1/error_lr_v10)/fenmu
+							result+=weight_lr_v10*final_list_v10[i]
+							weight_lr_v12 = float(1/error_lr_v12)/fenmu
+							result+=weight_lr_v12*final_list_v12[i]
+							weight_lr_v24 = float(1/error_lr_v24)/fenmu
+							result+=weight_lr_v24*final_list_v24[i]	
+						elif delete_number==5:
+							fenmu = 1/error_lr_v3+1/error_lr_v5+1/error_lr_v7+1/error_lr_v9+1/error_lr_v12+1/error_lr_v24
+							weight_lr_v3 = float(1/error_lr_v3)/fenmu
+							result+=weight_lr_v3*final_list_v3[i]
+							weight_lr_v5 = float(1/error_lr_v5)/fenmu
+							result+=weight_lr_v5*final_list_v5[i]
+							weight_lr_v7 = float(1/error_lr_v7)/fenmu
+							result+=weight_lr_v7*final_list_v7[i]
+							weight_lr_v9 = float(1/error_lr_v9)/fenmu
+							result+=weight_lr_v9*final_list_v9[i]
+							weight_lr_v12 = float(1/error_lr_v12)/fenmu
+							result+=weight_lr_v12*final_list_v12[i]
+							weight_lr_v24 = float(1/error_lr_v24)/fenmu
+							result+=weight_lr_v24*final_list_v24[i]	
+						elif delete_number==6:
+							fenmu = 1/error_lr_v3+1/error_lr_v5+1/error_lr_v7+1/error_lr_v9+1/error_lr_v10+1/error_lr_v24
+							weight_lr_v3 = float(1/error_lr_v3)/fenmu
+							result+=weight_lr_v3*final_list_v3[i]
+							weight_lr_v5 = float(1/error_lr_v5)/fenmu
+							result+=weight_lr_v5*final_list_v5[i]
+							weight_lr_v7 = float(1/error_lr_v7)/fenmu
+							result+=weight_lr_v7*final_list_v7[i]
+							weight_lr_v9 = float(1/error_lr_v9)/fenmu
+							result+=weight_lr_v9*final_list_v9[i]
+							weight_lr_v10 = float(1/error_lr_v10)/fenmu
+							result+=weight_lr_v10*final_list_v10[i]
+							weight_lr_v24 = float(1/error_lr_v24)/fenmu
+							result+=weight_lr_v24*final_list_v24[i]
+						elif delete_number==7:
+							fenmu = 1/error_lr_v3+1/error_lr_v5+1/error_lr_v7+1/error_lr_v9+1/error_lr_v10+1/error_lr_v12
+							weight_lr_v3 = float(1/error_lr_v3)/fenmu
+							result+=weight_lr_v3*final_list_v3[i]
+							weight_lr_v5 = float(1/error_lr_v5)/fenmu
+							result+=weight_lr_v5*final_list_v5[i]
+							weight_lr_v7 = float(1/error_lr_v7)/fenmu
+							result+=weight_lr_v7*final_list_v7[i]
+							weight_lr_v9 = float(1/error_lr_v9)/fenmu
+							result+=weight_lr_v9*final_list_v9[i]
+							weight_lr_v10 = float(1/error_lr_v10)/fenmu
+							result+=weight_lr_v10*final_list_v10[i]
+							weight_lr_v12 = float(1/error_lr_v12)/fenmu
+							result+=weight_lr_v12*final_list_v12[i]																																							
 						#error_lr_v7 = (np.sum(result_v7_error[length:length+window]))/window+1e-06
 
 						#print(accuracy_list)
@@ -451,12 +549,12 @@ for horizon in [1,3,5]:
 						
 						#probal.append(result)
 						#print(result)
-						"""
+						
 						if result>0.5:
 							final_list_1.append(1)
 						else:
 							final_list_1.append(0)
-						"""
+						
 						if window==window_size:
 							length+=1
 						else:
