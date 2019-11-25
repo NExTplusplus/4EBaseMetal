@@ -46,7 +46,7 @@ if __name__ == '__main__':
                 elif version in ["v5","v7"]:
                     exp = "exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf"
                     train = "code/train/train_log_reg_online.py"
-                elif version in ["v3"]:
+                elif version in ["v3","v23"]:
                     exp = "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf"
                     train = "code/train/train_log_reg_online.py"
                 elif version in ["v9"]:

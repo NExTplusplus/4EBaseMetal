@@ -6,132 +6,6 @@ from itertools import product
 import argparse
 import os
 
-if __name__ == '__main__':
-    desc = 'the script for XGBoost'
-    parser = argparse.ArgumentParser(description=desc)
-    parser.add_argument('-s','--step_list',type=str,default="1,3,5",
-                        help='list of horizons to be calculated, separated by ","')
-    parser.add_argument('-gt', '--ground_truth_list', help='list of ground truths, separated by ","',
-                        type=str, default="LME_Co_Spot,LME_Al_Spot,LME_Ni_Spot,LME_Ti_Spot,LME_Zi_Spot,LME_Le_Spot")
-    parser.add_argument(
-        '-sou','--source', help='source of data to be inserted into commands', type = str, default = "4E"
-    )
-    parser.add_argument(
-        '-l','--lag_list', type=str, default = '1,5,10,20', help='list of lags, separated by ","'
-    )
-    parser.add_argument(
-        '-v','--version_list', help='list of versions, separated by ","', type = str, default = 'v10'
-    )
-    parser.add_argument ('-out','--output',type = str, help='output file', default ="../../../Results/results")
-    parser.add_argument('-o', '--action', type=str, default='commands',
-                        help='tuning,commands, testing')
-    parser.add_argument('-p','--path',type =str, help='path to 4EBaseMetal folder',default ='NEXT/4EBaseMetal')
-
-    args = parser.parse_args()
-    args.step_list = args.step_list.split(",")
-    args.ground_truth_list = args.ground_truth_list.split(",")
-    args.lag_list = args.lag_list.split(",")
-    args.version_list = args.version_list.split(",")
-
-    #generates the top 5 results for each voting method for every combination produced from version list, step list, ground truth list and lag list
-    if args.action == "tuning":
-        path_list = []
-        combinations = product(args.ground_truth_list,args.lag_list,args.step_list,args.version_list)
-        for c in combinations:
-            path_list.append(os.path.join(args.path,"_".join(c[0].split("_")[1],"xgboost","l"+c[1],"h"+c[2],c[3])+".txt"))
-        pool = pl()
-        results = pool.starmap_async(retrieve_top,path_list)
-        pool.close()
-        pool.join()
-
-    #generates the command line to be used for online testing
-    if args.action == "commands":
-        i = 0
-        with open(args.output,"w") as out:
-            for version in args.version_list:
-                ground_truth_list = copy(args.ground_truth_list)
-                xgb = 0
-                if version in ["v10","v12"]:
-                    ground_truth_list = ["all"]
-                    train = "code/train/train_xgboost_online_v10_ex2.py"
-                    exp = "exp/online_v10.conf"
-                elif version in ["v5","v7"]:
-                    exp = "exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf"
-                    train = "code/train/train_xgboost_online.py"
-                elif version in ["v3"]:
-                    exp = "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf"
-                    train = "code/train/train_xgboost_online.py"
-                elif version in ["v9"]:
-                    exp = "exp/online_v10.conf"
-                    train = "code/train/train_xgboost_online.py"
-
-                for gt in ground_truth_list:
-                    for h in args.step_list:
-                        total = pd.DataFrame()
-                        for lag in args.lag_list:
-                            f = pd.read_csv(os.path.join(args.path,'_'.join([gt.split("_")[1],version,lag,"h"+h])+".csv").iloc[:5,:])
-                            total = pd.concat([total,f],axis = 0)
-                        total = total.sort_values(by=['result','lag','max_depth','learning_rate','gamma','min_child_weigh','subsample'],ascending=[False,True,True,True,True,True,True]).reset_index(drop = True)
-                        out.write(" ".join(["python",train,
-                          "-gt",gt,
-                          "-l",str(total.iloc[0,0]),
-                          "-s",h,
-                          "-xgb",str(xgb),
-                          "-v",version.split("_")[0],
-                          "-c",exp,
-                          "-sou",args.source,
-                          "-max_depth",str(int(total.iloc[0,1])),
-                          "-learning_rate",str(total.iloc[0,2]),
-                          "-gamma",str(total.iloc[0,3]),
-                          "-min_child",str(int(total.iloc[0,4])),
-                          "-subsample",str(total.iloc[0,5]),"-voting all",
-                          ">","_".join([gt,"xgboost","h"+h,version,"1718.txt"]),"2>&1 &"])+"\n")
-        i+=1
-        if i == 9:
-          i = 0
-          out.write("sleep 10m\n")
-
-    if args.action == "testing":
-        total = pd.DataFrame()
-        for version in args.version_list:
-            ans = None
-            temp_ans = {}
-            all_file = []
-            ground_truth_columns = copy(args.ground_truth_list)
-            for h in args.step_list:
-                for gt in ground_truth_columns:
-                    path = gt.split("_")[1]+"_h"+h+"_"+version+"_1718.txt"
-                    sub_file = []
-                    all_voting_Str = 'the all folder voting precision is'
-                    lag_Str = 'the lag is'
-                    if path in os.listdir(args.path):
-                        with open(os.path.join(args.path,path),"r") as f:
-                            lines = f.readlines()
-                            for i,line in enumerate(lines):
-                                if all_voting_Str.lower() in line.lower():
-                                    file = []
-                                    file.append(float(line.strip("\n").split(" ")[-1]))
-                                    sub_file.append(file)
-                                    if lag_Str.lower() in lines[i+1].lower():
-                                        for result in sub_file:
-                                            result.append(lines[i+1].strip("\n").split(" ")[-1])
-                                            result.append(lines[i+3].strip("\n").split(" ")[-1])
-                                        all_file+=sub_file
-                                        sub_file = []
-                    else:
-                        continue
-            for arr in all_file:
-                if arr[2] not in temp_ans.keys():
-                    temp_ans[arr[2]] = [arr[0]]
-                else:
-                    temp_ans[arr[2]].append(arr[0])
-            temp_ans = pd.DataFrame(temp_ans)
-            if ans is None:
-                ans = temp_ans
-            else:
-                ans = pd.concat([ans,temp_ans], axis = 0, sort = False)
-            ans.to_csv("xgboost_"+version+"_res.csv")
-
 '''
     This function is used to extract the top 5 combinations of hyperparameters in terms of weighted accuracy for each voting method
 '''
@@ -245,4 +119,134 @@ def retrieve_top(path):
 
         frame = pd.concat([all_frame,near_frame,far_frame,reverse_frame,same_frame], axis = 0)
         frame.to_csv(path.split("_")[0]+"_"+path.split("_")[-1].strip(".txt")+"_"+str(lag)+"_"+path.split("_")[3]+".csv",index = False)
+
+if __name__ == '__main__':
+    desc = 'the script for XGBoost'
+    parser = argparse.ArgumentParser(description=desc)
+    parser.add_argument('-s','--step_list',type=str,default="1,3,5",
+                        help='list of horizons to be calculated, separated by ","')
+    parser.add_argument('-gt', '--ground_truth_list', help='list of ground truths, separated by ","',
+                        type=str, default="LME_Co_Spot,LME_Al_Spot,LME_Ni_Spot,LME_Ti_Spot,LME_Zi_Spot,LME_Le_Spot")
+    parser.add_argument(
+        '-sou','--source', help='source of data to be inserted into commands', type = str, default = "4E"
+    )
+    parser.add_argument(
+        '-l','--lag_list', type=str, default = '1,5,10,20', help='list of lags, separated by ","'
+    )
+    parser.add_argument(
+        '-v','--version_list', help='list of versions, separated by ","', type = str, default = 'v10'
+    )
+    parser.add_argument ('-out','--output',type = str, help='output file', default ="../../../Results/results")
+    parser.add_argument('-o', '--action', type=str, default='commands',
+                        help='tuning,commands, testing')
+    parser.add_argument('-p','--path',type =str, help='path to 4EBaseMetal folder',default ='NEXT/4EBaseMetal')
+
+    args = parser.parse_args()
+    args.step_list = args.step_list.split(",")
+    args.ground_truth_list = args.ground_truth_list.split(",")
+    args.lag_list = args.lag_list.split(",")
+    args.version_list = args.version_list.split(",")
+
+    #generates the top 5 results for each voting method for every combination produced from version list, step list, ground truth list and lag list
+    if args.action == "tuning":
+        path_list = []
+        combinations = product(args.ground_truth_list,args.lag_list,args.step_list,args.version_list)
+        for c in combinations:
+            path_list.append(os.path.join(args.path,"_".join([c[0].split("_")[1],"xgboost","l"+c[1],"h"+c[2],c[3]])+".txt"))
+        pool = pl()
+        results = pool.map_async(retrieve_top,path_list)
+        pool.close()
+        pool.join()
+
+    #generates the command line to be used for online testing
+    if args.action == "commands":
+        i = 0
+        with open(args.output,"w") as out:
+            for version in args.version_list:
+                ground_truth_list = copy(args.ground_truth_list)
+                xgb = 0
+                if version in ["v10","v12"]:
+                    ground_truth_list = ["all_all"]
+                    train = "code/train/train_xgboost_online_v10_ex2.py"
+                    exp = "exp/online_v10.conf"
+                elif version in ["v5","v7"]:
+                    exp = "exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf"
+                    train = "code/train/train_xgboost_online.py"
+                elif version in ["v3","v23"]:
+                    exp = "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf"
+                    train = "code/train/train_xgboost_online.py"
+                elif version in ["v9"]:
+                    exp = "exp/online_v10.conf"
+                    train = "code/train/train_xgboost_online.py"
+                elif version in ["v24"]:
+                    exp = "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf"
+                    train = "code/train/train_xgboost_online_v10_ex2.py"
+                
+
+                for gt in ground_truth_list:
+                    for h in args.step_list:
+                        total = pd.DataFrame()
+                        for lag in args.lag_list:
+                            f = pd.read_csv(os.path.join(args.path,'_'.join([gt.split("_")[1],version,lag,"h"+h])+".csv")).iloc[:5,:]
+                            total = pd.concat([total,f],axis = 0)
+                        total = total.sort_values(by=['result','lag','max_depth','learning_rate','gamma','min_child_weigh','subsample'],ascending=[False,True,True,True,True,True,True]).reset_index(drop = True)
+                        out.write(" ".join(["python",train,
+                          "-gt",gt,
+                          "-l",str(total.iloc[0,0]),
+                          "-s",h,
+                          "-xgb",str(xgb),
+                          "-v",version.split("_")[0],
+                          "-c",exp,
+                          "-sou",args.source,
+                          "-max_depth",str(int(total.iloc[0,1])),
+                          "-learning_rate",str(total.iloc[0,2]),
+                          "-gamma",str(total.iloc[0,3]),
+                          "-min_child",str(int(total.iloc[0,4])),
+                          "-subsample",str(total.iloc[0,5]),"-voting all",
+                          ">","_".join([gt,"xgboost","h"+h,version,"1718.txt"]),"2>&1 &"])+"\n")
+        i+=1
+        if i == 9:
+          i = 0
+          out.write("sleep 10m\n")
+
+    if args.action == "testing":
+        total = pd.DataFrame()
+        for version in args.version_list:
+            ans = None
+            temp_ans = {}
+            all_file = []
+            ground_truth_columns = copy(args.ground_truth_list)
+            for h in args.step_list:
+                for gt in ground_truth_columns:
+                    path = gt.split("_")[1]+"_h"+h+"_"+version+"_1718.txt"
+                    sub_file = []
+                    all_voting_Str = 'the all folder voting precision is'
+                    lag_Str = 'the lag is'
+                    if path in os.listdir(args.path):
+                        with open(os.path.join(args.path,path),"r") as f:
+                            lines = f.readlines()
+                            for i,line in enumerate(lines):
+                                if all_voting_Str.lower() in line.lower():
+                                    file = []
+                                    file.append(float(line.strip("\n").split(" ")[-1]))
+                                    sub_file.append(file)
+                                    if lag_Str.lower() in lines[i+1].lower():
+                                        for result in sub_file:
+                                            result.append(lines[i+1].strip("\n").split(" ")[-1])
+                                            result.append(lines[i+3].strip("\n").split(" ")[-1])
+                                        all_file+=sub_file
+                                        sub_file = []
+                    else:
+                        continue
+            for arr in all_file:
+                if arr[2] not in temp_ans.keys():
+                    temp_ans[arr[2]] = [arr[0]]
+                else:
+                    temp_ans[arr[2]].append(arr[0])
+            temp_ans = pd.DataFrame(temp_ans)
+            if ans is None:
+                ans = temp_ans
+            else:
+                ans = pd.concat([ans,temp_ans], axis = 0, sort = False)
+            ans.to_csv("xgboost_"+version+"_res.csv")
 
