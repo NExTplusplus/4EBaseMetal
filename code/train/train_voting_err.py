@@ -91,7 +91,7 @@ for horizon in [1,3,5]:
             else:
               final_list_v23.append(0)        
 
-            if final_list_v3[-1]+final_list_v5[-1]+final_list_v7[-1]+final_list_v9[-1]+final_list_v10[-1]+final_list_v12[-1]+final_list_v23[-1]>=3:
+            if final_list_v3[-1]+final_list_v5[-1]+final_list_v7[-1]+final_list_v9[-1]+final_list_v10[-1]+final_list_v12[-1]+final_list_v23[-1]>=4:
               results.append(1)
               if j < horizon:
                 final_list_1.append(1)
