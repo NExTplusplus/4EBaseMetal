@@ -54,15 +54,14 @@ def generate_version_params(version):
             ans["price_normalization"] = None
             
         ans["scaling"] = None
-        
-    if v=="v23":
-        ans["generate_tech_params"]:"v2"
+    if v=="v23" or v == "v24":
+        ans["generate_tech_params"]="v2"
         ans['technical_indication'] = "v3"
-        ans['remove_unused_columns'] = "v2"
+        ans['remove_unused_columns'] = "v4"
         ans["construct"]="v3"
         ans["normalize_without_1d_return"] = None
         ans["price_normalization"] = None
-        ans["scaling"] = None
+        ans["scaling"] = "v2"
         
     if ex == "ex1":
         ans['labelling'] = "v1_ex1"
