@@ -227,7 +227,7 @@ class Logistic_online():
 					length = length + ans.loc[:,col[:-3]+"length"]
 		ave = ave/length
 		ans = pd.concat([ans,pd.DataFrame({"average": ave})],axis = 1)
-		pd.DataFrame(ans).to_csv("_".join(["log_reg_all",self.version,str(self.lag),str(self.horizon)+".csv"]))
+		pd.DataFrame(ans).to_csv("_".join(["log_reg",self.gt,self.version,str(self.lag),str(self.horizon)+".csv"]))
 
 	#-------------------------------------------------------------------------------------------------------------------------------------#
 	"""
