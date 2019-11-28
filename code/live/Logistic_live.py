@@ -161,59 +161,59 @@ class Logistic_online():
 					acc = pure_LogReg.test(X_va,y_va.flatten())
 					ans[split_date[1]+"_acc"].append(acc)
 					ans[split_date[1]+"_length"].append(len(y_va))
-		else:
-			'''
-				for versions that tune over 6 metals 
-			'''
-			final_X_tr = []
-			final_y_tr = []
-			final_X_va = []
-			final_y_va = []
-			i = 0
-			#iterate over ground truths
-			for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
-				print(ground_truth)
-				metal_id = [0,0,0,0,0,0]
-				metal_id[i] = 1
-				#load data
-				X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,copy(split_date),norm_params,tech_params,version_params)
-				#post load processing and metal id extension
-				X_tr = np.concatenate(X_tr)
-				X_tr = X_tr.reshape(len(X_tr),lag*len(column_list[0]))
-				X_tr = np.append(X_tr,[metal_id]*len(X_tr),axis = 1)
-				y_tr = np.concatenate(y_tr)
-				X_va = np.concatenate(X_va)
-				X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
-				X_va = np.append(X_va,[metal_id]*len(X_va),axis = 1)
-				y_va = np.concatenate(y_va)
-				final_X_tr.append(X_tr)
-				final_y_tr.append(y_tr)
-				final_X_va.append(X_va)
-				final_y_va.append(y_va)
-				i+=1
-			#sort by time, not by metal
-			final_X_tr = [np.transpose(arr) for arr in np.dstack(final_X_tr)]
-			final_y_tr = [np.transpose(arr) for arr in np.dstack(final_y_tr)]
-			final_X_va = [np.transpose(arr) for arr in np.dstack(final_X_va)]
-			final_y_va = [np.transpose(arr) for arr in np.dstack(final_y_va)]
-			final_X_tr = np.reshape(final_X_tr,[np.shape(final_X_tr)[0]*np.shape(final_X_tr)[1],np.shape(final_X_tr)[2]])
-			final_y_tr = np.reshape(final_y_tr,[np.shape(final_y_tr)[0]*np.shape(final_y_tr)[1],np.shape(final_y_tr)[2]])
-			final_X_va = np.reshape(final_X_va,[np.shape(final_X_va)[0]*np.shape(final_X_va)[1],np.shape(final_X_va)[2]])
-			final_y_va = np.reshape(final_y_va,[np.shape(final_y_va)[0]*np.shape(final_y_va)[1],np.shape(final_y_va)[2]])
-			#tune logistic regression hyper parameter
-			for C in [0.0001,0.001,0.01,0.1,1.0,10,100]:
-				if C not in ans['C']:
-					ans["C"].append(C)
-				if split_date[1]+"_acc" not in ans.keys():
-					ans[split_date[1]+"_acc"] = []
-					ans[split_date[1]+"_length"] = []
-				pure_LogReg = LogReg(parameters={})
-				max_iter = max_iter
-				parameters = {"penalty":"l2", "C":C, "solver":"lbfgs", "tol":tol,"max_iter":6*4*len(fname_columns[0])*max_iter, "verbose" : 0,"warm_start": False, "n_jobs": -1}
-				pure_LogReg.train(final_X_tr,final_y_tr.flatten(), parameters)
-				acc = pure_LogReg.test(final_X_va,final_y_va.flatten())
-				ans[split_date[1]+"_acc"].append(acc)
-				ans[split_date[1]+"_length"].append(len(final_y_va))
+			else:
+				'''
+					for versions that tune over 6 metals 
+				'''
+				final_X_tr = []
+				final_y_tr = []
+				final_X_va = []
+				final_y_va = []
+				i = 0
+				#iterate over ground truths
+				for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
+					print(ground_truth)
+					metal_id = [0,0,0,0,0,0]
+					metal_id[i] = 1
+					#load data
+					X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,copy(split_date),norm_params,tech_params,version_params)
+					#post load processing and metal id extension
+					X_tr = np.concatenate(X_tr)
+					X_tr = X_tr.reshape(len(X_tr),lag*len(column_list[0]))
+					X_tr = np.append(X_tr,[metal_id]*len(X_tr),axis = 1)
+					y_tr = np.concatenate(y_tr)
+					X_va = np.concatenate(X_va)
+					X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
+					X_va = np.append(X_va,[metal_id]*len(X_va),axis = 1)
+					y_va = np.concatenate(y_va)
+					final_X_tr.append(X_tr)
+					final_y_tr.append(y_tr)
+					final_X_va.append(X_va)
+					final_y_va.append(y_va)
+					i+=1
+				#sort by time, not by metal
+				final_X_tr = [np.transpose(arr) for arr in np.dstack(final_X_tr)]
+				final_y_tr = [np.transpose(arr) for arr in np.dstack(final_y_tr)]
+				final_X_va = [np.transpose(arr) for arr in np.dstack(final_X_va)]
+				final_y_va = [np.transpose(arr) for arr in np.dstack(final_y_va)]
+				final_X_tr = np.reshape(final_X_tr,[np.shape(final_X_tr)[0]*np.shape(final_X_tr)[1],np.shape(final_X_tr)[2]])
+				final_y_tr = np.reshape(final_y_tr,[np.shape(final_y_tr)[0]*np.shape(final_y_tr)[1],np.shape(final_y_tr)[2]])
+				final_X_va = np.reshape(final_X_va,[np.shape(final_X_va)[0]*np.shape(final_X_va)[1],np.shape(final_X_va)[2]])
+				final_y_va = np.reshape(final_y_va,[np.shape(final_y_va)[0]*np.shape(final_y_va)[1],np.shape(final_y_va)[2]])
+				#tune logistic regression hyper parameter
+				for C in [0.0001,0.001,0.01,0.1,1.0,10,100]:
+					if C not in ans['C']:
+						ans["C"].append(C)
+					if split_date[1]+"_acc" not in ans.keys():
+						ans[split_date[1]+"_acc"] = []
+						ans[split_date[1]+"_length"] = []
+					pure_LogReg = LogReg(parameters={})
+					max_iter = max_iter
+					parameters = {"penalty":"l2", "C":C, "solver":"lbfgs", "tol":tol,"max_iter":6*4*len(fname_columns[0])*max_iter, "verbose" : 0,"warm_start": False, "n_jobs": -1}
+					pure_LogReg.train(final_X_tr,final_y_tr.flatten(), parameters)
+					acc = pure_LogReg.test(final_X_va,final_y_va.flatten())
+					ans[split_date[1]+"_acc"].append(acc)
+					ans[split_date[1]+"_length"].append(len(final_y_va))
 		ans = pd.DataFrame(ans)
 		ave = None
 		length = None
