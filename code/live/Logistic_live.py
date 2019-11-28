@@ -5,7 +5,6 @@ import argparse
 import numpy as np
 import pandas as pd
 from copy import copy
-sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 from data.load_data import load_data
 from model.logistic_regression import LogReg
 from utils.transform_data import flatten
@@ -20,6 +19,7 @@ from sklearn import metrics
 from sklearn.model_selection import KFold
 from utils.version_control_functions import generate_version_params
 from sklearn.externals import joblib
+sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '4EBaseMetal')))
 
 
 class Logistic_online():
@@ -106,7 +106,7 @@ class Logistic_online():
 		split_dates = rolling_half_year(start_time,end_time,length)
 		split_dates  =  split_dates[:]
 		print(split_dates)
-
+		print(sys.path[0])
 		"""
 		generate the version
 		"""			
@@ -176,14 +176,14 @@ class Logistic_online():
 					metal_id = [0,0,0,0,0,0]
 					metal_id[i] = 1
 					#load data
-					X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,copy(split_date),norm_params,tech_params,version_params)
+					X_tr, y_tr, X_va, y_va, X_te, y_te, norm_params,column_list = load_data(ts,LME_dates,self.horizon,[ground_truth],self.lag,copy(split_date),norm_params,tech_params,version_params)
 					#post load processing and metal id extension
 					X_tr = np.concatenate(X_tr)
-					X_tr = X_tr.reshape(len(X_tr),lag*len(column_list[0]))
+					X_tr = X_tr.reshape(len(X_tr),self.lag*len(column_list[0]))
 					X_tr = np.append(X_tr,[metal_id]*len(X_tr),axis = 1)
 					y_tr = np.concatenate(y_tr)
 					X_va = np.concatenate(X_va)
-					X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
+					X_va = X_va.reshape(len(X_va),self.lag*len(column_list[0]))
 					X_va = np.append(X_va,[metal_id]*len(X_va),axis = 1)
 					y_va = np.concatenate(y_va)
 					final_X_tr.append(X_tr)
@@ -227,7 +227,7 @@ class Logistic_online():
 					length = length + ans.loc[:,col[:-3]+"length"]
 		ave = ave/length
 		ans = pd.concat([ans,pd.DataFrame({"average": ave})],axis = 1)
-		pd.DataFrame(ans).to_csv("_".join(["log_reg_all",self.version,str(self.lag),str(self.steps)+".csv"]))
+		pd.DataFrame(ans).to_csv("_".join(["log_reg_all",self.version,str(self.lag),str(self.horizon)+".csv"]))
 
 	#-------------------------------------------------------------------------------------------------------------------------------------#
 	"""
