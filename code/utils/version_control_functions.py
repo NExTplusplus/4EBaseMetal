@@ -72,9 +72,13 @@ def generate_version_params(version):
         ans['technical_indication'] = ans['technical_indication']+"_ex3"
     return ans
 
-def generate_norm_params(version):
+def generate_norm_params(version,xgboost):
     if version == "v1":
-        return {'vol_norm':'v1','ex_spread_norm':'v1','spot_spread_norm':'v1','len_ma':5,'len_update':30,'both':3,'strength':0.01,'xgboost':False}
+        if xgboost == 1:
+            return {'vol_norm':'v1','ex_spread_norm':'v1','spot_spread_norm':'v1','len_ma':5,'len_update':30,'both':3,'strength':0.01,'xgboost':True}
+        else:
+            return {'vol_norm':'v1','ex_spread_norm':'v1','spot_spread_norm':'v1','len_ma':5,'len_update':30,'both':3,'strength':0.01,'xgboost':False}
+        
 def generate_tech_params(version):
     if version == "v1":
         return {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
