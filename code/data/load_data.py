@@ -53,7 +53,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     parameters = {'time_series':time_series, 'LME_dates': LME_dates, 'horizon': horizon, 
                     'ground_truth_columns': ground_truth_columns, 'lags': lags, 'split_dates':split_dates,
                     'norm_params':norm_params, 'tech_params': tech_params}
-    parameters['norm_params'] = generate_norm_params(version_params['generate_norm_params'])
+    parameters['norm_params'] = generate_norm_params(version_params['generate_norm_params'], 1 if norm_params['xgboost'] else 0)
     parameters['tech_params'] = generate_tech_params(version_params['generate_tech_params'])
     parameters['strat_params'],parameters['activation_params'] = generate_strat_params(ground_truth_columns[0], horizon, version_params['generate_strat_params'])
     original_test_date = split_dates[2]
