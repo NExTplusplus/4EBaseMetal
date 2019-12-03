@@ -203,11 +203,11 @@ if __name__ == '__main__':
                           "-gamma",str(total.iloc[0,3]),
                           "-min_child",str(int(total.iloc[0,4])),
                           "-subsample",str(total.iloc[0,5]),"-voting all",
-                          ">","_".join([gt,"xgboost","h"+h,version,"1718.txt"]),"2>&1 &"])+"\n")
-        i+=1
-        if i == 9:
-          i = 0
-          out.write("sleep 10m\n")
+                          ">","_".join([gt.split("_")[1],"xgboost","h"+h,version,"1718.txt"]),"2>&1 &"])+"\n")
+                        i+=1
+                        if i == 9:
+                        i = 0
+                        out.write("sleep 10m\n")
 
     if args.action == "testing":
         total = pd.DataFrame()

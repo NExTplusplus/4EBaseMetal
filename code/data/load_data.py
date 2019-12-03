@@ -147,7 +147,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
         tra_ind = lags - 1
     val_ind = parameters['time_series'][0].index.get_loc(split_dates[1])
     assert val_ind >= lags - 1, 'without training data'
-    if split_dates[2] == original_test_date:
+    if split_dates[2] == original_test_date and "live" not in tech_params.keys():
         tes_ind = parameters['time_series'][0].index.get_loc(split_dates[2])
     else:
         tes_ind = parameters['time_series'][0].index.get_loc(split_dates[2])+1
@@ -186,7 +186,9 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
             y_te = None
     
     
-    
-    return X_tr, y_tr, X_va, y_va, X_te, y_te,parameters['norm_check'], parameters['all_cols']
+    if "live" not in tech_params.keys():
+        return X_tr, y_tr, X_va, y_va, X_te, y_te,parameters['norm_check'], parameters['all_cols']
+    else:
+        return X_tr, y_tr, X_va, y_va, X_te, y_te,parameters['norm_check'], parameters['all_cols'], parameters["time_series"][0].index.values.tolist()[val_ind:tes_ind]
 
 

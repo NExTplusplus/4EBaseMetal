@@ -39,7 +39,7 @@ if __name__ == '__main__':
 	parser.add_argument('-v','--version', help='version', type = str, default = 'v10')
 	parser.add_argument('-o', '--action', type=str, default='train',
 						help='train, test, tune')
-	parser.add_argument('-d', '--date', help = "the date is the final data's date which you want to use for testing",type=str)
+	parser.add_argument('-d', '--date', help = "the date is the final data's date which you want to use for testing",type=str)	
 	parser.add_argument('-C', '--C', type=float)
 	args = parser.parse_args()
 	model = Logistic_online(lag = args.lag, horizon = args.steps, version = args.version, gt = args.ground_truth, date = args.date, source = args.source, path =args.config)
@@ -50,4 +50,4 @@ if __name__ == '__main__':
 		model.train(C=args.C, max_iter=args.max_iter)
 	else:
 		final = model.test()
-		print(final)
+		final.to_csv("_".join([args.ground_truth,args.date,str(args.steps),args.version])+".csv")
