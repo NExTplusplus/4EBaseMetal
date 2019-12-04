@@ -695,6 +695,8 @@ def remove_unused_columns_v4(time_series,org_cols,ground_truth):
     print("target",target)
     for col in copy(time_series.columns):
         if target not in col or col==target+'_OI' or col==target+'_Volume':
+            if col == "day" or col == "month":
+                continue
             time_series = time_series.drop(col,axis = 1)
             if col in org_cols:
                 org_cols.remove(col)

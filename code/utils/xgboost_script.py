@@ -218,7 +218,7 @@ if __name__ == '__main__':
             ground_truth_columns = copy(args.ground_truth_list)
             for h in args.step_list:
                 for gt in ground_truth_columns:
-                    path = gt.split("_")[1]+"_h"+h+"_"+version+"_1718.txt"
+                    path = gt.split("_")[1]+"xgboost_h"+h+"_"+version+"_1718.txt"
                     sub_file = []
                     all_voting_Str = 'the all folder voting precision is'
                     lag_Str = 'the lag is'
