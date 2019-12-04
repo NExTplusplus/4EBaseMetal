@@ -15,33 +15,33 @@ if __name__ == '__main__':
   parser.add_argument(
         '-v',nargs='+',
         help='which version model is to be deleted',
-        default='none'
+        default=[]
     )
   args = parser.parse_args()
   version = args.v
-  
-  print(version)
+  #print(version)
+  #print(version)
   for horizon in [1,3,5]:
     for ground_truth in ["LME_Co_Spot","LME_Al_Spot","LME_Ni_Spot","LME_Ti_Spot","LME_Zi_Spot","LME_Le_Spot"]:
         for window_size in [5,10,15,20,25,30]:
           for date in ["2014-07-01","2015-01-01","2015-07-01","2016-01-01","2016-07-01","2017-01-01","2017-07-01","2018-01-01","2018-07-01"]:
             version_dict = {}
             xgboost_v3 = np.loadtxt("data/xgboost_folder/"+ground_truth+"_"+"h"+str(horizon)+"_"+date+"_xgboost_v3.txt")
-            version_dict['v3']=xgboost_v3
+            #version_dict['v3']=xgboost_v3
             xgboost_v5 = np.loadtxt("data/xgboost_folder/"+ground_truth+"_"+"h"+str(horizon)+"_"+date+"_xgboost_v5.txt")
-            version_dict['v5']=xgboost_v5
+            #version_dict['v5']=xgboost_v5
             xgboost_v7 = np.loadtxt("data/xgboost_folder/"+ground_truth+"_"+"h"+str(horizon)+"_"+date+"_xgboost_v7.txt")
-            version_dict['v7']=xgboost_v7
+            #version_dict['v7']=xgboost_v7
             xgboost_v9 = np.loadtxt("data/xgboost_folder/"+ground_truth+"_"+"h"+str(horizon)+"_"+date+"_xgboost_v9.txt")
-            version_dict['v9']=xgboost_v9
+            #version_dict['v9']=xgboost_v9
             xgboost_v10 = np.loadtxt("data/xgboost_folder/"+ground_truth+"_"+"h"+str(horizon)+"_"+date+"_xgboost_v10.txt")
-            version_dict['v10']=xgboost_v10
+            #version_dict['v10']=xgboost_v10
             xgboost_v12 = np.loadtxt("data/xgboost_folder/"+ground_truth+"_"+"h"+str(horizon)+"_"+date+"_xgboost_v12.txt")
-            version_dict['v12']=xgboost_v12
+            #version_dict['v12']=xgboost_v12
             xgboost_v23 = np.loadtxt("data/xgboost_folder/"+ground_truth+"_"+"h"+str(horizon)+"_"+date+"_xgboost_v23.txt")
-            version_dict['v23']=xgboost_v23
+            #version_dict['v23']=xgboost_v23
             xgboost_v24 = np.loadtxt("data/xgboost_folder/"+ground_truth+"_"+"h"+str(horizon)+"_"+date+"_xgboost_v24.txt")
-            version_dict['v24']=xgboost_v24
+            #version_dict['v24']=xgboost_v24
             y_va = pd.read_csv("data/Label/"+ground_truth+"_h"+str(horizon)+"_"+date+"_label"+".csv")
             y_va = list(y_va['Label'])
             length=0
@@ -77,7 +77,7 @@ if __name__ == '__main__':
                 final_list_v3.append(1)
               else:
                 final_list_v3.append(0)
-                    
+              version_dict['v3']=final_list_v3
               count_1 = 0
               count_0 = 0
               for item in xgboost_v5[j]:
@@ -89,7 +89,7 @@ if __name__ == '__main__':
                 final_list_v5.append(1)
               else:
                 final_list_v5.append(0)
-              
+              version_dict['v5']=final_list_v5
               count_1 = 0
               count_0 = 0
               for item in xgboost_v7[j]:
@@ -101,7 +101,7 @@ if __name__ == '__main__':
                 final_list_v7.append(1)
               else:
                 final_list_v7.append(0)
-              
+              version_dict['v7']=final_list_v7
               count_1 = 0
               count_0 = 0
               for item in xgboost_v9[j]:
@@ -113,7 +113,7 @@ if __name__ == '__main__':
                 final_list_v9.append(1)
               else:
                 final_list_v9.append(0)
-              
+              version_dict['v9']=final_list_v9
               count_1 = 0
               count_0 = 0
               for item in xgboost_v10[j]:
@@ -125,7 +125,7 @@ if __name__ == '__main__':
                 final_list_v10.append(1)
               else:
                 final_list_v10.append(0)
-              
+              version_dict['v10']=final_list_v10
               count_1 = 0
               count_0 = 0
               for item in xgboost_v12[j]:
@@ -137,7 +137,7 @@ if __name__ == '__main__':
                 final_list_v12.append(1)
               else:
                 final_list_v12.append(0)
-              
+              version_dict['v12']=final_list_v12
               count_1 = 0
               count_0 = 0
               for item in xgboost_v23[j]:
@@ -149,7 +149,7 @@ if __name__ == '__main__':
                 final_list_v23.append(1)
               else:
                 final_list_v23.append(0)
-              
+              version_dict['v23']=final_list_v23
               count_1 = 0
               count_0 = 0
               for item in xgboost_v24[j]:
@@ -161,11 +161,16 @@ if __name__ == '__main__':
                 final_list_v24.append(1)
               else:
                 final_list_v24.append(0)
-
+              count=0
+              version_dict['v24']=final_list_v24
+              #print(len(version))
+              gap=(len(version_dict.keys())-len(version))//2+1
+              #print(length)
               for key in version_dict.keys():
                 if key not in version:
                   count+=version_dict[key][-1]
-              if count>=(len(version_dict.keys())/2)+1:
+              #print(np.sum(count))
+              if count >= gap:
                 results.append(1)
                 if j < horizon:
                   final_list_1.append(1)
@@ -239,9 +244,11 @@ if __name__ == '__main__':
               error_xgb_v24 = np.sum(result_v24_error[length:length+window])+1e-06
               error_dict['v24']=error_xgb_v24
               result = 0
+              fenmu = 0
               for key in error_dict.keys():
                 if key not in version:
                   fenmu += 1/error_dict[key]
+              #print(fenmu)
               if 'v3' not in version:
                 weight_xgb_v3 = float(1/error_xgb_v3)/fenmu
                 result+=weight_xgb_v3*final_list_v3[i]
