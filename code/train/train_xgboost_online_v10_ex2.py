@@ -168,7 +168,7 @@ if __name__ == '__main__':
                 train_y = pd.DataFrame(final_y_tr,columns=['result'])
                 
                 #iterate over ground truths for testing
-                for i,gt in enumerate(["LMCADY","LMAHDY","LMNIDY","LMSNDY","LMZSDY","LMPBDY"]):
+                for i,gt in enumerate(["LME_Co_Spot","LME_Al_Spot","LME_Ni_Spot","LME_Ti_Spot","LME_Zi_Spot","LME_Le_Spot"]):
                     print("ground truth is "+gt)
                     test_dataframe = pd.DataFrame(final_X_va[i],columns=column_lag_list)
                     test_X = test_dataframe.loc[:,column_lag_list] 
@@ -246,7 +246,7 @@ if __name__ == '__main__':
                     #calculate the all folder voting
                     if args.voting=='all':
                         result = np.concatenate((folder_1,folder_2,folder_3,folder_4,folder_5,folder_6,folder_7,folder_8,folder_9,folder_10),axis=1)
-                        np.savetxt(ground_truth+"_h"+str(args.steps)+"_"+split_date[1]+"_xgboost_"+args.version+".txt",result)
+                        np.savetxt(gt+"_h"+str(args.steps)+"_"+split_date[1]+"_xgboost_"+args.version+".txt",result)
                         final_list = []
                         for j in range(len(result)):
                             count_1=0
