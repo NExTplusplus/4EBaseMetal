@@ -20,7 +20,7 @@ def generate_version_params(version):
         if v=="v3":
             ans['remove_unused_columns'] = "v4"
     
-    if v == "v9" or v == "v10" or v == "v11" or v == "v12" or v=="v14" or v=="v16" or v=="v18" or v=="v20" or v=="v22":
+    if v in ["v9","v10","v11","v12","v14","v16","v18","v20","v22","v26","v28","v30","v32"]:
         if v == "v9":
             ans["generate_strat_params"]="v1"
         elif v== "v10":
@@ -41,7 +41,14 @@ def generate_version_params(version):
             ans["generate_strat_params"]="v7"
         elif v== 'v22':
             ans["generate_strat_params"]="v8"
-            
+        elif v == "v26":
+            ans["generate_strat_params"]="v9"
+        elif v == "v28":
+            ans["generate_strat_params"]="v10"
+        elif v == "v30":
+            ans["generate_strat_params"]="v11"
+        elif v == "v32":
+            ans["generate_strat_params"]="v12"
         ans['strategy_signal'] = "v1"
         ans["technical_indication"] = None
         
@@ -54,7 +61,7 @@ def generate_version_params(version):
             ans["price_normalization"] = None
             
         ans["scaling"] = None
-    if v=="v23" or v == "v24":
+    if v in["v23","v24","v26","v28","v30","v32"]:
         ans["generate_tech_params"]="v2"
         ans['technical_indication'] = "v3"
         ans['remove_unused_columns'] = "v4"
@@ -62,7 +69,7 @@ def generate_version_params(version):
         ans["normalize_without_1d_return"] = None
         ans["price_normalization"] = None
         ans["scaling"] = "v2"
-        
+    
     if ex == "ex1":
         ans['labelling'] = "v1_ex1"
     if ex == "ex2":
@@ -70,6 +77,7 @@ def generate_version_params(version):
         ans['construct'] = "v1_ex2"
     if ex == "ex3":
         ans['technical_indication'] = ans['technical_indication']+"_ex3"
+    print(ans)
     return ans
 
 def generate_norm_params(version,xgboost):
@@ -133,6 +141,27 @@ def generate_strat_params(ground_truth,steps,version):
             load strategy parameters for preprocessing version 22
         '''
         return generate_strat_params_v8(ground_truth,steps)
+    
+    if version == "v9":
+        '''
+            load strategy_parameters for preprocessing version 26
+        '''
+        return generate_strat_params_v9(ground_truth,steps)
+    if version == "v10":
+        '''
+            load strategy_parameters for preprocessing version 28
+        '''
+        return generate_strat_params_v10(ground_truth,steps)
+    if version == "v11":
+        '''
+            load strategy_parameters for preprocessing version 26
+        '''
+        return generate_strat_params_v11(ground_truth,steps)
+    if version == "v12":
+        '''
+            load strategy_parameters for preprocessing version 26
+        '''
+        return generate_strat_params_v12(ground_truth,steps)
     
 
 def deal_with_abnormal_value(arguments, version):
