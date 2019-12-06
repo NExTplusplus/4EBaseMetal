@@ -21,6 +21,8 @@ if __name__ == '__main__':
                         help='batch size')
     parser.add_argument('--steps', type=int, default=5,
                         help='time horizon')
+    parser.add_argument('--version', type=str, default='v16',
+                        help='the feature version')
 
     args = parser.parse_args()
     print(args)
@@ -56,4 +58,4 @@ if __name__ == '__main__':
     }
 
     grid_search_alstm(selected_parameters, parameter_values, init_para,
-                script=args.script, log_file=args.log, steps=args.steps)
+                script=args.script, log_file=args.log, steps=args.steps, version=args.version)
