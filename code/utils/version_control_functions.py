@@ -61,7 +61,8 @@ def generate_version_params(version):
             ans["price_normalization"] = None
             
         ans["scaling"] = None
-    if v in["v23","v24","v26","v28","v30","v32"]:
+    
+    if v in["v23","v24","v28","v30","v32"]:
         ans["generate_tech_params"]="v2"
         ans['technical_indication'] = "v3"
         ans['remove_unused_columns'] = "v4"
@@ -69,6 +70,16 @@ def generate_version_params(version):
         ans["normalize_without_1d_return"] = None
         ans["price_normalization"] = None
         ans["scaling"] = "v2"
+    
+    if v in ["v26"]:
+        ans["generate_tech_params"]="v2"
+        ans['technical_indication'] = "v3"
+        ans['remove_unused_columns'] = "v4"
+        ans["construct"]="v1"
+        ans["normalize_without_1d_return"] = None
+        ans["price_normalization"] = None
+        ans["scaling"] = "v2"
+        ans['labelling'] = "v2"        
     
     if ex == "ex1":
         ans['labelling'] = "v1_ex1"
