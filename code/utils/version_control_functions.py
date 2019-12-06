@@ -20,7 +20,7 @@ def generate_version_params(version):
         if v=="v3":
             ans['remove_unused_columns'] = "v4"
     
-    if v in ["v9","v10","v11","v12","v14","v16","v18","v20","v22","v26","v28","v30","v32"]:
+    if v in ["v9","v10","v11","v12","v14","v16","v18","v20","v22","v28","v30","v32"]:
         if v == "v9":
             ans["generate_strat_params"]="v1"
         elif v== "v10":
@@ -41,8 +41,6 @@ def generate_version_params(version):
             ans["generate_strat_params"]="v7"
         elif v== 'v22':
             ans["generate_strat_params"]="v8"
-        elif v == "v26":
-            ans["generate_strat_params"]="v9"
         elif v == "v28":
             ans["generate_strat_params"]="v10"
         elif v == "v30":
