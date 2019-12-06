@@ -266,6 +266,14 @@ if __name__ == '__main__':
     #not flexible, need to be updated
     error_path = './step3_data/error_recommend.json'
     recommend = pd.read_sql('select * from recommend', con=conn)
+    
+    #here we deal with the wrong date
+    dat_type = [str(type(i)) for i in recommend['date']]
+    recommend['dat_type'] = dat_type
+    recommend = recommend[recommend['dat_type'].str.contains('time')]
+    recommend = recommend.reset_index(drop=True)
+    del recommend['dat_type']
+    
     #here we delete the id is because the id is the auto increment column of the table
     del recommend['id']
     

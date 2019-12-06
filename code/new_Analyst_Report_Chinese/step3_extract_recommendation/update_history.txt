@@ -7,3 +7,5 @@ This time will update the following things:
 
 P.S. this version doesn't have the online version, so jiaxian will keep updatung this for the following time.
 #######################################################################################################################################################################
+#update date: 2019-12-06
+1) Deal with the wrong date in the webpage.
