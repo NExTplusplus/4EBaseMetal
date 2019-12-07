@@ -57,7 +57,7 @@ class XGBoost_online():
     #assert that the configuration path is correct
     if self.version in ['v5','v7']:
       assert (self.path == "exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf")
-    elif self.version in ["v3","v23"]:
+    elif self.version in ["v3","v23","v24","v28","v30"]:
       assert (self.path == "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf")
     elif self.version in ["v9","v10","v12"]:
       assert (self.path == "exp/online_v10.conf")
@@ -216,78 +216,130 @@ class XGBoost_online():
             for min_child_weight in [3,4,5]:
               for subsample in [0.7,0.85,0.9]:
                 from sklearn.metrics import accuracy_score
-                  model = xgb.XGBClassifier(max_depth=max_depth,
-                              learning_rate = learning_rate,
-                              n_estimators=500,
-                              silent=True,
-                              nthread=10,
-                              gamma=gamma,
-                              min_child_weight=min_child_weight,
-                              subsample=subsample,
-                              colsample_bytree=0.7,
-                              colsample_bylevel=1,
-                              reg_alpha=0.0001,
-                              reg_lambda=1,
-                              scale_pos_weight=1,
-                              seed=1440,
-                              missing=None)
-                  folds = KFold(n_splits=n_splits)
-                  scores = []
-                  prediction = np.zeros((len(X_va), 1))
-                  folder_index = []
-                  
-                  #generate k fold and train xgboost model
-                  for fold_n, (train_index, valid_index) in enumerate(folds.split(train_X)):
-                    #print("the train_index is {}".format(train_index))
-                    #print("the test_index is {}".format(valid_index))
-                    X_train, X_valid = train_X[column_lag_list].iloc[train_index], train_X[column_lag_list].iloc[valid_index]
-                    y_train, y_valid = train_y.iloc[train_index], train_y.iloc[valid_index]
-                    model.fit(X_train, y_train,eval_metric='error',verbose=True,eval_set=[(X_valid,y_valid)],early_stopping_rounds=5)
-                    y_pred_valid = model.predict(X_valid)
-                    y_pred = model.predict_proba(test_X, ntree_limit=model.best_ntree_limit)[:, 1]
-                    y_pred = y_pred.reshape(-1, 1)
-                    #prediction_each_folder = y_pred
-                    if fold_n == 0:
-                      folder_1=y_pred
-                      folder_1=folder_1.reshape(len(folder_1),1)
-                    elif fold_n == 1:
-                        
-                      folder_2=y_pred
-                      folder_2=folder_2.reshape(len(folder_2),1)
-                    elif fold_n==2:
-                        
-                      folder_3 = y_pred
-                      folder_3=folder_3.reshape(len(folder_3),1)
-                    elif fold_n==3:
-                        
-                      folder_4 = y_pred
-                      folder_4=folder_4.reshape(len(folder_4),1)
-                    elif fold_n==4:
-                        
-                      folder_5=y_pred
-                      folder_5=folder_5.reshape(len(folder_5),1)
-                    elif fold_n==5:
-                        
-                      folder_6=y_pred
-                      folder_6=folder_6.reshape(len(folder_6),1)
-                    elif fold_n==6:
-                        
-                      folder_7=y_pred
-                      folder_7=folder_7.reshape(len(folder_7),1)
-                    elif fold_n==7:
-                        
-                      folder_8=y_pred
-                      folder_8=folder_8.reshape(len(folder_8),1)
-                    elif fold_n==8:
-                        
-                      folder_9=y_pred
-                      folder_9=folder_9.reshape(len(folder_9),1)
-                    elif fold_n==9:
-                      folder_10=y_pred
-                      folder_10=folder_10.reshape(len(folder_10),1) 
-                  
-                  #calculate the all folder voting
-                  result = np.concatenate((folder_1,folder_2,folder_3,folder_4,folder_5,folder_6,folder_7,folder_8,folder_9,folder_10),axis=1)
+                model = xgb.XGBClassifier(max_depth=max_depth,
+                            learning_rate = learning_rate,
+                            n_estimators=500,
+                            silent=True,
+                            nthread=10,
+                            gamma=gamma,
+                            min_child_weight=min_child_weight,
+                            subsample=subsample,
+                            colsample_bytree=0.7,
+                            colsample_bylevel=1,
+                            reg_alpha=0.0001,
+                            reg_lambda=1,
+                            scale_pos_weight=1,
+                            seed=1440,
+                            missing=None)
+                folds = KFold(n_splits=n_splits)
+                scores = []
+                prediction = np.zeros((len(X_va), 1))
+                folder_index = []
+                
+                #generate k fold and train xgboost model
+                for fold_n, (train_index, valid_index) in enumerate(folds.split(train_X)):
+                  #print("the train_index is {}".format(train_index))
+                  #print("the test_index is {}".format(valid_index))
+                  X_train, X_valid = train_X[column_lag_list].iloc[train_index], train_X[column_lag_list].iloc[valid_index]
+                  y_train, y_valid = train_y.iloc[train_index], train_y.iloc[valid_index]
+                  model.fit(X_train, y_train,eval_metric='error',verbose=True,eval_set=[(X_valid,y_valid)],early_stopping_rounds=5)
+                  y_pred_valid = model.predict(X_valid)
+                  y_pred = model.predict_proba(test_X, ntree_limit=model.best_ntree_limit)[:, 1]
+                  y_pred = y_pred.reshape(-1, 1)
+                  #prediction_each_folder = y_pred
+                  if fold_n == 0:
+                    folder_1=y_pred
+                    folder_1=folder_1.reshape(len(folder_1),1)
+                  elif fold_n == 1:
+                      
+                    folder_2=y_pred
+                    folder_2=folder_2.reshape(len(folder_2),1)
+                  elif fold_n==2:
+                      
+                    folder_3 = y_pred
+                    folder_3=folder_3.reshape(len(folder_3),1)
+                  elif fold_n==3:
+                      
+                    folder_4 = y_pred
+                    folder_4=folder_4.reshape(len(folder_4),1)
+                  elif fold_n==4:
+                      
+                    folder_5=y_pred
+                    folder_5=folder_5.reshape(len(folder_5),1)
+                  elif fold_n==5:
+                      
+                    folder_6=y_pred
+                    folder_6=folder_6.reshape(len(folder_6),1)
+                  elif fold_n==6:
+                      
+                    folder_7=y_pred
+                    folder_7=folder_7.reshape(len(folder_7),1)
+                  elif fold_n==7:
+                      
+                    folder_8=y_pred
+                    folder_8=folder_8.reshape(len(folder_8),1)
+                  elif fold_n==8:
+                      
+                    folder_9=y_pred
+                    folder_9=folder_9.reshape(len(folder_9),1)
+                  elif fold_n==9:
+                    folder_10=y_pred
+                    folder_10=folder_10.reshape(len(folder_10),1) 
+                
+                #calculate the all folder voting
+                result = np.concatenate((folder_1,folder_2,folder_3,folder_4,folder_5,folder_6,folder_7,folder_8,folder_9,folder_10),axis=1)
+                final_list = []
+                for j in range(len(result)):
+                  count_1=0
+                  count_0=0
+                  for item in result[j]:
+                    if item > 0.5:
+                      count_1+=1
+                    else:
+                      count_0+=1
+                  if count_1>count_0:
+                    final_list.append(1)
+                  else:
+                    final_list.append(0)
+                #print("the lag is {}".format(lag))
+                print("the all folder voting precision is {}".format(metrics.accuracy_score(final_y_va, final_list)))
+                
+                #calculate the near folder voting
+                result = np.concatenate((folder_6,folder_7,folder_8,folder_9,folder_10),axis=1)
+                final_list = []
+                for j in range(len(result)):
+                  count_1=0
+                  count_0=0
+                  for item in result[j]:
+                    if item > 0.5:
+                      count_1+=1
+                    else:
+                      count_0+=1
+                  if count_1>count_0:
+                    final_list.append(1)
+                  else:
+                    final_list.append(0)
+                print("the near precision is {}".format(metrics.accuracy_score(final_y_va, final_list)))
+                
+                #calculate the far folder voting
+                result = np.concatenate((folder_1,folder_2,folder_3,folder_4,folder_5),axis=1)
+                final_list = []
+                for j in range(len(result)):
+                  count_1=0
+                  count_0=0
+                  for item in result[j]:
+                    if item > 0.5:
+                      count_1+=1
+                    else:
+                      count_0+=1
+                  if count_1>count_0:
+                    final_list.append(1)
+                  else:
+                    final_list.append(0)
+                print("the far precision is {}".format(metrics.accuracy_score(final_y_va, final_list)))
+                #calculate the same folder voting
+                if split_date[1].split("-")[1]=='01':
+                  result = np.concatenate((folder_1,folder_3,folder_5,folder_7,folder_9),axis=1)
                   final_list = []
                   for j in range(len(result)):
                     count_1=0
@@ -302,10 +354,10 @@ class XGBoost_online():
                     else:
                       final_list.append(0)
                   #print("the lag is {}".format(lag))
-                  print("the all folder voting precision is {}".format(metrics.accuracy_score(final_y_va, final_list)))
+                  print("the same precision is {}".format(metrics.accuracy_score(final_y_va, final_list)))
                   
-                  #calculate the near folder voting
-                  result = np.concatenate((folder_6,folder_7,folder_8,folder_9,folder_10),axis=1)
+                  #calculate the reverse folder voting
+                  result = np.concatenate((folder_2,folder_4,folder_6,folder_8,folder_10),axis=1)
                   final_list = []
                   for j in range(len(result)):
                     count_1=0
@@ -319,107 +371,55 @@ class XGBoost_online():
                       final_list.append(1)
                     else:
                       final_list.append(0)
-                  print("the near precision is {}".format(metrics.accuracy_score(final_y_va, final_list)))
-                  
-                  #calculate the far folder voting
-                  result = np.concatenate((folder_1,folder_2,folder_3,folder_4,folder_5),axis=1)
-                  final_list = []
-                  for j in range(len(result)):
-                    count_1=0
-                    count_0=0
-                    for item in result[j]:
-                      if item > 0.5:
-                        count_1+=1
-                      else:
-                        count_0+=1
-                    if count_1>count_0:
-                      final_list.append(1)
-                    else:
-                      final_list.append(0)
-                  print("the far precision is {}".format(metrics.accuracy_score(final_y_va, final_list)))
+                  #print("the lag is {}".format(lag))
+                  print("the reverse precision is {}".format(metrics.accuracy_score(final_y_va, final_list)))
+                  print("the max_depth is {}".format(max_depth))
+                  print("the learning_rate is {}".format(learning_rate))
+                  print("the gamma is {}".format(gamma))
+                  print("the min_child_weight is {}".format(min_child_weight))
+                  print("the subsample is {}".format(subsample))
+                else:
+                    
                   #calculate the same folder voting
-                  if split_date[1].split("-")[1]=='01':
-                    result = np.concatenate((folder_1,folder_3,folder_5,folder_7,folder_9),axis=1)
-                    final_list = []
-                    for j in range(len(result)):
-                      count_1=0
-                      count_0=0
-                      for item in result[j]:
-                        if item > 0.5:
-                          count_1+=1
-                        else:
-                          count_0+=1
-                      if count_1>count_0:
-                        final_list.append(1)
+                  result = np.concatenate((folder_2,folder_4,folder_6,folder_8,folder_10),axis=1)
+                  final_list = []
+                  for j in range(len(result)):
+                    count_1=0
+                    count_0=0
+                    for item in result[j]:
+                      if item > 0.5:
+                        count_1+=1
                       else:
-                        final_list.append(0)
-                    #print("the lag is {}".format(lag))
-                    print("the same precision is {}".format(metrics.accuracy_score(final_y_va, final_list)))
-                    
-                    #calculate the reverse folder voting
-                    result = np.concatenate((folder_2,folder_4,folder_6,folder_8,folder_10),axis=1)
-                    final_list = []
-                    for j in range(len(result)):
-                      count_1=0
-                      count_0=0
-                      for item in result[j]:
-                        if item > 0.5:
-                          count_1+=1
-                        else:
-                          count_0+=1
-                      if count_1>count_0:
-                        final_list.append(1)
+                        count_0+=1
+                    if count_1>count_0:
+                      final_list.append(1)
+                    else:
+                      final_list.append(0)
+                  #print("the lag is {}".format(lag))
+                  print("the same precision is {}".format(metrics.accuracy_score(final_y_va, final_list)))
+                  
+                  #calculate the reverse folder voting
+                  result = np.concatenate((folder_1,folder_3,folder_5,folder_7,folder_9),axis=1)
+                  final_list = []
+                  for j in range(len(result)):
+                    count_1=0
+                    count_0=0
+                    for item in result[j]:
+                      if item > 0.5:
+                        count_1+=1
                       else:
-                        final_list.append(0)
-                    #print("the lag is {}".format(lag))
-                    print("the reverse precision is {}".format(metrics.accuracy_score(final_y_va, final_list)))
-                    print("the max_depth is {}".format(max_depth))
-                    print("the learning_rate is {}".format(learning_rate))
-                    print("the gamma is {}".format(gamma))
-                    print("the min_child_weight is {}".format(min_child_weight))
-                    print("the subsample is {}".format(subsample))
-                  else:
-                      
-                    #calculate the same folder voting
-                    result = np.concatenate((folder_2,folder_4,folder_6,folder_8,folder_10),axis=1)
-                    final_list = []
-                    for j in range(len(result)):
-                      count_1=0
-                      count_0=0
-                      for item in result[j]:
-                        if item > 0.5:
-                          count_1+=1
-                        else:
-                          count_0+=1
-                      if count_1>count_0:
-                        final_list.append(1)
-                      else:
-                        final_list.append(0)
-                    #print("the lag is {}".format(lag))
-                    print("the same precision is {}".format(metrics.accuracy_score(final_y_va, final_list)))
-                    
-                    #calculate the reverse folder voting
-                    result = np.concatenate((folder_1,folder_3,folder_5,folder_7,folder_9),axis=1)
-                    final_list = []
-                    for j in range(len(result)):
-                      count_1=0
-                      count_0=0
-                      for item in result[j]:
-                        if item > 0.5:
-                          count_1+=1
-                        else:
-                          count_0+=1
-                      if count_1>count_0:
-                        final_list.append(1)
-                      else:
-                        final_list.append(0)
-                    #print("the lag is {}".format(lag))
-                    print("the reverse precision is {}".format(metrics.accuracy_score(final_y_va, final_list)))
-                    print("the max_depth is {}".format(max_depth))
-                    print("the learning_rate is {}".format(learning_rate))
-                    print("the gamma is {}".format(gamma))
-                    print("the min_child_weight is {}".format(min_child_weight))
-                    print("the subsample is {}".format(subsample))
+                        count_0+=1
+                    if count_1>count_0:
+                      final_list.append(1)
+                    else:
+                      final_list.append(0)
+                  #print("the lag is {}".format(lag))
+                  print("the reverse precision is {}".format(metrics.accuracy_score(final_y_va, final_list)))
+                  print("the max_depth is {}".format(max_depth))
+                  print("the learning_rate is {}".format(learning_rate))
+                  print("the gamma is {}".format(gamma))
+                  print("the min_child_weight is {}".format(min_child_weight))
+                  print("the subsample is {}".format(subsample))
       print("the lag is {}".format(lag))
       print("the train date is {}".format(split_date[0]))
       print("the test date is {}".format(split_date[1]))
@@ -429,7 +429,7 @@ class XGBoost_online():
   """
   this function is used to train the model and save it
   """
-  def train(self,C=0.01,tol=1e-7,max_iter=100):
+  def train(self,max_depth,learning_rate,gamma,min_child_weight,subsample):
     print("begin to train")
     #assert that the configuration path is correct
     if self.version in ['v5','v7']:
@@ -520,7 +520,6 @@ class XGBoost_online():
     len_ma = 5
     len_update = 30
     tol = 1e-7
-    pure_LogReg = LogReg(parameters={})
     norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
             'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False}
     tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
