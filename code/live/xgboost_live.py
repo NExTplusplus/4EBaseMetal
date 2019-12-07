@@ -141,16 +141,16 @@ class XGBoost_online():
         X_tr, y_tr, X_va, y_va, X_te, y_te, norm_params,column_list = load_data(ts,LME_dates,self.horizon,self.gt,self.lag,split_date,norm_params,tech_params,version_params)
         column_lag_list = []
         column_name = []
-        for i in range(lag):
+        for i in range(self.lag):
           for item in column_list[0]:
-            new_item = item+"_"+str(lag-i)
+            new_item = item+"_"+str(self.lag-i)
             column_lag_list.append(new_item)
         X_tr = np.concatenate(X_tr)
-        final_X_tr = X_tr.reshape(len(X_tr),lag*len(column_list[0]))
+        final_X_tr = X_tr.reshape(len(X_tr),self.lag*len(column_list[0]))
         final_y_tr = np.concatenate(y_tr)
         X_va = np.concatenate(X_va)
         final_y_va = np.concatenate(y_va)
-        final_X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
+        final_X_va = X_va.reshape(len(X_va),self.lag*len(column_list[0]))
         
       else:
         i = 0
@@ -165,11 +165,11 @@ class XGBoost_online():
           
           #post load process and metal id extension
           X_tr = np.concatenate(X_tr)
-          X_tr = X_tr.reshape(len(X_tr),lag*len(column_list[0]))
+          X_tr = X_tr.reshape(len(X_tr),self.lag*len(column_list[0]))
           X_tr = np.append(X_tr,[metal_id]*len(X_tr),axis = 1)
           y_tr = np.concatenate(y_tr)
           X_va = np.concatenate(X_va)
-          X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
+          X_va = X_va.reshape(len(X_va),self.lag*len(column_list[0]))
           X_va = np.append(X_va,[metal_id]*len(X_va),axis = 1)
           y_va = np.concatenate(y_va)
           final_X_tr.append(X_tr)
@@ -190,9 +190,9 @@ class XGBoost_online():
         
         column_lag_list = []
         column_name = []
-        for i in range(lag):
+        for i in range(self.lag):
           for item in column_list[0]:
-            new_item = item+"_"+str(lag-i)
+            new_item = item+"_"+str(self.lag-i)
             column_lag_list.append(new_item)
         column_lag_list.append("Co")
         column_lag_list.append("Al")
@@ -420,7 +420,7 @@ class XGBoost_online():
                   print("the gamma is {}".format(gamma))
                   print("the min_child_weight is {}".format(min_child_weight))
                   print("the subsample is {}".format(subsample))
-      print("the lag is {}".format(lag))
+      print("the lag is {}".format(self.lag))
       print("the train date is {}".format(split_date[0]))
       print("the test date is {}".format(split_date[1]))
 
@@ -534,19 +534,19 @@ class XGBoost_online():
     """
     
     if self.version in ['v3','v5','v7','v9','v23']:
-      X_tr, y_tr, X_va, y_va, X_te, y_te, norm_params,column_list = load_data(ts,LME_dates,self.horizon,self.gt,self.lag,split_date,norm_params,tech_params,version_params)
+      X_tr, y_tr, X_va, y_va, X_te, y_te, norm_params,column_list = load_data(ts,LME_dates,self.horizon,[self.gt],self.lag,copy(split_date),norm_params,tech_params,version_params)
       column_lag_list = []
       column_name = []
-      for i in range(lag):
+      for i in range(self.lag):
         for item in column_list[0]:
-          new_item = item+"_"+str(lag-i)
+          new_item = item+"_"+str(self.lag-i)
           column_lag_list.append(new_item)
       X_tr = np.concatenate(X_tr)
-      final_X_tr = X_tr.reshape(len(X_tr),lag*len(column_list[0]))
+      final_X_tr = X_tr.reshape(len(X_tr),self.lag*len(column_list[0]))
       final_y_tr = np.concatenate(y_tr)
       X_va = np.concatenate(X_va)
       final_y_va = np.concatenate(y_va)
-      final_X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
+      final_X_va = X_va.reshape(len(X_va),self.lag*len(column_list[0]))
       
     else:
       i = 0
@@ -561,11 +561,11 @@ class XGBoost_online():
         
         #post load process and metal id extension
         X_tr = np.concatenate(X_tr)
-        X_tr = X_tr.reshape(len(X_tr),lag*len(column_list[0]))
+        X_tr = X_tr.reshape(len(X_tr),self.lag*len(column_list[0]))
         X_tr = np.append(X_tr,[metal_id]*len(X_tr),axis = 1)
         y_tr = np.concatenate(y_tr)
         X_va = np.concatenate(X_va)
-        X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
+        X_va = X_va.reshape(len(X_va),self.lag*len(column_list[0]))
         X_va = np.append(X_va,[metal_id]*len(X_va),axis = 1)
         y_va = np.concatenate(y_va)
         final_X_tr.append(X_tr)
@@ -586,9 +586,9 @@ class XGBoost_online():
       
       column_lag_list = []
       column_name = []
-      for i in range(lag):
+      for i in range(self.lag):
         for item in column_list[0]:
-          new_item = item+"_"+str(lag-i)
+          new_item = item+"_"+str(self.lag-i)
           column_lag_list.append(new_item)
       column_lag_list.append("Co")
       column_lag_list.append("Al")
@@ -631,7 +631,7 @@ class XGBoost_online():
       y_train, y_valid = train_y.iloc[train_index], train_y.iloc[valid_index]
       model.fit(X_train, y_train,eval_metric='error',verbose=True,eval_set=[(X_valid,y_valid)],early_stopping_rounds=5)
       y_pred_valid = model.predict(X_valid)
-      pickle.dump(model, open(split_date+"_"+self.gt+"_"+str(self.horizon)+"_"+str(lag)+"_"+str(fold_n)+"_"+'xgb.model', "wb"))
+      pickle.dump(model, open(split_date+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+str(fold_n)+"_"+'xgb.model', "wb"))
       #bst.save_model(split_date+"_"+self.gt+"_"+str(self.horizon)+"_"+str(lag)+"_"+'xgb.model')
 
 
@@ -746,9 +746,9 @@ class XGBoost_online():
     X_tr, y_tr, X_va, y_va, X_te, y_te, norm_params,column_list,val_dates = load_data(ts,LME_dates,self.horizon,[self.gt],self.lag,copy(split_dates),norm_params,tech_params,version_params)
     column_lag_list = []
     column_name = []
-    for i in range(lag):
+    for i in range(self.lag):
       for item in column_list[0]:
-        new_item = item+"_"+str(lag-i)
+        new_item = item+"_"+str(self.lag-i)
         column_lag_list.append(new_item)
     if self.version not in ['v3','v5','v7','v9','v23']:
       metal_id = [0,0,0,0,0,0]
@@ -765,14 +765,14 @@ class XGBoost_online():
       column_lag_list.append("Le")
 
     X_tr = np.concatenate(X_tr)
-    X_tr = X_tr.reshape(len(X_tr),lag*len(column_list[0]))
+    X_tr = X_tr.reshape(len(X_tr),self.lag*len(column_list[0]))
     train_dataframe = pd.DataFrame(X_tr,columns=column_lag_list)
     train_X = train_dataframe.loc[:,column_lag_list]
     y_tr = np.concatenate(y_tr)
     train_y = pd.DataFrame(y_tr,columns=['result'])
     X_va = np.concatenate(X_va)
     y_va = np.concatenate(y_va)
-    X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
+    X_va = X_va.reshape(len(X_va),self.lag*len(column_list[0]))
     test_dataframe = pd.DataFrame(X_va,columns=column_lag_list)
     test_X = test_dataframe.loc[:,column_lag_list] 
     n_splits=args.k_folds
@@ -800,7 +800,7 @@ class XGBoost_online():
     save the model
     """
     for fold_n, (train_index, valid_index) in enumerate(folds.split(train_X)):
-      pickle.load(model, open(split_date+"_"+self.gt+"_"+str(self.horizon)+"_"+str(lag)+"_"+str(fold_n)+"_"+'xgb.model', "rb"))
+      pickle.load(model, open(split_date+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+str(fold_n)+"_"+'xgb.model', "rb"))
       y_pred = model.predict_proba(test_X, ntree_limit=model.best_ntree_limit)[:, 1]
       y_pred = y_pred.reshape(-1, 1)
       if fold_n == 0:
