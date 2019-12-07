@@ -161,7 +161,7 @@ class XGBoost_online():
           metal_id[i] = 1
           
           #load data
-          X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,copy(split_date),norm_params,tech_params,version_params)
+          X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,self.horizon,[ground_truth],self.lag,copy(split_date),norm_params,tech_params,version_params)
           
           #post load process and metal id extension
           X_tr = np.concatenate(X_tr)
@@ -434,7 +434,7 @@ class XGBoost_online():
     #assert that the configuration path is correct
     if self.version in ['v5','v7']:
       assert (self.path == "exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf")
-    elif self.version in ["v3","v23"]:
+    elif self.version in ["v3","v23","v24","v28","v30"]:
       assert (self.path == "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf")
     elif self.version in ["v9","v10","v12"]:
       assert (self.path == "exp/online_v10.conf")
@@ -557,7 +557,7 @@ class XGBoost_online():
         metal_id[i] = 1
         
         #load data
-        X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,horizon,[ground_truth],lag,copy(split_date),norm_params,tech_params,version_params)
+        X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,self.horizon,[ground_truth],self.lag,copy(split_date),norm_params,tech_params,version_params)
         
         #post load process and metal id extension
         X_tr = np.concatenate(X_tr)
@@ -648,9 +648,10 @@ class XGBoost_online():
     pure_LogReg = LogReg(parameters={})
 
     #assert that the configuration path is correct
+    #assert that the configuration path is correct
     if self.version in ['v5','v7']:
       assert (self.path == "exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf")
-    elif self.version in ["v3","v23"]:
+    elif self.version in ["v3","v23","v24","v28","v30"]:
       assert (self.path == "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf")
     elif self.version in ["v9","v10","v12"]:
       assert (self.path == "exp/online_v10.conf")
