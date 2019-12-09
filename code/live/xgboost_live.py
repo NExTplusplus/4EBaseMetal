@@ -138,7 +138,7 @@ class XGBoost_online():
       """
       
       if self.version in ['v3','v5','v7','v9','v23']:
-        X_tr, y_tr, X_va, y_va, X_te, y_te, norm_params,column_list = load_data(ts,LME_dates,self.horizon,self.gt,self.lag,split_date,norm_params,tech_params,version_params)
+        X_tr, y_tr, X_va, y_va, X_te, y_te, norm_params,column_list = load_data(ts,LME_dates,self.horizon,[self.gt],self.lag,copy(split_date),norm_params,tech_params,version_params)
         column_lag_list = []
         column_name = []
         for i in range(self.lag):
@@ -206,15 +206,16 @@ class XGBoost_online():
       
       test_dataframe = pd.DataFrame(final_X_va,columns=column_lag_list)
       test_X = test_dataframe.loc[:,column_lag_list] 
-      n_splits=args.k_folds
+      n_splits=10
       """
       tune xgboost hyper parameter
       """
-      for max_depth in [4,5,6]:
-        for learning_rate in [0.7,0.8,0.9]:
-          for gamma in [0.7,0.8,0.9]:
-            for min_child_weight in [3,4,5]:
-              for subsample in [0.7,0.85,0.9]:
+
+      for max_depth in [3,4,5]:
+        for learning_rate in [0.6,0.7,0.8,0.9]:
+          for gamma in [0.6,0.7,0.8,0.9]:
+            for min_child_weight in [3,4,5,6]:
+              for subsample in [0.6,0.7,0.85,0.9]:
                 from sklearn.metrics import accuracy_score
                 model = xgb.XGBClassifier(max_depth=max_depth,
                             learning_rate = learning_rate,
@@ -534,7 +535,7 @@ class XGBoost_online():
     """
     
     if self.version in ['v3','v5','v7','v9','v23']:
-      X_tr, y_tr, X_va, y_va, X_te, y_te, norm_params,column_list = load_data(ts,LME_dates,self.horizon,[self.gt],self.lag,copy(split_date),norm_params,tech_params,version_params)
+      X_tr, y_tr, X_va, y_va, X_te, y_te, norm_params,column_list = load_data(ts,LME_dates,self.horizon,[self.gt],self.lag,copy(split_dates),norm_params,tech_params,version_params)
       column_lag_list = []
       column_name = []
       for i in range(self.lag):
@@ -557,7 +558,7 @@ class XGBoost_online():
         metal_id[i] = 1
         
         #load data
-        X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,self.horizon,[ground_truth],self.lag,copy(split_date),norm_params,tech_params,version_params)
+        X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(copy(ts),LME_dates,self.horizon,[ground_truth],self.lag,copy(split_dates),norm_params,tech_params,version_params)
         
         #post load process and metal id extension
         X_tr = np.concatenate(X_tr)
@@ -602,7 +603,7 @@ class XGBoost_online():
     
     test_dataframe = pd.DataFrame(final_X_va,columns=column_lag_list)
     test_X = test_dataframe.loc[:,column_lag_list] 
-    n_splits=args.k_folds
+    n_splits=10
     from sklearn.metrics import accuracy_score
     model = xgb.XGBClassifier(max_depth=max_depth,
           learning_rate = learning_rate,
@@ -631,7 +632,42 @@ class XGBoost_online():
       y_train, y_valid = train_y.iloc[train_index], train_y.iloc[valid_index]
       model.fit(X_train, y_train,eval_metric='error',verbose=True,eval_set=[(X_valid,y_valid)],early_stopping_rounds=5)
       y_pred_valid = model.predict(X_valid)
-      pickle.dump(model, open(split_date+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+str(fold_n)+"_"+'xgb.model', "wb"))
+      pickle.dump(model, open(split_dates[1]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+str(fold_n)+"_"+'xgb.model', "wb"))
+      y_pred = model.predict_proba(test_X, ntree_limit=model.best_ntree_limit)[:, 1]
+      y_pred = y_pred.reshape(-1, 1)
+      if fold_n == 0:
+        folder_1=y_pred
+        folder_1=folder_1.reshape(len(folder_1),1)
+      elif fold_n == 1:    
+        folder_2=y_pred
+        folder_2=folder_2.reshape(len(folder_2),1)
+      elif fold_n==2:    
+        folder_3 = y_pred
+        folder_3=folder_3.reshape(len(folder_3),1)
+      elif fold_n==3:
+        folder_4 = y_pred
+        folder_4=folder_4.reshape(len(folder_4),1)
+      elif fold_n==4:
+        folder_5=y_pred
+        folder_5=folder_5.reshape(len(folder_5),1)
+      elif fold_n==5:
+        folder_6=y_pred
+        folder_6=folder_6.reshape(len(folder_6),1)
+      elif fold_n==6:
+        folder_7=y_pred
+        folder_7=folder_7.reshape(len(folder_7),1)
+      elif fold_n==7:
+        folder_8=y_pred
+        folder_8=folder_8.reshape(len(folder_8),1)
+      elif fold_n==8:
+        folder_9=y_pred
+        folder_9=folder_9.reshape(len(folder_9),1)
+      elif fold_n==9:
+        folder_10=y_pred
+        folder_10=folder_10.reshape(len(folder_10),1) 
+        #calculate the all folder voting
+    result = np.concatenate((folder_1,folder_2,folder_3,folder_4,folder_5,folder_6,folder_7,folder_8,folder_9,folder_10),axis=1)
+    np.savetxt("test.txt",result)
       #bst.save_model(split_date+"_"+self.gt+"_"+str(self.horizon)+"_"+str(lag)+"_"+'xgb.model')
 
 
@@ -645,7 +681,6 @@ class XGBoost_online():
     """
     #os.chdir(os.path.abspath(sys.path[0]))
     print("begin to test")
-    pure_LogReg = LogReg(parameters={})
 
     #assert that the configuration path is correct
     #assert that the configuration path is correct
@@ -723,8 +758,7 @@ class XGBoost_online():
         evalidate_date = str(evalidate_year)+"-07-01"
         end_time = str(today)
     split_dates  =  [start_time,evalidate_date,str(today)]
-    
-    model = pure_LogReg.load(self.version, self.gt, self.horizon, self.lag,evalidate_date)
+  
 
     """
     generate the version
@@ -775,16 +809,12 @@ class XGBoost_online():
     X_va = X_va.reshape(len(X_va),self.lag*len(column_list[0]))
     test_dataframe = pd.DataFrame(X_va,columns=column_lag_list)
     test_X = test_dataframe.loc[:,column_lag_list] 
-    n_splits=args.k_folds
+    n_splits=10
     from sklearn.metrics import accuracy_score
-    model = xgb.XGBClassifier(max_depth=max_depth,
-          learning_rate = learning_rate,
+    model = xgb.XGBClassifier(
           n_estimators=500,
           silent=True,
           nthread=10,
-          gamma=gamma,
-          min_child_weight=min_child_weight,
-          subsample=subsample,
           colsample_bytree=0.7,
           colsample_bylevel=1,
           reg_alpha=0.0001,
@@ -800,7 +830,7 @@ class XGBoost_online():
     save the model
     """
     for fold_n, (train_index, valid_index) in enumerate(folds.split(train_X)):
-      pickle.load(model, open(split_date+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+str(fold_n)+"_"+'xgb.model', "rb"))
+      model = pickle.load(open(split_dates[1]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+str(fold_n)+"_"+'xgb.model', "rb"))
       y_pred = model.predict_proba(test_X, ntree_limit=model.best_ntree_limit)[:, 1]
       y_pred = y_pred.reshape(-1, 1)
       if fold_n == 0:
@@ -835,6 +865,7 @@ class XGBoost_online():
         folder_10=folder_10.reshape(len(folder_10),1) 
         #calculate the all folder voting
     result = np.concatenate((folder_1,folder_2,folder_3,folder_4,folder_5,folder_6,folder_7,folder_8,folder_9,folder_10),axis=1)
+    np.savetxt("test.txt",result)
     final_list = []
     for j in range(len(result)):
       count_1=0
@@ -848,7 +879,9 @@ class XGBoost_online():
         final_list.append(1)
       else:
         final_list.append(0)
-    #print("the all folder voting precision is {}".format(metrics.accuracy_score(y_va, final_list)))
+    print("the all folder voting precision is {}".format(metrics.accuracy_score(y_va, final_list)))
+    final_list = pd.DataFrame(final_list,index = val_dates, columns = ["Prediction"])
+    print(final_list)
     return final_list
     result = np.concatenate((folder_6,folder_7,folder_8,folder_9,folder_10),axis=1)
     final_list = []
@@ -950,6 +983,7 @@ class XGBoost_online():
       #print("the lag is {}".format(lag))
       #print("the reverse precision is {}".format(metrics.accuracy_score(y_va, final_list)))
       #bst.save_model(split_date+"_"+self.gt+"_"+str(self.horizon)+"_"+str(lag)+"_"+'xgb.model')
+
       return final_list
 
 
