@@ -241,7 +241,7 @@ class Trainer:
 						# print(np.min(current_test_pred), np.max(current_test_pred))
 						
 						current_test_class = [1 if ele>thresh else 0 for ele in current_test_pred]    
-						
+						#np.save(epoch+"prediction.txt",current_test_class)
 						test_loss = loss_sum
 						test_loss_list.append(float(test_loss))
 						
@@ -290,7 +290,8 @@ class ALSTM_online():
 	"""
 	this function is used to choose the parameter
 	"""
-	def choose_parameter(self,log='./tune.log',
+	def choose_parameter(self,
+						log='./tune.log',
 						script='code/train/train_alstm.py',
 						drop_out=0.0,
 						hidden=50,
@@ -801,7 +802,9 @@ class ALSTM_online():
 		current_test_pred = list(test_output.detach().view(-1,))
 		# print(np.min(current_test_pred), np.max(current_test_pred))
 		
-		current_test_class = [1 if ele>thresh else 0 for ele in current_test_pred]    
+		current_test_class = [1 if ele>thresh else 0 for ele in current_test_pred]
+		np.savetxt(split_date[1]+"_"+str(time_horizon)+"_"+"prediction.txt",current_test_class)
+		#np.savetxt("preciction.txt",current_test_class)    
 		
 		#test_loss = loss_sum
 		#test_loss_list.append(float(test_loss))
@@ -839,7 +842,3 @@ class ALSTM_online():
 		#print("the split date is {}".format(split_date[1]))
 		print("predict time: {}".format(end-start))
 		return current_test_class
-		#out_val_pred, out_test_pred, out_loss = trainer.train_minibatch(num_epochs, batch_size, interval)
-		#save = 1
-		#net = trainer.train_minibatch(num_epochs, batch_size, interval)
-		#torch.save(net, split_dates[0]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(lag)+"_"+str(fold_n)+"_"+'xgb.model')
