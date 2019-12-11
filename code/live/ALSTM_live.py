@@ -328,7 +328,27 @@ class ALSTM_online():
 				drop_out=0.0,
 				hidden=50,
 				embedding_size=5,
-				batch=512):
+				batch=512,
+				hidden_state=50,
+				lrate=0.001,
+				attention_size=2,
+				interval=1,
+				lambd=0,
+				save_loss=0,
+				save_prediction=0):
+	"""
+	drop_out: the dropout rate of LSTM network
+	hidden: number of hidden_state of encoder/decoder
+	embdedding_size: the size of embedding layer
+	batch: the mini-batch size
+	hidden_satte: number of hidden_state of encoder/decoder
+	lrate: learning rate
+	attention_size: the head number in MultiheadAttention Mechanism
+	interval: save models every interval epoch
+	lambd: the weight of classfication loss
+	save_loss: whether to save loss results
+	save_prediction: whether to save prediction results
+	"""
 		print("begin to train")
 		#assert that the configuration path is correct
 		if self.version in ['v16','v24']:
@@ -440,6 +460,7 @@ class ALSTM_online():
 		final_val_X_embedding = []
 
 		i = 0
+		ground_truths_list = ['LME_Co_Spot','LME_Al_Spot','LME_Le_Spot','LME_Ni_Spot','LME_Zi_Spot','LME_Ti_Spot']
 		for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
 			print(ground_truth)
 			new_time_series = copy(time_series)
@@ -541,7 +562,7 @@ class ALSTM_online():
 		print('Testing:', len(final_X_te), len(final_y_te), len(final_test_X_embedding))
 		# begin to train the model
 		input_dim = final_X_tr.shape[-1]
-		window_size = lag
+		window_size = self.lag
 		case_number = len(ground_truths_list)
 		start = time.time()
 		trainer = Trainer(input_dim, hidden_state, window_size, lr,
