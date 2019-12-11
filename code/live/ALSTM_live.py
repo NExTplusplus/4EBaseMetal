@@ -565,8 +565,8 @@ class ALSTM_online():
 		window_size = self.lag
 		case_number = len(ground_truths_list)
 		start = time.time()
-		trainer = Trainer(input_dim, hidden_state, window_size, lr,
-						dropout, case_number, attention_size,
+		trainer = Trainer(input_dim, hidden_state, window_size, lrate,
+						drop_out, case_number, attention_size,
 						embedding_size,
 						final_X_tr, final_y_tr,
 						final_X_te, final_y_te,
