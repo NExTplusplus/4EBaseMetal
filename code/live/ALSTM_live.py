@@ -600,7 +600,7 @@ class ALSTM_online():
 	"""
 	this function is used to predict the date
 	"""
-	def test(self):
+	def test(self,split=0.9):
 		print("begin to train")
 		#assert that the configuration path is correct
 		if self.version in ['v16','v26']:
@@ -712,6 +712,7 @@ class ALSTM_online():
 		final_val_X_embedding = []
 
 		i = 0
+		ground_truths_list = ['LME_Co_Spot','LME_Al_Spot','LME_Le_Spot','LME_Ni_Spot','LME_Zi_Spot','LME_Ti_Spot']
 		for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
 			print(ground_truth)
 			new_time_series = copy(time_series)
@@ -829,7 +830,7 @@ class ALSTM_online():
 		# print(np.min(current_test_pred), np.max(current_test_pred))
 		
 		current_test_class = [1 if ele>thresh else 0 for ele in current_test_pred]
-		np.savetxt(split_dates[1]+"_"+str(time_horizon)+"_"+"prediction.txt",current_test_class)
+		np.savetxt(split_dates[1]+"_"+str(self.horizon)+"_"+"prediction.txt",current_test_class)
 		#np.savetxt("preciction.txt",current_test_class)    
 		
 		#test_loss = loss_sum
