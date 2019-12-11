@@ -632,7 +632,7 @@ class XGBoost_online():
       y_train, y_valid = train_y.iloc[train_index], train_y.iloc[valid_index]
       model.fit(X_train, y_train,eval_metric='error',verbose=True,eval_set=[(X_valid,y_valid)],early_stopping_rounds=5)
       y_pred_valid = model.predict(X_valid)
-      pickle.dump(model, open(split_dates[1]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+str(fold_n)+"_"+'xgb.model', "wb"))
+      pickle.dump(model, open(split_dates[1]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+str(fold_n)+"_"+self.version+"_"+'xgb.model', "wb"))
       y_pred = model.predict_proba(test_X, ntree_limit=model.best_ntree_limit)[:, 1]
       y_pred = y_pred.reshape(-1, 1)
       if fold_n == 0:
@@ -667,7 +667,6 @@ class XGBoost_online():
         folder_10=folder_10.reshape(len(folder_10),1) 
         #calculate the all folder voting
     result = np.concatenate((folder_1,folder_2,folder_3,folder_4,folder_5,folder_6,folder_7,folder_8,folder_9,folder_10),axis=1)
-    np.savetxt("test.txt",result)
       #bst.save_model(split_date+"_"+self.gt+"_"+str(self.horizon)+"_"+str(lag)+"_"+'xgb.model')
 
 
@@ -830,7 +829,7 @@ class XGBoost_online():
     save the model
     """
     for fold_n, (train_index, valid_index) in enumerate(folds.split(train_X)):
-      model = pickle.load(open(split_dates[1]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+str(fold_n)+"_"+'xgb.model', "rb"))
+      model = pickle.load(open(split_dates[1]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+str(fold_n)+"_"+self.version+"_"+'xgb.model', "rb"))
       y_pred = model.predict_proba(test_X, ntree_limit=model.best_ntree_limit)[:, 1]
       y_pred = y_pred.reshape(-1, 1)
       if fold_n == 0:

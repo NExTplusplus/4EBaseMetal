@@ -26,7 +26,7 @@ from sklearn import metrics
 from sklearn.model_selection import KFold
 from utils.version_control_functions import generate_version_params
 from sklearn.externals import joblib
-from code.train.grid_search import grid_search_alstm
+from train.grid_search import grid_search_alstm
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 from data.load_data import load_data
 from model.model_embedding import MultiHeadAttention, attention, bilstm
@@ -334,7 +334,7 @@ class ALSTM_online():
 				num_epochs=50,
 				drop_out=0.0,
 				embedding_size=5,
-				batch=512,
+				batch_size=512,
 				hidden_state=50,
 				lrate=0.001,
 				attention_size=2,
@@ -477,7 +477,7 @@ class ALSTM_online():
 			X_va, y_va, \
 			X_te, y_te, \
 			norm_check, column_list = load_data(
-				copy(ts), LME_dates, horizon, [ground_truth], lag,
+				copy(ts), LME_dates, self.horizon, [ground_truth], self.lag,
 				copy(split_dates), norm_params, tech_params,
 				version_params
 			)
@@ -596,7 +596,7 @@ class ALSTM_online():
 		#out_val_pred, out_test_pred, out_loss = trainer.train_minibatch(num_epochs, batch_size, interval)
 		save = 1
 		net = trainer.train_minibatch(num_epochs, batch_size, interval)
-		torch.save(net, split_dates[0]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(lag)+"_"+'alstm.model')
+		torch.save(net, split_dates[0]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+self.version+"_"+'alstm.model')
 	#-------------------------------------------------------------------------------------------------------------------------------------#
 	"""
 	this function is used to predict the date
@@ -724,7 +724,7 @@ class ALSTM_online():
 			X_va, y_va, \
 			X_te, y_te, \
 			norm_check, column_list,val_dates = load_data(
-				copy(ts), LME_dates, horizon, [ground_truth], lag,
+				copy(ts), LME_dates, self.horizon, [ground_truth], self.lag,
 				copy(split_dates), norm_params, tech_params,
 				version_params
 			)
@@ -815,7 +815,7 @@ class ALSTM_online():
 		print('Testing:', len(final_X_te), len(final_y_te), len(final_test_X_embedding))
 		# begin to train the model
 		input_dim = final_X_tr.shape[-1]
-		window_size = lag
+		window_size = self.lag
 		case_number = len(ground_truths_list)
 		# begin to predict
 		start = time.time()
@@ -823,13 +823,13 @@ class ALSTM_online():
 		test_X = torch.from_numpy(final_X_te).float()
 		test_Y = torch.from_numpy(final_y_te).float()
 		var_x_test_id = torch.LongTensor(np.array(final_test_X_embedding))
-		net = torch.load(split_dates[0]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(lag)+"_"+'alstm.model')
+		net = torch.load(split_dates[0]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+self.version+"_"+'alstm.model')
 		test_output = net(test_X, var_x_test_id)
 		#loss = loss_func(test_output, test_Y)
 		#loss_sum = loss.detach()
 		current_test_pred = list(test_output.detach().view(-1,))
 		# print(np.min(current_test_pred), np.max(current_test_pred))
-		
+		print(var_x_test_id)
 		current_test_class = [1 if ele>thresh else 0 for ele in current_test_pred]
 		np.savetxt(split_dates[1]+"_"+str(self.horizon)+"_"+"prediction.txt",current_test_class)
 		#np.savetxt("preciction.txt",current_test_class)    
@@ -862,6 +862,7 @@ class ALSTM_online():
 		#				final_y_te_bot_ind_list
 		#				)
 		#torch.save(trainer, PATH)
+		print(val_dates)
 		end = time.time()
 		###############################
 		# to replace the old code (Fuli)

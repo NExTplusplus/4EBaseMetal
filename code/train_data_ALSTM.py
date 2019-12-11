@@ -57,7 +57,7 @@ if __name__ == '__main__':
       '-split', '--split', type=float, default=0.9,
       help='the split ratio of validation set')
   parser.add_argument(
-      '-d','--drop_out', type=float, default = 0.3,
+      '-drop','--drop_out', type=float, default = 0.3,
       help='the dropout rate of LSTM network'
   )
   parser.add_argument(
@@ -100,5 +100,5 @@ if __name__ == '__main__':
 				save_loss=args.save_loss,
 				save_prediction=args.save_prediction)
   else:
-    final = model.test()
+    final = model.test(split = args.split)
     final.to_csv("_".join([args.ground_truth,args.date,str(args.steps),args.version])+".csv")

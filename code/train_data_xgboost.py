@@ -34,7 +34,7 @@ if __name__ == '__main__':
   parser.add_argument('-min_child', '--min_child', type=int)
   parser.add_argument('-subsample', '--subsample', type=float)
   args = parser.parse_args()
-  model = xgboost_online(lag = args.lag, horizon = args.steps, version = args.version, gt = args.ground_truth, date = args.date, source = args.source, path =args.config)
+  model = XGBoost_online(lag = args.lag, horizon = args.steps, version = args.version, gt = args.ground_truth, date = args.date, source = args.source, path =args.config)
   if args.action=="tune":
   #model = Logistic_online(lag = 5, horizon = 5, version = 'v9', gt = 'LME_Co_Spot', date = '2016-05-01', source = 'NExT')
     model.choose_parameter()
