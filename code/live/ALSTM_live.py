@@ -330,6 +330,8 @@ class ALSTM_online():
 	this function is used to train the model and save it
 	"""
 	def train(self,
+		  		num_epochs=50,
+				batch_size=1024,
 				drop_out=0.0,
 				hidden=50,
 				embedding_size=5,
