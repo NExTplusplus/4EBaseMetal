@@ -915,7 +915,7 @@ class XGBoost_online():
         final_list.append(0)
     #print("the far precision is {}".format(metrics.accuracy_score(y_va, final_list)))
     return final_list
-    if split_date[1].split("-")[1]=='01':
+    if split_dates[1].split("-")[1]=='01':
       result = np.concatenate((folder_1,folder_3,folder_5,folder_7,folder_9),axis=1)
       final_list = []
       for j in range(len(result)):

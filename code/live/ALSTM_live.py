@@ -329,11 +329,10 @@ class ALSTM_online():
 	"""
 	this function is used to train the model and save it
 	"""
-	def train(self,
-		  		num_epochs=50,
-				batch_size=1024,
+	def train(
+				self,split = 0.9,
+				num_epochs=50,
 				drop_out=0.0,
-				hidden=50,
 				embedding_size=5,
 				batch=512,
 				hidden_state=50,
@@ -694,7 +693,7 @@ class ALSTM_online():
 		norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
 						'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False}
 		tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
-										'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
+										'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2,"live":None}
 		'''
 			for versions that tune over 6 metals 
 		'''
@@ -724,7 +723,7 @@ class ALSTM_online():
 			X_tr, y_tr, \
 			X_va, y_va, \
 			X_te, y_te, \
-			norm_check, column_list = load_data(
+			norm_check, column_list,val_dates = load_data(
 				copy(ts), LME_dates, horizon, [ground_truth], lag,
 				copy(split_dates), norm_params, tech_params,
 				version_params
