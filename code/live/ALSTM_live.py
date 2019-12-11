@@ -299,6 +299,11 @@ class ALSTM_online():
 						batch=512):
 		print("begin to choose the parameter")
 
+		if self.version in ['v16','v26']:
+			assert (self.path == 'exp/online_v10.conf')
+		else:
+			print("the path is error")
+
 		#the param we want to use
 		selected_parameters = ['lag', 'hidden', 'embedding_size', 'drop_out', 'batch']
 		# the range of the param we want to use
@@ -336,22 +341,22 @@ class ALSTM_online():
 				lambd=0,
 				save_loss=0,
 				save_prediction=0):
-	"""
-	drop_out: the dropout rate of LSTM network
-	hidden: number of hidden_state of encoder/decoder
-	embdedding_size: the size of embedding layer
-	batch: the mini-batch size
-	hidden_satte: number of hidden_state of encoder/decoder
-	lrate: learning rate
-	attention_size: the head number in MultiheadAttention Mechanism
-	interval: save models every interval epoch
-	lambd: the weight of classfication loss
-	save_loss: whether to save loss results
-	save_prediction: whether to save prediction results
-	"""
+		"""
+		drop_out: the dropout rate of LSTM network
+		hidden: number of hidden_state of encoder/decoder
+		embdedding_size: the size of embedding layer
+		batch: the mini-batch size
+		hidden_satte: number of hidden_state of encoder/decoder
+		lrate: learning rate
+		attention_size: the head number in MultiheadAttention Mechanism
+		interval: save models every interval epoch
+		lambd: the weight of classfication loss
+		save_loss: whether to save loss results
+		save_prediction: whether to save prediction results
+		"""
 		print("begin to train")
 		#assert that the configuration path is correct
-		if self.version in ['v16','v24']:
+		if self.version in ['v16','v26']:
 			assert (self.path == 'exp/online_v10.conf')
 		else:
 			print("the path is error")
@@ -466,13 +471,13 @@ class ALSTM_online():
 			new_time_series = copy(time_series)
 			spot_list = np.array(new_time_series[ground_truth])
 			new_time_series['spot_price'] = spot_list
-			ts = new_time_series.loc[split_date[0]:split_dates[s+1][2]]
+			ts = new_time_series.loc[split_dates[0]:split_dates[2]]
 			X_tr, y_tr, \
 			X_va, y_va, \
 			X_te, y_te, \
 			norm_check, column_list = load_data(
 				copy(ts), LME_dates, horizon, [ground_truth], lag,
-				copy(split_date), norm_params, tech_params,
+				copy(split_dates), norm_params, tech_params,
 				version_params
 			)
 			# remove the list wrapper
@@ -586,7 +591,7 @@ class ALSTM_online():
 		# to replace the old code (Fuli)
 		###############################
 		print("pre-processing time: {}".format(end-start))
-		print("the split date is {}".format(split_date[1]))
+		print("the split date is {}".format(split_dates[1]))
 		#out_val_pred, out_test_pred, out_loss = trainer.train_minibatch(num_epochs, batch_size, interval)
 		save = 1
 		net = trainer.train_minibatch(num_epochs, batch_size, interval)
@@ -598,7 +603,7 @@ class ALSTM_online():
 	def test(self):
 		print("begin to train")
 		#assert that the configuration path is correct
-		if self.version in ['v16','v24']:
+		if self.version in ['v16','v26']:
 			assert (self.path == 'exp/online_v10.conf')
 		else:
 			print("the path is error")
@@ -712,13 +717,13 @@ class ALSTM_online():
 			new_time_series = copy(time_series)
 			spot_list = np.array(new_time_series[ground_truth])
 			new_time_series['spot_price'] = spot_list
-			ts = new_time_series.loc[split_date[0]:split_dates[s+1][2]]
+			ts = new_time_series.loc[split_dates[0]:split_dates[2]]
 			X_tr, y_tr, \
 			X_va, y_va, \
 			X_te, y_te, \
 			norm_check, column_list = load_data(
 				copy(ts), LME_dates, horizon, [ground_truth], lag,
-				copy(split_date), norm_params, tech_params,
+				copy(split_dates), norm_params, tech_params,
 				version_params
 			)
 			# remove the list wrapper
@@ -824,7 +829,7 @@ class ALSTM_online():
 		# print(np.min(current_test_pred), np.max(current_test_pred))
 		
 		current_test_class = [1 if ele>thresh else 0 for ele in current_test_pred]
-		np.savetxt(split_date[1]+"_"+str(time_horizon)+"_"+"prediction.txt",current_test_class)
+		np.savetxt(split_dates[1]+"_"+str(time_horizon)+"_"+"prediction.txt",current_test_class)
 		#np.savetxt("preciction.txt",current_test_class)    
 		
 		#test_loss = loss_sum
