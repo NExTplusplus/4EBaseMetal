@@ -76,6 +76,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
 
     # we construct the signal strategy of LME
     parameters['time_series'] = strategy_signal(parameters,version_params['strategy_signal'])
+    print(parameters['time_series'].columns.values.tolist())
     # save_data("i3",parameters['time_series'],parameters['time_series'].columns.values.tolist())
     # reset the split date before dealing with the abnormal value
     split_dates = reset_split_dates(parameters['time_series'],split_dates)
@@ -133,6 +134,8 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
         if version_params['labelling']=='v2': 
             parameters['time_series'][ind] = pd.concat([parameters['time_series'][ind], parameters['spot_price'][ind]],sort = True, axis = 1)
         parameters['time_series'][ind] = pd.concat([parameters['time_series'][ind], parameters['labels'][ind]],sort = True, axis = 1)
+        if "live" in tech_params.keys():
+            parameters['time_series'][ind]["Label"][-horizon:] = [0]*horizon
         
         parameters['time_series'][ind] = process_missing_value_v3(parameters['time_series'][ind])
         split_dates = reset_split_dates(parameters['time_series'][ind],split_dates)
