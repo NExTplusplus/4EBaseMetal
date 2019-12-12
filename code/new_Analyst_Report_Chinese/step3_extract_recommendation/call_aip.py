@@ -168,15 +168,24 @@ def main_function(metal_lst, metal_dict, recommend, conn, client):
             time.sleep(1)
             metal_sentiment.append(res)
             raise_error[post_pre_sentiment['url'][i]] = err
+            
+            tmp_to_sql_df = pd.DataFrame(post_pre_sentiment.loc[i, list(post_pre_sentiment.columns)]).T.reset_index(drop=True)
+            tmp_to_sql_df['date'] = tmp_to_sql_df['date'].apply(lambda x: pd.to_datetime(x).floor('D'))
+            tmp_to_sql_df['Sentiment'] = [res]
+            tmp_to_sql_df['Sentiment_article'] = tmp_to_sql_df['Sentiment'].apply(lambda x: sen_art(x))
+            
+            tmp_filter_df = tmp_to_sql_df[tmp_to_sql_df['Sentiment_article']!=np.nan].copy().reset_index(drop=True)
+            if len(tmp_filter_df)>0:
+                tmp_filter_df = change_type(tmp_filter_df)
+                tmp_filter_df.to_sql('{}_sentiment'.format(met), con=conn, if_exists='append', index=False, chunksize=1000)
+        #post_pre_sentiment['Sentiment'] = metal_sentiment
+        #post_pre_sentiment['Sentiment_article'] = post_pre_sentiment['Sentiment'].apply(lambda x: sen_art(x))
         
-        post_pre_sentiment['Sentiment'] = metal_sentiment
-        post_pre_sentiment['Sentiment_article'] = post_pre_sentiment['Sentiment'].apply(lambda x: sen_art(x))
-        
-        filter_pre_sentiment = post_pre_sentiment[post_pre_sentiment['Sentiment_article']!=np.nan].copy().reset_index(drop=True)
+        #filter_pre_sentiment = post_pre_sentiment[post_pre_sentiment['Sentiment_article']!=np.nan].copy().reset_index(drop=True)
   
-        filter_pre_sentiment = change_type(filter_pre_sentiment)
+        #filter_pre_sentiment = change_type(filter_pre_sentiment)
         
-        filter_pre_sentiment.to_sql('{}_sentiment'.format(met), con=conn, if_exists='append', index=False, chunksize=1000)
+        #filter_pre_sentiment.to_sql('{}_sentiment'.format(met), con=conn, if_exists='append', index=False, chunksize=1000)
         
     print('completed')
     return raise_error
