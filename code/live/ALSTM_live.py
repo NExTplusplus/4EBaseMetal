@@ -596,7 +596,7 @@ class ALSTM_online():
 		#out_val_pred, out_test_pred, out_loss = trainer.train_minibatch(num_epochs, batch_size, interval)
 		save = 1
 		net, test_label = trainer.train_minibatch(num_epochs, batch_size, interval)
-		np.savetxt(split_date[1]+"_"+str(horizon)+"_"+"train_prediction.txt",test_label)
+		np.savetxt(split_dates[1]+"_"+str(horizon)+"_"+"train_prediction.txt",test_label)
 		torch.save(net, split_dates[0]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+self.version+"_"+'alstm.pkl')
 	#-------------------------------------------------------------------------------------------------------------------------------------#
 	"""
@@ -825,6 +825,7 @@ class ALSTM_online():
 		test_Y = torch.from_numpy(final_y_te).float()
 		var_x_test_id = torch.LongTensor(np.array(final_test_X_embedding))
 		net = torch.load(split_dates[0]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+self.version+"_"+'alstm.pkl')
+		net.eval()
 		test_output = net(test_X, var_x_test_id)
 		#loss = loss_func(test_output, test_Y)
 		#loss_sum = loss.detach()
