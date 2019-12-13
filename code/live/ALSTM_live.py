@@ -258,7 +258,7 @@ class Trainer:
 						# evaluate by case
 						self.evaluate_by_case(current_test_class)
 				#torch.save(net, )
-				return net
+				return net, current_test_class
 
 
 
@@ -595,8 +595,9 @@ class ALSTM_online():
 		print("the split date is {}".format(split_dates[1]))
 		#out_val_pred, out_test_pred, out_loss = trainer.train_minibatch(num_epochs, batch_size, interval)
 		save = 1
-		net = trainer.train_minibatch(num_epochs, batch_size, interval)
-		torch.save(net, split_dates[0]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+self.version+"_"+'alstm.model')
+		net, test_label = trainer.train_minibatch(num_epochs, batch_size, interval)
+		np.savetxt(split_dates[1]+"_"+str(horizon)+"_"+"train_prediction.txt",test_label)
+		torch.save(net, split_dates[0]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+self.version+"_"+'alstm.pkl')
 	#-------------------------------------------------------------------------------------------------------------------------------------#
 	"""
 	this function is used to predict the date
@@ -823,7 +824,8 @@ class ALSTM_online():
 		test_X = torch.from_numpy(final_X_te).float()
 		test_Y = torch.from_numpy(final_y_te).float()
 		var_x_test_id = torch.LongTensor(np.array(final_test_X_embedding))
-		net = torch.load(split_dates[0]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+self.version+"_"+'alstm.model')
+		net = torch.load(split_dates[0]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+self.version+"_"+'alstm.pkl')
+		net.eval()
 		test_output = net(test_X, var_x_test_id)
 		#loss = loss_func(test_output, test_Y)
 		#loss_sum = loss.detach()
