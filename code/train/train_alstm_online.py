@@ -500,6 +500,7 @@ class Trainer:
         #out_loss=0
         #return out_pred_val, out_pred_test, out_loss
         '''
+        return current_test_class
 
 
 if __name__ == '__main__':
@@ -892,4 +893,5 @@ if __name__ == '__main__':
                 print("pre-processing time: {}".format(end-start))
                 print("the split date is {}".format(split_date[1]))
                 #out_val_pred, out_test_pred, out_loss = trainer.train_minibatch(num_epochs, batch_size, interval)
-                trainer.train_minibatch(num_epochs, batch_size, interval)
+                test_label=trainer.train_minibatch(num_epochs, batch_size, interval)
+                np.savetxt(split_date[1]+"_"+str(horizon)+"_"+"prediction.txt",test_label)
