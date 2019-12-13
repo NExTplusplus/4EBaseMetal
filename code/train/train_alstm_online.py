@@ -899,6 +899,6 @@ if __name__ == '__main__':
                 end_index = (len(test_label)/6)-1
                 for ground in ground_truths_list:
                     label_list = copy(test_label[int(start_index):int(end_index)])
-                    np.savetxt(split_date[1]+"_"+str(horizon)+"_"+ground+"_"+"prediction.txt",label_list)
+                    np.savetxt(split_date[1]+"_"+str(horizon)+"_"+args.version+"_"+ground+"_"+"prediction.txt",label_list)
                     start_index=end_index+1
                     end_index+=(len(test_label)/6)
