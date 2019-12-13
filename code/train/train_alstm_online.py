@@ -894,6 +894,7 @@ if __name__ == '__main__':
                 print("the split date is {}".format(split_date[1]))
                 #out_val_pred, out_test_pred, out_loss = trainer.train_minibatch(num_epochs, batch_size, interval)
                 test_label=trainer.train_minibatch(num_epochs, batch_size, interval)
+                np.savetxt(split_date[1]+"_"+str(horizon)+"_"+args.version+"_"+"prediction.txt",test_label)
                 ground_truths_list = ['LME_Co_Spot','LME_Al_Spot','LME_Le_Spot','LME_Ni_Spot','LME_Zi_Spot','LME_Ti_Spot']
                 start_index = 0
                 end_index = (len(test_label)/6)-1
