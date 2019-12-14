@@ -79,7 +79,7 @@ if __name__ == '__main__':
                         temp = pd.DataFrame({"true_average":np.true_divide(temp_arr['average'],temp_arr['length'])})
                         ans = pd.concat([total,temp],axis = 1).sort_values(by = ["true_average","lag","C"], ascending = [False,True,True])
 
-                        out.write("python "+train+" ".join(["-sou",args.source,"-v",version,"-c",exp,"-s",h,"-l",str(ans.iloc[0,0]),"-C",str(ans.iloc[0,2]),"-gt",gt,"-xgb",str(xgb),">",gt+"_"+h+"_"+version+"_1718.txt", "2>&1", "&"]))
+                        out.write("python "+train+" "+" ".join(["-sou",args.source,"-v",version,"-c",exp,"-s",h,"-l",str(ans.iloc[0,0]),"-C",str(ans.iloc[0,2]),"-gt",gt,"-xgb",str(xgb),">",gt+"_"+h+"_"+version+"_1718.txt", "2>&1", "&"]))
                         out.write("\n")
                         i+=1
                         if i%9 == 0:
