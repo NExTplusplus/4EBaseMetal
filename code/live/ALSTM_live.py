@@ -467,7 +467,7 @@ class ALSTM_online():
 
 		i = 0
 		ground_truths_list = ['LME_Co_Spot','LME_Al_Spot','LME_Le_Spot','LME_Ni_Spot','LME_Zi_Spot','LME_Ti_Spot']
-		for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
+		for ground_truth in ground_truths_list:
 			print(ground_truth)
 			new_time_series = copy(time_series)
 			spot_list = np.array(new_time_series[ground_truth])
@@ -715,7 +715,7 @@ class ALSTM_online():
 
 		i = 0
 		ground_truths_list = ['LME_Co_Spot','LME_Al_Spot','LME_Le_Spot','LME_Ni_Spot','LME_Zi_Spot','LME_Ti_Spot']
-		for ground_truth in ['LME_Co_Spot','LME_Al_Spot','LME_Ni_Spot','LME_Ti_Spot','LME_Zi_Spot','LME_Le_Spot']:
+		for ground_truth in ground_truths_list:
 			print(ground_truth)
 			new_time_series = copy(time_series)
 			spot_list = np.array(new_time_series[ground_truth])
