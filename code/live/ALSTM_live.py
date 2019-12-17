@@ -239,8 +239,9 @@ class Trainer:
 						loss_sum = loss.detach()
 						current_test_pred = list(test_output.detach().view(-1,))
 						# print(np.min(current_test_pred), np.max(current_test_pred))
-						
-						current_test_class = [1 if ele>thresh else 0 for ele in current_test_pred]    
+						torch.save(net, split_dates[0]+"_"+str(horizon)+"_"+str(epoch)+"_"+version+"_"+'alstm.pkl')
+						current_test_class = [1 if ele>thresh else 0 for ele in current_test_pred]
+						np.savetxt(split_dates[1]+"_"+str(horizon)+"_"+str(epoch)+"_"+version+"_"+"prediction.txt",current_test_class)
 						#np.save(epoch+"prediction.txt",current_test_class)
 						test_loss = loss_sum
 						test_loss_list.append(float(test_loss))
@@ -597,7 +598,7 @@ class ALSTM_online():
 		save = 1
 		net=trainer.train_minibatch(num_epochs, batch_size, interval)
 		#np.savetxt(split_dates[1]+"_"+str(horizon)+"_"+"train_prediction.txt",test_label)
-		torch.save(net, split_dates[0]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+self.version+"_"+'alstm.pkl')
+		#torch.save(net, split_dates[0]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+self.version+"_"+'alstm.pkl')
 	#-------------------------------------------------------------------------------------------------------------------------------------#
 	"""
 	this function is used to predict the date
