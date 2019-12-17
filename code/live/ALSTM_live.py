@@ -119,7 +119,7 @@ class Trainer:
 						print('top acc: {:.4f} ::: bot acc: {:.4f}'.format(top_acc, bot_acc))
 
 
-		def train_minibatch(self, num_epochs, batch_size, interval, version, horizon):
+		def train_minibatch(self, num_epochs, batch_size, interval, version, horizon, split_dates):
 				start = time.time()
 				net = bilstm(input_dim=self.feature_size,
 										hidden_dim=self.hidden_state,
@@ -596,7 +596,7 @@ class ALSTM_online():
 		print("the split date is {}".format(split_dates[1]))
 		#out_val_pred, out_test_pred, out_loss = trainer.train_minibatch(num_epochs, batch_size, interval)
 		save = 1
-		net=trainer.train_minibatch(num_epochs, batch_size, interval, self.version, self.horizon)
+		net=trainer.train_minibatch(num_epochs, batch_size, interval, self.version, self.horizon, split_dates)
 		#np.savetxt(split_dates[1]+"_"+str(horizon)+"_"+"train_prediction.txt",test_label)
 		#torch.save(net, split_dates[0]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+self.version+"_"+'alstm.pkl')
 	#-------------------------------------------------------------------------------------------------------------------------------------#
