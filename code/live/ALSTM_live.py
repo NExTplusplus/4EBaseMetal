@@ -119,7 +119,7 @@ class Trainer:
 						print('top acc: {:.4f} ::: bot acc: {:.4f}'.format(top_acc, bot_acc))
 
 
-		def train_minibatch(self, num_epochs, batch_size, interval, version, horizon, split_dates):
+		def train_minibatch(self, num_epochs, batch_size, interval, version, horizon, split_dates, drop_out, hidden_state, embedding_size, lag):
 				start = time.time()
 				net = bilstm(input_dim=self.feature_size,
 										hidden_dim=self.hidden_state,
@@ -244,8 +244,8 @@ class Trainer:
 						current_test_class = [1 if ele>thresh else 0 for ele in current_test_pred]
 						#np.savetxt(split_dates[1]+"_"+str(horizon)+"_"+str(epoch)+"_"+version+"_"+"prediction.txt",current_test_class)
 						if val_loss < loss:
-							torch.save(net, split_dates[0]+"_"+str(horizon)+"_"+version+"_"+'alstm.pkl')
-							np.savetxt(split_dates[1]+"_"+str(horizon)+"_"+version+"_"+"prediction.txt",current_test_class)
+							torch.save(net, split_dates[0]+"_"+str(horizon)+"_"+str(drop_out)+"_"+str(hidden_state)+"_"+str(embedding_size)+"_"+str(lag)+"_"+version+"_"+'alstm.pkl')
+							np.savetxt(split_dates[1]+"_"+str(horizon)+"_"+str(drop_out)+"_"+str(hidden_state)+"_"+str(embedding_size)+"_"+str(lag)+"_"+version+"_"+"prediction.txt",current_test_class)
 							loss = val_loss
 						#np.save(epoch+"prediction.txt",current_test_class)
 						test_loss = loss_sum
@@ -601,7 +601,7 @@ class ALSTM_online():
 		print("the split date is {}".format(split_dates[1]))
 		#out_val_pred, out_test_pred, out_loss = trainer.train_minibatch(num_epochs, batch_size, interval)
 		save = 1
-		net=trainer.train_minibatch(num_epochs, batch_size, interval, self.version, self.horizon, split_dates)
+		net=trainer.train_minibatch(num_epochs, batch_size, interval, self.version, self.horizon, split_dates, drop_out, hidden_state, embedding_size, self.lag)
 		#np.savetxt(split_dates[1]+"_"+str(horizon)+"_"+"train_prediction.txt",test_label)
 		#torch.save(net, split_dates[0]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+self.version+"_"+'alstm.pkl')
 	#-------------------------------------------------------------------------------------------------------------------------------------#
