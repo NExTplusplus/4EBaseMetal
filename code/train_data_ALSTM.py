@@ -81,7 +81,7 @@ if __name__ == '__main__':
       help='whether to save loss results'
   )
   args = parser.parse_args()
-  for date in ["2014-07-01","2015-01-01","2015-07-01","2016-01-01","2016-07-01","2017-01-01","2017-07-01","2018-01-01","2018-07-01"]:
+  for date in for date in ["2014-12-31","2015-06-30","2015-12-31","2016-06-30","2016-12-31","2017-06-30","2017-12-31","2018-06-30","2018-12-31"]:
     model = ALSTM_online(lag = args.lag, horizon = args.steps, version = args.version, gt = args.ground_truth, date = date, source = args.source, path =args.config)
     if args.action=="tune":
       model.choose_parameter(log = args.log, script = args.script)
