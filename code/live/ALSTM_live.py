@@ -482,7 +482,7 @@ class ALSTM_online():
 			X_tr, y_tr, \
 			X_va, y_va, \
 			X_te, y_te, \
-			norm_check, column_list = load_data(
+			norm_check, column_list,val_dates = load_data(
 				copy(ts), LME_dates, self.horizon, [ground_truth], self.lag,
 				copy(split_dates), norm_params, tech_params,
 				version_params
