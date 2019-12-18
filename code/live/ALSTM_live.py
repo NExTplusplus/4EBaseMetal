@@ -119,7 +119,7 @@ class Trainer:
 						print('top acc: {:.4f} ::: bot acc: {:.4f}'.format(top_acc, bot_acc))
 
 
-		def train_minibatch(self, num_epochs, batch_size, interval):
+		def train_minibatch(self, num_epochs, batch_size, interval, version, horizon, split_dates, drop_out, hidden_state, embedding_size, lag):
 				start = time.time()
 				net = bilstm(input_dim=self.feature_size,
 										hidden_dim=self.hidden_state,
@@ -163,6 +163,7 @@ class Trainer:
 				train_size = len(self.train_X)
 				val_size = len(self.val_X)
 				test_size = len(self.test_X)
+				max_loss = 10
 				#begin to train
 				for epoch in range(num_epochs):
 						current_val_pred = []
@@ -239,8 +240,13 @@ class Trainer:
 						loss_sum = loss.detach()
 						current_test_pred = list(test_output.detach().view(-1,))
 						# print(np.min(current_test_pred), np.max(current_test_pred))
-						
-						current_test_class = [1 if ele>thresh else 0 for ele in current_test_pred]    
+						#torch.save(net, split_dates[0]+"_"+str(horizon)+"_"+str(epoch)+"_"+version+"_"+'alstm.pkl')
+						current_test_class = [1 if ele>thresh else 0 for ele in current_test_pred]
+						#np.savetxt(split_dates[1]+"_"+str(horizon)+"_"+str(epoch)+"_"+version+"_"+"prediction.txt",current_test_class)
+						if val_loss < max_loss:
+							torch.save(net, split_dates[1]+"_"+str(horizon)+"_"+str(drop_out)+"_"+str(hidden_state)+"_"+str(embedding_size)+"_"+str(lag)+"_"+version+"_"+'alstm.pkl')
+							np.savetxt(split_dates[1]+"_"+str(horizon)+"_"+str(drop_out)+"_"+str(hidden_state)+"_"+str(embedding_size)+"_"+str(lag)+"_"+version+"_"+"prediction.txt",current_test_class)
+							max_loss = val_loss
 						#np.save(epoch+"prediction.txt",current_test_class)
 						test_loss = loss_sum
 						test_loss_list.append(float(test_loss))
@@ -446,7 +452,7 @@ class ALSTM_online():
 		norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
 						'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False}
 		tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
-										'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2}
+										'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2,"live":None}
 		'''
 			for versions that tune over 6 metals 
 		'''
@@ -476,7 +482,7 @@ class ALSTM_online():
 			X_tr, y_tr, \
 			X_va, y_va, \
 			X_te, y_te, \
-			norm_check, column_list = load_data(
+			norm_check, column_list,val_dates = load_data(
 				copy(ts), LME_dates, self.horizon, [ground_truth], self.lag,
 				copy(split_dates), norm_params, tech_params,
 				version_params
@@ -595,9 +601,9 @@ class ALSTM_online():
 		print("the split date is {}".format(split_dates[1]))
 		#out_val_pred, out_test_pred, out_loss = trainer.train_minibatch(num_epochs, batch_size, interval)
 		save = 1
-		net=trainer.train_minibatch(num_epochs, batch_size, interval)
+		net=trainer.train_minibatch(num_epochs, batch_size, interval, self.version, self.horizon, split_dates, drop_out, hidden_state, embedding_size, self.lag)
 		#np.savetxt(split_dates[1]+"_"+str(horizon)+"_"+"train_prediction.txt",test_label)
-		torch.save(net, split_dates[0]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+self.version+"_"+'alstm.pkl')
+		#torch.save(net, split_dates[0]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+self.version+"_"+'alstm.pkl')
 	#-------------------------------------------------------------------------------------------------------------------------------------#
 	"""
 	this function is used to predict the date
