@@ -163,7 +163,7 @@ class Trainer:
 				train_size = len(self.train_X)
 				val_size = len(self.val_X)
 				test_size = len(self.test_X)
-				loss = 10
+				max_loss = 10
 				#begin to train
 				for epoch in range(num_epochs):
 						current_val_pred = []
@@ -243,10 +243,10 @@ class Trainer:
 						#torch.save(net, split_dates[0]+"_"+str(horizon)+"_"+str(epoch)+"_"+version+"_"+'alstm.pkl')
 						current_test_class = [1 if ele>thresh else 0 for ele in current_test_pred]
 						#np.savetxt(split_dates[1]+"_"+str(horizon)+"_"+str(epoch)+"_"+version+"_"+"prediction.txt",current_test_class)
-						if val_loss < loss:
+						if val_loss < max_loss:
 							torch.save(net, split_dates[1]+"_"+str(horizon)+"_"+str(drop_out)+"_"+str(hidden_state)+"_"+str(embedding_size)+"_"+str(lag)+"_"+version+"_"+'alstm.pkl')
 							np.savetxt(split_dates[1]+"_"+str(horizon)+"_"+str(drop_out)+"_"+str(hidden_state)+"_"+str(embedding_size)+"_"+str(lag)+"_"+version+"_"+"prediction.txt",current_test_class)
-							loss = val_loss
+							max_loss = val_loss
 						#np.save(epoch+"prediction.txt",current_test_class)
 						test_loss = loss_sum
 						test_loss_list.append(float(test_loss))
