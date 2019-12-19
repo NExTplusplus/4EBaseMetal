@@ -190,7 +190,7 @@ if __name__ ==  '__main__':
                                            threshold_lst,short_term_freq_win,short_term_repo_win,
                                            short_term_predict_half, 
                                            short_term_whether_use_threshold_for_horizons,conn)        
-        res.to_csv('./adjustment_intermediate/{}/{}_{}_{}_short_term_adjustment'.format(met, met, predict_start_date, predict_end_date))
+        res.to_csv('./adjustment_intermediate/{}/{}_{}_{}_short_term_adjustment.csv'.format(met, met, predict_start_date, predict_end_date), index=False)
         for hor, best_threshold in best_param.items():
             if predict_mode == 'reproduction':
                 ans = online_reproduction(met, metal_columns, metal_path, 
@@ -211,7 +211,7 @@ if __name__ ==  '__main__':
                                            threshold_lst,long_term_freq_win,long_term_repo_win,
                                            long_term_predict_half, 
                                            long_term_whether_use_threshold_for_horizons,conn)        
-        res.to_csv('./adjustment_intermediate/{}/{}_{}_{}_long_term_adjustment'.format(met, met, predict_start_date, predict_end_date))
+        res.to_csv('./adjustment_intermediate/{}/{}_{}_{}_long_term_adjustment.csv'.format(met, met, predict_start_date, predict_end_date), index=False)
         
         for hor, best_threshold in best_param.items():
             if predict_mode == 'reproduction':
