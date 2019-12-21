@@ -28,8 +28,8 @@ if __name__ == '__main__':
   parser.add_argument('-o', '--action', type=str, default='train',
             help='train, test, tune')
   parser.add_argument('-d', '--date', help = "the date is the final data's date which you want to use for testing",type=str)	
-  parser.add_argument('-log', '--log', type=str)
-  parser.add_argument('-script', '--script', type=str)
+  parser.add_argument('-log', '--log', default='./tune.log', type=str)
+  parser.add_argument('-script', '--script', default='code/train/train_alstm.py', type=str)
   parser.add_argument(
       '-e', '--epoch', type=int, default=50,
       help='the number of epochs')
