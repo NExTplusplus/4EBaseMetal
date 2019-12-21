@@ -608,7 +608,18 @@ class ALSTM_online():
 	"""
 	this function is used to predict the date
 	"""
-	def test(self,split=0.9):
+	def test(self,split = 0.9,
+				num_epochs=50,
+				drop_out=0.0,
+				embedding_size=5,
+				batch_size=512,
+				hidden_state=50,
+				lrate=0.001,
+				attention_size=2,
+				interval=1,
+				lambd=0,
+				save_loss=0,
+				save_prediction=0):
 		print("begin to train")
 		#assert that the configuration path is correct
 		if self.version in ['v16','v26']:
@@ -830,7 +841,7 @@ class ALSTM_online():
 		test_X = torch.from_numpy(final_X_te).float()
 		test_Y = torch.from_numpy(final_y_te).float()
 		var_x_test_id = torch.LongTensor(np.array(final_test_X_embedding))
-		net = torch.load(split_dates[0]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+self.version+"_"+'alstm.pkl')
+		net = torch.load(split_dates[1]+"_"+str(horizon)+"_"+str(drop_out)+"_"+str(hidden_state)+"_"+str(embedding_size)+"_"+str(lag)+"_"+version+"_"+'alstm.pkl')
 		net.eval()
 		test_output = net(test_X, var_x_test_id)
 		#loss = loss_func(test_output, test_Y)
