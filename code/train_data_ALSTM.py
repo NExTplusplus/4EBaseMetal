@@ -101,4 +101,4 @@ if __name__ == '__main__':
   				save_prediction=args.save_prediction)
     else:
       final = model.test(split = args.split)
-      final.to_csv("_".join([args.ground_truth,args.date,str(args.steps),args.version])+".csv")
+      print("the result of the test is {}".format(final))
