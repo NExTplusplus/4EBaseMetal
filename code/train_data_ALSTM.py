@@ -81,24 +81,34 @@ if __name__ == '__main__':
       help='whether to save loss results'
   )
   args = parser.parse_args()
-  for date in ["2014-12-31","2015-06-30","2015-12-31","2016-06-30","2016-12-31","2017-06-30","2017-12-31","2018-06-30","2018-12-31"]:
-    model = ALSTM_online(lag = args.lag, horizon = args.steps, version = args.version, gt = args.ground_truth, date = date, source = args.source, path =args.config)
-    if args.action=="tune":
-      model.choose_parameter(log = args.log, script = args.script)
-    elif args.action=='train':
-      model.train(
-          num_epochs=args.epoch,
-  				batch_size=args.batch,
-          split=args.split,
-  				drop_out=args.drop_out,
-  				hidden_state=args.hidden_state,
-  				embedding_size=args.embedding_size,
-  				lrate=args.lrate,
-  				attention_size=args.attention_size,
-  				interval=args.interval,
-  				lambd=args.lambd,
-  				save_loss=args.save_loss,
-  				save_prediction=args.save_prediction)
-    else:
-      final = model.test(split = args.split)
-      print("the result of the test is {}".format(final))
+  model = ALSTM_online(lag = args.lag, horizon = args.steps, version = args.version, gt = args.ground_truth, date = date, source = args.source, path =args.config)
+  if args.action=="tune":
+    model.choose_parameter(log = args.log, script = args.script)
+  elif args.action=='train':
+    model.train(
+        num_epochs=args.epoch,
+        batch_size=args.batch,
+        split=args.split,
+        drop_out=args.drop_out,
+        hidden_state=args.hidden_state,
+        embedding_size=args.embedding_size,
+        lrate=args.lrate,
+        attention_size=args.attention_size,
+        interval=args.interval,
+        lambd=args.lambd,
+        save_loss=args.save_loss,
+        save_prediction=args.save_prediction)
+  else:
+    final = model.test(num_epochs=args.epoch,
+        batch_size=args.batch,
+        split=args.split,
+        drop_out=args.drop_out,
+        hidden_state=args.hidden_state,
+        embedding_size=args.embedding_size,
+        lrate=args.lrate,
+        attention_size=args.attention_size,
+        interval=args.interval,
+        lambd=args.lambd,
+        save_loss=args.save_loss,
+        save_prediction=args.save_prediction)
+    print("the result of the test is {}".format(final))
