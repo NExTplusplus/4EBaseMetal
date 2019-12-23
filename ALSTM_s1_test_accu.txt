@@ -1,0 +1,4318 @@
+Namespace(action='train', attention_size=2, batch=512, data_configure_file='exp/online_v10.conf', drop_out=0.6, embedding_size=20, epoch=50, ground_truth='LME_Co_Spot', hidden_state=30, interval=1, lag=5, lambd=0.0, lrate=0.001, model='', save_loss=True, save_prediction=True, source='NExT', split=0.9, steps=1, test=False, version='v26')
+{'generate_norm_params': 'v1', 'generate_tech_params': 'v2', 'generate_strat_params': None, 'deal_with_abnormal_value': 'v2', 'labelling': 'v2', 'process_missing_value': 'v1', 'strategy_signal': None, 'normalize_without_1d_return': None, 'technical_indication': 'v3', 'remove_unused_columns': 'v4', 'price_normalization': None, 'scaling': 'v2', 'construct': 'v1'}
+LME_Co_Spot
+Before Load Data
+['2012-01-01', '2017-01-01', '2017-07-01']
+0.012271647844515989
+['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot', 'LME_Zi_Spot', 'LME_Ti_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low', 'LME_Al_Close', 'LME_Al_Volume', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low', 'LME_Co_Close', 'LME_Co_Volume', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low', 'LME_Ti_Close', 'LME_Ti_Volume', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low', 'LME_Le_Close', 'LME_Le_Volume', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low', 'LME_Ni_Close', 'LME_Ni_Volume', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low', 'LME_Zi_Close', 'LME_Zi_Volume', 'spot_price']
+====================================technical indicator_v3========================================
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+Remove Columns Version4
+ground_truth ['LME_Co_Spot']
+#####################remove_unused_columns_v4#####################
+target LME_Co
+Index(['LME_Co_Spot', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low',
+       'LME_Co_Close', 'LME_Co_Spot_EMA12', 'LME_Co_Spot_WMA12',
+       'LME_Co_Spot_EMA26', 'LME_Co_Spot_WMA26', 'LME_Co_Spot_EMA40',
+       'LME_Co_Spot_WMA40', 'LME_Co_Spot_EMA65', 'LME_Co_Spot_WMA65',
+       'LME_Co_Spot_EMA125', 'LME_Co_Spot_WMA125', 'LME_Co_Spot_bollinger5',
+       'LME_Co_Spot_bollinger10', 'LME_Co_Spot_bollinger15',
+       'LME_Co_Spot_bollinger20', 'LME_Co_Spot_bollinger30',
+       'LME_Co_Spot_bollinger65', 'LME_Co_Spot_Mom5', 'LME_Co_Spot_Mom10',
+       'LME_Co_Spot_Mom15', 'LME_Co_Spot_Mom26', 'LME_Co_Spot_Mom40',
+       'LME_Co_Spot_Mom65', 'LME_Co_Spot_Mom125', 'LME_Co_Spot_PPO12',
+       'LME_Co_Spot_PPO22', 'LME_Co_Spot_RSI14', 'LME_Co_Spot_RSI26',
+       'LME_Co_Spot_RSI40', 'LME_Co_Spot_RSI54', 'LME_Co_Spot_RSI125',
+       'LME_Co_Close_EMA12', 'LME_Co_Close_WMA12', 'LME_Co_Close_EMA26',
+       'LME_Co_Close_WMA26', 'LME_Co_Close_EMA40', 'LME_Co_Close_WMA40',
+       'LME_Co_Close_EMA65', 'LME_Co_Close_WMA65', 'LME_Co_Close_EMA125',
+       'LME_Co_Close_WMA125', 'LME_Co_Close_bollinger5',
+       'LME_Co_Close_bollinger10', 'LME_Co_Close_bollinger15',
+       'LME_Co_Close_bollinger20', 'LME_Co_Close_bollinger30',
+       'LME_Co_Close_bollinger65', 'LME_Co_Close_Mom5', 'LME_Co_Close_Mom10',
+       'LME_Co_Close_Mom15', 'LME_Co_Close_Mom26', 'LME_Co_Close_Mom40',
+       'LME_Co_Close_Mom65', 'LME_Co_Close_Mom125', 'LME_Co_Close_PPO12',
+       'LME_Co_Close_PPO22', 'LME_Co_Close_RSI14', 'LME_Co_Close_RSI26',
+       'LME_Co_Close_RSI40', 'LME_Co_Close_RSI54', 'LME_Co_Close_RSI125',
+       'LME_Co_PVT', 'LME_Co_divPVT', 'LME_Co_NATR14', 'LME_Co_NATR26',
+       'LME_Co_NATR65', 'LME_Co_NATR125', 'LME_Co_CCI12', 'LME_Co_CCI26',
+       'LME_Co_CCI40', 'LME_Co_CCI65', 'LME_Co_CCI125', 'LME_Co_VBM12',
+       'LME_Co_VBM22', 'LME_Co_ADX14', 'LME_Co_ADX26', 'LME_Co_ADX40',
+       'LME_Co_ADX54', 'LME_Co_ADX125', 'LME_Co_SAR'],
+      dtype='object')
+LME_Al_Spot
+Before Load Data
+['2012-01-01', '2017-01-01', '2017-07-01']
+0.011244562693550543
+['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot', 'LME_Zi_Spot', 'LME_Ti_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low', 'LME_Al_Close', 'LME_Al_Volume', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low', 'LME_Co_Close', 'LME_Co_Volume', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low', 'LME_Ti_Close', 'LME_Ti_Volume', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low', 'LME_Le_Close', 'LME_Le_Volume', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low', 'LME_Ni_Close', 'LME_Ni_Volume', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low', 'LME_Zi_Close', 'LME_Zi_Volume', 'spot_price']
+====================================technical indicator_v3========================================
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+Remove Columns Version4
+ground_truth ['LME_Al_Spot']
+#####################remove_unused_columns_v4#####################
+target LME_Al
+Index(['LME_Al_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low',
+       'LME_Al_Close', 'LME_Al_Spot_EMA12', 'LME_Al_Spot_WMA12',
+       'LME_Al_Spot_EMA26', 'LME_Al_Spot_WMA26', 'LME_Al_Spot_EMA40',
+       'LME_Al_Spot_WMA40', 'LME_Al_Spot_EMA65', 'LME_Al_Spot_WMA65',
+       'LME_Al_Spot_EMA125', 'LME_Al_Spot_WMA125', 'LME_Al_Spot_bollinger5',
+       'LME_Al_Spot_bollinger10', 'LME_Al_Spot_bollinger15',
+       'LME_Al_Spot_bollinger20', 'LME_Al_Spot_bollinger30',
+       'LME_Al_Spot_bollinger65', 'LME_Al_Spot_Mom5', 'LME_Al_Spot_Mom10',
+       'LME_Al_Spot_Mom15', 'LME_Al_Spot_Mom26', 'LME_Al_Spot_Mom40',
+       'LME_Al_Spot_Mom65', 'LME_Al_Spot_Mom125', 'LME_Al_Spot_PPO12',
+       'LME_Al_Spot_PPO22', 'LME_Al_Spot_RSI14', 'LME_Al_Spot_RSI26',
+       'LME_Al_Spot_RSI40', 'LME_Al_Spot_RSI54', 'LME_Al_Spot_RSI125',
+       'LME_Al_Close_EMA12', 'LME_Al_Close_WMA12', 'LME_Al_Close_EMA26',
+       'LME_Al_Close_WMA26', 'LME_Al_Close_EMA40', 'LME_Al_Close_WMA40',
+       'LME_Al_Close_EMA65', 'LME_Al_Close_WMA65', 'LME_Al_Close_EMA125',
+       'LME_Al_Close_WMA125', 'LME_Al_Close_bollinger5',
+       'LME_Al_Close_bollinger10', 'LME_Al_Close_bollinger15',
+       'LME_Al_Close_bollinger20', 'LME_Al_Close_bollinger30',
+       'LME_Al_Close_bollinger65', 'LME_Al_Close_Mom5', 'LME_Al_Close_Mom10',
+       'LME_Al_Close_Mom15', 'LME_Al_Close_Mom26', 'LME_Al_Close_Mom40',
+       'LME_Al_Close_Mom65', 'LME_Al_Close_Mom125', 'LME_Al_Close_PPO12',
+       'LME_Al_Close_PPO22', 'LME_Al_Close_RSI14', 'LME_Al_Close_RSI26',
+       'LME_Al_Close_RSI40', 'LME_Al_Close_RSI54', 'LME_Al_Close_RSI125',
+       'LME_Al_PVT', 'LME_Al_divPVT', 'LME_Al_NATR14', 'LME_Al_NATR26',
+       'LME_Al_NATR65', 'LME_Al_NATR125', 'LME_Al_CCI12', 'LME_Al_CCI26',
+       'LME_Al_CCI40', 'LME_Al_CCI65', 'LME_Al_CCI125', 'LME_Al_VBM12',
+       'LME_Al_VBM22', 'LME_Al_ADX14', 'LME_Al_ADX26', 'LME_Al_ADX40',
+       'LME_Al_ADX54', 'LME_Al_ADX125', 'LME_Al_SAR'],
+      dtype='object')
+LME_Le_Spot
+Before Load Data
+['2012-01-01', '2017-01-01', '2017-07-01']
+0.01457642307182968
+['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot', 'LME_Zi_Spot', 'LME_Ti_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low', 'LME_Al_Close', 'LME_Al_Volume', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low', 'LME_Co_Close', 'LME_Co_Volume', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low', 'LME_Ti_Close', 'LME_Ti_Volume', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low', 'LME_Le_Close', 'LME_Le_Volume', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low', 'LME_Ni_Close', 'LME_Ni_Volume', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low', 'LME_Zi_Close', 'LME_Zi_Volume', 'spot_price']
+====================================technical indicator_v3========================================
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+Remove Columns Version4
+ground_truth ['LME_Le_Spot']
+#####################remove_unused_columns_v4#####################
+target LME_Le
+Index(['LME_Le_Spot', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low',
+       'LME_Le_Close', 'LME_Le_Spot_EMA12', 'LME_Le_Spot_WMA12',
+       'LME_Le_Spot_EMA26', 'LME_Le_Spot_WMA26', 'LME_Le_Spot_EMA40',
+       'LME_Le_Spot_WMA40', 'LME_Le_Spot_EMA65', 'LME_Le_Spot_WMA65',
+       'LME_Le_Spot_EMA125', 'LME_Le_Spot_WMA125', 'LME_Le_Spot_bollinger5',
+       'LME_Le_Spot_bollinger10', 'LME_Le_Spot_bollinger15',
+       'LME_Le_Spot_bollinger20', 'LME_Le_Spot_bollinger30',
+       'LME_Le_Spot_bollinger65', 'LME_Le_Spot_Mom5', 'LME_Le_Spot_Mom10',
+       'LME_Le_Spot_Mom15', 'LME_Le_Spot_Mom26', 'LME_Le_Spot_Mom40',
+       'LME_Le_Spot_Mom65', 'LME_Le_Spot_Mom125', 'LME_Le_Spot_PPO12',
+       'LME_Le_Spot_PPO22', 'LME_Le_Spot_RSI14', 'LME_Le_Spot_RSI26',
+       'LME_Le_Spot_RSI40', 'LME_Le_Spot_RSI54', 'LME_Le_Spot_RSI125',
+       'LME_Le_Close_EMA12', 'LME_Le_Close_WMA12', 'LME_Le_Close_EMA26',
+       'LME_Le_Close_WMA26', 'LME_Le_Close_EMA40', 'LME_Le_Close_WMA40',
+       'LME_Le_Close_EMA65', 'LME_Le_Close_WMA65', 'LME_Le_Close_EMA125',
+       'LME_Le_Close_WMA125', 'LME_Le_Close_bollinger5',
+       'LME_Le_Close_bollinger10', 'LME_Le_Close_bollinger15',
+       'LME_Le_Close_bollinger20', 'LME_Le_Close_bollinger30',
+       'LME_Le_Close_bollinger65', 'LME_Le_Close_Mom5', 'LME_Le_Close_Mom10',
+       'LME_Le_Close_Mom15', 'LME_Le_Close_Mom26', 'LME_Le_Close_Mom40',
+       'LME_Le_Close_Mom65', 'LME_Le_Close_Mom125', 'LME_Le_Close_PPO12',
+       'LME_Le_Close_PPO22', 'LME_Le_Close_RSI14', 'LME_Le_Close_RSI26',
+       'LME_Le_Close_RSI40', 'LME_Le_Close_RSI54', 'LME_Le_Close_RSI125',
+       'LME_Le_PVT', 'LME_Le_divPVT', 'LME_Le_NATR14', 'LME_Le_NATR26',
+       'LME_Le_NATR65', 'LME_Le_NATR125', 'LME_Le_CCI12', 'LME_Le_CCI26',
+       'LME_Le_CCI40', 'LME_Le_CCI65', 'LME_Le_CCI125', 'LME_Le_VBM12',
+       'LME_Le_VBM22', 'LME_Le_ADX14', 'LME_Le_ADX26', 'LME_Le_ADX40',
+       'LME_Le_ADX54', 'LME_Le_ADX125', 'LME_Le_SAR'],
+      dtype='object')
+LME_Ni_Spot
+Before Load Data
+['2012-01-01', '2017-01-01', '2017-07-01']
+0.017817458043556614
+['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot', 'LME_Zi_Spot', 'LME_Ti_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low', 'LME_Al_Close', 'LME_Al_Volume', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low', 'LME_Co_Close', 'LME_Co_Volume', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low', 'LME_Ti_Close', 'LME_Ti_Volume', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low', 'LME_Le_Close', 'LME_Le_Volume', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low', 'LME_Ni_Close', 'LME_Ni_Volume', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low', 'LME_Zi_Close', 'LME_Zi_Volume', 'spot_price']
+====================================technical indicator_v3========================================
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+Remove Columns Version4
+ground_truth ['LME_Ni_Spot']
+#####################remove_unused_columns_v4#####################
+target LME_Ni
+Index(['LME_Ni_Spot', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low',
+       'LME_Ni_Close', 'LME_Ni_Spot_EMA12', 'LME_Ni_Spot_WMA12',
+       'LME_Ni_Spot_EMA26', 'LME_Ni_Spot_WMA26', 'LME_Ni_Spot_EMA40',
+       'LME_Ni_Spot_WMA40', 'LME_Ni_Spot_EMA65', 'LME_Ni_Spot_WMA65',
+       'LME_Ni_Spot_EMA125', 'LME_Ni_Spot_WMA125', 'LME_Ni_Spot_bollinger5',
+       'LME_Ni_Spot_bollinger10', 'LME_Ni_Spot_bollinger15',
+       'LME_Ni_Spot_bollinger20', 'LME_Ni_Spot_bollinger30',
+       'LME_Ni_Spot_bollinger65', 'LME_Ni_Spot_Mom5', 'LME_Ni_Spot_Mom10',
+       'LME_Ni_Spot_Mom15', 'LME_Ni_Spot_Mom26', 'LME_Ni_Spot_Mom40',
+       'LME_Ni_Spot_Mom65', 'LME_Ni_Spot_Mom125', 'LME_Ni_Spot_PPO12',
+       'LME_Ni_Spot_PPO22', 'LME_Ni_Spot_RSI14', 'LME_Ni_Spot_RSI26',
+       'LME_Ni_Spot_RSI40', 'LME_Ni_Spot_RSI54', 'LME_Ni_Spot_RSI125',
+       'LME_Ni_Close_EMA12', 'LME_Ni_Close_WMA12', 'LME_Ni_Close_EMA26',
+       'LME_Ni_Close_WMA26', 'LME_Ni_Close_EMA40', 'LME_Ni_Close_WMA40',
+       'LME_Ni_Close_EMA65', 'LME_Ni_Close_WMA65', 'LME_Ni_Close_EMA125',
+       'LME_Ni_Close_WMA125', 'LME_Ni_Close_bollinger5',
+       'LME_Ni_Close_bollinger10', 'LME_Ni_Close_bollinger15',
+       'LME_Ni_Close_bollinger20', 'LME_Ni_Close_bollinger30',
+       'LME_Ni_Close_bollinger65', 'LME_Ni_Close_Mom5', 'LME_Ni_Close_Mom10',
+       'LME_Ni_Close_Mom15', 'LME_Ni_Close_Mom26', 'LME_Ni_Close_Mom40',
+       'LME_Ni_Close_Mom65', 'LME_Ni_Close_Mom125', 'LME_Ni_Close_PPO12',
+       'LME_Ni_Close_PPO22', 'LME_Ni_Close_RSI14', 'LME_Ni_Close_RSI26',
+       'LME_Ni_Close_RSI40', 'LME_Ni_Close_RSI54', 'LME_Ni_Close_RSI125',
+       'LME_Ni_PVT', 'LME_Ni_divPVT', 'LME_Ni_NATR14', 'LME_Ni_NATR26',
+       'LME_Ni_NATR65', 'LME_Ni_NATR125', 'LME_Ni_CCI12', 'LME_Ni_CCI26',
+       'LME_Ni_CCI40', 'LME_Ni_CCI65', 'LME_Ni_CCI125', 'LME_Ni_VBM12',
+       'LME_Ni_VBM22', 'LME_Ni_ADX14', 'LME_Ni_ADX26', 'LME_Ni_ADX40',
+       'LME_Ni_ADX54', 'LME_Ni_ADX125', 'LME_Ni_SAR'],
+      dtype='object')
+LME_Zi_Spot
+Before Load Data
+['2012-01-01', '2017-01-01', '2017-07-01']
+0.01413456527781114
+['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot', 'LME_Zi_Spot', 'LME_Ti_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low', 'LME_Al_Close', 'LME_Al_Volume', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low', 'LME_Co_Close', 'LME_Co_Volume', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low', 'LME_Ti_Close', 'LME_Ti_Volume', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low', 'LME_Le_Close', 'LME_Le_Volume', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low', 'LME_Ni_Close', 'LME_Ni_Volume', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low', 'LME_Zi_Close', 'LME_Zi_Volume', 'spot_price']
+====================================technical indicator_v3========================================
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+Remove Columns Version4
+ground_truth ['LME_Zi_Spot']
+#####################remove_unused_columns_v4#####################
+target LME_Zi
+Index(['LME_Zi_Spot', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low',
+       'LME_Zi_Close', 'LME_Zi_Spot_EMA12', 'LME_Zi_Spot_WMA12',
+       'LME_Zi_Spot_EMA26', 'LME_Zi_Spot_WMA26', 'LME_Zi_Spot_EMA40',
+       'LME_Zi_Spot_WMA40', 'LME_Zi_Spot_EMA65', 'LME_Zi_Spot_WMA65',
+       'LME_Zi_Spot_EMA125', 'LME_Zi_Spot_WMA125', 'LME_Zi_Spot_bollinger5',
+       'LME_Zi_Spot_bollinger10', 'LME_Zi_Spot_bollinger15',
+       'LME_Zi_Spot_bollinger20', 'LME_Zi_Spot_bollinger30',
+       'LME_Zi_Spot_bollinger65', 'LME_Zi_Spot_Mom5', 'LME_Zi_Spot_Mom10',
+       'LME_Zi_Spot_Mom15', 'LME_Zi_Spot_Mom26', 'LME_Zi_Spot_Mom40',
+       'LME_Zi_Spot_Mom65', 'LME_Zi_Spot_Mom125', 'LME_Zi_Spot_PPO12',
+       'LME_Zi_Spot_PPO22', 'LME_Zi_Spot_RSI14', 'LME_Zi_Spot_RSI26',
+       'LME_Zi_Spot_RSI40', 'LME_Zi_Spot_RSI54', 'LME_Zi_Spot_RSI125',
+       'LME_Zi_Close_EMA12', 'LME_Zi_Close_WMA12', 'LME_Zi_Close_EMA26',
+       'LME_Zi_Close_WMA26', 'LME_Zi_Close_EMA40', 'LME_Zi_Close_WMA40',
+       'LME_Zi_Close_EMA65', 'LME_Zi_Close_WMA65', 'LME_Zi_Close_EMA125',
+       'LME_Zi_Close_WMA125', 'LME_Zi_Close_bollinger5',
+       'LME_Zi_Close_bollinger10', 'LME_Zi_Close_bollinger15',
+       'LME_Zi_Close_bollinger20', 'LME_Zi_Close_bollinger30',
+       'LME_Zi_Close_bollinger65', 'LME_Zi_Close_Mom5', 'LME_Zi_Close_Mom10',
+       'LME_Zi_Close_Mom15', 'LME_Zi_Close_Mom26', 'LME_Zi_Close_Mom40',
+       'LME_Zi_Close_Mom65', 'LME_Zi_Close_Mom125', 'LME_Zi_Close_PPO12',
+       'LME_Zi_Close_PPO22', 'LME_Zi_Close_RSI14', 'LME_Zi_Close_RSI26',
+       'LME_Zi_Close_RSI40', 'LME_Zi_Close_RSI54', 'LME_Zi_Close_RSI125',
+       'LME_Zi_PVT', 'LME_Zi_divPVT', 'LME_Zi_NATR14', 'LME_Zi_NATR26',
+       'LME_Zi_NATR65', 'LME_Zi_NATR125', 'LME_Zi_CCI12', 'LME_Zi_CCI26',
+       'LME_Zi_CCI40', 'LME_Zi_CCI65', 'LME_Zi_CCI125', 'LME_Zi_VBM12',
+       'LME_Zi_VBM22', 'LME_Zi_ADX14', 'LME_Zi_ADX26', 'LME_Zi_ADX40',
+       'LME_Zi_ADX54', 'LME_Zi_ADX125', 'LME_Zi_SAR'],
+      dtype='object')
+LME_Ti_Spot
+Before Load Data
+['2012-01-01', '2017-01-01', '2017-07-01']
+0.013554767961814066
+['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot', 'LME_Zi_Spot', 'LME_Ti_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low', 'LME_Al_Close', 'LME_Al_Volume', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low', 'LME_Co_Close', 'LME_Co_Volume', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low', 'LME_Ti_Close', 'LME_Ti_Volume', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low', 'LME_Le_Close', 'LME_Le_Volume', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low', 'LME_Ni_Close', 'LME_Ni_Volume', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low', 'LME_Zi_Close', 'LME_Zi_Volume', 'spot_price']
+====================================technical indicator_v3========================================
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+Remove Columns Version4
+ground_truth ['LME_Ti_Spot']
+#####################remove_unused_columns_v4#####################
+target LME_Ti
+Index(['LME_Ti_Spot', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low',
+       'LME_Ti_Close', 'LME_Ti_Spot_EMA12', 'LME_Ti_Spot_WMA12',
+       'LME_Ti_Spot_EMA26', 'LME_Ti_Spot_WMA26', 'LME_Ti_Spot_EMA40',
+       'LME_Ti_Spot_WMA40', 'LME_Ti_Spot_EMA65', 'LME_Ti_Spot_WMA65',
+       'LME_Ti_Spot_EMA125', 'LME_Ti_Spot_WMA125', 'LME_Ti_Spot_bollinger5',
+       'LME_Ti_Spot_bollinger10', 'LME_Ti_Spot_bollinger15',
+       'LME_Ti_Spot_bollinger20', 'LME_Ti_Spot_bollinger30',
+       'LME_Ti_Spot_bollinger65', 'LME_Ti_Spot_Mom5', 'LME_Ti_Spot_Mom10',
+       'LME_Ti_Spot_Mom15', 'LME_Ti_Spot_Mom26', 'LME_Ti_Spot_Mom40',
+       'LME_Ti_Spot_Mom65', 'LME_Ti_Spot_Mom125', 'LME_Ti_Spot_PPO12',
+       'LME_Ti_Spot_PPO22', 'LME_Ti_Spot_RSI14', 'LME_Ti_Spot_RSI26',
+       'LME_Ti_Spot_RSI40', 'LME_Ti_Spot_RSI54', 'LME_Ti_Spot_RSI125',
+       'LME_Ti_Close_EMA12', 'LME_Ti_Close_WMA12', 'LME_Ti_Close_EMA26',
+       'LME_Ti_Close_WMA26', 'LME_Ti_Close_EMA40', 'LME_Ti_Close_WMA40',
+       'LME_Ti_Close_EMA65', 'LME_Ti_Close_WMA65', 'LME_Ti_Close_EMA125',
+       'LME_Ti_Close_WMA125', 'LME_Ti_Close_bollinger5',
+       'LME_Ti_Close_bollinger10', 'LME_Ti_Close_bollinger15',
+       'LME_Ti_Close_bollinger20', 'LME_Ti_Close_bollinger30',
+       'LME_Ti_Close_bollinger65', 'LME_Ti_Close_Mom5', 'LME_Ti_Close_Mom10',
+       'LME_Ti_Close_Mom15', 'LME_Ti_Close_Mom26', 'LME_Ti_Close_Mom40',
+       'LME_Ti_Close_Mom65', 'LME_Ti_Close_Mom125', 'LME_Ti_Close_PPO12',
+       'LME_Ti_Close_PPO22', 'LME_Ti_Close_RSI14', 'LME_Ti_Close_RSI26',
+       'LME_Ti_Close_RSI40', 'LME_Ti_Close_RSI54', 'LME_Ti_Close_RSI125',
+       'LME_Ti_PVT', 'LME_Ti_divPVT', 'LME_Ti_NATR14', 'LME_Ti_NATR26',
+       'LME_Ti_NATR65', 'LME_Ti_NATR125', 'LME_Ti_CCI12', 'LME_Ti_CCI26',
+       'LME_Ti_CCI40', 'LME_Ti_CCI65', 'LME_Ti_CCI125', 'LME_Ti_VBM12',
+       'LME_Ti_VBM22', 'LME_Ti_ADX14', 'LME_Ti_ADX26', 'LME_Ti_ADX40',
+       'LME_Ti_ADX54', 'LME_Ti_ADX125', 'LME_Ti_SAR'],
+      dtype='object')
+Dataset statistic: #examples
+Train: 5454 5454 5454
+11.425974 -8.434036 2.4669304 -1.6870325
+Validation: 612 612 612
+Testing: 750 750 750
+pre-processing time: 0.00015091896057128906
+the split date is 2017-01-01
+net initializing with time: 0.003139019012451172
+preparing training and testing date with time: 0.004558086395263672
+current epoch: 1
+train loss is 0.565279
+average val loss: 0.268806, accuracy: 0.5441
+average test loss: 0.234164, accuracy: 0.5173
+case acc: 0.504
+case acc: 0.472
+case acc: 0.568
+case acc: 0.544
+case acc: 0.504
+case acc: 0.512
+top acc: 0.8049 ::: bot acc: 0.1707
+top acc: 0.3171 ::: bot acc: 0.6098
+top acc: 1.0000 ::: bot acc: 0.0244
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 0.3415 ::: bot acc: 0.7561
+top acc: 0.9756 ::: bot acc: 0.0488
+current epoch: 2
+train loss is 0.213446
+average val loss: 0.186874, accuracy: 0.4755
+average test loss: 0.188937, accuracy: 0.5013
+case acc: 0.488
+case acc: 0.44
+case acc: 0.536
+case acc: 0.56
+case acc: 0.48
+case acc: 0.504
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.9756 ::: bot acc: 0.0244
+top acc: 0.9512 ::: bot acc: 0.0732
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0244 ::: bot acc: 1.0000
+current epoch: 3
+train loss is 0.172885
+average val loss: 0.164036, accuracy: 0.4755
+average test loss: 0.166781, accuracy: 0.5053
+case acc: 0.464
+case acc: 0.44
+case acc: 0.536
+case acc: 0.544
+case acc: 0.48
+case acc: 0.568
+top acc: 0.1463 ::: bot acc: 0.7561
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.3171 ::: bot acc: 0.7805
+current epoch: 4
+train loss is 0.160574
+average val loss: 0.157629, accuracy: 0.4869
+average test loss: 0.151970, accuracy: 0.5053
+case acc: 0.48
+case acc: 0.44
+case acc: 0.536
+case acc: 0.544
+case acc: 0.48
+case acc: 0.552
+top acc: 0.5610 ::: bot acc: 0.3659
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.1951 ::: bot acc: 0.8537
+current epoch: 5
+train loss is 0.151318
+average val loss: 0.155125, accuracy: 0.4788
+average test loss: 0.149752, accuracy: 0.5053
+case acc: 0.48
+case acc: 0.44
+case acc: 0.536
+case acc: 0.552
+case acc: 0.48
+case acc: 0.544
+top acc: 0.0732 ::: bot acc: 0.8780
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 1.0000 ::: bot acc: 0.0244
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.2195 ::: bot acc: 0.8537
+current epoch: 6
+train loss is 0.142641
+average val loss: 0.147968, accuracy: 0.4869
+average test loss: 0.140992, accuracy: 0.5227
+case acc: 0.528
+case acc: 0.44
+case acc: 0.536
+case acc: 0.544
+case acc: 0.496
+case acc: 0.592
+top acc: 0.3415 ::: bot acc: 0.6341
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 0.0488 ::: bot acc: 1.0000
+top acc: 0.3902 ::: bot acc: 0.7805
+current epoch: 7
+train loss is 0.137535
+average val loss: 0.145626, accuracy: 0.4886
+average test loss: 0.138869, accuracy: 0.5173
+case acc: 0.512
+case acc: 0.44
+case acc: 0.536
+case acc: 0.552
+case acc: 0.48
+case acc: 0.584
+top acc: 0.2195 ::: bot acc: 0.7561
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 0.9756 ::: bot acc: 0.0488
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.2683 ::: bot acc: 0.8537
+current epoch: 8
+train loss is 0.133477
+average val loss: 0.142791, accuracy: 0.4918
+average test loss: 0.137092, accuracy: 0.5120
+case acc: 0.496
+case acc: 0.44
+case acc: 0.52
+case acc: 0.536
+case acc: 0.488
+case acc: 0.592
+top acc: 0.1951 ::: bot acc: 0.7805
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.9512 ::: bot acc: 0.0000
+top acc: 0.9756 ::: bot acc: 0.0000
+top acc: 0.0488 ::: bot acc: 0.9756
+top acc: 0.4146 ::: bot acc: 0.8049
+current epoch: 9
+train loss is 0.129857
+average val loss: 0.139126, accuracy: 0.4902
+average test loss: 0.131229, accuracy: 0.5213
+case acc: 0.496
+case acc: 0.44
+case acc: 0.528
+case acc: 0.568
+case acc: 0.488
+case acc: 0.608
+top acc: 0.2195 ::: bot acc: 0.7073
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.9756 ::: bot acc: 0.0000
+top acc: 0.9512 ::: bot acc: 0.1220
+top acc: 0.0244 ::: bot acc: 1.0000
+top acc: 0.3902 ::: bot acc: 0.7805
+current epoch: 10
+train loss is 0.124366
+average val loss: 0.137981, accuracy: 0.5033
+average test loss: 0.131266, accuracy: 0.5307
+case acc: 0.496
+case acc: 0.44
+case acc: 0.552
+case acc: 0.6
+case acc: 0.496
+case acc: 0.6
+top acc: 0.1707 ::: bot acc: 0.8049
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.8780 ::: bot acc: 0.1463
+top acc: 0.9512 ::: bot acc: 0.1463
+top acc: 0.0488 ::: bot acc: 1.0000
+top acc: 0.3902 ::: bot acc: 0.7805
+current epoch: 11
+train loss is 0.122484
+average val loss: 0.135175, accuracy: 0.5065
+average test loss: 0.128223, accuracy: 0.5200
+case acc: 0.472
+case acc: 0.44
+case acc: 0.552
+case acc: 0.584
+case acc: 0.488
+case acc: 0.584
+top acc: 0.1463 ::: bot acc: 0.7561
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.8537 ::: bot acc: 0.1707
+top acc: 0.9024 ::: bot acc: 0.1707
+top acc: 0.0244 ::: bot acc: 1.0000
+top acc: 0.3902 ::: bot acc: 0.7561
+current epoch: 12
+train loss is 0.117953
+average val loss: 0.134068, accuracy: 0.5033
+average test loss: 0.126701, accuracy: 0.5267
+case acc: 0.488
+case acc: 0.44
+case acc: 0.544
+case acc: 0.6
+case acc: 0.488
+case acc: 0.6
+top acc: 0.1220 ::: bot acc: 0.8293
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.8293 ::: bot acc: 0.2195
+top acc: 0.8293 ::: bot acc: 0.2683
+top acc: 0.0244 ::: bot acc: 1.0000
+top acc: 0.3415 ::: bot acc: 0.8293
+current epoch: 13
+train loss is 0.117417
+average val loss: 0.132117, accuracy: 0.5147
+average test loss: 0.123732, accuracy: 0.5187
+case acc: 0.472
+case acc: 0.44
+case acc: 0.528
+case acc: 0.576
+case acc: 0.488
+case acc: 0.608
+top acc: 0.1707 ::: bot acc: 0.7561
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.7561 ::: bot acc: 0.2439
+top acc: 0.7073 ::: bot acc: 0.3415
+top acc: 0.0244 ::: bot acc: 1.0000
+top acc: 0.4390 ::: bot acc: 0.7561
+current epoch: 14
+train loss is 0.116090
+average val loss: 0.131572, accuracy: 0.5016
+average test loss: 0.122652, accuracy: 0.5160
+case acc: 0.456
+case acc: 0.44
+case acc: 0.528
+case acc: 0.584
+case acc: 0.488
+case acc: 0.6
+top acc: 0.1707 ::: bot acc: 0.7073
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.7073 ::: bot acc: 0.2683
+top acc: 0.6829 ::: bot acc: 0.3902
+top acc: 0.0244 ::: bot acc: 1.0000
+top acc: 0.3659 ::: bot acc: 0.8049
+current epoch: 15
+train loss is 0.113330
+average val loss: 0.130585, accuracy: 0.5065
+average test loss: 0.121267, accuracy: 0.5160
+case acc: 0.48
+case acc: 0.44
+case acc: 0.536
+case acc: 0.568
+case acc: 0.488
+case acc: 0.584
+top acc: 0.1951 ::: bot acc: 0.7317
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.7073 ::: bot acc: 0.2927
+top acc: 0.6098 ::: bot acc: 0.4146
+top acc: 0.0244 ::: bot acc: 1.0000
+top acc: 0.4390 ::: bot acc: 0.7561
+current epoch: 16
+train loss is 0.112179
+average val loss: 0.129779, accuracy: 0.5131
+average test loss: 0.120032, accuracy: 0.5213
+case acc: 0.48
+case acc: 0.44
+case acc: 0.536
+case acc: 0.544
+case acc: 0.52
+case acc: 0.608
+top acc: 0.1220 ::: bot acc: 0.8049
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.7073 ::: bot acc: 0.3415
+top acc: 0.5366 ::: bot acc: 0.5366
+top acc: 0.0976 ::: bot acc: 1.0000
+top acc: 0.4878 ::: bot acc: 0.7317
+current epoch: 17
+train loss is 0.111074
+average val loss: 0.128759, accuracy: 0.5114
+average test loss: 0.118579, accuracy: 0.5240
+case acc: 0.48
+case acc: 0.44
+case acc: 0.544
+case acc: 0.544
+case acc: 0.512
+case acc: 0.624
+top acc: 0.1707 ::: bot acc: 0.7561
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.7073 ::: bot acc: 0.3659
+top acc: 0.5122 ::: bot acc: 0.6098
+top acc: 0.1220 ::: bot acc: 0.9756
+top acc: 0.4634 ::: bot acc: 0.7561
+current epoch: 18
+train loss is 0.110651
+average val loss: 0.128685, accuracy: 0.5033
+average test loss: 0.118108, accuracy: 0.5253
+case acc: 0.488
+case acc: 0.44
+case acc: 0.52
+case acc: 0.552
+case acc: 0.52
+case acc: 0.632
+top acc: 0.1463 ::: bot acc: 0.8049
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.6585 ::: bot acc: 0.3659
+top acc: 0.4390 ::: bot acc: 0.6829
+top acc: 0.1220 ::: bot acc: 1.0000
+top acc: 0.3902 ::: bot acc: 0.8293
+current epoch: 19
+train loss is 0.109293
+average val loss: 0.127730, accuracy: 0.5147
+average test loss: 0.116866, accuracy: 0.5280
+case acc: 0.488
+case acc: 0.44
+case acc: 0.528
+case acc: 0.552
+case acc: 0.528
+case acc: 0.632
+top acc: 0.2195 ::: bot acc: 0.7073
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.6585 ::: bot acc: 0.3659
+top acc: 0.4634 ::: bot acc: 0.6585
+top acc: 0.1463 ::: bot acc: 1.0000
+top acc: 0.4390 ::: bot acc: 0.7805
+current epoch: 20
+train loss is 0.108294
+average val loss: 0.128080, accuracy: 0.4951
+average test loss: 0.116835, accuracy: 0.5213
+case acc: 0.488
+case acc: 0.44
+case acc: 0.52
+case acc: 0.536
+case acc: 0.544
+case acc: 0.6
+top acc: 0.2195 ::: bot acc: 0.7561
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.6341 ::: bot acc: 0.3659
+top acc: 0.3415 ::: bot acc: 0.7073
+top acc: 0.1707 ::: bot acc: 1.0000
+top acc: 0.3415 ::: bot acc: 0.8049
+current epoch: 21
+train loss is 0.107893
+average val loss: 0.126447, accuracy: 0.5098
+average test loss: 0.114729, accuracy: 0.5240
+case acc: 0.512
+case acc: 0.44
+case acc: 0.52
+case acc: 0.552
+case acc: 0.52
+case acc: 0.6
+top acc: 0.3415 ::: bot acc: 0.6585
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.6341 ::: bot acc: 0.3659
+top acc: 0.5122 ::: bot acc: 0.6341
+top acc: 0.1707 ::: bot acc: 0.9268
+top acc: 0.4390 ::: bot acc: 0.7317
+current epoch: 22
+train loss is 0.107183
+average val loss: 0.126900, accuracy: 0.4984
+average test loss: 0.115031, accuracy: 0.5187
+case acc: 0.528
+case acc: 0.44
+case acc: 0.512
+case acc: 0.528
+case acc: 0.536
+case acc: 0.568
+top acc: 0.3171 ::: bot acc: 0.7317
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.6098 ::: bot acc: 0.4146
+top acc: 0.3659 ::: bot acc: 0.6829
+top acc: 0.1707 ::: bot acc: 0.9756
+top acc: 0.3171 ::: bot acc: 0.7561
+current epoch: 23
+train loss is 0.107850
+average val loss: 0.126606, accuracy: 0.5000
+average test loss: 0.115343, accuracy: 0.5160
+case acc: 0.528
+case acc: 0.448
+case acc: 0.496
+case acc: 0.528
+case acc: 0.528
+case acc: 0.568
+top acc: 0.3415 ::: bot acc: 0.7073
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.5610 ::: bot acc: 0.4146
+top acc: 0.3659 ::: bot acc: 0.6585
+top acc: 0.1220 ::: bot acc: 1.0000
+top acc: 0.3659 ::: bot acc: 0.7561
+current epoch: 24
+train loss is 0.107135
+average val loss: 0.126244, accuracy: 0.5114
+average test loss: 0.115238, accuracy: 0.5267
+case acc: 0.528
+case acc: 0.448
+case acc: 0.52
+case acc: 0.544
+case acc: 0.528
+case acc: 0.592
+top acc: 0.3659 ::: bot acc: 0.6829
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.5610 ::: bot acc: 0.4878
+top acc: 0.3659 ::: bot acc: 0.7073
+top acc: 0.1220 ::: bot acc: 1.0000
+top acc: 0.4146 ::: bot acc: 0.7317
+current epoch: 25
+train loss is 0.106897
+average val loss: 0.125550, accuracy: 0.5049
+average test loss: 0.114000, accuracy: 0.5360
+case acc: 0.536
+case acc: 0.456
+case acc: 0.536
+case acc: 0.56
+case acc: 0.528
+case acc: 0.6
+top acc: 0.3902 ::: bot acc: 0.6098
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.5854 ::: bot acc: 0.4634
+top acc: 0.4878 ::: bot acc: 0.6585
+top acc: 0.1220 ::: bot acc: 1.0000
+top acc: 0.3902 ::: bot acc: 0.7805
+current epoch: 26
+train loss is 0.105165
+average val loss: 0.125661, accuracy: 0.4951
+average test loss: 0.113892, accuracy: 0.5347
+case acc: 0.536
+case acc: 0.456
+case acc: 0.552
+case acc: 0.536
+case acc: 0.528
+case acc: 0.6
+top acc: 0.3415 ::: bot acc: 0.6585
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.5122 ::: bot acc: 0.5854
+top acc: 0.3902 ::: bot acc: 0.7073
+top acc: 0.1220 ::: bot acc: 1.0000
+top acc: 0.3415 ::: bot acc: 0.8293
+current epoch: 27
+train loss is 0.105869
+average val loss: 0.124775, accuracy: 0.5098
+average test loss: 0.113614, accuracy: 0.5253
+case acc: 0.528
+case acc: 0.448
+case acc: 0.536
+case acc: 0.544
+case acc: 0.512
+case acc: 0.584
+top acc: 0.3415 ::: bot acc: 0.6341
+top acc: 0.0000 ::: bot acc: 0.9756
+top acc: 0.4878 ::: bot acc: 0.5854
+top acc: 0.3171 ::: bot acc: 0.7561
+top acc: 0.0976 ::: bot acc: 1.0000
+top acc: 0.3415 ::: bot acc: 0.7805
+current epoch: 28
+train loss is 0.105803
+average val loss: 0.125525, accuracy: 0.4902
+average test loss: 0.113868, accuracy: 0.5360
+case acc: 0.544
+case acc: 0.448
+case acc: 0.544
+case acc: 0.56
+case acc: 0.52
+case acc: 0.6
+top acc: 0.3902 ::: bot acc: 0.6829
+top acc: 0.0000 ::: bot acc: 0.9756
+top acc: 0.5122 ::: bot acc: 0.5366
+top acc: 0.4146 ::: bot acc: 0.6829
+top acc: 0.1951 ::: bot acc: 0.9024
+top acc: 0.4878 ::: bot acc: 0.7317
+current epoch: 29
+train loss is 0.104108
+average val loss: 0.124612, accuracy: 0.5147
+average test loss: 0.113371, accuracy: 0.5187
+case acc: 0.528
+case acc: 0.448
+case acc: 0.56
+case acc: 0.504
+case acc: 0.48
+case acc: 0.592
+top acc: 0.3659 ::: bot acc: 0.6098
+top acc: 0.0000 ::: bot acc: 0.9756
+top acc: 0.4878 ::: bot acc: 0.6098
+top acc: 0.2927 ::: bot acc: 0.7561
+top acc: 0.0732 ::: bot acc: 0.9268
+top acc: 0.3659 ::: bot acc: 0.8049
+current epoch: 30
+train loss is 0.105501
+average val loss: 0.125279, accuracy: 0.4902
+average test loss: 0.113430, accuracy: 0.5227
+case acc: 0.552
+case acc: 0.448
+case acc: 0.56
+case acc: 0.504
+case acc: 0.48
+case acc: 0.592
+top acc: 0.3415 ::: bot acc: 0.7317
+top acc: 0.0000 ::: bot acc: 0.9756
+top acc: 0.4634 ::: bot acc: 0.6585
+top acc: 0.2927 ::: bot acc: 0.7561
+top acc: 0.0488 ::: bot acc: 0.9512
+top acc: 0.3415 ::: bot acc: 0.8049
+current epoch: 31
+train loss is 0.104577
+average val loss: 0.124875, accuracy: 0.4902
+average test loss: 0.112591, accuracy: 0.5213
+case acc: 0.528
+case acc: 0.448
+case acc: 0.552
+case acc: 0.52
+case acc: 0.504
+case acc: 0.576
+top acc: 0.3415 ::: bot acc: 0.6829
+top acc: 0.0000 ::: bot acc: 0.9756
+top acc: 0.4878 ::: bot acc: 0.6098
+top acc: 0.3171 ::: bot acc: 0.7561
+top acc: 0.1220 ::: bot acc: 0.9024
+top acc: 0.3171 ::: bot acc: 0.8293
+current epoch: 32
+train loss is 0.104228
+average val loss: 0.124894, accuracy: 0.4869
+average test loss: 0.112747, accuracy: 0.5160
+case acc: 0.528
+case acc: 0.448
+case acc: 0.512
+case acc: 0.504
+case acc: 0.504
+case acc: 0.6
+top acc: 0.2927 ::: bot acc: 0.6829
+top acc: 0.0000 ::: bot acc: 0.9756
+top acc: 0.4390 ::: bot acc: 0.6341
+top acc: 0.2683 ::: bot acc: 0.7805
+top acc: 0.1220 ::: bot acc: 0.9024
+top acc: 0.3171 ::: bot acc: 0.8537
+current epoch: 33
+train loss is 0.104294
+average val loss: 0.125700, accuracy: 0.4771
+average test loss: 0.113392, accuracy: 0.5147
+case acc: 0.52
+case acc: 0.448
+case acc: 0.536
+case acc: 0.48
+case acc: 0.52
+case acc: 0.584
+top acc: 0.3171 ::: bot acc: 0.7317
+top acc: 0.0000 ::: bot acc: 0.9756
+top acc: 0.3902 ::: bot acc: 0.7073
+top acc: 0.2439 ::: bot acc: 0.7561
+top acc: 0.0976 ::: bot acc: 0.9512
+top acc: 0.3415 ::: bot acc: 0.8293
+current epoch: 34
+train loss is 0.104557
+average val loss: 0.124699, accuracy: 0.4918
+average test loss: 0.112486, accuracy: 0.5213
+case acc: 0.536
+case acc: 0.448
+case acc: 0.544
+case acc: 0.504
+case acc: 0.528
+case acc: 0.568
+top acc: 0.3171 ::: bot acc: 0.6829
+top acc: 0.0000 ::: bot acc: 0.9756
+top acc: 0.4146 ::: bot acc: 0.6829
+top acc: 0.2927 ::: bot acc: 0.7561
+top acc: 0.1220 ::: bot acc: 0.9268
+top acc: 0.4146 ::: bot acc: 0.7561
+current epoch: 35
+train loss is 0.104483
+average val loss: 0.124837, accuracy: 0.4739
+average test loss: 0.113266, accuracy: 0.5040
+case acc: 0.488
+case acc: 0.448
+case acc: 0.496
+case acc: 0.496
+case acc: 0.496
+case acc: 0.6
+top acc: 0.2439 ::: bot acc: 0.7317
+top acc: 0.0000 ::: bot acc: 0.9756
+top acc: 0.3171 ::: bot acc: 0.7317
+top acc: 0.2439 ::: bot acc: 0.8049
+top acc: 0.0488 ::: bot acc: 0.9512
+top acc: 0.3171 ::: bot acc: 0.8780
+current epoch: 36
+train loss is 0.104182
+average val loss: 0.124698, accuracy: 0.4837
+average test loss: 0.113574, accuracy: 0.5040
+case acc: 0.488
+case acc: 0.448
+case acc: 0.512
+case acc: 0.488
+case acc: 0.488
+case acc: 0.6
+top acc: 0.2195 ::: bot acc: 0.7561
+top acc: 0.0000 ::: bot acc: 0.9756
+top acc: 0.2683 ::: bot acc: 0.8293
+top acc: 0.2195 ::: bot acc: 0.8293
+top acc: 0.0488 ::: bot acc: 0.9512
+top acc: 0.3171 ::: bot acc: 0.9024
+current epoch: 37
+train loss is 0.103650
+average val loss: 0.124316, accuracy: 0.4902
+average test loss: 0.112586, accuracy: 0.5000
+case acc: 0.472
+case acc: 0.464
+case acc: 0.496
+case acc: 0.488
+case acc: 0.512
+case acc: 0.568
+top acc: 0.2439 ::: bot acc: 0.6829
+top acc: 0.0244 ::: bot acc: 0.9756
+top acc: 0.3415 ::: bot acc: 0.7073
+top acc: 0.2195 ::: bot acc: 0.8049
+top acc: 0.0976 ::: bot acc: 0.9268
+top acc: 0.3171 ::: bot acc: 0.8293
+current epoch: 38
+train loss is 0.103591
+average val loss: 0.125276, accuracy: 0.4624
+average test loss: 0.113683, accuracy: 0.5093
+case acc: 0.504
+case acc: 0.448
+case acc: 0.488
+case acc: 0.512
+case acc: 0.496
+case acc: 0.608
+top acc: 0.1951 ::: bot acc: 0.8293
+top acc: 0.0000 ::: bot acc: 0.9756
+top acc: 0.2683 ::: bot acc: 0.8049
+top acc: 0.1951 ::: bot acc: 0.9268
+top acc: 0.0732 ::: bot acc: 0.9268
+top acc: 0.2683 ::: bot acc: 0.9512
+current epoch: 39
+train loss is 0.103584
+average val loss: 0.123752, accuracy: 0.5033
+average test loss: 0.111813, accuracy: 0.5093
+case acc: 0.496
+case acc: 0.464
+case acc: 0.512
+case acc: 0.504
+case acc: 0.512
+case acc: 0.568
+top acc: 0.2683 ::: bot acc: 0.6829
+top acc: 0.0244 ::: bot acc: 0.9756
+top acc: 0.3659 ::: bot acc: 0.6829
+top acc: 0.2683 ::: bot acc: 0.8049
+top acc: 0.1707 ::: bot acc: 0.8537
+top acc: 0.3902 ::: bot acc: 0.7805
+current epoch: 40
+train loss is 0.102608
+average val loss: 0.124659, accuracy: 0.4706
+average test loss: 0.113017, accuracy: 0.5067
+case acc: 0.48
+case acc: 0.464
+case acc: 0.496
+case acc: 0.496
+case acc: 0.496
+case acc: 0.608
+top acc: 0.1707 ::: bot acc: 0.8293
+top acc: 0.0244 ::: bot acc: 0.9756
+top acc: 0.2927 ::: bot acc: 0.8049
+top acc: 0.2195 ::: bot acc: 0.8293
+top acc: 0.0732 ::: bot acc: 0.9024
+top acc: 0.2927 ::: bot acc: 0.9024
+current epoch: 41
+train loss is 0.103228
+average val loss: 0.123935, accuracy: 0.4886
+average test loss: 0.112464, accuracy: 0.5000
+case acc: 0.496
+case acc: 0.464
+case acc: 0.496
+case acc: 0.496
+case acc: 0.488
+case acc: 0.56
+top acc: 0.1951 ::: bot acc: 0.8293
+top acc: 0.0244 ::: bot acc: 0.9756
+top acc: 0.2927 ::: bot acc: 0.8049
+top acc: 0.2195 ::: bot acc: 0.8049
+top acc: 0.0732 ::: bot acc: 0.9024
+top acc: 0.3171 ::: bot acc: 0.8293
+current epoch: 42
+train loss is 0.102670
+average val loss: 0.124496, accuracy: 0.4673
+average test loss: 0.112449, accuracy: 0.5093
+case acc: 0.512
+case acc: 0.456
+case acc: 0.52
+case acc: 0.52
+case acc: 0.496
+case acc: 0.552
+top acc: 0.2195 ::: bot acc: 0.8293
+top acc: 0.0244 ::: bot acc: 0.9756
+top acc: 0.2927 ::: bot acc: 0.8049
+top acc: 0.2927 ::: bot acc: 0.7805
+top acc: 0.0976 ::: bot acc: 0.9024
+top acc: 0.3171 ::: bot acc: 0.8049
+current epoch: 43
+train loss is 0.102983
+average val loss: 0.124376, accuracy: 0.4673
+average test loss: 0.112358, accuracy: 0.5053
+case acc: 0.496
+case acc: 0.456
+case acc: 0.504
+case acc: 0.496
+case acc: 0.504
+case acc: 0.576
+top acc: 0.1951 ::: bot acc: 0.8293
+top acc: 0.0244 ::: bot acc: 0.9756
+top acc: 0.2927 ::: bot acc: 0.8049
+top acc: 0.2195 ::: bot acc: 0.8049
+top acc: 0.1220 ::: bot acc: 0.9024
+top acc: 0.2927 ::: bot acc: 0.8537
+current epoch: 44
+train loss is 0.101773
+average val loss: 0.124156, accuracy: 0.4918
+average test loss: 0.111567, accuracy: 0.5053
+case acc: 0.512
+case acc: 0.456
+case acc: 0.512
+case acc: 0.488
+case acc: 0.512
+case acc: 0.552
+top acc: 0.2195 ::: bot acc: 0.8293
+top acc: 0.0244 ::: bot acc: 0.9756
+top acc: 0.2927 ::: bot acc: 0.7805
+top acc: 0.2195 ::: bot acc: 0.7805
+top acc: 0.1707 ::: bot acc: 0.8537
+top acc: 0.2927 ::: bot acc: 0.8537
+current epoch: 45
+train loss is 0.101884
+average val loss: 0.124495, accuracy: 0.4935
+average test loss: 0.112224, accuracy: 0.5093
+case acc: 0.464
+case acc: 0.456
+case acc: 0.512
+case acc: 0.488
+case acc: 0.512
+case acc: 0.624
+top acc: 0.1463 ::: bot acc: 0.8293
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.2683 ::: bot acc: 0.8049
+top acc: 0.2195 ::: bot acc: 0.8049
+top acc: 0.1220 ::: bot acc: 0.9024
+top acc: 0.2927 ::: bot acc: 0.9512
+current epoch: 46
+train loss is 0.102281
+average val loss: 0.124123, accuracy: 0.4967
+average test loss: 0.111965, accuracy: 0.5080
+case acc: 0.488
+case acc: 0.456
+case acc: 0.488
+case acc: 0.496
+case acc: 0.496
+case acc: 0.624
+top acc: 0.1951 ::: bot acc: 0.8293
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.2683 ::: bot acc: 0.7805
+top acc: 0.2439 ::: bot acc: 0.8049
+top acc: 0.1463 ::: bot acc: 0.8537
+top acc: 0.2927 ::: bot acc: 0.9512
+current epoch: 47
+train loss is 0.103711
+average val loss: 0.123600, accuracy: 0.5033
+average test loss: 0.111868, accuracy: 0.5080
+case acc: 0.504
+case acc: 0.464
+case acc: 0.456
+case acc: 0.52
+case acc: 0.512
+case acc: 0.592
+top acc: 0.2439 ::: bot acc: 0.7561
+top acc: 0.0244 ::: bot acc: 1.0000
+top acc: 0.2195 ::: bot acc: 0.7561
+top acc: 0.3171 ::: bot acc: 0.7317
+top acc: 0.1463 ::: bot acc: 0.8780
+top acc: 0.3171 ::: bot acc: 0.8537
+current epoch: 48
+train loss is 0.101818
+average val loss: 0.124771, accuracy: 0.4951
+average test loss: 0.113337, accuracy: 0.5040
+case acc: 0.504
+case acc: 0.456
+case acc: 0.48
+case acc: 0.504
+case acc: 0.488
+case acc: 0.592
+top acc: 0.2195 ::: bot acc: 0.8049
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.1707 ::: bot acc: 0.8293
+top acc: 0.2683 ::: bot acc: 0.8293
+top acc: 0.0732 ::: bot acc: 0.8780
+top acc: 0.1951 ::: bot acc: 0.9756
+current epoch: 49
+train loss is 0.101736
+average val loss: 0.123781, accuracy: 0.5000
+average test loss: 0.111654, accuracy: 0.5053
+case acc: 0.504
+case acc: 0.456
+case acc: 0.48
+case acc: 0.504
+case acc: 0.504
+case acc: 0.584
+top acc: 0.2439 ::: bot acc: 0.7561
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.2439 ::: bot acc: 0.7805
+top acc: 0.2927 ::: bot acc: 0.8049
+top acc: 0.1463 ::: bot acc: 0.8780
+top acc: 0.3171 ::: bot acc: 0.8780
+current epoch: 50
+train loss is 0.101932
+average val loss: 0.123544, accuracy: 0.5147
+average test loss: 0.111776, accuracy: 0.5027
+case acc: 0.504
+case acc: 0.456
+case acc: 0.48
+case acc: 0.528
+case acc: 0.48
+case acc: 0.568
+top acc: 0.2195 ::: bot acc: 0.8049
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.1951 ::: bot acc: 0.7805
+top acc: 0.3415 ::: bot acc: 0.8049
+top acc: 0.0976 ::: bot acc: 0.8780
+top acc: 0.2439 ::: bot acc: 0.9024
+LME_Co_Spot
+Before Load Data
+['2012-07-01', '2017-07-01', '2018-01-01']
+0.01194885239903713
+['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot', 'LME_Zi_Spot', 'LME_Ti_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low', 'LME_Al_Close', 'LME_Al_Volume', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low', 'LME_Co_Close', 'LME_Co_Volume', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low', 'LME_Ti_Close', 'LME_Ti_Volume', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low', 'LME_Le_Close', 'LME_Le_Volume', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low', 'LME_Ni_Close', 'LME_Ni_Volume', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low', 'LME_Zi_Close', 'LME_Zi_Volume', 'spot_price']
+====================================technical indicator_v3========================================
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+Remove Columns Version4
+ground_truth ['LME_Co_Spot']
+#####################remove_unused_columns_v4#####################
+target LME_Co
+Index(['LME_Co_Spot', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low',
+       'LME_Co_Close', 'LME_Co_Spot_EMA12', 'LME_Co_Spot_WMA12',
+       'LME_Co_Spot_EMA26', 'LME_Co_Spot_WMA26', 'LME_Co_Spot_EMA40',
+       'LME_Co_Spot_WMA40', 'LME_Co_Spot_EMA65', 'LME_Co_Spot_WMA65',
+       'LME_Co_Spot_EMA125', 'LME_Co_Spot_WMA125', 'LME_Co_Spot_bollinger5',
+       'LME_Co_Spot_bollinger10', 'LME_Co_Spot_bollinger15',
+       'LME_Co_Spot_bollinger20', 'LME_Co_Spot_bollinger30',
+       'LME_Co_Spot_bollinger65', 'LME_Co_Spot_Mom5', 'LME_Co_Spot_Mom10',
+       'LME_Co_Spot_Mom15', 'LME_Co_Spot_Mom26', 'LME_Co_Spot_Mom40',
+       'LME_Co_Spot_Mom65', 'LME_Co_Spot_Mom125', 'LME_Co_Spot_PPO12',
+       'LME_Co_Spot_PPO22', 'LME_Co_Spot_RSI14', 'LME_Co_Spot_RSI26',
+       'LME_Co_Spot_RSI40', 'LME_Co_Spot_RSI54', 'LME_Co_Spot_RSI125',
+       'LME_Co_Close_EMA12', 'LME_Co_Close_WMA12', 'LME_Co_Close_EMA26',
+       'LME_Co_Close_WMA26', 'LME_Co_Close_EMA40', 'LME_Co_Close_WMA40',
+       'LME_Co_Close_EMA65', 'LME_Co_Close_WMA65', 'LME_Co_Close_EMA125',
+       'LME_Co_Close_WMA125', 'LME_Co_Close_bollinger5',
+       'LME_Co_Close_bollinger10', 'LME_Co_Close_bollinger15',
+       'LME_Co_Close_bollinger20', 'LME_Co_Close_bollinger30',
+       'LME_Co_Close_bollinger65', 'LME_Co_Close_Mom5', 'LME_Co_Close_Mom10',
+       'LME_Co_Close_Mom15', 'LME_Co_Close_Mom26', 'LME_Co_Close_Mom40',
+       'LME_Co_Close_Mom65', 'LME_Co_Close_Mom125', 'LME_Co_Close_PPO12',
+       'LME_Co_Close_PPO22', 'LME_Co_Close_RSI14', 'LME_Co_Close_RSI26',
+       'LME_Co_Close_RSI40', 'LME_Co_Close_RSI54', 'LME_Co_Close_RSI125',
+       'LME_Co_PVT', 'LME_Co_divPVT', 'LME_Co_NATR14', 'LME_Co_NATR26',
+       'LME_Co_NATR65', 'LME_Co_NATR125', 'LME_Co_CCI12', 'LME_Co_CCI26',
+       'LME_Co_CCI40', 'LME_Co_CCI65', 'LME_Co_CCI125', 'LME_Co_VBM12',
+       'LME_Co_VBM22', 'LME_Co_ADX14', 'LME_Co_ADX26', 'LME_Co_ADX40',
+       'LME_Co_ADX54', 'LME_Co_ADX125', 'LME_Co_SAR'],
+      dtype='object')
+LME_Al_Spot
+Before Load Data
+['2012-07-01', '2017-07-01', '2018-01-01']
+0.011853840935772688
+['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot', 'LME_Zi_Spot', 'LME_Ti_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low', 'LME_Al_Close', 'LME_Al_Volume', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low', 'LME_Co_Close', 'LME_Co_Volume', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low', 'LME_Ti_Close', 'LME_Ti_Volume', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low', 'LME_Le_Close', 'LME_Le_Volume', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low', 'LME_Ni_Close', 'LME_Ni_Volume', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low', 'LME_Zi_Close', 'LME_Zi_Volume', 'spot_price']
+====================================technical indicator_v3========================================
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+Remove Columns Version4
+ground_truth ['LME_Al_Spot']
+#####################remove_unused_columns_v4#####################
+target LME_Al
+Index(['LME_Al_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low',
+       'LME_Al_Close', 'LME_Al_Spot_EMA12', 'LME_Al_Spot_WMA12',
+       'LME_Al_Spot_EMA26', 'LME_Al_Spot_WMA26', 'LME_Al_Spot_EMA40',
+       'LME_Al_Spot_WMA40', 'LME_Al_Spot_EMA65', 'LME_Al_Spot_WMA65',
+       'LME_Al_Spot_EMA125', 'LME_Al_Spot_WMA125', 'LME_Al_Spot_bollinger5',
+       'LME_Al_Spot_bollinger10', 'LME_Al_Spot_bollinger15',
+       'LME_Al_Spot_bollinger20', 'LME_Al_Spot_bollinger30',
+       'LME_Al_Spot_bollinger65', 'LME_Al_Spot_Mom5', 'LME_Al_Spot_Mom10',
+       'LME_Al_Spot_Mom15', 'LME_Al_Spot_Mom26', 'LME_Al_Spot_Mom40',
+       'LME_Al_Spot_Mom65', 'LME_Al_Spot_Mom125', 'LME_Al_Spot_PPO12',
+       'LME_Al_Spot_PPO22', 'LME_Al_Spot_RSI14', 'LME_Al_Spot_RSI26',
+       'LME_Al_Spot_RSI40', 'LME_Al_Spot_RSI54', 'LME_Al_Spot_RSI125',
+       'LME_Al_Close_EMA12', 'LME_Al_Close_WMA12', 'LME_Al_Close_EMA26',
+       'LME_Al_Close_WMA26', 'LME_Al_Close_EMA40', 'LME_Al_Close_WMA40',
+       'LME_Al_Close_EMA65', 'LME_Al_Close_WMA65', 'LME_Al_Close_EMA125',
+       'LME_Al_Close_WMA125', 'LME_Al_Close_bollinger5',
+       'LME_Al_Close_bollinger10', 'LME_Al_Close_bollinger15',
+       'LME_Al_Close_bollinger20', 'LME_Al_Close_bollinger30',
+       'LME_Al_Close_bollinger65', 'LME_Al_Close_Mom5', 'LME_Al_Close_Mom10',
+       'LME_Al_Close_Mom15', 'LME_Al_Close_Mom26', 'LME_Al_Close_Mom40',
+       'LME_Al_Close_Mom65', 'LME_Al_Close_Mom125', 'LME_Al_Close_PPO12',
+       'LME_Al_Close_PPO22', 'LME_Al_Close_RSI14', 'LME_Al_Close_RSI26',
+       'LME_Al_Close_RSI40', 'LME_Al_Close_RSI54', 'LME_Al_Close_RSI125',
+       'LME_Al_PVT', 'LME_Al_divPVT', 'LME_Al_NATR14', 'LME_Al_NATR26',
+       'LME_Al_NATR65', 'LME_Al_NATR125', 'LME_Al_CCI12', 'LME_Al_CCI26',
+       'LME_Al_CCI40', 'LME_Al_CCI65', 'LME_Al_CCI125', 'LME_Al_VBM12',
+       'LME_Al_VBM22', 'LME_Al_ADX14', 'LME_Al_ADX26', 'LME_Al_ADX40',
+       'LME_Al_ADX54', 'LME_Al_ADX125', 'LME_Al_SAR'],
+      dtype='object')
+LME_Le_Spot
+Before Load Data
+['2012-07-01', '2017-07-01', '2018-01-01']
+0.01432474002841089
+['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot', 'LME_Zi_Spot', 'LME_Ti_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low', 'LME_Al_Close', 'LME_Al_Volume', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low', 'LME_Co_Close', 'LME_Co_Volume', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low', 'LME_Ti_Close', 'LME_Ti_Volume', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low', 'LME_Le_Close', 'LME_Le_Volume', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low', 'LME_Ni_Close', 'LME_Ni_Volume', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low', 'LME_Zi_Close', 'LME_Zi_Volume', 'spot_price']
+====================================technical indicator_v3========================================
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+Remove Columns Version4
+ground_truth ['LME_Le_Spot']
+#####################remove_unused_columns_v4#####################
+target LME_Le
+Index(['LME_Le_Spot', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low',
+       'LME_Le_Close', 'LME_Le_Spot_EMA12', 'LME_Le_Spot_WMA12',
+       'LME_Le_Spot_EMA26', 'LME_Le_Spot_WMA26', 'LME_Le_Spot_EMA40',
+       'LME_Le_Spot_WMA40', 'LME_Le_Spot_EMA65', 'LME_Le_Spot_WMA65',
+       'LME_Le_Spot_EMA125', 'LME_Le_Spot_WMA125', 'LME_Le_Spot_bollinger5',
+       'LME_Le_Spot_bollinger10', 'LME_Le_Spot_bollinger15',
+       'LME_Le_Spot_bollinger20', 'LME_Le_Spot_bollinger30',
+       'LME_Le_Spot_bollinger65', 'LME_Le_Spot_Mom5', 'LME_Le_Spot_Mom10',
+       'LME_Le_Spot_Mom15', 'LME_Le_Spot_Mom26', 'LME_Le_Spot_Mom40',
+       'LME_Le_Spot_Mom65', 'LME_Le_Spot_Mom125', 'LME_Le_Spot_PPO12',
+       'LME_Le_Spot_PPO22', 'LME_Le_Spot_RSI14', 'LME_Le_Spot_RSI26',
+       'LME_Le_Spot_RSI40', 'LME_Le_Spot_RSI54', 'LME_Le_Spot_RSI125',
+       'LME_Le_Close_EMA12', 'LME_Le_Close_WMA12', 'LME_Le_Close_EMA26',
+       'LME_Le_Close_WMA26', 'LME_Le_Close_EMA40', 'LME_Le_Close_WMA40',
+       'LME_Le_Close_EMA65', 'LME_Le_Close_WMA65', 'LME_Le_Close_EMA125',
+       'LME_Le_Close_WMA125', 'LME_Le_Close_bollinger5',
+       'LME_Le_Close_bollinger10', 'LME_Le_Close_bollinger15',
+       'LME_Le_Close_bollinger20', 'LME_Le_Close_bollinger30',
+       'LME_Le_Close_bollinger65', 'LME_Le_Close_Mom5', 'LME_Le_Close_Mom10',
+       'LME_Le_Close_Mom15', 'LME_Le_Close_Mom26', 'LME_Le_Close_Mom40',
+       'LME_Le_Close_Mom65', 'LME_Le_Close_Mom125', 'LME_Le_Close_PPO12',
+       'LME_Le_Close_PPO22', 'LME_Le_Close_RSI14', 'LME_Le_Close_RSI26',
+       'LME_Le_Close_RSI40', 'LME_Le_Close_RSI54', 'LME_Le_Close_RSI125',
+       'LME_Le_PVT', 'LME_Le_divPVT', 'LME_Le_NATR14', 'LME_Le_NATR26',
+       'LME_Le_NATR65', 'LME_Le_NATR125', 'LME_Le_CCI12', 'LME_Le_CCI26',
+       'LME_Le_CCI40', 'LME_Le_CCI65', 'LME_Le_CCI125', 'LME_Le_VBM12',
+       'LME_Le_VBM22', 'LME_Le_ADX14', 'LME_Le_ADX26', 'LME_Le_ADX40',
+       'LME_Le_ADX54', 'LME_Le_ADX125', 'LME_Le_SAR'],
+      dtype='object')
+LME_Ni_Spot
+Before Load Data
+['2012-07-01', '2017-07-01', '2018-01-01']
+0.017937965880472445
+['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot', 'LME_Zi_Spot', 'LME_Ti_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low', 'LME_Al_Close', 'LME_Al_Volume', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low', 'LME_Co_Close', 'LME_Co_Volume', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low', 'LME_Ti_Close', 'LME_Ti_Volume', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low', 'LME_Le_Close', 'LME_Le_Volume', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low', 'LME_Ni_Close', 'LME_Ni_Volume', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low', 'LME_Zi_Close', 'LME_Zi_Volume', 'spot_price']
+====================================technical indicator_v3========================================
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+Remove Columns Version4
+ground_truth ['LME_Ni_Spot']
+#####################remove_unused_columns_v4#####################
+target LME_Ni
+Index(['LME_Ni_Spot', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low',
+       'LME_Ni_Close', 'LME_Ni_Spot_EMA12', 'LME_Ni_Spot_WMA12',
+       'LME_Ni_Spot_EMA26', 'LME_Ni_Spot_WMA26', 'LME_Ni_Spot_EMA40',
+       'LME_Ni_Spot_WMA40', 'LME_Ni_Spot_EMA65', 'LME_Ni_Spot_WMA65',
+       'LME_Ni_Spot_EMA125', 'LME_Ni_Spot_WMA125', 'LME_Ni_Spot_bollinger5',
+       'LME_Ni_Spot_bollinger10', 'LME_Ni_Spot_bollinger15',
+       'LME_Ni_Spot_bollinger20', 'LME_Ni_Spot_bollinger30',
+       'LME_Ni_Spot_bollinger65', 'LME_Ni_Spot_Mom5', 'LME_Ni_Spot_Mom10',
+       'LME_Ni_Spot_Mom15', 'LME_Ni_Spot_Mom26', 'LME_Ni_Spot_Mom40',
+       'LME_Ni_Spot_Mom65', 'LME_Ni_Spot_Mom125', 'LME_Ni_Spot_PPO12',
+       'LME_Ni_Spot_PPO22', 'LME_Ni_Spot_RSI14', 'LME_Ni_Spot_RSI26',
+       'LME_Ni_Spot_RSI40', 'LME_Ni_Spot_RSI54', 'LME_Ni_Spot_RSI125',
+       'LME_Ni_Close_EMA12', 'LME_Ni_Close_WMA12', 'LME_Ni_Close_EMA26',
+       'LME_Ni_Close_WMA26', 'LME_Ni_Close_EMA40', 'LME_Ni_Close_WMA40',
+       'LME_Ni_Close_EMA65', 'LME_Ni_Close_WMA65', 'LME_Ni_Close_EMA125',
+       'LME_Ni_Close_WMA125', 'LME_Ni_Close_bollinger5',
+       'LME_Ni_Close_bollinger10', 'LME_Ni_Close_bollinger15',
+       'LME_Ni_Close_bollinger20', 'LME_Ni_Close_bollinger30',
+       'LME_Ni_Close_bollinger65', 'LME_Ni_Close_Mom5', 'LME_Ni_Close_Mom10',
+       'LME_Ni_Close_Mom15', 'LME_Ni_Close_Mom26', 'LME_Ni_Close_Mom40',
+       'LME_Ni_Close_Mom65', 'LME_Ni_Close_Mom125', 'LME_Ni_Close_PPO12',
+       'LME_Ni_Close_PPO22', 'LME_Ni_Close_RSI14', 'LME_Ni_Close_RSI26',
+       'LME_Ni_Close_RSI40', 'LME_Ni_Close_RSI54', 'LME_Ni_Close_RSI125',
+       'LME_Ni_PVT', 'LME_Ni_divPVT', 'LME_Ni_NATR14', 'LME_Ni_NATR26',
+       'LME_Ni_NATR65', 'LME_Ni_NATR125', 'LME_Ni_CCI12', 'LME_Ni_CCI26',
+       'LME_Ni_CCI40', 'LME_Ni_CCI65', 'LME_Ni_CCI125', 'LME_Ni_VBM12',
+       'LME_Ni_VBM22', 'LME_Ni_ADX14', 'LME_Ni_ADX26', 'LME_Ni_ADX40',
+       'LME_Ni_ADX54', 'LME_Ni_ADX125', 'LME_Ni_SAR'],
+      dtype='object')
+LME_Zi_Spot
+Before Load Data
+['2012-07-01', '2017-07-01', '2018-01-01']
+0.013950220795104414
+['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot', 'LME_Zi_Spot', 'LME_Ti_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low', 'LME_Al_Close', 'LME_Al_Volume', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low', 'LME_Co_Close', 'LME_Co_Volume', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low', 'LME_Ti_Close', 'LME_Ti_Volume', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low', 'LME_Le_Close', 'LME_Le_Volume', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low', 'LME_Ni_Close', 'LME_Ni_Volume', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low', 'LME_Zi_Close', 'LME_Zi_Volume', 'spot_price']
+====================================technical indicator_v3========================================
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+Remove Columns Version4
+ground_truth ['LME_Zi_Spot']
+#####################remove_unused_columns_v4#####################
+target LME_Zi
+Index(['LME_Zi_Spot', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low',
+       'LME_Zi_Close', 'LME_Zi_Spot_EMA12', 'LME_Zi_Spot_WMA12',
+       'LME_Zi_Spot_EMA26', 'LME_Zi_Spot_WMA26', 'LME_Zi_Spot_EMA40',
+       'LME_Zi_Spot_WMA40', 'LME_Zi_Spot_EMA65', 'LME_Zi_Spot_WMA65',
+       'LME_Zi_Spot_EMA125', 'LME_Zi_Spot_WMA125', 'LME_Zi_Spot_bollinger5',
+       'LME_Zi_Spot_bollinger10', 'LME_Zi_Spot_bollinger15',
+       'LME_Zi_Spot_bollinger20', 'LME_Zi_Spot_bollinger30',
+       'LME_Zi_Spot_bollinger65', 'LME_Zi_Spot_Mom5', 'LME_Zi_Spot_Mom10',
+       'LME_Zi_Spot_Mom15', 'LME_Zi_Spot_Mom26', 'LME_Zi_Spot_Mom40',
+       'LME_Zi_Spot_Mom65', 'LME_Zi_Spot_Mom125', 'LME_Zi_Spot_PPO12',
+       'LME_Zi_Spot_PPO22', 'LME_Zi_Spot_RSI14', 'LME_Zi_Spot_RSI26',
+       'LME_Zi_Spot_RSI40', 'LME_Zi_Spot_RSI54', 'LME_Zi_Spot_RSI125',
+       'LME_Zi_Close_EMA12', 'LME_Zi_Close_WMA12', 'LME_Zi_Close_EMA26',
+       'LME_Zi_Close_WMA26', 'LME_Zi_Close_EMA40', 'LME_Zi_Close_WMA40',
+       'LME_Zi_Close_EMA65', 'LME_Zi_Close_WMA65', 'LME_Zi_Close_EMA125',
+       'LME_Zi_Close_WMA125', 'LME_Zi_Close_bollinger5',
+       'LME_Zi_Close_bollinger10', 'LME_Zi_Close_bollinger15',
+       'LME_Zi_Close_bollinger20', 'LME_Zi_Close_bollinger30',
+       'LME_Zi_Close_bollinger65', 'LME_Zi_Close_Mom5', 'LME_Zi_Close_Mom10',
+       'LME_Zi_Close_Mom15', 'LME_Zi_Close_Mom26', 'LME_Zi_Close_Mom40',
+       'LME_Zi_Close_Mom65', 'LME_Zi_Close_Mom125', 'LME_Zi_Close_PPO12',
+       'LME_Zi_Close_PPO22', 'LME_Zi_Close_RSI14', 'LME_Zi_Close_RSI26',
+       'LME_Zi_Close_RSI40', 'LME_Zi_Close_RSI54', 'LME_Zi_Close_RSI125',
+       'LME_Zi_PVT', 'LME_Zi_divPVT', 'LME_Zi_NATR14', 'LME_Zi_NATR26',
+       'LME_Zi_NATR65', 'LME_Zi_NATR125', 'LME_Zi_CCI12', 'LME_Zi_CCI26',
+       'LME_Zi_CCI40', 'LME_Zi_CCI65', 'LME_Zi_CCI125', 'LME_Zi_VBM12',
+       'LME_Zi_VBM22', 'LME_Zi_ADX14', 'LME_Zi_ADX26', 'LME_Zi_ADX40',
+       'LME_Zi_ADX54', 'LME_Zi_ADX125', 'LME_Zi_SAR'],
+      dtype='object')
+LME_Ti_Spot
+Before Load Data
+['2012-07-01', '2017-07-01', '2018-01-01']
+0.012861182006101209
+['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot', 'LME_Zi_Spot', 'LME_Ti_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low', 'LME_Al_Close', 'LME_Al_Volume', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low', 'LME_Co_Close', 'LME_Co_Volume', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low', 'LME_Ti_Close', 'LME_Ti_Volume', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low', 'LME_Le_Close', 'LME_Le_Volume', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low', 'LME_Ni_Close', 'LME_Ni_Volume', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low', 'LME_Zi_Close', 'LME_Zi_Volume', 'spot_price']
+====================================technical indicator_v3========================================
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+Remove Columns Version4
+ground_truth ['LME_Ti_Spot']
+#####################remove_unused_columns_v4#####################
+target LME_Ti
+Index(['LME_Ti_Spot', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low',
+       'LME_Ti_Close', 'LME_Ti_Spot_EMA12', 'LME_Ti_Spot_WMA12',
+       'LME_Ti_Spot_EMA26', 'LME_Ti_Spot_WMA26', 'LME_Ti_Spot_EMA40',
+       'LME_Ti_Spot_WMA40', 'LME_Ti_Spot_EMA65', 'LME_Ti_Spot_WMA65',
+       'LME_Ti_Spot_EMA125', 'LME_Ti_Spot_WMA125', 'LME_Ti_Spot_bollinger5',
+       'LME_Ti_Spot_bollinger10', 'LME_Ti_Spot_bollinger15',
+       'LME_Ti_Spot_bollinger20', 'LME_Ti_Spot_bollinger30',
+       'LME_Ti_Spot_bollinger65', 'LME_Ti_Spot_Mom5', 'LME_Ti_Spot_Mom10',
+       'LME_Ti_Spot_Mom15', 'LME_Ti_Spot_Mom26', 'LME_Ti_Spot_Mom40',
+       'LME_Ti_Spot_Mom65', 'LME_Ti_Spot_Mom125', 'LME_Ti_Spot_PPO12',
+       'LME_Ti_Spot_PPO22', 'LME_Ti_Spot_RSI14', 'LME_Ti_Spot_RSI26',
+       'LME_Ti_Spot_RSI40', 'LME_Ti_Spot_RSI54', 'LME_Ti_Spot_RSI125',
+       'LME_Ti_Close_EMA12', 'LME_Ti_Close_WMA12', 'LME_Ti_Close_EMA26',
+       'LME_Ti_Close_WMA26', 'LME_Ti_Close_EMA40', 'LME_Ti_Close_WMA40',
+       'LME_Ti_Close_EMA65', 'LME_Ti_Close_WMA65', 'LME_Ti_Close_EMA125',
+       'LME_Ti_Close_WMA125', 'LME_Ti_Close_bollinger5',
+       'LME_Ti_Close_bollinger10', 'LME_Ti_Close_bollinger15',
+       'LME_Ti_Close_bollinger20', 'LME_Ti_Close_bollinger30',
+       'LME_Ti_Close_bollinger65', 'LME_Ti_Close_Mom5', 'LME_Ti_Close_Mom10',
+       'LME_Ti_Close_Mom15', 'LME_Ti_Close_Mom26', 'LME_Ti_Close_Mom40',
+       'LME_Ti_Close_Mom65', 'LME_Ti_Close_Mom125', 'LME_Ti_Close_PPO12',
+       'LME_Ti_Close_PPO22', 'LME_Ti_Close_RSI14', 'LME_Ti_Close_RSI26',
+       'LME_Ti_Close_RSI40', 'LME_Ti_Close_RSI54', 'LME_Ti_Close_RSI125',
+       'LME_Ti_PVT', 'LME_Ti_divPVT', 'LME_Ti_NATR14', 'LME_Ti_NATR26',
+       'LME_Ti_NATR65', 'LME_Ti_NATR125', 'LME_Ti_CCI12', 'LME_Ti_CCI26',
+       'LME_Ti_CCI40', 'LME_Ti_CCI65', 'LME_Ti_CCI125', 'LME_Ti_VBM12',
+       'LME_Ti_VBM22', 'LME_Ti_ADX14', 'LME_Ti_ADX26', 'LME_Ti_ADX40',
+       'LME_Ti_ADX54', 'LME_Ti_ADX125', 'LME_Ti_SAR'],
+      dtype='object')
+Dataset statistic: #examples
+Train: 5460 5460 5460
+6.4683285 -11.448174 2.4995294 -1.6756989
+Validation: 612 612 612
+Testing: 762 762 762
+pre-processing time: 0.0021822452545166016
+the split date is 2017-07-01
+net initializing with time: 0.0018868446350097656
+preparing training and testing date with time: 0.003734111785888672
+current epoch: 1
+train loss is 0.210881
+average val loss: 0.121443, accuracy: 0.4853
+average test loss: 0.152744, accuracy: 0.4711
+case acc: 0.4645669291338583
+case acc: 0.5118110236220472
+case acc: 0.5196850393700787
+case acc: 0.44881889763779526
+case acc: 0.4251968503937008
+case acc: 0.4566929133858268
+top acc: 0.0476 ::: bot acc: 0.9762
+top acc: 0.4524 ::: bot acc: 0.6905
+top acc: 0.1429 ::: bot acc: 0.9286
+top acc: 0.3095 ::: bot acc: 0.6667
+top acc: 0.0238 ::: bot acc: 0.9286
+top acc: 0.0238 ::: bot acc: 0.9286
+current epoch: 2
+train loss is 0.155761
+average val loss: 0.209353, accuracy: 0.4722
+average test loss: 0.244367, accuracy: 0.4514
+case acc: 0.4566929133858268
+case acc: 0.48031496062992124
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0238 ::: bot acc: 0.9762
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 3
+train loss is 0.143146
+average val loss: 0.162300, accuracy: 0.4739
+average test loss: 0.205967, accuracy: 0.4488
+case acc: 0.4566929133858268
+case acc: 0.4645669291338583
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0238 ::: bot acc: 0.9762
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 4
+train loss is 0.127350
+average val loss: 0.157400, accuracy: 0.4739
+average test loss: 0.181772, accuracy: 0.4488
+case acc: 0.4566929133858268
+case acc: 0.4645669291338583
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0238 ::: bot acc: 0.9762
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 5
+train loss is 0.126072
+average val loss: 0.167555, accuracy: 0.4739
+average test loss: 0.198820, accuracy: 0.4514
+case acc: 0.4566929133858268
+case acc: 0.48031496062992124
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 6
+train loss is 0.122131
+average val loss: 0.148129, accuracy: 0.4739
+average test loss: 0.174981, accuracy: 0.4488
+case acc: 0.4566929133858268
+case acc: 0.4645669291338583
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 0.9762
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 7
+train loss is 0.118997
+average val loss: 0.150627, accuracy: 0.4739
+average test loss: 0.177287, accuracy: 0.4514
+case acc: 0.4566929133858268
+case acc: 0.48031496062992124
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 8
+train loss is 0.118563
+average val loss: 0.147728, accuracy: 0.4739
+average test loss: 0.172208, accuracy: 0.4514
+case acc: 0.4566929133858268
+case acc: 0.48031496062992124
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 9
+train loss is 0.115135
+average val loss: 0.143700, accuracy: 0.4739
+average test loss: 0.164146, accuracy: 0.4514
+case acc: 0.4566929133858268
+case acc: 0.48031496062992124
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 10
+train loss is 0.117381
+average val loss: 0.134764, accuracy: 0.4739
+average test loss: 0.153284, accuracy: 0.4514
+case acc: 0.4566929133858268
+case acc: 0.47244094488188976
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.4566929133858268
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0476 ::: bot acc: 0.9762
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0238 ::: bot acc: 1.0000
+current epoch: 11
+train loss is 0.112857
+average val loss: 0.136204, accuracy: 0.4739
+average test loss: 0.153384, accuracy: 0.4514
+case acc: 0.4566929133858268
+case acc: 0.48031496062992124
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 12
+train loss is 0.113881
+average val loss: 0.137271, accuracy: 0.4739
+average test loss: 0.154559, accuracy: 0.4501
+case acc: 0.4566929133858268
+case acc: 0.47244094488188976
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 13
+train loss is 0.113032
+average val loss: 0.133242, accuracy: 0.4739
+average test loss: 0.146739, accuracy: 0.4514
+case acc: 0.4566929133858268
+case acc: 0.48031496062992124
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 14
+train loss is 0.112375
+average val loss: 0.128706, accuracy: 0.4755
+average test loss: 0.138665, accuracy: 0.4514
+case acc: 0.4566929133858268
+case acc: 0.48031496062992124
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 15
+train loss is 0.112759
+average val loss: 0.127273, accuracy: 0.4755
+average test loss: 0.138900, accuracy: 0.4514
+case acc: 0.4566929133858268
+case acc: 0.48031496062992124
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 16
+train loss is 0.111800
+average val loss: 0.124216, accuracy: 0.4755
+average test loss: 0.133449, accuracy: 0.4501
+case acc: 0.4566929133858268
+case acc: 0.47244094488188976
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 0.9762
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 17
+train loss is 0.110607
+average val loss: 0.124129, accuracy: 0.4755
+average test loss: 0.132894, accuracy: 0.4501
+case acc: 0.4566929133858268
+case acc: 0.47244094488188976
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 0.9762
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 18
+train loss is 0.111755
+average val loss: 0.123035, accuracy: 0.4755
+average test loss: 0.131008, accuracy: 0.4501
+case acc: 0.4566929133858268
+case acc: 0.47244094488188976
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 0.9762
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 19
+train loss is 0.110621
+average val loss: 0.123735, accuracy: 0.4755
+average test loss: 0.132413, accuracy: 0.4514
+case acc: 0.4566929133858268
+case acc: 0.48031496062992124
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 20
+train loss is 0.110702
+average val loss: 0.123021, accuracy: 0.4755
+average test loss: 0.131018, accuracy: 0.4514
+case acc: 0.4566929133858268
+case acc: 0.48031496062992124
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 21
+train loss is 0.110351
+average val loss: 0.119813, accuracy: 0.4788
+average test loss: 0.127078, accuracy: 0.4488
+case acc: 0.4566929133858268
+case acc: 0.4645669291338583
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 0.9762
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 22
+train loss is 0.110827
+average val loss: 0.117592, accuracy: 0.4788
+average test loss: 0.123364, accuracy: 0.4488
+case acc: 0.4566929133858268
+case acc: 0.4645669291338583
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 0.9762
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 23
+train loss is 0.109439
+average val loss: 0.118147, accuracy: 0.4788
+average test loss: 0.123763, accuracy: 0.4488
+case acc: 0.4566929133858268
+case acc: 0.4645669291338583
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 0.9762
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 24
+train loss is 0.109404
+average val loss: 0.119676, accuracy: 0.4739
+average test loss: 0.126116, accuracy: 0.4514
+case acc: 0.4566929133858268
+case acc: 0.48031496062992124
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 25
+train loss is 0.109345
+average val loss: 0.121522, accuracy: 0.4739
+average test loss: 0.130658, accuracy: 0.4501
+case acc: 0.4566929133858268
+case acc: 0.47244094488188976
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 26
+train loss is 0.109972
+average val loss: 0.121771, accuracy: 0.4739
+average test loss: 0.132130, accuracy: 0.4501
+case acc: 0.4566929133858268
+case acc: 0.47244094488188976
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 27
+train loss is 0.110371
+average val loss: 0.119125, accuracy: 0.4739
+average test loss: 0.128094, accuracy: 0.4501
+case acc: 0.4566929133858268
+case acc: 0.47244094488188976
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 28
+train loss is 0.109482
+average val loss: 0.112745, accuracy: 0.4706
+average test loss: 0.117785, accuracy: 0.4501
+case acc: 0.4566929133858268
+case acc: 0.48031496062992124
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.4409448818897638
+top acc: 0.0238 ::: bot acc: 1.0000
+top acc: 0.0476 ::: bot acc: 0.9762
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 0.9762
+current epoch: 29
+train loss is 0.110381
+average val loss: 0.107365, accuracy: 0.4837
+average test loss: 0.108666, accuracy: 0.4698
+case acc: 0.4645669291338583
+case acc: 0.4881889763779528
+case acc: 0.4881889763779528
+case acc: 0.49606299212598426
+case acc: 0.4409448818897638
+case acc: 0.4409448818897638
+top acc: 0.0952 ::: bot acc: 0.8333
+top acc: 0.1667 ::: bot acc: 0.8810
+top acc: 0.1667 ::: bot acc: 0.8333
+top acc: 0.2381 ::: bot acc: 0.8810
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.1190 ::: bot acc: 0.9048
+current epoch: 30
+train loss is 0.110738
+average val loss: 0.106484, accuracy: 0.4837
+average test loss: 0.105650, accuracy: 0.4843
+case acc: 0.48031496062992124
+case acc: 0.48031496062992124
+case acc: 0.5196850393700787
+case acc: 0.5039370078740157
+case acc: 0.4645669291338583
+case acc: 0.4566929133858268
+top acc: 0.1905 ::: bot acc: 0.7381
+top acc: 0.1905 ::: bot acc: 0.8571
+top acc: 0.4524 ::: bot acc: 0.5714
+top acc: 0.4524 ::: bot acc: 0.5714
+top acc: 0.0714 ::: bot acc: 1.0000
+top acc: 0.1429 ::: bot acc: 0.9048
+current epoch: 31
+train loss is 0.113054
+average val loss: 0.113306, accuracy: 0.4706
+average test loss: 0.116913, accuracy: 0.4633
+case acc: 0.4566929133858268
+case acc: 0.47244094488188976
+case acc: 0.4881889763779528
+case acc: 0.47244094488188976
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0714 ::: bot acc: 0.9286
+top acc: 0.1905 ::: bot acc: 0.9286
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 32
+train loss is 0.112862
+average val loss: 0.141410, accuracy: 0.4739
+average test loss: 0.156452, accuracy: 0.4501
+case acc: 0.4566929133858268
+case acc: 0.47244094488188976
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 33
+train loss is 0.116599
+average val loss: 0.163924, accuracy: 0.4739
+average test loss: 0.184092, accuracy: 0.4501
+case acc: 0.4566929133858268
+case acc: 0.47244094488188976
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 34
+train loss is 0.124939
+average val loss: 0.120428, accuracy: 0.4788
+average test loss: 0.125215, accuracy: 0.4462
+case acc: 0.4566929133858268
+case acc: 0.47244094488188976
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.44881889763779526
+case acc: 0.41732283464566927
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0238 ::: bot acc: 1.0000
+top acc: 0.0952 ::: bot acc: 0.8571
+current epoch: 35
+train loss is 0.121150
+average val loss: 0.106008, accuracy: 0.5212
+average test loss: 0.102390, accuracy: 0.5289
+case acc: 0.5511811023622047
+case acc: 0.5354330708661418
+case acc: 0.5433070866141733
+case acc: 0.5196850393700787
+case acc: 0.47244094488188976
+case acc: 0.5511811023622047
+top acc: 0.8333 ::: bot acc: 0.2381
+top acc: 0.6667 ::: bot acc: 0.4286
+top acc: 0.6190 ::: bot acc: 0.5476
+top acc: 0.5952 ::: bot acc: 0.4524
+top acc: 0.4286 ::: bot acc: 0.6667
+top acc: 1.0000 ::: bot acc: 0.0000
+current epoch: 36
+train loss is 0.121825
+average val loss: 0.109774, accuracy: 0.4804
+average test loss: 0.112412, accuracy: 0.4462
+case acc: 0.41732283464566927
+case acc: 0.47244094488188976
+case acc: 0.48031496062992124
+case acc: 0.4094488188976378
+case acc: 0.4409448818897638
+case acc: 0.4566929133858268
+top acc: 0.0238 ::: bot acc: 0.9286
+top acc: 0.0714 ::: bot acc: 0.9286
+top acc: 0.0476 ::: bot acc: 0.9762
+top acc: 0.0952 ::: bot acc: 0.9048
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0238 ::: bot acc: 1.0000
+current epoch: 37
+train loss is 0.113599
+average val loss: 0.127337, accuracy: 0.4739
+average test loss: 0.134881, accuracy: 0.4501
+case acc: 0.4566929133858268
+case acc: 0.47244094488188976
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 38
+train loss is 0.109056
+average val loss: 0.115653, accuracy: 0.4853
+average test loss: 0.120412, accuracy: 0.4528
+case acc: 0.4566929133858268
+case acc: 0.47244094488188976
+case acc: 0.49606299212598426
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0238 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 39
+train loss is 0.107469
+average val loss: 0.112071, accuracy: 0.4869
+average test loss: 0.115234, accuracy: 0.4580
+case acc: 0.4645669291338583
+case acc: 0.47244094488188976
+case acc: 0.5039370078740157
+case acc: 0.41732283464566927
+case acc: 0.44881889763779526
+case acc: 0.4409448818897638
+top acc: 0.0238 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0476 ::: bot acc: 1.0000
+top acc: 0.0476 ::: bot acc: 1.0000
+top acc: 0.0238 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 0.9762
+current epoch: 40
+train loss is 0.106510
+average val loss: 0.114375, accuracy: 0.4771
+average test loss: 0.119514, accuracy: 0.4501
+case acc: 0.4566929133858268
+case acc: 0.47244094488188976
+case acc: 0.48031496062992124
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 41
+train loss is 0.105971
+average val loss: 0.113501, accuracy: 0.4820
+average test loss: 0.117389, accuracy: 0.4528
+case acc: 0.4566929133858268
+case acc: 0.47244094488188976
+case acc: 0.49606299212598426
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0238 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0238 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 42
+train loss is 0.106281
+average val loss: 0.112723, accuracy: 0.4869
+average test loss: 0.116342, accuracy: 0.4514
+case acc: 0.44881889763779526
+case acc: 0.47244094488188976
+case acc: 0.49606299212598426
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0238 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0476 ::: bot acc: 0.9762
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 43
+train loss is 0.105995
+average val loss: 0.114501, accuracy: 0.4820
+average test loss: 0.118191, accuracy: 0.4514
+case acc: 0.4566929133858268
+case acc: 0.47244094488188976
+case acc: 0.4881889763779528
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0238 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 44
+train loss is 0.105322
+average val loss: 0.113656, accuracy: 0.4804
+average test loss: 0.117065, accuracy: 0.4514
+case acc: 0.44881889763779526
+case acc: 0.47244094488188976
+case acc: 0.49606299212598426
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0238 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0476 ::: bot acc: 0.9762
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 45
+train loss is 0.105961
+average val loss: 0.114459, accuracy: 0.4804
+average test loss: 0.117981, accuracy: 0.4514
+case acc: 0.4566929133858268
+case acc: 0.47244094488188976
+case acc: 0.4881889763779528
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0238 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 46
+train loss is 0.105782
+average val loss: 0.113751, accuracy: 0.4869
+average test loss: 0.117167, accuracy: 0.4514
+case acc: 0.44881889763779526
+case acc: 0.47244094488188976
+case acc: 0.4881889763779528
+case acc: 0.4094488188976378
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0238 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0238 ::: bot acc: 0.9762
+top acc: 0.0238 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 47
+train loss is 0.105593
+average val loss: 0.112860, accuracy: 0.4918
+average test loss: 0.117604, accuracy: 0.4528
+case acc: 0.4566929133858268
+case acc: 0.47244094488188976
+case acc: 0.4881889763779528
+case acc: 0.4094488188976378
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0238 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0238 ::: bot acc: 0.9762
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 48
+train loss is 0.105778
+average val loss: 0.113000, accuracy: 0.4804
+average test loss: 0.118046, accuracy: 0.4514
+case acc: 0.4566929133858268
+case acc: 0.47244094488188976
+case acc: 0.4881889763779528
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0238 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0238 ::: bot acc: 0.9762
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 49
+train loss is 0.105086
+average val loss: 0.114134, accuracy: 0.4755
+average test loss: 0.119311, accuracy: 0.4528
+case acc: 0.4645669291338583
+case acc: 0.47244094488188976
+case acc: 0.4881889763779528
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0238 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0238 ::: bot acc: 0.9762
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 50
+train loss is 0.104424
+average val loss: 0.114252, accuracy: 0.4755
+average test loss: 0.118589, accuracy: 0.4514
+case acc: 0.4566929133858268
+case acc: 0.47244094488188976
+case acc: 0.4881889763779528
+case acc: 0.4015748031496063
+case acc: 0.4409448818897638
+case acc: 0.44881889763779526
+top acc: 0.0238 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0238 ::: bot acc: 0.9762
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+LME_Co_Spot
+Before Load Data
+['2013-01-01', '2018-01-01', '2018-07-01']
+0.012068379314964605
+['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot', 'LME_Zi_Spot', 'LME_Ti_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low', 'LME_Al_Close', 'LME_Al_Volume', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low', 'LME_Co_Close', 'LME_Co_Volume', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low', 'LME_Ti_Close', 'LME_Ti_Volume', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low', 'LME_Le_Close', 'LME_Le_Volume', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low', 'LME_Ni_Close', 'LME_Ni_Volume', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low', 'LME_Zi_Close', 'LME_Zi_Volume', 'spot_price']
+====================================technical indicator_v3========================================
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+Remove Columns Version4
+ground_truth ['LME_Co_Spot']
+#####################remove_unused_columns_v4#####################
+target LME_Co
+Index(['LME_Co_Spot', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low',
+       'LME_Co_Close', 'LME_Co_Spot_EMA12', 'LME_Co_Spot_WMA12',
+       'LME_Co_Spot_EMA26', 'LME_Co_Spot_WMA26', 'LME_Co_Spot_EMA40',
+       'LME_Co_Spot_WMA40', 'LME_Co_Spot_EMA65', 'LME_Co_Spot_WMA65',
+       'LME_Co_Spot_EMA125', 'LME_Co_Spot_WMA125', 'LME_Co_Spot_bollinger5',
+       'LME_Co_Spot_bollinger10', 'LME_Co_Spot_bollinger15',
+       'LME_Co_Spot_bollinger20', 'LME_Co_Spot_bollinger30',
+       'LME_Co_Spot_bollinger65', 'LME_Co_Spot_Mom5', 'LME_Co_Spot_Mom10',
+       'LME_Co_Spot_Mom15', 'LME_Co_Spot_Mom26', 'LME_Co_Spot_Mom40',
+       'LME_Co_Spot_Mom65', 'LME_Co_Spot_Mom125', 'LME_Co_Spot_PPO12',
+       'LME_Co_Spot_PPO22', 'LME_Co_Spot_RSI14', 'LME_Co_Spot_RSI26',
+       'LME_Co_Spot_RSI40', 'LME_Co_Spot_RSI54', 'LME_Co_Spot_RSI125',
+       'LME_Co_Close_EMA12', 'LME_Co_Close_WMA12', 'LME_Co_Close_EMA26',
+       'LME_Co_Close_WMA26', 'LME_Co_Close_EMA40', 'LME_Co_Close_WMA40',
+       'LME_Co_Close_EMA65', 'LME_Co_Close_WMA65', 'LME_Co_Close_EMA125',
+       'LME_Co_Close_WMA125', 'LME_Co_Close_bollinger5',
+       'LME_Co_Close_bollinger10', 'LME_Co_Close_bollinger15',
+       'LME_Co_Close_bollinger20', 'LME_Co_Close_bollinger30',
+       'LME_Co_Close_bollinger65', 'LME_Co_Close_Mom5', 'LME_Co_Close_Mom10',
+       'LME_Co_Close_Mom15', 'LME_Co_Close_Mom26', 'LME_Co_Close_Mom40',
+       'LME_Co_Close_Mom65', 'LME_Co_Close_Mom125', 'LME_Co_Close_PPO12',
+       'LME_Co_Close_PPO22', 'LME_Co_Close_RSI14', 'LME_Co_Close_RSI26',
+       'LME_Co_Close_RSI40', 'LME_Co_Close_RSI54', 'LME_Co_Close_RSI125',
+       'LME_Co_PVT', 'LME_Co_divPVT', 'LME_Co_NATR14', 'LME_Co_NATR26',
+       'LME_Co_NATR65', 'LME_Co_NATR125', 'LME_Co_CCI12', 'LME_Co_CCI26',
+       'LME_Co_CCI40', 'LME_Co_CCI65', 'LME_Co_CCI125', 'LME_Co_VBM12',
+       'LME_Co_VBM22', 'LME_Co_ADX14', 'LME_Co_ADX26', 'LME_Co_ADX40',
+       'LME_Co_ADX54', 'LME_Co_ADX125', 'LME_Co_SAR'],
+      dtype='object')
+LME_Al_Spot
+Before Load Data
+['2013-01-01', '2018-01-01', '2018-07-01']
+0.01166878865767512
+['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot', 'LME_Zi_Spot', 'LME_Ti_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low', 'LME_Al_Close', 'LME_Al_Volume', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low', 'LME_Co_Close', 'LME_Co_Volume', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low', 'LME_Ti_Close', 'LME_Ti_Volume', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low', 'LME_Le_Close', 'LME_Le_Volume', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low', 'LME_Ni_Close', 'LME_Ni_Volume', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low', 'LME_Zi_Close', 'LME_Zi_Volume', 'spot_price']
+====================================technical indicator_v3========================================
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+Remove Columns Version4
+ground_truth ['LME_Al_Spot']
+#####################remove_unused_columns_v4#####################
+target LME_Al
+Index(['LME_Al_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low',
+       'LME_Al_Close', 'LME_Al_Spot_EMA12', 'LME_Al_Spot_WMA12',
+       'LME_Al_Spot_EMA26', 'LME_Al_Spot_WMA26', 'LME_Al_Spot_EMA40',
+       'LME_Al_Spot_WMA40', 'LME_Al_Spot_EMA65', 'LME_Al_Spot_WMA65',
+       'LME_Al_Spot_EMA125', 'LME_Al_Spot_WMA125', 'LME_Al_Spot_bollinger5',
+       'LME_Al_Spot_bollinger10', 'LME_Al_Spot_bollinger15',
+       'LME_Al_Spot_bollinger20', 'LME_Al_Spot_bollinger30',
+       'LME_Al_Spot_bollinger65', 'LME_Al_Spot_Mom5', 'LME_Al_Spot_Mom10',
+       'LME_Al_Spot_Mom15', 'LME_Al_Spot_Mom26', 'LME_Al_Spot_Mom40',
+       'LME_Al_Spot_Mom65', 'LME_Al_Spot_Mom125', 'LME_Al_Spot_PPO12',
+       'LME_Al_Spot_PPO22', 'LME_Al_Spot_RSI14', 'LME_Al_Spot_RSI26',
+       'LME_Al_Spot_RSI40', 'LME_Al_Spot_RSI54', 'LME_Al_Spot_RSI125',
+       'LME_Al_Close_EMA12', 'LME_Al_Close_WMA12', 'LME_Al_Close_EMA26',
+       'LME_Al_Close_WMA26', 'LME_Al_Close_EMA40', 'LME_Al_Close_WMA40',
+       'LME_Al_Close_EMA65', 'LME_Al_Close_WMA65', 'LME_Al_Close_EMA125',
+       'LME_Al_Close_WMA125', 'LME_Al_Close_bollinger5',
+       'LME_Al_Close_bollinger10', 'LME_Al_Close_bollinger15',
+       'LME_Al_Close_bollinger20', 'LME_Al_Close_bollinger30',
+       'LME_Al_Close_bollinger65', 'LME_Al_Close_Mom5', 'LME_Al_Close_Mom10',
+       'LME_Al_Close_Mom15', 'LME_Al_Close_Mom26', 'LME_Al_Close_Mom40',
+       'LME_Al_Close_Mom65', 'LME_Al_Close_Mom125', 'LME_Al_Close_PPO12',
+       'LME_Al_Close_PPO22', 'LME_Al_Close_RSI14', 'LME_Al_Close_RSI26',
+       'LME_Al_Close_RSI40', 'LME_Al_Close_RSI54', 'LME_Al_Close_RSI125',
+       'LME_Al_PVT', 'LME_Al_divPVT', 'LME_Al_NATR14', 'LME_Al_NATR26',
+       'LME_Al_NATR65', 'LME_Al_NATR125', 'LME_Al_CCI12', 'LME_Al_CCI26',
+       'LME_Al_CCI40', 'LME_Al_CCI65', 'LME_Al_CCI125', 'LME_Al_VBM12',
+       'LME_Al_VBM22', 'LME_Al_ADX14', 'LME_Al_ADX26', 'LME_Al_ADX40',
+       'LME_Al_ADX54', 'LME_Al_ADX125', 'LME_Al_SAR'],
+      dtype='object')
+LME_Le_Spot
+Before Load Data
+['2013-01-01', '2018-01-01', '2018-07-01']
+0.014703068700396902
+['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot', 'LME_Zi_Spot', 'LME_Ti_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low', 'LME_Al_Close', 'LME_Al_Volume', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low', 'LME_Co_Close', 'LME_Co_Volume', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low', 'LME_Ti_Close', 'LME_Ti_Volume', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low', 'LME_Le_Close', 'LME_Le_Volume', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low', 'LME_Ni_Close', 'LME_Ni_Volume', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low', 'LME_Zi_Close', 'LME_Zi_Volume', 'spot_price']
+====================================technical indicator_v3========================================
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+Remove Columns Version4
+ground_truth ['LME_Le_Spot']
+#####################remove_unused_columns_v4#####################
+target LME_Le
+Index(['LME_Le_Spot', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low',
+       'LME_Le_Close', 'LME_Le_Spot_EMA12', 'LME_Le_Spot_WMA12',
+       'LME_Le_Spot_EMA26', 'LME_Le_Spot_WMA26', 'LME_Le_Spot_EMA40',
+       'LME_Le_Spot_WMA40', 'LME_Le_Spot_EMA65', 'LME_Le_Spot_WMA65',
+       'LME_Le_Spot_EMA125', 'LME_Le_Spot_WMA125', 'LME_Le_Spot_bollinger5',
+       'LME_Le_Spot_bollinger10', 'LME_Le_Spot_bollinger15',
+       'LME_Le_Spot_bollinger20', 'LME_Le_Spot_bollinger30',
+       'LME_Le_Spot_bollinger65', 'LME_Le_Spot_Mom5', 'LME_Le_Spot_Mom10',
+       'LME_Le_Spot_Mom15', 'LME_Le_Spot_Mom26', 'LME_Le_Spot_Mom40',
+       'LME_Le_Spot_Mom65', 'LME_Le_Spot_Mom125', 'LME_Le_Spot_PPO12',
+       'LME_Le_Spot_PPO22', 'LME_Le_Spot_RSI14', 'LME_Le_Spot_RSI26',
+       'LME_Le_Spot_RSI40', 'LME_Le_Spot_RSI54', 'LME_Le_Spot_RSI125',
+       'LME_Le_Close_EMA12', 'LME_Le_Close_WMA12', 'LME_Le_Close_EMA26',
+       'LME_Le_Close_WMA26', 'LME_Le_Close_EMA40', 'LME_Le_Close_WMA40',
+       'LME_Le_Close_EMA65', 'LME_Le_Close_WMA65', 'LME_Le_Close_EMA125',
+       'LME_Le_Close_WMA125', 'LME_Le_Close_bollinger5',
+       'LME_Le_Close_bollinger10', 'LME_Le_Close_bollinger15',
+       'LME_Le_Close_bollinger20', 'LME_Le_Close_bollinger30',
+       'LME_Le_Close_bollinger65', 'LME_Le_Close_Mom5', 'LME_Le_Close_Mom10',
+       'LME_Le_Close_Mom15', 'LME_Le_Close_Mom26', 'LME_Le_Close_Mom40',
+       'LME_Le_Close_Mom65', 'LME_Le_Close_Mom125', 'LME_Le_Close_PPO12',
+       'LME_Le_Close_PPO22', 'LME_Le_Close_RSI14', 'LME_Le_Close_RSI26',
+       'LME_Le_Close_RSI40', 'LME_Le_Close_RSI54', 'LME_Le_Close_RSI125',
+       'LME_Le_PVT', 'LME_Le_divPVT', 'LME_Le_NATR14', 'LME_Le_NATR26',
+       'LME_Le_NATR65', 'LME_Le_NATR125', 'LME_Le_CCI12', 'LME_Le_CCI26',
+       'LME_Le_CCI40', 'LME_Le_CCI65', 'LME_Le_CCI125', 'LME_Le_VBM12',
+       'LME_Le_VBM22', 'LME_Le_ADX14', 'LME_Le_ADX26', 'LME_Le_ADX40',
+       'LME_Le_ADX54', 'LME_Le_ADX125', 'LME_Le_SAR'],
+      dtype='object')
+LME_Ni_Spot
+Before Load Data
+['2013-01-01', '2018-01-01', '2018-07-01']
+0.01791886867408872
+['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot', 'LME_Zi_Spot', 'LME_Ti_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low', 'LME_Al_Close', 'LME_Al_Volume', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low', 'LME_Co_Close', 'LME_Co_Volume', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low', 'LME_Ti_Close', 'LME_Ti_Volume', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low', 'LME_Le_Close', 'LME_Le_Volume', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low', 'LME_Ni_Close', 'LME_Ni_Volume', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low', 'LME_Zi_Close', 'LME_Zi_Volume', 'spot_price']
+====================================technical indicator_v3========================================
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+Remove Columns Version4
+ground_truth ['LME_Ni_Spot']
+#####################remove_unused_columns_v4#####################
+target LME_Ni
+Index(['LME_Ni_Spot', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low',
+       'LME_Ni_Close', 'LME_Ni_Spot_EMA12', 'LME_Ni_Spot_WMA12',
+       'LME_Ni_Spot_EMA26', 'LME_Ni_Spot_WMA26', 'LME_Ni_Spot_EMA40',
+       'LME_Ni_Spot_WMA40', 'LME_Ni_Spot_EMA65', 'LME_Ni_Spot_WMA65',
+       'LME_Ni_Spot_EMA125', 'LME_Ni_Spot_WMA125', 'LME_Ni_Spot_bollinger5',
+       'LME_Ni_Spot_bollinger10', 'LME_Ni_Spot_bollinger15',
+       'LME_Ni_Spot_bollinger20', 'LME_Ni_Spot_bollinger30',
+       'LME_Ni_Spot_bollinger65', 'LME_Ni_Spot_Mom5', 'LME_Ni_Spot_Mom10',
+       'LME_Ni_Spot_Mom15', 'LME_Ni_Spot_Mom26', 'LME_Ni_Spot_Mom40',
+       'LME_Ni_Spot_Mom65', 'LME_Ni_Spot_Mom125', 'LME_Ni_Spot_PPO12',
+       'LME_Ni_Spot_PPO22', 'LME_Ni_Spot_RSI14', 'LME_Ni_Spot_RSI26',
+       'LME_Ni_Spot_RSI40', 'LME_Ni_Spot_RSI54', 'LME_Ni_Spot_RSI125',
+       'LME_Ni_Close_EMA12', 'LME_Ni_Close_WMA12', 'LME_Ni_Close_EMA26',
+       'LME_Ni_Close_WMA26', 'LME_Ni_Close_EMA40', 'LME_Ni_Close_WMA40',
+       'LME_Ni_Close_EMA65', 'LME_Ni_Close_WMA65', 'LME_Ni_Close_EMA125',
+       'LME_Ni_Close_WMA125', 'LME_Ni_Close_bollinger5',
+       'LME_Ni_Close_bollinger10', 'LME_Ni_Close_bollinger15',
+       'LME_Ni_Close_bollinger20', 'LME_Ni_Close_bollinger30',
+       'LME_Ni_Close_bollinger65', 'LME_Ni_Close_Mom5', 'LME_Ni_Close_Mom10',
+       'LME_Ni_Close_Mom15', 'LME_Ni_Close_Mom26', 'LME_Ni_Close_Mom40',
+       'LME_Ni_Close_Mom65', 'LME_Ni_Close_Mom125', 'LME_Ni_Close_PPO12',
+       'LME_Ni_Close_PPO22', 'LME_Ni_Close_RSI14', 'LME_Ni_Close_RSI26',
+       'LME_Ni_Close_RSI40', 'LME_Ni_Close_RSI54', 'LME_Ni_Close_RSI125',
+       'LME_Ni_PVT', 'LME_Ni_divPVT', 'LME_Ni_NATR14', 'LME_Ni_NATR26',
+       'LME_Ni_NATR65', 'LME_Ni_NATR125', 'LME_Ni_CCI12', 'LME_Ni_CCI26',
+       'LME_Ni_CCI40', 'LME_Ni_CCI65', 'LME_Ni_CCI125', 'LME_Ni_VBM12',
+       'LME_Ni_VBM22', 'LME_Ni_ADX14', 'LME_Ni_ADX26', 'LME_Ni_ADX40',
+       'LME_Ni_ADX54', 'LME_Ni_ADX125', 'LME_Ni_SAR'],
+      dtype='object')
+LME_Zi_Spot
+Before Load Data
+['2013-01-01', '2018-01-01', '2018-07-01']
+0.014471891458719797
+['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot', 'LME_Zi_Spot', 'LME_Ti_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low', 'LME_Al_Close', 'LME_Al_Volume', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low', 'LME_Co_Close', 'LME_Co_Volume', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low', 'LME_Ti_Close', 'LME_Ti_Volume', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low', 'LME_Le_Close', 'LME_Le_Volume', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low', 'LME_Ni_Close', 'LME_Ni_Volume', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low', 'LME_Zi_Close', 'LME_Zi_Volume', 'spot_price']
+====================================technical indicator_v3========================================
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+Remove Columns Version4
+ground_truth ['LME_Zi_Spot']
+#####################remove_unused_columns_v4#####################
+target LME_Zi
+Index(['LME_Zi_Spot', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low',
+       'LME_Zi_Close', 'LME_Zi_Spot_EMA12', 'LME_Zi_Spot_WMA12',
+       'LME_Zi_Spot_EMA26', 'LME_Zi_Spot_WMA26', 'LME_Zi_Spot_EMA40',
+       'LME_Zi_Spot_WMA40', 'LME_Zi_Spot_EMA65', 'LME_Zi_Spot_WMA65',
+       'LME_Zi_Spot_EMA125', 'LME_Zi_Spot_WMA125', 'LME_Zi_Spot_bollinger5',
+       'LME_Zi_Spot_bollinger10', 'LME_Zi_Spot_bollinger15',
+       'LME_Zi_Spot_bollinger20', 'LME_Zi_Spot_bollinger30',
+       'LME_Zi_Spot_bollinger65', 'LME_Zi_Spot_Mom5', 'LME_Zi_Spot_Mom10',
+       'LME_Zi_Spot_Mom15', 'LME_Zi_Spot_Mom26', 'LME_Zi_Spot_Mom40',
+       'LME_Zi_Spot_Mom65', 'LME_Zi_Spot_Mom125', 'LME_Zi_Spot_PPO12',
+       'LME_Zi_Spot_PPO22', 'LME_Zi_Spot_RSI14', 'LME_Zi_Spot_RSI26',
+       'LME_Zi_Spot_RSI40', 'LME_Zi_Spot_RSI54', 'LME_Zi_Spot_RSI125',
+       'LME_Zi_Close_EMA12', 'LME_Zi_Close_WMA12', 'LME_Zi_Close_EMA26',
+       'LME_Zi_Close_WMA26', 'LME_Zi_Close_EMA40', 'LME_Zi_Close_WMA40',
+       'LME_Zi_Close_EMA65', 'LME_Zi_Close_WMA65', 'LME_Zi_Close_EMA125',
+       'LME_Zi_Close_WMA125', 'LME_Zi_Close_bollinger5',
+       'LME_Zi_Close_bollinger10', 'LME_Zi_Close_bollinger15',
+       'LME_Zi_Close_bollinger20', 'LME_Zi_Close_bollinger30',
+       'LME_Zi_Close_bollinger65', 'LME_Zi_Close_Mom5', 'LME_Zi_Close_Mom10',
+       'LME_Zi_Close_Mom15', 'LME_Zi_Close_Mom26', 'LME_Zi_Close_Mom40',
+       'LME_Zi_Close_Mom65', 'LME_Zi_Close_Mom125', 'LME_Zi_Close_PPO12',
+       'LME_Zi_Close_PPO22', 'LME_Zi_Close_RSI14', 'LME_Zi_Close_RSI26',
+       'LME_Zi_Close_RSI40', 'LME_Zi_Close_RSI54', 'LME_Zi_Close_RSI125',
+       'LME_Zi_PVT', 'LME_Zi_divPVT', 'LME_Zi_NATR14', 'LME_Zi_NATR26',
+       'LME_Zi_NATR65', 'LME_Zi_NATR125', 'LME_Zi_CCI12', 'LME_Zi_CCI26',
+       'LME_Zi_CCI40', 'LME_Zi_CCI65', 'LME_Zi_CCI125', 'LME_Zi_VBM12',
+       'LME_Zi_VBM22', 'LME_Zi_ADX14', 'LME_Zi_ADX26', 'LME_Zi_ADX40',
+       'LME_Zi_ADX54', 'LME_Zi_ADX125', 'LME_Zi_SAR'],
+      dtype='object')
+LME_Ti_Spot
+Before Load Data
+['2013-01-01', '2018-01-01', '2018-07-01']
+0.011902288228514706
+['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot', 'LME_Zi_Spot', 'LME_Ti_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low', 'LME_Al_Close', 'LME_Al_Volume', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low', 'LME_Co_Close', 'LME_Co_Volume', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low', 'LME_Ti_Close', 'LME_Ti_Volume', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low', 'LME_Le_Close', 'LME_Le_Volume', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low', 'LME_Ni_Close', 'LME_Ni_Volume', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low', 'LME_Zi_Close', 'LME_Zi_Volume', 'spot_price']
+====================================technical indicator_v3========================================
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+Remove Columns Version4
+ground_truth ['LME_Ti_Spot']
+#####################remove_unused_columns_v4#####################
+target LME_Ti
+Index(['LME_Ti_Spot', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low',
+       'LME_Ti_Close', 'LME_Ti_Spot_EMA12', 'LME_Ti_Spot_WMA12',
+       'LME_Ti_Spot_EMA26', 'LME_Ti_Spot_WMA26', 'LME_Ti_Spot_EMA40',
+       'LME_Ti_Spot_WMA40', 'LME_Ti_Spot_EMA65', 'LME_Ti_Spot_WMA65',
+       'LME_Ti_Spot_EMA125', 'LME_Ti_Spot_WMA125', 'LME_Ti_Spot_bollinger5',
+       'LME_Ti_Spot_bollinger10', 'LME_Ti_Spot_bollinger15',
+       'LME_Ti_Spot_bollinger20', 'LME_Ti_Spot_bollinger30',
+       'LME_Ti_Spot_bollinger65', 'LME_Ti_Spot_Mom5', 'LME_Ti_Spot_Mom10',
+       'LME_Ti_Spot_Mom15', 'LME_Ti_Spot_Mom26', 'LME_Ti_Spot_Mom40',
+       'LME_Ti_Spot_Mom65', 'LME_Ti_Spot_Mom125', 'LME_Ti_Spot_PPO12',
+       'LME_Ti_Spot_PPO22', 'LME_Ti_Spot_RSI14', 'LME_Ti_Spot_RSI26',
+       'LME_Ti_Spot_RSI40', 'LME_Ti_Spot_RSI54', 'LME_Ti_Spot_RSI125',
+       'LME_Ti_Close_EMA12', 'LME_Ti_Close_WMA12', 'LME_Ti_Close_EMA26',
+       'LME_Ti_Close_WMA26', 'LME_Ti_Close_EMA40', 'LME_Ti_Close_WMA40',
+       'LME_Ti_Close_EMA65', 'LME_Ti_Close_WMA65', 'LME_Ti_Close_EMA125',
+       'LME_Ti_Close_WMA125', 'LME_Ti_Close_bollinger5',
+       'LME_Ti_Close_bollinger10', 'LME_Ti_Close_bollinger15',
+       'LME_Ti_Close_bollinger20', 'LME_Ti_Close_bollinger30',
+       'LME_Ti_Close_bollinger65', 'LME_Ti_Close_Mom5', 'LME_Ti_Close_Mom10',
+       'LME_Ti_Close_Mom15', 'LME_Ti_Close_Mom26', 'LME_Ti_Close_Mom40',
+       'LME_Ti_Close_Mom65', 'LME_Ti_Close_Mom125', 'LME_Ti_Close_PPO12',
+       'LME_Ti_Close_PPO22', 'LME_Ti_Close_RSI14', 'LME_Ti_Close_RSI26',
+       'LME_Ti_Close_RSI40', 'LME_Ti_Close_RSI54', 'LME_Ti_Close_RSI125',
+       'LME_Ti_PVT', 'LME_Ti_divPVT', 'LME_Ti_NATR14', 'LME_Ti_NATR26',
+       'LME_Ti_NATR65', 'LME_Ti_NATR125', 'LME_Ti_CCI12', 'LME_Ti_CCI26',
+       'LME_Ti_CCI40', 'LME_Ti_CCI65', 'LME_Ti_CCI125', 'LME_Ti_VBM12',
+       'LME_Ti_VBM22', 'LME_Ti_ADX14', 'LME_Ti_ADX26', 'LME_Ti_ADX40',
+       'LME_Ti_ADX54', 'LME_Ti_ADX125', 'LME_Ti_SAR'],
+      dtype='object')
+Dataset statistic: #examples
+Train: 5454 5454 5454
+6.1627693 -8.906525 2.4094286 -1.6774849
+Validation: 612 612 612
+Testing: 750 750 750
+pre-processing time: 0.0013811588287353516
+the split date is 2018-01-01
+net initializing with time: 0.0015940666198730469
+preparing training and testing date with time: 0.0023343563079833984
+current epoch: 1
+train loss is 0.257583
+average val loss: 0.156575, accuracy: 0.5049
+average test loss: 0.163145, accuracy: 0.5040
+case acc: 0.56
+case acc: 0.528
+case acc: 0.472
+case acc: 0.504
+case acc: 0.496
+case acc: 0.464
+top acc: 0.1220 ::: bot acc: 0.9512
+top acc: 0.1220 ::: bot acc: 0.9024
+top acc: 0.9512 ::: bot acc: 0.0488
+top acc: 0.9756 ::: bot acc: 0.0000
+top acc: 0.0244 ::: bot acc: 0.9512
+top acc: 0.2195 ::: bot acc: 0.7561
+current epoch: 2
+train loss is 0.210057
+average val loss: 0.146495, accuracy: 0.4902
+average test loss: 0.165178, accuracy: 0.5000
+case acc: 0.472
+case acc: 0.496
+case acc: 0.504
+case acc: 0.512
+case acc: 0.504
+case acc: 0.512
+top acc: 0.3415 ::: bot acc: 0.5854
+top acc: 0.1707 ::: bot acc: 0.7561
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 0.0244 ::: bot acc: 1.0000
+top acc: 0.9024 ::: bot acc: 0.0976
+current epoch: 3
+train loss is 0.156389
+average val loss: 0.142241, accuracy: 0.5016
+average test loss: 0.144542, accuracy: 0.5093
+case acc: 0.56
+case acc: 0.544
+case acc: 0.504
+case acc: 0.496
+case acc: 0.48
+case acc: 0.472
+top acc: 0.0976 ::: bot acc: 0.9756
+top acc: 0.0732 ::: bot acc: 0.9512
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 0.9268 ::: bot acc: 0.0244
+top acc: 0.0000 ::: bot acc: 0.9512
+top acc: 0.2683 ::: bot acc: 0.7805
+current epoch: 4
+train loss is 0.150480
+average val loss: 0.127991, accuracy: 0.4951
+average test loss: 0.142367, accuracy: 0.5240
+case acc: 0.552
+case acc: 0.568
+case acc: 0.504
+case acc: 0.512
+case acc: 0.48
+case acc: 0.528
+top acc: 0.1951 ::: bot acc: 0.8049
+top acc: 0.0732 ::: bot acc: 1.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 0.0000 ::: bot acc: 0.9512
+top acc: 0.5366 ::: bot acc: 0.5610
+current epoch: 5
+train loss is 0.140640
+average val loss: 0.126444, accuracy: 0.4935
+average test loss: 0.137554, accuracy: 0.5093
+case acc: 0.528
+case acc: 0.544
+case acc: 0.504
+case acc: 0.512
+case acc: 0.496
+case acc: 0.472
+top acc: 0.0244 ::: bot acc: 0.9512
+top acc: 0.0244 ::: bot acc: 1.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0488 ::: bot acc: 0.9512
+current epoch: 6
+train loss is 0.135447
+average val loss: 0.121461, accuracy: 0.5065
+average test loss: 0.133834, accuracy: 0.5253
+case acc: 0.568
+case acc: 0.576
+case acc: 0.504
+case acc: 0.512
+case acc: 0.488
+case acc: 0.504
+top acc: 0.2195 ::: bot acc: 0.8537
+top acc: 0.0976 ::: bot acc: 1.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 0.0488 ::: bot acc: 0.9268
+top acc: 0.2439 ::: bot acc: 0.8537
+current epoch: 7
+train loss is 0.132687
+average val loss: 0.119642, accuracy: 0.5016
+average test loss: 0.132282, accuracy: 0.5213
+case acc: 0.56
+case acc: 0.552
+case acc: 0.504
+case acc: 0.512
+case acc: 0.488
+case acc: 0.512
+top acc: 0.1707 ::: bot acc: 0.8537
+top acc: 0.0488 ::: bot acc: 1.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 0.0244 ::: bot acc: 0.9268
+top acc: 0.2439 ::: bot acc: 0.9268
+current epoch: 8
+train loss is 0.128762
+average val loss: 0.117055, accuracy: 0.5049
+average test loss: 0.130307, accuracy: 0.5227
+case acc: 0.568
+case acc: 0.56
+case acc: 0.504
+case acc: 0.512
+case acc: 0.448
+case acc: 0.544
+top acc: 0.2683 ::: bot acc: 0.8293
+top acc: 0.0488 ::: bot acc: 1.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 0.0732 ::: bot acc: 0.8293
+top acc: 0.2927 ::: bot acc: 0.8537
+current epoch: 9
+train loss is 0.126324
+average val loss: 0.116263, accuracy: 0.5000
+average test loss: 0.129156, accuracy: 0.5080
+case acc: 0.536
+case acc: 0.536
+case acc: 0.504
+case acc: 0.512
+case acc: 0.472
+case acc: 0.488
+top acc: 0.1707 ::: bot acc: 0.8537
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 0.9756 ::: bot acc: 0.0244
+top acc: 0.0732 ::: bot acc: 0.9024
+top acc: 0.1707 ::: bot acc: 0.9268
+current epoch: 10
+train loss is 0.125278
+average val loss: 0.115052, accuracy: 0.5082
+average test loss: 0.128438, accuracy: 0.5147
+case acc: 0.536
+case acc: 0.536
+case acc: 0.504
+case acc: 0.512
+case acc: 0.488
+case acc: 0.512
+top acc: 0.1707 ::: bot acc: 0.8293
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 1.0000 ::: bot acc: 0.0244
+top acc: 0.1463 ::: bot acc: 0.8537
+top acc: 0.1951 ::: bot acc: 0.9268
+current epoch: 11
+train loss is 0.121922
+average val loss: 0.113813, accuracy: 0.5245
+average test loss: 0.127821, accuracy: 0.5187
+case acc: 0.544
+case acc: 0.536
+case acc: 0.504
+case acc: 0.496
+case acc: 0.496
+case acc: 0.536
+top acc: 0.2439 ::: bot acc: 0.7805
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 0.3171 ::: bot acc: 0.7317
+top acc: 0.2683 ::: bot acc: 0.8537
+current epoch: 12
+train loss is 0.119599
+average val loss: 0.112886, accuracy: 0.5343
+average test loss: 0.127799, accuracy: 0.5093
+case acc: 0.496
+case acc: 0.536
+case acc: 0.504
+case acc: 0.504
+case acc: 0.448
+case acc: 0.568
+top acc: 0.2927 ::: bot acc: 0.6829
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 0.3902 ::: bot acc: 0.5610
+top acc: 0.3659 ::: bot acc: 0.8293
+current epoch: 13
+train loss is 0.119311
+average val loss: 0.112237, accuracy: 0.5376
+average test loss: 0.127290, accuracy: 0.5040
+case acc: 0.496
+case acc: 0.536
+case acc: 0.504
+case acc: 0.504
+case acc: 0.424
+case acc: 0.56
+top acc: 0.2439 ::: bot acc: 0.6829
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 1.0000 ::: bot acc: 0.0244
+top acc: 0.4146 ::: bot acc: 0.4634
+top acc: 0.3659 ::: bot acc: 0.8293
+current epoch: 14
+train loss is 0.118795
+average val loss: 0.111751, accuracy: 0.5294
+average test loss: 0.126695, accuracy: 0.4960
+case acc: 0.496
+case acc: 0.536
+case acc: 0.504
+case acc: 0.504
+case acc: 0.408
+case acc: 0.528
+top acc: 0.2439 ::: bot acc: 0.6829
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.9756 ::: bot acc: 0.0000
+top acc: 1.0000 ::: bot acc: 0.0244
+top acc: 0.4390 ::: bot acc: 0.4390
+top acc: 0.2927 ::: bot acc: 0.8537
+current epoch: 15
+train loss is 0.117851
+average val loss: 0.111302, accuracy: 0.5278
+average test loss: 0.126422, accuracy: 0.4933
+case acc: 0.512
+case acc: 0.528
+case acc: 0.496
+case acc: 0.504
+case acc: 0.416
+case acc: 0.504
+top acc: 0.3171 ::: bot acc: 0.6585
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.9268 ::: bot acc: 0.0000
+top acc: 1.0000 ::: bot acc: 0.0244
+top acc: 0.3902 ::: bot acc: 0.5122
+top acc: 0.3171 ::: bot acc: 0.7561
+current epoch: 16
+train loss is 0.117256
+average val loss: 0.110872, accuracy: 0.5425
+average test loss: 0.126117, accuracy: 0.5040
+case acc: 0.512
+case acc: 0.504
+case acc: 0.496
+case acc: 0.52
+case acc: 0.456
+case acc: 0.536
+top acc: 0.3659 ::: bot acc: 0.5854
+top acc: 0.0488 ::: bot acc: 0.9268
+top acc: 0.9268 ::: bot acc: 0.0000
+top acc: 0.9756 ::: bot acc: 0.0976
+top acc: 0.5366 ::: bot acc: 0.4146
+top acc: 0.3902 ::: bot acc: 0.7317
+current epoch: 17
+train loss is 0.115561
+average val loss: 0.110372, accuracy: 0.5474
+average test loss: 0.126259, accuracy: 0.5173
+case acc: 0.528
+case acc: 0.48
+case acc: 0.504
+case acc: 0.52
+case acc: 0.52
+case acc: 0.552
+top acc: 0.6098 ::: bot acc: 0.4878
+top acc: 0.0732 ::: bot acc: 0.8293
+top acc: 0.9756 ::: bot acc: 0.0000
+top acc: 0.9756 ::: bot acc: 0.0976
+top acc: 0.7561 ::: bot acc: 0.3415
+top acc: 0.4878 ::: bot acc: 0.6585
+current epoch: 18
+train loss is 0.116448
+average val loss: 0.110216, accuracy: 0.5196
+average test loss: 0.125076, accuracy: 0.5240
+case acc: 0.536
+case acc: 0.528
+case acc: 0.504
+case acc: 0.52
+case acc: 0.488
+case acc: 0.568
+top acc: 0.4878 ::: bot acc: 0.5854
+top acc: 0.0976 ::: bot acc: 0.9024
+top acc: 0.9512 ::: bot acc: 0.0000
+top acc: 0.8780 ::: bot acc: 0.1707
+top acc: 0.5854 ::: bot acc: 0.3902
+top acc: 0.4146 ::: bot acc: 0.7805
+current epoch: 19
+train loss is 0.115507
+average val loss: 0.109750, accuracy: 0.5392
+average test loss: 0.125358, accuracy: 0.5213
+case acc: 0.528
+case acc: 0.496
+case acc: 0.512
+case acc: 0.52
+case acc: 0.496
+case acc: 0.576
+top acc: 0.5854 ::: bot acc: 0.4878
+top acc: 0.0976 ::: bot acc: 0.8537
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 0.9268 ::: bot acc: 0.1707
+top acc: 0.7561 ::: bot acc: 0.2683
+top acc: 0.4878 ::: bot acc: 0.6098
+current epoch: 20
+train loss is 0.114957
+average val loss: 0.109790, accuracy: 0.5327
+average test loss: 0.125234, accuracy: 0.5027
+case acc: 0.472
+case acc: 0.472
+case acc: 0.504
+case acc: 0.504
+case acc: 0.504
+case acc: 0.56
+top acc: 0.5366 ::: bot acc: 0.3902
+top acc: 0.1220 ::: bot acc: 0.8049
+top acc: 0.9756 ::: bot acc: 0.0000
+top acc: 0.9024 ::: bot acc: 0.1463
+top acc: 0.7561 ::: bot acc: 0.2927
+top acc: 0.5366 ::: bot acc: 0.5122
+current epoch: 21
+train loss is 0.114058
+average val loss: 0.109966, accuracy: 0.5278
+average test loss: 0.124838, accuracy: 0.5133
+case acc: 0.472
+case acc: 0.496
+case acc: 0.504
+case acc: 0.52
+case acc: 0.512
+case acc: 0.576
+top acc: 0.4878 ::: bot acc: 0.3902
+top acc: 0.1707 ::: bot acc: 0.8049
+top acc: 0.9024 ::: bot acc: 0.0000
+top acc: 0.8780 ::: bot acc: 0.1707
+top acc: 0.7073 ::: bot acc: 0.3659
+top acc: 0.5122 ::: bot acc: 0.5854
+current epoch: 22
+train loss is 0.114247
+average val loss: 0.109786, accuracy: 0.5229
+average test loss: 0.124898, accuracy: 0.5000
+case acc: 0.48
+case acc: 0.456
+case acc: 0.488
+case acc: 0.536
+case acc: 0.512
+case acc: 0.528
+top acc: 0.6098 ::: bot acc: 0.3415
+top acc: 0.1707 ::: bot acc: 0.7805
+top acc: 0.9024 ::: bot acc: 0.0000
+top acc: 0.9024 ::: bot acc: 0.1951
+top acc: 0.7561 ::: bot acc: 0.3415
+top acc: 0.5610 ::: bot acc: 0.4146
+current epoch: 23
+train loss is 0.114104
+average val loss: 0.109465, accuracy: 0.5376
+average test loss: 0.125313, accuracy: 0.4880
+case acc: 0.512
+case acc: 0.448
+case acc: 0.48
+case acc: 0.512
+case acc: 0.48
+case acc: 0.496
+top acc: 0.7317 ::: bot acc: 0.3171
+top acc: 0.1951 ::: bot acc: 0.7317
+top acc: 0.8780 ::: bot acc: 0.0000
+top acc: 0.9024 ::: bot acc: 0.1463
+top acc: 0.8537 ::: bot acc: 0.1707
+top acc: 0.6829 ::: bot acc: 0.2195
+current epoch: 24
+train loss is 0.113501
+average val loss: 0.109441, accuracy: 0.5359
+average test loss: 0.124925, accuracy: 0.4933
+case acc: 0.48
+case acc: 0.472
+case acc: 0.504
+case acc: 0.488
+case acc: 0.504
+case acc: 0.512
+top acc: 0.6098 ::: bot acc: 0.3415
+top acc: 0.1951 ::: bot acc: 0.7805
+top acc: 0.8293 ::: bot acc: 0.0732
+top acc: 0.8293 ::: bot acc: 0.1707
+top acc: 0.8049 ::: bot acc: 0.3171
+top acc: 0.6098 ::: bot acc: 0.2927
+current epoch: 25
+train loss is 0.113965
+average val loss: 0.109550, accuracy: 0.5359
+average test loss: 0.125037, accuracy: 0.4933
+case acc: 0.48
+case acc: 0.48
+case acc: 0.488
+case acc: 0.496
+case acc: 0.496
+case acc: 0.52
+top acc: 0.6098 ::: bot acc: 0.3171
+top acc: 0.1707 ::: bot acc: 0.7805
+top acc: 0.7805 ::: bot acc: 0.0732
+top acc: 0.8293 ::: bot acc: 0.1951
+top acc: 0.8049 ::: bot acc: 0.2927
+top acc: 0.5854 ::: bot acc: 0.3415
+current epoch: 26
+train loss is 0.113008
+average val loss: 0.109460, accuracy: 0.5245
+average test loss: 0.125528, accuracy: 0.5027
+case acc: 0.512
+case acc: 0.504
+case acc: 0.496
+case acc: 0.512
+case acc: 0.472
+case acc: 0.52
+top acc: 0.7317 ::: bot acc: 0.2927
+top acc: 0.3415 ::: bot acc: 0.6829
+top acc: 0.8049 ::: bot acc: 0.0976
+top acc: 0.9024 ::: bot acc: 0.1463
+top acc: 0.8293 ::: bot acc: 0.1707
+top acc: 0.7073 ::: bot acc: 0.2195
+current epoch: 27
+train loss is 0.113733
+average val loss: 0.109250, accuracy: 0.5327
+average test loss: 0.125412, accuracy: 0.5080
+case acc: 0.512
+case acc: 0.512
+case acc: 0.52
+case acc: 0.52
+case acc: 0.464
+case acc: 0.52
+top acc: 0.7561 ::: bot acc: 0.2927
+top acc: 0.3659 ::: bot acc: 0.6585
+top acc: 0.8537 ::: bot acc: 0.1220
+top acc: 0.9268 ::: bot acc: 0.1707
+top acc: 0.8293 ::: bot acc: 0.1707
+top acc: 0.7317 ::: bot acc: 0.2195
+current epoch: 28
+train loss is 0.113829
+average val loss: 0.109293, accuracy: 0.5310
+average test loss: 0.125316, accuracy: 0.5067
+case acc: 0.504
+case acc: 0.504
+case acc: 0.52
+case acc: 0.528
+case acc: 0.48
+case acc: 0.504
+top acc: 0.7561 ::: bot acc: 0.2927
+top acc: 0.2927 ::: bot acc: 0.7317
+top acc: 0.8293 ::: bot acc: 0.1220
+top acc: 0.9024 ::: bot acc: 0.1707
+top acc: 0.8780 ::: bot acc: 0.1463
+top acc: 0.7073 ::: bot acc: 0.1951
+current epoch: 29
+train loss is 0.113333
+average val loss: 0.109418, accuracy: 0.5278
+average test loss: 0.125430, accuracy: 0.5093
+case acc: 0.512
+case acc: 0.504
+case acc: 0.528
+case acc: 0.512
+case acc: 0.504
+case acc: 0.496
+top acc: 0.8049 ::: bot acc: 0.2439
+top acc: 0.3171 ::: bot acc: 0.6585
+top acc: 0.8293 ::: bot acc: 0.1463
+top acc: 0.9024 ::: bot acc: 0.1463
+top acc: 0.9024 ::: bot acc: 0.1463
+top acc: 0.7073 ::: bot acc: 0.1951
+current epoch: 30
+train loss is 0.112628
+average val loss: 0.109356, accuracy: 0.5327
+average test loss: 0.125293, accuracy: 0.5040
+case acc: 0.472
+case acc: 0.488
+case acc: 0.536
+case acc: 0.496
+case acc: 0.504
+case acc: 0.528
+top acc: 0.6585 ::: bot acc: 0.3171
+top acc: 0.2439 ::: bot acc: 0.7073
+top acc: 0.7561 ::: bot acc: 0.2195
+top acc: 0.7561 ::: bot acc: 0.2683
+top acc: 0.9268 ::: bot acc: 0.1463
+top acc: 0.6341 ::: bot acc: 0.2927
+current epoch: 31
+train loss is 0.113141
+average val loss: 0.109138, accuracy: 0.5327
+average test loss: 0.125541, accuracy: 0.5040
+case acc: 0.48
+case acc: 0.488
+case acc: 0.536
+case acc: 0.488
+case acc: 0.52
+case acc: 0.512
+top acc: 0.6829 ::: bot acc: 0.2927
+top acc: 0.2927 ::: bot acc: 0.6829
+top acc: 0.7561 ::: bot acc: 0.1951
+top acc: 0.8049 ::: bot acc: 0.2195
+top acc: 0.9512 ::: bot acc: 0.1463
+top acc: 0.7073 ::: bot acc: 0.2195
+current epoch: 32
+train loss is 0.112090
+average val loss: 0.108750, accuracy: 0.5392
+average test loss: 0.125440, accuracy: 0.5013
+case acc: 0.528
+case acc: 0.472
+case acc: 0.504
+case acc: 0.448
+case acc: 0.528
+case acc: 0.528
+top acc: 0.7317 ::: bot acc: 0.3415
+top acc: 0.2927 ::: bot acc: 0.6585
+top acc: 0.6829 ::: bot acc: 0.1951
+top acc: 0.7317 ::: bot acc: 0.1951
+top acc: 0.9756 ::: bot acc: 0.1463
+top acc: 0.7073 ::: bot acc: 0.2927
+current epoch: 33
+train loss is 0.112154
+average val loss: 0.109075, accuracy: 0.5376
+average test loss: 0.125813, accuracy: 0.5027
+case acc: 0.488
+case acc: 0.488
+case acc: 0.504
+case acc: 0.504
+case acc: 0.504
+case acc: 0.528
+top acc: 0.8049 ::: bot acc: 0.1707
+top acc: 0.4634 ::: bot acc: 0.5610
+top acc: 0.8293 ::: bot acc: 0.0976
+top acc: 0.9512 ::: bot acc: 0.0732
+top acc: 0.9756 ::: bot acc: 0.0732
+top acc: 0.8293 ::: bot acc: 0.1951
+current epoch: 34
+train loss is 0.111150
+average val loss: 0.109343, accuracy: 0.5359
+average test loss: 0.125231, accuracy: 0.5107
+case acc: 0.496
+case acc: 0.488
+case acc: 0.536
+case acc: 0.52
+case acc: 0.504
+case acc: 0.52
+top acc: 0.7073 ::: bot acc: 0.2683
+top acc: 0.4878 ::: bot acc: 0.5122
+top acc: 0.7805 ::: bot acc: 0.2439
+top acc: 0.9268 ::: bot acc: 0.1463
+top acc: 0.9512 ::: bot acc: 0.0976
+top acc: 0.6585 ::: bot acc: 0.2683
+current epoch: 35
+train loss is 0.112192
+average val loss: 0.109190, accuracy: 0.5343
+average test loss: 0.124958, accuracy: 0.5093
+case acc: 0.496
+case acc: 0.52
+case acc: 0.512
+case acc: 0.496
+case acc: 0.504
+case acc: 0.528
+top acc: 0.5122 ::: bot acc: 0.3902
+top acc: 0.3659 ::: bot acc: 0.6829
+top acc: 0.7073 ::: bot acc: 0.3171
+top acc: 0.8049 ::: bot acc: 0.2439
+top acc: 0.9024 ::: bot acc: 0.1463
+top acc: 0.5854 ::: bot acc: 0.3659
+current epoch: 36
+train loss is 0.111070
+average val loss: 0.108800, accuracy: 0.5343
+average test loss: 0.125566, accuracy: 0.5013
+case acc: 0.496
+case acc: 0.472
+case acc: 0.52
+case acc: 0.488
+case acc: 0.512
+case acc: 0.52
+top acc: 0.7561 ::: bot acc: 0.2439
+top acc: 0.3659 ::: bot acc: 0.6098
+top acc: 0.7561 ::: bot acc: 0.1707
+top acc: 0.8780 ::: bot acc: 0.1220
+top acc: 0.9512 ::: bot acc: 0.0732
+top acc: 0.8537 ::: bot acc: 0.1463
+current epoch: 37
+train loss is 0.111806
+average val loss: 0.108930, accuracy: 0.5261
+average test loss: 0.125825, accuracy: 0.5093
+case acc: 0.488
+case acc: 0.496
+case acc: 0.512
+case acc: 0.512
+case acc: 0.512
+case acc: 0.536
+top acc: 0.7805 ::: bot acc: 0.1951
+top acc: 0.4390 ::: bot acc: 0.5854
+top acc: 0.7805 ::: bot acc: 0.1220
+top acc: 0.9024 ::: bot acc: 0.1463
+top acc: 0.9756 ::: bot acc: 0.0244
+top acc: 0.9024 ::: bot acc: 0.1220
+current epoch: 38
+train loss is 0.110776
+average val loss: 0.108876, accuracy: 0.5359
+average test loss: 0.126011, accuracy: 0.5107
+case acc: 0.488
+case acc: 0.496
+case acc: 0.512
+case acc: 0.496
+case acc: 0.52
+case acc: 0.552
+top acc: 0.7561 ::: bot acc: 0.2195
+top acc: 0.4390 ::: bot acc: 0.5854
+top acc: 0.8049 ::: bot acc: 0.1463
+top acc: 0.8537 ::: bot acc: 0.1707
+top acc: 0.9756 ::: bot acc: 0.0488
+top acc: 0.8780 ::: bot acc: 0.1707
+current epoch: 39
+train loss is 0.111178
+average val loss: 0.109018, accuracy: 0.5294
+average test loss: 0.125374, accuracy: 0.4947
+case acc: 0.512
+case acc: 0.472
+case acc: 0.48
+case acc: 0.464
+case acc: 0.496
+case acc: 0.544
+top acc: 0.6341 ::: bot acc: 0.3902
+top acc: 0.3659 ::: bot acc: 0.6341
+top acc: 0.6585 ::: bot acc: 0.2439
+top acc: 0.6829 ::: bot acc: 0.3171
+top acc: 0.9756 ::: bot acc: 0.0732
+top acc: 0.7317 ::: bot acc: 0.3171
+current epoch: 40
+train loss is 0.111916
+average val loss: 0.109169, accuracy: 0.5310
+average test loss: 0.125393, accuracy: 0.4960
+case acc: 0.496
+case acc: 0.48
+case acc: 0.496
+case acc: 0.456
+case acc: 0.512
+case acc: 0.536
+top acc: 0.6341 ::: bot acc: 0.4146
+top acc: 0.3415 ::: bot acc: 0.6585
+top acc: 0.6829 ::: bot acc: 0.2195
+top acc: 0.7073 ::: bot acc: 0.2683
+top acc: 0.9512 ::: bot acc: 0.1220
+top acc: 0.8049 ::: bot acc: 0.2439
+current epoch: 41
+train loss is 0.110977
+average val loss: 0.109359, accuracy: 0.5408
+average test loss: 0.125391, accuracy: 0.5027
+case acc: 0.488
+case acc: 0.52
+case acc: 0.472
+case acc: 0.52
+case acc: 0.48
+case acc: 0.536
+top acc: 0.6829 ::: bot acc: 0.3171
+top acc: 0.3902 ::: bot acc: 0.5854
+top acc: 0.6829 ::: bot acc: 0.1951
+top acc: 0.8780 ::: bot acc: 0.2195
+top acc: 0.9024 ::: bot acc: 0.1220
+top acc: 0.7805 ::: bot acc: 0.2439
+current epoch: 42
+train loss is 0.110539
+average val loss: 0.109396, accuracy: 0.5359
+average test loss: 0.125752, accuracy: 0.5013
+case acc: 0.48
+case acc: 0.496
+case acc: 0.488
+case acc: 0.52
+case acc: 0.472
+case acc: 0.552
+top acc: 0.6585 ::: bot acc: 0.2927
+top acc: 0.4146 ::: bot acc: 0.5854
+top acc: 0.7073 ::: bot acc: 0.1707
+top acc: 0.9024 ::: bot acc: 0.1951
+top acc: 0.9024 ::: bot acc: 0.0976
+top acc: 0.8049 ::: bot acc: 0.2683
+current epoch: 43
+train loss is 0.110952
+average val loss: 0.109377, accuracy: 0.5458
+average test loss: 0.125221, accuracy: 0.4907
+case acc: 0.48
+case acc: 0.504
+case acc: 0.472
+case acc: 0.472
+case acc: 0.472
+case acc: 0.544
+top acc: 0.5610 ::: bot acc: 0.3659
+top acc: 0.3171 ::: bot acc: 0.6585
+top acc: 0.5854 ::: bot acc: 0.2927
+top acc: 0.6341 ::: bot acc: 0.3415
+top acc: 0.8537 ::: bot acc: 0.1707
+top acc: 0.6098 ::: bot acc: 0.3902
+current epoch: 44
+train loss is 0.111025
+average val loss: 0.109335, accuracy: 0.5408
+average test loss: 0.125343, accuracy: 0.5040
+case acc: 0.488
+case acc: 0.52
+case acc: 0.48
+case acc: 0.472
+case acc: 0.496
+case acc: 0.568
+top acc: 0.5854 ::: bot acc: 0.3659
+top acc: 0.3902 ::: bot acc: 0.6341
+top acc: 0.6341 ::: bot acc: 0.2439
+top acc: 0.6585 ::: bot acc: 0.3171
+top acc: 0.8780 ::: bot acc: 0.1707
+top acc: 0.6829 ::: bot acc: 0.3659
+current epoch: 45
+train loss is 0.109735
+average val loss: 0.108911, accuracy: 0.5621
+average test loss: 0.125572, accuracy: 0.5000
+case acc: 0.48
+case acc: 0.52
+case acc: 0.488
+case acc: 0.488
+case acc: 0.504
+case acc: 0.52
+top acc: 0.7561 ::: bot acc: 0.1951
+top acc: 0.5366 ::: bot acc: 0.5610
+top acc: 0.7805 ::: bot acc: 0.1707
+top acc: 0.6585 ::: bot acc: 0.3171
+top acc: 0.9268 ::: bot acc: 0.1220
+top acc: 0.7317 ::: bot acc: 0.2439
+current epoch: 46
+train loss is 0.110356
+average val loss: 0.109491, accuracy: 0.5474
+average test loss: 0.126223, accuracy: 0.4973
+case acc: 0.432
+case acc: 0.488
+case acc: 0.496
+case acc: 0.512
+case acc: 0.528
+case acc: 0.528
+top acc: 0.7561 ::: bot acc: 0.1220
+top acc: 0.5610 ::: bot acc: 0.4634
+top acc: 0.8293 ::: bot acc: 0.1220
+top acc: 0.8780 ::: bot acc: 0.1951
+top acc: 0.9756 ::: bot acc: 0.1220
+top acc: 0.8780 ::: bot acc: 0.1951
+current epoch: 47
+train loss is 0.110093
+average val loss: 0.110139, accuracy: 0.5327
+average test loss: 0.125476, accuracy: 0.5053
+case acc: 0.488
+case acc: 0.512
+case acc: 0.488
+case acc: 0.48
+case acc: 0.512
+case acc: 0.552
+top acc: 0.5122 ::: bot acc: 0.4390
+top acc: 0.3415 ::: bot acc: 0.6829
+top acc: 0.6585 ::: bot acc: 0.3415
+top acc: 0.5366 ::: bot acc: 0.3902
+top acc: 0.8780 ::: bot acc: 0.1707
+top acc: 0.4390 ::: bot acc: 0.6098
+current epoch: 48
+train loss is 0.109125
+average val loss: 0.110371, accuracy: 0.5294
+average test loss: 0.125921, accuracy: 0.5053
+case acc: 0.456
+case acc: 0.528
+case acc: 0.488
+case acc: 0.488
+case acc: 0.528
+case acc: 0.544
+top acc: 0.4878 ::: bot acc: 0.3902
+top acc: 0.2927 ::: bot acc: 0.7073
+top acc: 0.6098 ::: bot acc: 0.3415
+top acc: 0.5366 ::: bot acc: 0.4146
+top acc: 0.9024 ::: bot acc: 0.1707
+top acc: 0.4390 ::: bot acc: 0.6098
+current epoch: 49
+train loss is 0.109834
+average val loss: 0.109610, accuracy: 0.5392
+average test loss: 0.126063, accuracy: 0.4987
+case acc: 0.48
+case acc: 0.52
+case acc: 0.472
+case acc: 0.488
+case acc: 0.52
+case acc: 0.512
+top acc: 0.6098 ::: bot acc: 0.3171
+top acc: 0.3659 ::: bot acc: 0.6585
+top acc: 0.6585 ::: bot acc: 0.2439
+top acc: 0.5610 ::: bot acc: 0.4146
+top acc: 0.9512 ::: bot acc: 0.0976
+top acc: 0.6098 ::: bot acc: 0.3171
+current epoch: 50
+train loss is 0.109901
+average val loss: 0.109552, accuracy: 0.5474
+average test loss: 0.126394, accuracy: 0.4973
+case acc: 0.496
+case acc: 0.48
+case acc: 0.464
+case acc: 0.512
+case acc: 0.504
+case acc: 0.528
+top acc: 0.8293 ::: bot acc: 0.1707
+top acc: 0.4634 ::: bot acc: 0.5366
+top acc: 0.7317 ::: bot acc: 0.0976
+top acc: 0.8537 ::: bot acc: 0.1951
+top acc: 0.9512 ::: bot acc: 0.0732
+top acc: 0.7805 ::: bot acc: 0.2195
+LME_Co_Spot
+Before Load Data
+['2013-07-01', '2018-07-01', '2019-01-01']
+0.01178733590789469
+['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot', 'LME_Zi_Spot', 'LME_Ti_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low', 'LME_Al_Close', 'LME_Al_Volume', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low', 'LME_Co_Close', 'LME_Co_Volume', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low', 'LME_Ti_Close', 'LME_Ti_Volume', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low', 'LME_Le_Close', 'LME_Le_Volume', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low', 'LME_Ni_Close', 'LME_Ni_Volume', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low', 'LME_Zi_Close', 'LME_Zi_Volume', 'spot_price']
+====================================technical indicator_v3========================================
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+Remove Columns Version4
+ground_truth ['LME_Co_Spot']
+#####################remove_unused_columns_v4#####################
+target LME_Co
+Index(['LME_Co_Spot', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low',
+       'LME_Co_Close', 'LME_Co_Spot_EMA12', 'LME_Co_Spot_WMA12',
+       'LME_Co_Spot_EMA26', 'LME_Co_Spot_WMA26', 'LME_Co_Spot_EMA40',
+       'LME_Co_Spot_WMA40', 'LME_Co_Spot_EMA65', 'LME_Co_Spot_WMA65',
+       'LME_Co_Spot_EMA125', 'LME_Co_Spot_WMA125', 'LME_Co_Spot_bollinger5',
+       'LME_Co_Spot_bollinger10', 'LME_Co_Spot_bollinger15',
+       'LME_Co_Spot_bollinger20', 'LME_Co_Spot_bollinger30',
+       'LME_Co_Spot_bollinger65', 'LME_Co_Spot_Mom5', 'LME_Co_Spot_Mom10',
+       'LME_Co_Spot_Mom15', 'LME_Co_Spot_Mom26', 'LME_Co_Spot_Mom40',
+       'LME_Co_Spot_Mom65', 'LME_Co_Spot_Mom125', 'LME_Co_Spot_PPO12',
+       'LME_Co_Spot_PPO22', 'LME_Co_Spot_RSI14', 'LME_Co_Spot_RSI26',
+       'LME_Co_Spot_RSI40', 'LME_Co_Spot_RSI54', 'LME_Co_Spot_RSI125',
+       'LME_Co_Close_EMA12', 'LME_Co_Close_WMA12', 'LME_Co_Close_EMA26',
+       'LME_Co_Close_WMA26', 'LME_Co_Close_EMA40', 'LME_Co_Close_WMA40',
+       'LME_Co_Close_EMA65', 'LME_Co_Close_WMA65', 'LME_Co_Close_EMA125',
+       'LME_Co_Close_WMA125', 'LME_Co_Close_bollinger5',
+       'LME_Co_Close_bollinger10', 'LME_Co_Close_bollinger15',
+       'LME_Co_Close_bollinger20', 'LME_Co_Close_bollinger30',
+       'LME_Co_Close_bollinger65', 'LME_Co_Close_Mom5', 'LME_Co_Close_Mom10',
+       'LME_Co_Close_Mom15', 'LME_Co_Close_Mom26', 'LME_Co_Close_Mom40',
+       'LME_Co_Close_Mom65', 'LME_Co_Close_Mom125', 'LME_Co_Close_PPO12',
+       'LME_Co_Close_PPO22', 'LME_Co_Close_RSI14', 'LME_Co_Close_RSI26',
+       'LME_Co_Close_RSI40', 'LME_Co_Close_RSI54', 'LME_Co_Close_RSI125',
+       'LME_Co_PVT', 'LME_Co_divPVT', 'LME_Co_NATR14', 'LME_Co_NATR26',
+       'LME_Co_NATR65', 'LME_Co_NATR125', 'LME_Co_CCI12', 'LME_Co_CCI26',
+       'LME_Co_CCI40', 'LME_Co_CCI65', 'LME_Co_CCI125', 'LME_Co_VBM12',
+       'LME_Co_VBM22', 'LME_Co_ADX14', 'LME_Co_ADX26', 'LME_Co_ADX40',
+       'LME_Co_ADX54', 'LME_Co_ADX125', 'LME_Co_SAR'],
+      dtype='object')
+LME_Al_Spot
+Before Load Data
+['2013-07-01', '2018-07-01', '2019-01-01']
+0.011527718397236061
+['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot', 'LME_Zi_Spot', 'LME_Ti_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low', 'LME_Al_Close', 'LME_Al_Volume', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low', 'LME_Co_Close', 'LME_Co_Volume', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low', 'LME_Ti_Close', 'LME_Ti_Volume', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low', 'LME_Le_Close', 'LME_Le_Volume', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low', 'LME_Ni_Close', 'LME_Ni_Volume', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low', 'LME_Zi_Close', 'LME_Zi_Volume', 'spot_price']
+====================================technical indicator_v3========================================
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+Remove Columns Version4
+ground_truth ['LME_Al_Spot']
+#####################remove_unused_columns_v4#####################
+target LME_Al
+Index(['LME_Al_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low',
+       'LME_Al_Close', 'LME_Al_Spot_EMA12', 'LME_Al_Spot_WMA12',
+       'LME_Al_Spot_EMA26', 'LME_Al_Spot_WMA26', 'LME_Al_Spot_EMA40',
+       'LME_Al_Spot_WMA40', 'LME_Al_Spot_EMA65', 'LME_Al_Spot_WMA65',
+       'LME_Al_Spot_EMA125', 'LME_Al_Spot_WMA125', 'LME_Al_Spot_bollinger5',
+       'LME_Al_Spot_bollinger10', 'LME_Al_Spot_bollinger15',
+       'LME_Al_Spot_bollinger20', 'LME_Al_Spot_bollinger30',
+       'LME_Al_Spot_bollinger65', 'LME_Al_Spot_Mom5', 'LME_Al_Spot_Mom10',
+       'LME_Al_Spot_Mom15', 'LME_Al_Spot_Mom26', 'LME_Al_Spot_Mom40',
+       'LME_Al_Spot_Mom65', 'LME_Al_Spot_Mom125', 'LME_Al_Spot_PPO12',
+       'LME_Al_Spot_PPO22', 'LME_Al_Spot_RSI14', 'LME_Al_Spot_RSI26',
+       'LME_Al_Spot_RSI40', 'LME_Al_Spot_RSI54', 'LME_Al_Spot_RSI125',
+       'LME_Al_Close_EMA12', 'LME_Al_Close_WMA12', 'LME_Al_Close_EMA26',
+       'LME_Al_Close_WMA26', 'LME_Al_Close_EMA40', 'LME_Al_Close_WMA40',
+       'LME_Al_Close_EMA65', 'LME_Al_Close_WMA65', 'LME_Al_Close_EMA125',
+       'LME_Al_Close_WMA125', 'LME_Al_Close_bollinger5',
+       'LME_Al_Close_bollinger10', 'LME_Al_Close_bollinger15',
+       'LME_Al_Close_bollinger20', 'LME_Al_Close_bollinger30',
+       'LME_Al_Close_bollinger65', 'LME_Al_Close_Mom5', 'LME_Al_Close_Mom10',
+       'LME_Al_Close_Mom15', 'LME_Al_Close_Mom26', 'LME_Al_Close_Mom40',
+       'LME_Al_Close_Mom65', 'LME_Al_Close_Mom125', 'LME_Al_Close_PPO12',
+       'LME_Al_Close_PPO22', 'LME_Al_Close_RSI14', 'LME_Al_Close_RSI26',
+       'LME_Al_Close_RSI40', 'LME_Al_Close_RSI54', 'LME_Al_Close_RSI125',
+       'LME_Al_PVT', 'LME_Al_divPVT', 'LME_Al_NATR14', 'LME_Al_NATR26',
+       'LME_Al_NATR65', 'LME_Al_NATR125', 'LME_Al_CCI12', 'LME_Al_CCI26',
+       'LME_Al_CCI40', 'LME_Al_CCI65', 'LME_Al_CCI125', 'LME_Al_VBM12',
+       'LME_Al_VBM22', 'LME_Al_ADX14', 'LME_Al_ADX26', 'LME_Al_ADX40',
+       'LME_Al_ADX54', 'LME_Al_ADX125', 'LME_Al_SAR'],
+      dtype='object')
+LME_Le_Spot
+Before Load Data
+['2013-07-01', '2018-07-01', '2019-01-01']
+0.014701278485289508
+['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot', 'LME_Zi_Spot', 'LME_Ti_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low', 'LME_Al_Close', 'LME_Al_Volume', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low', 'LME_Co_Close', 'LME_Co_Volume', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low', 'LME_Ti_Close', 'LME_Ti_Volume', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low', 'LME_Le_Close', 'LME_Le_Volume', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low', 'LME_Ni_Close', 'LME_Ni_Volume', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low', 'LME_Zi_Close', 'LME_Zi_Volume', 'spot_price']
+====================================technical indicator_v3========================================
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+Remove Columns Version4
+ground_truth ['LME_Le_Spot']
+#####################remove_unused_columns_v4#####################
+target LME_Le
+Index(['LME_Le_Spot', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low',
+       'LME_Le_Close', 'LME_Le_Spot_EMA12', 'LME_Le_Spot_WMA12',
+       'LME_Le_Spot_EMA26', 'LME_Le_Spot_WMA26', 'LME_Le_Spot_EMA40',
+       'LME_Le_Spot_WMA40', 'LME_Le_Spot_EMA65', 'LME_Le_Spot_WMA65',
+       'LME_Le_Spot_EMA125', 'LME_Le_Spot_WMA125', 'LME_Le_Spot_bollinger5',
+       'LME_Le_Spot_bollinger10', 'LME_Le_Spot_bollinger15',
+       'LME_Le_Spot_bollinger20', 'LME_Le_Spot_bollinger30',
+       'LME_Le_Spot_bollinger65', 'LME_Le_Spot_Mom5', 'LME_Le_Spot_Mom10',
+       'LME_Le_Spot_Mom15', 'LME_Le_Spot_Mom26', 'LME_Le_Spot_Mom40',
+       'LME_Le_Spot_Mom65', 'LME_Le_Spot_Mom125', 'LME_Le_Spot_PPO12',
+       'LME_Le_Spot_PPO22', 'LME_Le_Spot_RSI14', 'LME_Le_Spot_RSI26',
+       'LME_Le_Spot_RSI40', 'LME_Le_Spot_RSI54', 'LME_Le_Spot_RSI125',
+       'LME_Le_Close_EMA12', 'LME_Le_Close_WMA12', 'LME_Le_Close_EMA26',
+       'LME_Le_Close_WMA26', 'LME_Le_Close_EMA40', 'LME_Le_Close_WMA40',
+       'LME_Le_Close_EMA65', 'LME_Le_Close_WMA65', 'LME_Le_Close_EMA125',
+       'LME_Le_Close_WMA125', 'LME_Le_Close_bollinger5',
+       'LME_Le_Close_bollinger10', 'LME_Le_Close_bollinger15',
+       'LME_Le_Close_bollinger20', 'LME_Le_Close_bollinger30',
+       'LME_Le_Close_bollinger65', 'LME_Le_Close_Mom5', 'LME_Le_Close_Mom10',
+       'LME_Le_Close_Mom15', 'LME_Le_Close_Mom26', 'LME_Le_Close_Mom40',
+       'LME_Le_Close_Mom65', 'LME_Le_Close_Mom125', 'LME_Le_Close_PPO12',
+       'LME_Le_Close_PPO22', 'LME_Le_Close_RSI14', 'LME_Le_Close_RSI26',
+       'LME_Le_Close_RSI40', 'LME_Le_Close_RSI54', 'LME_Le_Close_RSI125',
+       'LME_Le_PVT', 'LME_Le_divPVT', 'LME_Le_NATR14', 'LME_Le_NATR26',
+       'LME_Le_NATR65', 'LME_Le_NATR125', 'LME_Le_CCI12', 'LME_Le_CCI26',
+       'LME_Le_CCI40', 'LME_Le_CCI65', 'LME_Le_CCI125', 'LME_Le_VBM12',
+       'LME_Le_VBM22', 'LME_Le_ADX14', 'LME_Le_ADX26', 'LME_Le_ADX40',
+       'LME_Le_ADX54', 'LME_Le_ADX125', 'LME_Le_SAR'],
+      dtype='object')
+LME_Ni_Spot
+Before Load Data
+['2013-07-01', '2018-07-01', '2019-01-01']
+0.017875317990602393
+['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot', 'LME_Zi_Spot', 'LME_Ti_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low', 'LME_Al_Close', 'LME_Al_Volume', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low', 'LME_Co_Close', 'LME_Co_Volume', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low', 'LME_Ti_Close', 'LME_Ti_Volume', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low', 'LME_Le_Close', 'LME_Le_Volume', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low', 'LME_Ni_Close', 'LME_Ni_Volume', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low', 'LME_Zi_Close', 'LME_Zi_Volume', 'spot_price']
+====================================technical indicator_v3========================================
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+Remove Columns Version4
+ground_truth ['LME_Ni_Spot']
+#####################remove_unused_columns_v4#####################
+target LME_Ni
+Index(['LME_Ni_Spot', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low',
+       'LME_Ni_Close', 'LME_Ni_Spot_EMA12', 'LME_Ni_Spot_WMA12',
+       'LME_Ni_Spot_EMA26', 'LME_Ni_Spot_WMA26', 'LME_Ni_Spot_EMA40',
+       'LME_Ni_Spot_WMA40', 'LME_Ni_Spot_EMA65', 'LME_Ni_Spot_WMA65',
+       'LME_Ni_Spot_EMA125', 'LME_Ni_Spot_WMA125', 'LME_Ni_Spot_bollinger5',
+       'LME_Ni_Spot_bollinger10', 'LME_Ni_Spot_bollinger15',
+       'LME_Ni_Spot_bollinger20', 'LME_Ni_Spot_bollinger30',
+       'LME_Ni_Spot_bollinger65', 'LME_Ni_Spot_Mom5', 'LME_Ni_Spot_Mom10',
+       'LME_Ni_Spot_Mom15', 'LME_Ni_Spot_Mom26', 'LME_Ni_Spot_Mom40',
+       'LME_Ni_Spot_Mom65', 'LME_Ni_Spot_Mom125', 'LME_Ni_Spot_PPO12',
+       'LME_Ni_Spot_PPO22', 'LME_Ni_Spot_RSI14', 'LME_Ni_Spot_RSI26',
+       'LME_Ni_Spot_RSI40', 'LME_Ni_Spot_RSI54', 'LME_Ni_Spot_RSI125',
+       'LME_Ni_Close_EMA12', 'LME_Ni_Close_WMA12', 'LME_Ni_Close_EMA26',
+       'LME_Ni_Close_WMA26', 'LME_Ni_Close_EMA40', 'LME_Ni_Close_WMA40',
+       'LME_Ni_Close_EMA65', 'LME_Ni_Close_WMA65', 'LME_Ni_Close_EMA125',
+       'LME_Ni_Close_WMA125', 'LME_Ni_Close_bollinger5',
+       'LME_Ni_Close_bollinger10', 'LME_Ni_Close_bollinger15',
+       'LME_Ni_Close_bollinger20', 'LME_Ni_Close_bollinger30',
+       'LME_Ni_Close_bollinger65', 'LME_Ni_Close_Mom5', 'LME_Ni_Close_Mom10',
+       'LME_Ni_Close_Mom15', 'LME_Ni_Close_Mom26', 'LME_Ni_Close_Mom40',
+       'LME_Ni_Close_Mom65', 'LME_Ni_Close_Mom125', 'LME_Ni_Close_PPO12',
+       'LME_Ni_Close_PPO22', 'LME_Ni_Close_RSI14', 'LME_Ni_Close_RSI26',
+       'LME_Ni_Close_RSI40', 'LME_Ni_Close_RSI54', 'LME_Ni_Close_RSI125',
+       'LME_Ni_PVT', 'LME_Ni_divPVT', 'LME_Ni_NATR14', 'LME_Ni_NATR26',
+       'LME_Ni_NATR65', 'LME_Ni_NATR125', 'LME_Ni_CCI12', 'LME_Ni_CCI26',
+       'LME_Ni_CCI40', 'LME_Ni_CCI65', 'LME_Ni_CCI125', 'LME_Ni_VBM12',
+       'LME_Ni_VBM22', 'LME_Ni_ADX14', 'LME_Ni_ADX26', 'LME_Ni_ADX40',
+       'LME_Ni_ADX54', 'LME_Ni_ADX125', 'LME_Ni_SAR'],
+      dtype='object')
+LME_Zi_Spot
+Before Load Data
+['2013-07-01', '2018-07-01', '2019-01-01']
+0.014691487696987549
+['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot', 'LME_Zi_Spot', 'LME_Ti_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low', 'LME_Al_Close', 'LME_Al_Volume', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low', 'LME_Co_Close', 'LME_Co_Volume', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low', 'LME_Ti_Close', 'LME_Ti_Volume', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low', 'LME_Le_Close', 'LME_Le_Volume', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low', 'LME_Ni_Close', 'LME_Ni_Volume', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low', 'LME_Zi_Close', 'LME_Zi_Volume', 'spot_price']
+====================================technical indicator_v3========================================
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+Remove Columns Version4
+ground_truth ['LME_Zi_Spot']
+#####################remove_unused_columns_v4#####################
+target LME_Zi
+Index(['LME_Zi_Spot', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low',
+       'LME_Zi_Close', 'LME_Zi_Spot_EMA12', 'LME_Zi_Spot_WMA12',
+       'LME_Zi_Spot_EMA26', 'LME_Zi_Spot_WMA26', 'LME_Zi_Spot_EMA40',
+       'LME_Zi_Spot_WMA40', 'LME_Zi_Spot_EMA65', 'LME_Zi_Spot_WMA65',
+       'LME_Zi_Spot_EMA125', 'LME_Zi_Spot_WMA125', 'LME_Zi_Spot_bollinger5',
+       'LME_Zi_Spot_bollinger10', 'LME_Zi_Spot_bollinger15',
+       'LME_Zi_Spot_bollinger20', 'LME_Zi_Spot_bollinger30',
+       'LME_Zi_Spot_bollinger65', 'LME_Zi_Spot_Mom5', 'LME_Zi_Spot_Mom10',
+       'LME_Zi_Spot_Mom15', 'LME_Zi_Spot_Mom26', 'LME_Zi_Spot_Mom40',
+       'LME_Zi_Spot_Mom65', 'LME_Zi_Spot_Mom125', 'LME_Zi_Spot_PPO12',
+       'LME_Zi_Spot_PPO22', 'LME_Zi_Spot_RSI14', 'LME_Zi_Spot_RSI26',
+       'LME_Zi_Spot_RSI40', 'LME_Zi_Spot_RSI54', 'LME_Zi_Spot_RSI125',
+       'LME_Zi_Close_EMA12', 'LME_Zi_Close_WMA12', 'LME_Zi_Close_EMA26',
+       'LME_Zi_Close_WMA26', 'LME_Zi_Close_EMA40', 'LME_Zi_Close_WMA40',
+       'LME_Zi_Close_EMA65', 'LME_Zi_Close_WMA65', 'LME_Zi_Close_EMA125',
+       'LME_Zi_Close_WMA125', 'LME_Zi_Close_bollinger5',
+       'LME_Zi_Close_bollinger10', 'LME_Zi_Close_bollinger15',
+       'LME_Zi_Close_bollinger20', 'LME_Zi_Close_bollinger30',
+       'LME_Zi_Close_bollinger65', 'LME_Zi_Close_Mom5', 'LME_Zi_Close_Mom10',
+       'LME_Zi_Close_Mom15', 'LME_Zi_Close_Mom26', 'LME_Zi_Close_Mom40',
+       'LME_Zi_Close_Mom65', 'LME_Zi_Close_Mom125', 'LME_Zi_Close_PPO12',
+       'LME_Zi_Close_PPO22', 'LME_Zi_Close_RSI14', 'LME_Zi_Close_RSI26',
+       'LME_Zi_Close_RSI40', 'LME_Zi_Close_RSI54', 'LME_Zi_Close_RSI125',
+       'LME_Zi_PVT', 'LME_Zi_divPVT', 'LME_Zi_NATR14', 'LME_Zi_NATR26',
+       'LME_Zi_NATR65', 'LME_Zi_NATR125', 'LME_Zi_CCI12', 'LME_Zi_CCI26',
+       'LME_Zi_CCI40', 'LME_Zi_CCI65', 'LME_Zi_CCI125', 'LME_Zi_VBM12',
+       'LME_Zi_VBM22', 'LME_Zi_ADX14', 'LME_Zi_ADX26', 'LME_Zi_ADX40',
+       'LME_Zi_ADX54', 'LME_Zi_ADX125', 'LME_Zi_SAR'],
+      dtype='object')
+LME_Ti_Spot
+Before Load Data
+['2013-07-01', '2018-07-01', '2019-01-01']
+0.011580449844901794
+['LME_Co_Spot', 'LME_Al_Spot', 'LME_Le_Spot', 'LME_Ni_Spot', 'LME_Zi_Spot', 'LME_Ti_Spot', 'LME_Al_Open', 'LME_Al_High', 'LME_Al_Low', 'LME_Al_Close', 'LME_Al_Volume', 'LME_Co_Open', 'LME_Co_High', 'LME_Co_Low', 'LME_Co_Close', 'LME_Co_Volume', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low', 'LME_Ti_Close', 'LME_Ti_Volume', 'LME_Le_Open', 'LME_Le_High', 'LME_Le_Low', 'LME_Le_Close', 'LME_Le_Volume', 'LME_Ni_Open', 'LME_Ni_High', 'LME_Ni_Low', 'LME_Ni_Close', 'LME_Ni_Volume', 'LME_Zi_Open', 'LME_Zi_High', 'LME_Zi_Low', 'LME_Zi_Close', 'LME_Zi_Volume', 'spot_price']
+====================================technical indicator_v3========================================
+LME_Al_Close+LME_Al_Volume=>LME_Al_PVT+LME_Al_divPVT
+LME_Co_Close+LME_Co_Volume=>LME_Co_PVT+LME_Co_divPVT
+LME_Ti_Close+LME_Ti_Volume=>LME_Ti_PVT+LME_Ti_divPVT
+LME_Le_Close+LME_Le_Volume=>LME_Le_PVT+LME_Le_divPVT
+LME_Ni_Close+LME_Ni_Volume=>LME_Ni_PVT+LME_Ni_divPVT
+LME_Zi_Close+LME_Zi_Volume=>LME_Zi_PVT+LME_Zi_divPVT
+Remove Columns Version4
+ground_truth ['LME_Ti_Spot']
+#####################remove_unused_columns_v4#####################
+target LME_Ti
+Index(['LME_Ti_Spot', 'LME_Ti_Open', 'LME_Ti_High', 'LME_Ti_Low',
+       'LME_Ti_Close', 'LME_Ti_Spot_EMA12', 'LME_Ti_Spot_WMA12',
+       'LME_Ti_Spot_EMA26', 'LME_Ti_Spot_WMA26', 'LME_Ti_Spot_EMA40',
+       'LME_Ti_Spot_WMA40', 'LME_Ti_Spot_EMA65', 'LME_Ti_Spot_WMA65',
+       'LME_Ti_Spot_EMA125', 'LME_Ti_Spot_WMA125', 'LME_Ti_Spot_bollinger5',
+       'LME_Ti_Spot_bollinger10', 'LME_Ti_Spot_bollinger15',
+       'LME_Ti_Spot_bollinger20', 'LME_Ti_Spot_bollinger30',
+       'LME_Ti_Spot_bollinger65', 'LME_Ti_Spot_Mom5', 'LME_Ti_Spot_Mom10',
+       'LME_Ti_Spot_Mom15', 'LME_Ti_Spot_Mom26', 'LME_Ti_Spot_Mom40',
+       'LME_Ti_Spot_Mom65', 'LME_Ti_Spot_Mom125', 'LME_Ti_Spot_PPO12',
+       'LME_Ti_Spot_PPO22', 'LME_Ti_Spot_RSI14', 'LME_Ti_Spot_RSI26',
+       'LME_Ti_Spot_RSI40', 'LME_Ti_Spot_RSI54', 'LME_Ti_Spot_RSI125',
+       'LME_Ti_Close_EMA12', 'LME_Ti_Close_WMA12', 'LME_Ti_Close_EMA26',
+       'LME_Ti_Close_WMA26', 'LME_Ti_Close_EMA40', 'LME_Ti_Close_WMA40',
+       'LME_Ti_Close_EMA65', 'LME_Ti_Close_WMA65', 'LME_Ti_Close_EMA125',
+       'LME_Ti_Close_WMA125', 'LME_Ti_Close_bollinger5',
+       'LME_Ti_Close_bollinger10', 'LME_Ti_Close_bollinger15',
+       'LME_Ti_Close_bollinger20', 'LME_Ti_Close_bollinger30',
+       'LME_Ti_Close_bollinger65', 'LME_Ti_Close_Mom5', 'LME_Ti_Close_Mom10',
+       'LME_Ti_Close_Mom15', 'LME_Ti_Close_Mom26', 'LME_Ti_Close_Mom40',
+       'LME_Ti_Close_Mom65', 'LME_Ti_Close_Mom125', 'LME_Ti_Close_PPO12',
+       'LME_Ti_Close_PPO22', 'LME_Ti_Close_RSI14', 'LME_Ti_Close_RSI26',
+       'LME_Ti_Close_RSI40', 'LME_Ti_Close_RSI54', 'LME_Ti_Close_RSI125',
+       'LME_Ti_PVT', 'LME_Ti_divPVT', 'LME_Ti_NATR14', 'LME_Ti_NATR26',
+       'LME_Ti_NATR65', 'LME_Ti_NATR125', 'LME_Ti_CCI12', 'LME_Ti_CCI26',
+       'LME_Ti_CCI40', 'LME_Ti_CCI65', 'LME_Ti_CCI125', 'LME_Ti_VBM12',
+       'LME_Ti_VBM22', 'LME_Ti_ADX14', 'LME_Ti_ADX26', 'LME_Ti_ADX40',
+       'LME_Ti_ADX54', 'LME_Ti_ADX125', 'LME_Ti_SAR'],
+      dtype='object')
+Dataset statistic: #examples
+Train: 5460 5460 5460
+9.376807 -10.54052 2.3734143 -1.6815717
+Validation: 612 612 612
+Testing: 768 768 768
+pre-processing time: 0.0017161369323730469
+the split date is 2018-07-01
+net initializing with time: 0.001046895980834961
+preparing training and testing date with time: 0.0019061565399169922
+current epoch: 1
+train loss is 0.207332
+average val loss: 0.195155, accuracy: 0.5016
+average test loss: 0.186198, accuracy: 0.5182
+case acc: 0.5625
+case acc: 0.5390625
+case acc: 0.546875
+case acc: 0.40625
+case acc: 0.5234375
+case acc: 0.53125
+top acc: 0.0238 ::: bot acc: 0.9762
+top acc: 0.0238 ::: bot acc: 0.9048
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.8810 ::: bot acc: 0.0714
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.1667 ::: bot acc: 0.8095
+current epoch: 2
+train loss is 0.166629
+average val loss: 0.147094, accuracy: 0.4886
+average test loss: 0.154677, accuracy: 0.5039
+case acc: 0.53125
+case acc: 0.484375
+case acc: 0.5546875
+case acc: 0.3984375
+case acc: 0.5390625
+case acc: 0.515625
+top acc: 0.1667 ::: bot acc: 0.8333
+top acc: 0.6905 ::: bot acc: 0.4048
+top acc: 0.0476 ::: bot acc: 1.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 0.0952 ::: bot acc: 0.9286
+top acc: 0.7857 ::: bot acc: 0.1429
+current epoch: 3
+train loss is 0.147403
+average val loss: 0.152418, accuracy: 0.4837
+average test loss: 0.142993, accuracy: 0.4974
+case acc: 0.546875
+case acc: 0.4609375
+case acc: 0.5625
+case acc: 0.3984375
+case acc: 0.5
+case acc: 0.515625
+top acc: 0.1429 ::: bot acc: 0.8571
+top acc: 0.1667 ::: bot acc: 0.5952
+top acc: 0.0476 ::: bot acc: 1.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 0.0238 ::: bot acc: 0.9048
+top acc: 0.8571 ::: bot acc: 0.0952
+current epoch: 4
+train loss is 0.141523
+average val loss: 0.143157, accuracy: 0.4935
+average test loss: 0.136882, accuracy: 0.5208
+case acc: 0.5546875
+case acc: 0.53125
+case acc: 0.5625
+case acc: 0.3984375
+case acc: 0.53125
+case acc: 0.546875
+top acc: 0.0714 ::: bot acc: 0.9048
+top acc: 0.0714 ::: bot acc: 0.8810
+top acc: 0.0476 ::: bot acc: 1.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 0.0238 ::: bot acc: 0.9524
+top acc: 0.7143 ::: bot acc: 0.2143
+current epoch: 5
+train loss is 0.134433
+average val loss: 0.142194, accuracy: 0.4869
+average test loss: 0.136742, accuracy: 0.5130
+case acc: 0.5546875
+case acc: 0.53125
+case acc: 0.5625
+case acc: 0.3828125
+case acc: 0.5390625
+case acc: 0.5078125
+top acc: 0.0952 ::: bot acc: 0.9286
+top acc: 0.0476 ::: bot acc: 0.8810
+top acc: 0.0476 ::: bot acc: 1.0000
+top acc: 0.9524 ::: bot acc: 0.0000
+top acc: 0.0238 ::: bot acc: 1.0000
+top acc: 0.5476 ::: bot acc: 0.2857
+current epoch: 6
+train loss is 0.131526
+average val loss: 0.138521, accuracy: 0.4902
+average test loss: 0.134681, accuracy: 0.5013
+case acc: 0.5390625
+case acc: 0.4765625
+case acc: 0.578125
+case acc: 0.3984375
+case acc: 0.4921875
+case acc: 0.5234375
+top acc: 0.2381 ::: bot acc: 0.7619
+top acc: 0.1429 ::: bot acc: 0.6905
+top acc: 0.1429 ::: bot acc: 0.9762
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 0.1429 ::: bot acc: 0.7857
+top acc: 0.8571 ::: bot acc: 0.0952
+current epoch: 7
+train loss is 0.129480
+average val loss: 0.138043, accuracy: 0.4918
+average test loss: 0.132233, accuracy: 0.4987
+case acc: 0.5625
+case acc: 0.5078125
+case acc: 0.546875
+case acc: 0.3828125
+case acc: 0.4921875
+case acc: 0.5
+top acc: 0.1429 ::: bot acc: 0.8810
+top acc: 0.0714 ::: bot acc: 0.7857
+top acc: 0.0476 ::: bot acc: 0.9762
+top acc: 0.8095 ::: bot acc: 0.1429
+top acc: 0.0714 ::: bot acc: 0.8333
+top acc: 0.4524 ::: bot acc: 0.3810
+current epoch: 8
+train loss is 0.127547
+average val loss: 0.137241, accuracy: 0.4951
+average test loss: 0.131402, accuracy: 0.5091
+case acc: 0.546875
+case acc: 0.5390625
+case acc: 0.5390625
+case acc: 0.421875
+case acc: 0.5
+case acc: 0.5078125
+top acc: 0.1429 ::: bot acc: 0.8571
+top acc: 0.0714 ::: bot acc: 0.8810
+top acc: 0.0238 ::: bot acc: 0.9762
+top acc: 0.6190 ::: bot acc: 0.2857
+top acc: 0.0476 ::: bot acc: 0.8333
+top acc: 0.3095 ::: bot acc: 0.5238
+current epoch: 9
+train loss is 0.126437
+average val loss: 0.136063, accuracy: 0.4951
+average test loss: 0.130668, accuracy: 0.4961
+case acc: 0.4921875
+case acc: 0.4921875
+case acc: 0.5703125
+case acc: 0.4140625
+case acc: 0.5
+case acc: 0.5078125
+top acc: 0.1429 ::: bot acc: 0.7143
+top acc: 0.0952 ::: bot acc: 0.7619
+top acc: 0.1190 ::: bot acc: 0.9762
+top acc: 0.7619 ::: bot acc: 0.2143
+top acc: 0.1667 ::: bot acc: 0.7143
+top acc: 0.5714 ::: bot acc: 0.3095
+current epoch: 10
+train loss is 0.126065
+average val loss: 0.134400, accuracy: 0.4853
+average test loss: 0.129726, accuracy: 0.4987
+case acc: 0.4921875
+case acc: 0.453125
+case acc: 0.5859375
+case acc: 0.3984375
+case acc: 0.4921875
+case acc: 0.5703125
+top acc: 0.2619 ::: bot acc: 0.6429
+top acc: 0.1667 ::: bot acc: 0.6667
+top acc: 0.3333 ::: bot acc: 0.8810
+top acc: 0.8095 ::: bot acc: 0.1429
+top acc: 0.3095 ::: bot acc: 0.5714
+top acc: 0.7143 ::: bot acc: 0.2619
+current epoch: 11
+train loss is 0.124042
+average val loss: 0.134199, accuracy: 0.4951
+average test loss: 0.129142, accuracy: 0.5169
+case acc: 0.546875
+case acc: 0.4921875
+case acc: 0.578125
+case acc: 0.5
+case acc: 0.4765625
+case acc: 0.5078125
+top acc: 0.1667 ::: bot acc: 0.8095
+top acc: 0.1190 ::: bot acc: 0.7381
+top acc: 0.1905 ::: bot acc: 0.9762
+top acc: 0.5000 ::: bot acc: 0.4524
+top acc: 0.2143 ::: bot acc: 0.6429
+top acc: 0.3333 ::: bot acc: 0.5000
+current epoch: 12
+train loss is 0.123269
+average val loss: 0.132994, accuracy: 0.5033
+average test loss: 0.128964, accuracy: 0.5195
+case acc: 0.53125
+case acc: 0.4765625
+case acc: 0.5625
+case acc: 0.5234375
+case acc: 0.5078125
+case acc: 0.515625
+top acc: 0.1905 ::: bot acc: 0.7381
+top acc: 0.1190 ::: bot acc: 0.7143
+top acc: 0.1905 ::: bot acc: 0.9524
+top acc: 0.6667 ::: bot acc: 0.4048
+top acc: 0.2857 ::: bot acc: 0.6190
+top acc: 0.4286 ::: bot acc: 0.4048
+current epoch: 13
+train loss is 0.124045
+average val loss: 0.132838, accuracy: 0.4886
+average test loss: 0.128782, accuracy: 0.5078
+case acc: 0.4765625
+case acc: 0.46875
+case acc: 0.578125
+case acc: 0.484375
+case acc: 0.5078125
+case acc: 0.53125
+top acc: 0.1905 ::: bot acc: 0.6667
+top acc: 0.1667 ::: bot acc: 0.7143
+top acc: 0.2619 ::: bot acc: 0.9286
+top acc: 0.6667 ::: bot acc: 0.4048
+top acc: 0.3571 ::: bot acc: 0.5714
+top acc: 0.5714 ::: bot acc: 0.3810
+current epoch: 14
+train loss is 0.123292
+average val loss: 0.133550, accuracy: 0.4853
+average test loss: 0.128655, accuracy: 0.5091
+case acc: 0.5078125
+case acc: 0.4609375
+case acc: 0.5859375
+case acc: 0.4453125
+case acc: 0.5390625
+case acc: 0.515625
+top acc: 0.3095 ::: bot acc: 0.6667
+top acc: 0.2381 ::: bot acc: 0.7143
+top acc: 0.3571 ::: bot acc: 0.8571
+top acc: 0.6429 ::: bot acc: 0.3810
+top acc: 0.4524 ::: bot acc: 0.5476
+top acc: 0.6190 ::: bot acc: 0.2857
+current epoch: 15
+train loss is 0.123732
+average val loss: 0.133170, accuracy: 0.4869
+average test loss: 0.128334, accuracy: 0.4987
+case acc: 0.484375
+case acc: 0.4765625
+case acc: 0.578125
+case acc: 0.40625
+case acc: 0.546875
+case acc: 0.5
+top acc: 0.2619 ::: bot acc: 0.6667
+top acc: 0.2619 ::: bot acc: 0.7143
+top acc: 0.3571 ::: bot acc: 0.8333
+top acc: 0.5476 ::: bot acc: 0.3571
+top acc: 0.5000 ::: bot acc: 0.5000
+top acc: 0.5714 ::: bot acc: 0.3095
+current epoch: 16
+train loss is 0.123051
+average val loss: 0.133829, accuracy: 0.4820
+average test loss: 0.127950, accuracy: 0.5156
+case acc: 0.4921875
+case acc: 0.484375
+case acc: 0.6015625
+case acc: 0.4765625
+case acc: 0.5234375
+case acc: 0.515625
+top acc: 0.2143 ::: bot acc: 0.7143
+top acc: 0.2143 ::: bot acc: 0.7143
+top acc: 0.3571 ::: bot acc: 0.8810
+top acc: 0.3810 ::: bot acc: 0.5238
+top acc: 0.4524 ::: bot acc: 0.5000
+top acc: 0.4524 ::: bot acc: 0.5000
+current epoch: 17
+train loss is 0.122695
+average val loss: 0.133770, accuracy: 0.4853
+average test loss: 0.127625, accuracy: 0.5430
+case acc: 0.5390625
+case acc: 0.515625
+case acc: 0.5859375
+case acc: 0.5546875
+case acc: 0.5546875
+case acc: 0.5078125
+top acc: 0.1190 ::: bot acc: 0.8571
+top acc: 0.1429 ::: bot acc: 0.8095
+top acc: 0.2143 ::: bot acc: 0.9286
+top acc: 0.2143 ::: bot acc: 0.7143
+top acc: 0.4048 ::: bot acc: 0.6429
+top acc: 0.3095 ::: bot acc: 0.5952
+current epoch: 18
+train loss is 0.121937
+average val loss: 0.132878, accuracy: 0.4951
+average test loss: 0.127372, accuracy: 0.5443
+case acc: 0.5546875
+case acc: 0.5546875
+case acc: 0.5546875
+case acc: 0.546875
+case acc: 0.5390625
+case acc: 0.515625
+top acc: 0.0952 ::: bot acc: 0.9286
+top acc: 0.0714 ::: bot acc: 0.9048
+top acc: 0.1190 ::: bot acc: 0.9762
+top acc: 0.1429 ::: bot acc: 0.7857
+top acc: 0.3095 ::: bot acc: 0.7143
+top acc: 0.1667 ::: bot acc: 0.7857
+current epoch: 19
+train loss is 0.121438
+average val loss: 0.133118, accuracy: 0.4869
+average test loss: 0.127547, accuracy: 0.5417
+case acc: 0.5546875
+case acc: 0.53125
+case acc: 0.5625
+case acc: 0.5546875
+case acc: 0.546875
+case acc: 0.5
+top acc: 0.2143 ::: bot acc: 0.8095
+top acc: 0.0476 ::: bot acc: 0.8810
+top acc: 0.1190 ::: bot acc: 0.9762
+top acc: 0.0476 ::: bot acc: 0.8571
+top acc: 0.3095 ::: bot acc: 0.7143
+top acc: 0.2143 ::: bot acc: 0.7381
+current epoch: 20
+train loss is 0.121853
+average val loss: 0.133095, accuracy: 0.4739
+average test loss: 0.127856, accuracy: 0.5312
+case acc: 0.5078125
+case acc: 0.4609375
+case acc: 0.6015625
+case acc: 0.5390625
+case acc: 0.546875
+case acc: 0.53125
+top acc: 0.4286 ::: bot acc: 0.5952
+top acc: 0.2381 ::: bot acc: 0.6667
+top acc: 0.3571 ::: bot acc: 0.8571
+top acc: 0.1905 ::: bot acc: 0.6905
+top acc: 0.3571 ::: bot acc: 0.6429
+top acc: 0.5476 ::: bot acc: 0.4286
+current epoch: 21
+train loss is 0.121304
+average val loss: 0.134736, accuracy: 0.4967
+average test loss: 0.130025, accuracy: 0.4622
+case acc: 0.453125
+case acc: 0.3671875
+case acc: 0.46875
+case acc: 0.40625
+case acc: 0.546875
+case acc: 0.53125
+top acc: 0.8095 ::: bot acc: 0.2143
+top acc: 0.7381 ::: bot acc: 0.0714
+top acc: 0.7619 ::: bot acc: 0.2143
+top acc: 0.7143 ::: bot acc: 0.2143
+top acc: 0.7619 ::: bot acc: 0.3333
+top acc: 0.7619 ::: bot acc: 0.1667
+current epoch: 22
+train loss is 0.122596
+average val loss: 0.137038, accuracy: 0.4755
+average test loss: 0.131933, accuracy: 0.4596
+case acc: 0.4765625
+case acc: 0.3984375
+case acc: 0.4375
+case acc: 0.3984375
+case acc: 0.4921875
+case acc: 0.5546875
+top acc: 0.8333 ::: bot acc: 0.2857
+top acc: 0.8571 ::: bot acc: 0.0476
+top acc: 0.8810 ::: bot acc: 0.0238
+top acc: 0.9524 ::: bot acc: 0.0476
+top acc: 0.8333 ::: bot acc: 0.1429
+top acc: 0.8810 ::: bot acc: 0.1429
+current epoch: 23
+train loss is 0.123844
+average val loss: 0.134007, accuracy: 0.5049
+average test loss: 0.128805, accuracy: 0.4831
+case acc: 0.5390625
+case acc: 0.4453125
+case acc: 0.4765625
+case acc: 0.4375
+case acc: 0.515625
+case acc: 0.484375
+top acc: 0.1429 ::: bot acc: 0.8333
+top acc: 0.3095 ::: bot acc: 0.5952
+top acc: 0.8095 ::: bot acc: 0.2143
+top acc: 0.5952 ::: bot acc: 0.3571
+top acc: 0.7381 ::: bot acc: 0.2857
+top acc: 0.3333 ::: bot acc: 0.5476
+current epoch: 24
+train loss is 0.125192
+average val loss: 0.136435, accuracy: 0.5180
+average test loss: 0.132584, accuracy: 0.5482
+case acc: 0.5625
+case acc: 0.578125
+case acc: 0.546875
+case acc: 0.5859375
+case acc: 0.53125
+case acc: 0.484375
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0238 ::: bot acc: 0.9762
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0238 ::: bot acc: 0.9286
+top acc: 0.2143 ::: bot acc: 0.7619
+top acc: 0.0000 ::: bot acc: 0.9762
+current epoch: 25
+train loss is 0.127825
+average val loss: 0.143650, accuracy: 0.5147
+average test loss: 0.140643, accuracy: 0.5482
+case acc: 0.5625
+case acc: 0.578125
+case acc: 0.546875
+case acc: 0.6015625
+case acc: 0.515625
+case acc: 0.484375
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0238 ::: bot acc: 0.9524
+top acc: 0.0000 ::: bot acc: 1.0000
+current epoch: 26
+train loss is 0.132732
+average val loss: 0.133000, accuracy: 0.4837
+average test loss: 0.128331, accuracy: 0.5417
+case acc: 0.5
+case acc: 0.546875
+case acc: 0.5546875
+case acc: 0.59375
+case acc: 0.515625
+case acc: 0.5390625
+top acc: 0.6667 ::: bot acc: 0.4762
+top acc: 0.0476 ::: bot acc: 0.9048
+top acc: 0.0952 ::: bot acc: 0.9762
+top acc: 0.0952 ::: bot acc: 0.9286
+top acc: 0.3810 ::: bot acc: 0.6429
+top acc: 0.5476 ::: bot acc: 0.4048
+current epoch: 27
+train loss is 0.127751
+average val loss: 0.145380, accuracy: 0.4755
+average test loss: 0.140292, accuracy: 0.4518
+case acc: 0.4375
+case acc: 0.4296875
+case acc: 0.4609375
+case acc: 0.3984375
+case acc: 0.46875
+case acc: 0.515625
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 1.0000 ::: bot acc: 0.0238
+top acc: 0.9286 ::: bot acc: 0.0000
+top acc: 1.0000 ::: bot acc: 0.0000
+top acc: 0.9524 ::: bot acc: 0.0238
+top acc: 1.0000 ::: bot acc: 0.0000
+current epoch: 28
+train loss is 0.129414
+average val loss: 0.135066, accuracy: 0.4755
+average test loss: 0.129136, accuracy: 0.4831
+case acc: 0.5
+case acc: 0.4296875
+case acc: 0.53125
+case acc: 0.375
+case acc: 0.515625
+case acc: 0.546875
+top acc: 0.7381 ::: bot acc: 0.3810
+top acc: 0.6905 ::: bot acc: 0.2619
+top acc: 0.6905 ::: bot acc: 0.3571
+top acc: 0.4048 ::: bot acc: 0.4048
+top acc: 0.5476 ::: bot acc: 0.4762
+top acc: 0.5952 ::: bot acc: 0.3571
+current epoch: 29
+train loss is 0.123360
+average val loss: 0.134397, accuracy: 0.5114
+average test loss: 0.129064, accuracy: 0.5456
+case acc: 0.5625
+case acc: 0.546875
+case acc: 0.5390625
+case acc: 0.6015625
+case acc: 0.5390625
+case acc: 0.484375
+top acc: 0.0000 ::: bot acc: 1.0000
+top acc: 0.0476 ::: bot acc: 0.9286
+top acc: 0.0476 ::: bot acc: 0.9524
+top acc: 0.0238 ::: bot acc: 0.9762
+top acc: 0.2143 ::: bot acc: 0.7857
+top acc: 0.0000 ::: bot acc: 0.9762
+current epoch: 30
+train loss is 0.120290
+average val loss: 0.132793, accuracy: 0.5163
+average test loss: 0.127668, accuracy: 0.5352
+case acc: 0.5390625
+case acc: 0.5078125
+case acc: 0.5703125
+case acc: 0.5859375
+case acc: 0.5
+case acc: 0.5078125
+top acc: 0.0476 ::: bot acc: 0.9286
+top acc: 0.1190 ::: bot acc: 0.8095
+top acc: 0.2381 ::: bot acc: 0.9048
+top acc: 0.1667 ::: bot acc: 0.7857
+top acc: 0.4048 ::: bot acc: 0.5476
+top acc: 0.1429 ::: bot acc: 0.8095
+current epoch: 31
+train loss is 0.120202
+average val loss: 0.133194, accuracy: 0.4820
+average test loss: 0.127901, accuracy: 0.4935
+case acc: 0.453125
+case acc: 0.5234375
+case acc: 0.5234375
+case acc: 0.4140625
+case acc: 0.515625
+case acc: 0.53125
+top acc: 0.2857 ::: bot acc: 0.5714
+top acc: 0.3095 ::: bot acc: 0.7619
+top acc: 0.3810 ::: bot acc: 0.6667
+top acc: 0.3810 ::: bot acc: 0.4048
+top acc: 0.6190 ::: bot acc: 0.4048
+top acc: 0.4286 ::: bot acc: 0.5000
+current epoch: 32
+train loss is 0.120171
+average val loss: 0.132688, accuracy: 0.5131
+average test loss: 0.127441, accuracy: 0.5104
+case acc: 0.5
+case acc: 0.4765625
+case acc: 0.53125
+case acc: 0.53125
+case acc: 0.5078125
+case acc: 0.515625
+top acc: 0.1667 ::: bot acc: 0.7857
+top acc: 0.1905 ::: bot acc: 0.7857
+top acc: 0.3333 ::: bot acc: 0.7381
+top acc: 0.2381 ::: bot acc: 0.6667
+top acc: 0.4048 ::: bot acc: 0.5476
+top acc: 0.2857 ::: bot acc: 0.6429
+current epoch: 33
+train loss is 0.119923
+average val loss: 0.132603, accuracy: 0.5180
+average test loss: 0.127398, accuracy: 0.5195
+case acc: 0.5
+case acc: 0.484375
+case acc: 0.5625
+case acc: 0.5234375
+case acc: 0.515625
+case acc: 0.53125
+top acc: 0.1905 ::: bot acc: 0.7619
+top acc: 0.2143 ::: bot acc: 0.7857
+top acc: 0.3571 ::: bot acc: 0.7857
+top acc: 0.1667 ::: bot acc: 0.7143
+top acc: 0.4048 ::: bot acc: 0.5714
+top acc: 0.2619 ::: bot acc: 0.7619
+current epoch: 34
+train loss is 0.118326
+average val loss: 0.132662, accuracy: 0.5180
+average test loss: 0.127447, accuracy: 0.5234
+case acc: 0.5
+case acc: 0.484375
+case acc: 0.5625
+case acc: 0.5625
+case acc: 0.53125
+case acc: 0.5
+top acc: 0.1667 ::: bot acc: 0.8095
+top acc: 0.1190 ::: bot acc: 0.8095
+top acc: 0.3095 ::: bot acc: 0.8333
+top acc: 0.1429 ::: bot acc: 0.7619
+top acc: 0.3810 ::: bot acc: 0.6190
+top acc: 0.1905 ::: bot acc: 0.7619
+current epoch: 35
+train loss is 0.118222
+average val loss: 0.132992, accuracy: 0.4951
+average test loss: 0.127776, accuracy: 0.5143
+case acc: 0.5
+case acc: 0.5
+case acc: 0.5390625
+case acc: 0.515625
+case acc: 0.53125
+case acc: 0.5
+top acc: 0.2143 ::: bot acc: 0.7381
+top acc: 0.1667 ::: bot acc: 0.8095
+top acc: 0.3333 ::: bot acc: 0.7619
+top acc: 0.1905 ::: bot acc: 0.6429
+top acc: 0.3810 ::: bot acc: 0.6190
+top acc: 0.3095 ::: bot acc: 0.6429
+current epoch: 36
+train loss is 0.119218
+average val loss: 0.133362, accuracy: 0.5065
+average test loss: 0.128072, accuracy: 0.5013
+case acc: 0.46875
+case acc: 0.4921875
+case acc: 0.5234375
+case acc: 0.4921875
+case acc: 0.5390625
+case acc: 0.4921875
+top acc: 0.2143 ::: bot acc: 0.6905
+top acc: 0.1905 ::: bot acc: 0.8095
+top acc: 0.3571 ::: bot acc: 0.7143
+top acc: 0.2381 ::: bot acc: 0.6429
+top acc: 0.4048 ::: bot acc: 0.6190
+top acc: 0.3095 ::: bot acc: 0.5952
+current epoch: 37
+train loss is 0.117609
+average val loss: 0.133392, accuracy: 0.5163
+average test loss: 0.128115, accuracy: 0.5000
+case acc: 0.5078125
+case acc: 0.484375
+case acc: 0.5078125
+case acc: 0.484375
+case acc: 0.5234375
+case acc: 0.4921875
+top acc: 0.2381 ::: bot acc: 0.7619
+top acc: 0.1429 ::: bot acc: 0.8095
+top acc: 0.3333 ::: bot acc: 0.7143
+top acc: 0.1667 ::: bot acc: 0.6429
+top acc: 0.3810 ::: bot acc: 0.5952
+top acc: 0.2857 ::: bot acc: 0.6667
+current epoch: 38
+train loss is 0.118549
+average val loss: 0.134096, accuracy: 0.5212
+average test loss: 0.128641, accuracy: 0.5286
+case acc: 0.5234375
+case acc: 0.53125
+case acc: 0.5390625
+case acc: 0.5390625
+case acc: 0.5234375
+case acc: 0.515625
+top acc: 0.1429 ::: bot acc: 0.8333
+top acc: 0.1190 ::: bot acc: 0.8333
+top acc: 0.1905 ::: bot acc: 0.8810
+top acc: 0.1667 ::: bot acc: 0.7143
+top acc: 0.3333 ::: bot acc: 0.6190
+top acc: 0.2619 ::: bot acc: 0.7619
+current epoch: 39
+train loss is 0.118574
+average val loss: 0.134868, accuracy: 0.5000
+average test loss: 0.128811, accuracy: 0.5182
+case acc: 0.515625
+case acc: 0.5234375
+case acc: 0.5234375
+case acc: 0.53125
+case acc: 0.53125
+case acc: 0.484375
+top acc: 0.1667 ::: bot acc: 0.8333
+top acc: 0.0952 ::: bot acc: 0.8333
+top acc: 0.1905 ::: bot acc: 0.8571
+top acc: 0.1667 ::: bot acc: 0.7143
+top acc: 0.3571 ::: bot acc: 0.6190
+top acc: 0.2619 ::: bot acc: 0.6190
+current epoch: 40
+train loss is 0.118267
+average val loss: 0.134935, accuracy: 0.5065
+average test loss: 0.128860, accuracy: 0.5260
+case acc: 0.53125
+case acc: 0.5234375
+case acc: 0.5390625
+case acc: 0.5390625
+case acc: 0.5234375
+case acc: 0.5
+top acc: 0.1905 ::: bot acc: 0.8095
+top acc: 0.0952 ::: bot acc: 0.8571
+top acc: 0.2143 ::: bot acc: 0.8571
+top acc: 0.1667 ::: bot acc: 0.7143
+top acc: 0.3571 ::: bot acc: 0.6190
+top acc: 0.3095 ::: bot acc: 0.6190
+current epoch: 41
+train loss is 0.117797
+average val loss: 0.135086, accuracy: 0.5098
+average test loss: 0.128590, accuracy: 0.5234
+case acc: 0.5234375
+case acc: 0.5078125
+case acc: 0.5234375
+case acc: 0.5234375
+case acc: 0.53125
+case acc: 0.53125
+top acc: 0.1667 ::: bot acc: 0.7857
+top acc: 0.0952 ::: bot acc: 0.8333
+top acc: 0.2619 ::: bot acc: 0.7857
+top acc: 0.1667 ::: bot acc: 0.6667
+top acc: 0.3333 ::: bot acc: 0.6667
+top acc: 0.3333 ::: bot acc: 0.7143
+current epoch: 42
+train loss is 0.117367
+average val loss: 0.135329, accuracy: 0.5098
+average test loss: 0.128294, accuracy: 0.5352
+case acc: 0.546875
+case acc: 0.515625
+case acc: 0.5234375
+case acc: 0.546875
+case acc: 0.53125
+case acc: 0.546875
+top acc: 0.1667 ::: bot acc: 0.8571
+top acc: 0.0714 ::: bot acc: 0.8810
+top acc: 0.2619 ::: bot acc: 0.7857
+top acc: 0.1667 ::: bot acc: 0.7619
+top acc: 0.3333 ::: bot acc: 0.6667
+top acc: 0.3095 ::: bot acc: 0.8095
+current epoch: 43
+train loss is 0.117938
+average val loss: 0.135247, accuracy: 0.5114
+average test loss: 0.128084, accuracy: 0.5430
+case acc: 0.546875
+case acc: 0.5234375
+case acc: 0.546875
+case acc: 0.546875
+case acc: 0.53125
+case acc: 0.5625
+top acc: 0.1667 ::: bot acc: 0.8571
+top acc: 0.0714 ::: bot acc: 0.8810
+top acc: 0.2857 ::: bot acc: 0.8095
+top acc: 0.1667 ::: bot acc: 0.7619
+top acc: 0.3333 ::: bot acc: 0.6667
+top acc: 0.3571 ::: bot acc: 0.7381
+current epoch: 44
+train loss is 0.117246
+average val loss: 0.135756, accuracy: 0.5098
+average test loss: 0.128346, accuracy: 0.5326
+case acc: 0.5390625
+case acc: 0.53125
+case acc: 0.53125
+case acc: 0.5234375
+case acc: 0.5234375
+case acc: 0.546875
+top acc: 0.2143 ::: bot acc: 0.8333
+top acc: 0.0714 ::: bot acc: 0.8810
+top acc: 0.2619 ::: bot acc: 0.8095
+top acc: 0.1429 ::: bot acc: 0.7143
+top acc: 0.3333 ::: bot acc: 0.6429
+top acc: 0.3333 ::: bot acc: 0.7381
+current epoch: 45
+train loss is 0.116804
+average val loss: 0.135211, accuracy: 0.5082
+average test loss: 0.128284, accuracy: 0.5339
+case acc: 0.546875
+case acc: 0.546875
+case acc: 0.5390625
+case acc: 0.4921875
+case acc: 0.5234375
+case acc: 0.5546875
+top acc: 0.1905 ::: bot acc: 0.8333
+top acc: 0.1190 ::: bot acc: 0.8333
+top acc: 0.3095 ::: bot acc: 0.7857
+top acc: 0.1667 ::: bot acc: 0.6905
+top acc: 0.3333 ::: bot acc: 0.6667
+top acc: 0.3571 ::: bot acc: 0.7143
+current epoch: 46
+train loss is 0.116464
+average val loss: 0.136121, accuracy: 0.5049
+average test loss: 0.128857, accuracy: 0.5286
+case acc: 0.5390625
+case acc: 0.53125
+case acc: 0.5390625
+case acc: 0.5234375
+case acc: 0.515625
+case acc: 0.5234375
+top acc: 0.1190 ::: bot acc: 0.8571
+top acc: 0.0476 ::: bot acc: 0.8810
+top acc: 0.1905 ::: bot acc: 0.8571
+top acc: 0.1190 ::: bot acc: 0.7381
+top acc: 0.2857 ::: bot acc: 0.6905
+top acc: 0.2381 ::: bot acc: 0.8095
+current epoch: 47
+train loss is 0.117393
+average val loss: 0.136427, accuracy: 0.5114
+average test loss: 0.128716, accuracy: 0.5286
+case acc: 0.53125
+case acc: 0.5390625
+case acc: 0.5234375
+case acc: 0.5078125
+case acc: 0.53125
+case acc: 0.5390625
+top acc: 0.0952 ::: bot acc: 0.8571
+top acc: 0.0476 ::: bot acc: 0.9048
+top acc: 0.1905 ::: bot acc: 0.8095
+top acc: 0.1190 ::: bot acc: 0.7381
+top acc: 0.3095 ::: bot acc: 0.6905
+top acc: 0.2619 ::: bot acc: 0.8095
+current epoch: 48
+train loss is 0.117090
+average val loss: 0.136788, accuracy: 0.5229
+average test loss: 0.128938, accuracy: 0.5339
+case acc: 0.546875
+case acc: 0.546875
+case acc: 0.5390625
+case acc: 0.5234375
+case acc: 0.515625
+case acc: 0.53125
+top acc: 0.1429 ::: bot acc: 0.8571
+top acc: 0.0476 ::: bot acc: 0.9286
+top acc: 0.2143 ::: bot acc: 0.8333
+top acc: 0.1190 ::: bot acc: 0.7381
+top acc: 0.2857 ::: bot acc: 0.7143
+top acc: 0.2619 ::: bot acc: 0.8095
+current epoch: 49
+train loss is 0.116595
+average val loss: 0.137105, accuracy: 0.5180
+average test loss: 0.128934, accuracy: 0.5365
+case acc: 0.53125
+case acc: 0.5390625
+case acc: 0.546875
+case acc: 0.53125
+case acc: 0.5234375
+case acc: 0.546875
+top acc: 0.1429 ::: bot acc: 0.8333
+top acc: 0.0476 ::: bot acc: 0.9048
+top acc: 0.2381 ::: bot acc: 0.8333
+top acc: 0.0952 ::: bot acc: 0.7857
+top acc: 0.2857 ::: bot acc: 0.7143
+top acc: 0.2857 ::: bot acc: 0.8095
+current epoch: 50
+train loss is 0.117158
+average val loss: 0.137216, accuracy: 0.5147
+average test loss: 0.128594, accuracy: 0.5182
+case acc: 0.4921875
+case acc: 0.53125
+case acc: 0.5546875
+case acc: 0.4921875
+case acc: 0.5078125
+case acc: 0.53125
+top acc: 0.2143 ::: bot acc: 0.7619
+top acc: 0.1429 ::: bot acc: 0.8810
+top acc: 0.3333 ::: bot acc: 0.7857
+top acc: 0.1667 ::: bot acc: 0.6905
+top acc: 0.3095 ::: bot acc: 0.6429
+top acc: 0.3571 ::: bot acc: 0.7143

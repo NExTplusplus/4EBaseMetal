@@ -1,0 +1,4 @@
+[
+  "code/feature_pytest/pass_test.py::test_one",
+  "code/feature_pytest/pass_test.py::test_two"
+]
