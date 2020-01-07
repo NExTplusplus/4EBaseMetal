@@ -81,7 +81,7 @@ if __name__ == '__main__':
       help='whether to save loss results'
   )
   args = parser.parse_args()
-  model = ALSTM_online(lag = args.lag, horizon = args.steps, version = args.version, gt = args.ground_truth, date = date, source = args.source, path =args.config)
+  model = ALSTM_online(lag = args.lag, horizon = args.steps, version = args.version, gt = args.ground_truth, date = args.date, source = args.source, path =args.config)
   if args.action=="tune":
     model.choose_parameter(log = args.log, script = args.script)
   elif args.action=='train':

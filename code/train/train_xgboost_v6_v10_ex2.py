@@ -128,8 +128,12 @@ if __name__ == '__main__':
             columns = temp.columns.values.tolist()
             time_series = time_series[columns]
             #generate parameters for load data
-            length = 5
-            split_dates = rolling_half_year("2009-07-01","2017-07-01",length)
+            if args.steps  <= 5 :
+                length = 5
+                split_dates = rolling_half_year("2009-07-01","2019-07-01",length)
+            else:
+                length = 4
+                split_dates = rolling_half_year("2010-07-01","2019-07-01",length)
             split_dates  =  split_dates[:]
             importance_list = []
             version_params=generate_version_params(args.version)
