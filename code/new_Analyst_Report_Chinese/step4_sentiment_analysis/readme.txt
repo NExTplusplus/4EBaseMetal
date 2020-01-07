@@ -20,6 +20,6 @@ P.S. The two date you input will be include in the predict period.
 #reproduce the result of 2017 and 2018
 P.S. If you want to reproduce the result in your server, you need to do the following operations for 4 half, that is to say, you need to run 4 times.
 1)open the terminal, and change the directory to step4_sentiment_analysis
-2)python main_function.py 2017-01-01 2019-06-30 reproduction
+2)python main_function.py 2017-01-01 2017-06-30 reproduction
 ############problems############
 As the Zn is generated from the 4E server, so it may have some difference compared with the local one.
