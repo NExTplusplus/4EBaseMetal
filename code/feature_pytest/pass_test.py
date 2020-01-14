@@ -531,3 +531,13 @@ def test_two():
                             assert ((X_va == true_data_x_va).all())
                             assert ((y_va == true_data_y_va).all())     
     
+def test_three():
+
+
+
+
+
+
+
+
+    

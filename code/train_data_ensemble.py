@@ -54,6 +54,7 @@ if __name__ == '__main__':
                 #path = os.getcwd()
                 #print(path)
                 new_date = "".join(date.split("-"))
+                
                 if ground_truth=="LME_Al_Spot":
                     indicator = pd.read_csv('data/indicator/Al_'+new_date+"_"+str(horizon)+".csv")
                 elif ground_truth=="LME_Co_Spot":
@@ -67,6 +68,7 @@ if __name__ == '__main__':
                 else:
                     indicator = pd.read_csv('data/indicator/Zn_'+new_date+"_"+str(horizon)+".csv")
                 indicator_prediction = indicator[['date','discrete_score']][indicator['discrete_score']!=0.0]
+                
                 #print(indicator_prediction)
                 #print(indicator_prediction[indicator_prediction['date']=='2017-01-04']['discrete_score'].values[0])
                 indicator_list = list(indicator_prediction['date'])
@@ -93,22 +95,24 @@ if __name__ == '__main__':
                   lr_ensemble = ensemble.single_model('lr')
                 final_list = []
                 for i, label_date in enumerate(date_list):
-                  #if label_date not in indicator_list:
+                  if label_date not in indicator_list:
                     if alstm_ensemble[i]+xgb_ensemble[i]+lr_ensemble[i]>=2:
                       final_list.append(1)
                     else:
                       final_list.append(0)
-                  #else:
-                  #  if indicator_prediction[indicator_prediction['date']==label_date]['discrete_score'].values[0]==-1:
-                  #    if alstm_ensemble[i]+xgb_ensemble[i]+lr_ensemble[i]>=2:
-                  #      final_list.append(1)
-                  #    else:
-                  #      final_list.append(0)
-                  #  else:
-                  #    if alstm_ensemble[i]+xgb_ensemble[i]+lr_ensemble[i]>=1:
-                  #      final_list.append(1)
-                  #    else:
-                  #      final_list.append(0)
+                #np.savetxt("/Users/changjiangeng/Desktop/4EBaseMetal/"+ground_truth+"_"+date+"_"+str(horizon)+"_"+"predict_label.txt",final_list)
+                  else:
+                    if indicator_prediction[indicator_prediction['date']==label_date]['discrete_score'].values[0]==-1:
+                      if alstm_ensemble[i]+xgb_ensemble[i]+lr_ensemble[i]>=2:
+                        final_list.append(1)
+                      else:
+                        final_list.append(0)
+                    else:
+                      if alstm_ensemble[i]+xgb_ensemble[i]+lr_ensemble[i]>=1:
+                        final_list.append(1)
+                      else:
+                        final_list.append(0)
+                np.savetxt("/Users/changjiangeng/Desktop/4EBaseMetal/"+ground_truth+"_"+date+"_"+str(horizon)+"_"+"predict_label.txt",final_list)
                 print("the length of the y_test is {}".format(len(final_list)))
                 print("the weight ensebmle for 4 models voting precision is {}".format(metrics.accuracy_score(label_value, final_list)))
                 print("the horizon is {}".format(horizon))
