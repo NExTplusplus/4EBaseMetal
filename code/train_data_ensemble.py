@@ -7,7 +7,7 @@ import pandas as pd
 from copy import copy
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 import warnings
-from live.ensemble_live import Ensemble_online
+from live.ensemble_live_new import Ensemble_online
 from sklearn import metrics
 
 if __name__ == '__main__':
@@ -25,7 +25,6 @@ if __name__ == '__main__':
     )
   args = parser.parse_args()
   if args.method=='single':
-    if args.model=='alstm':
       for horizon in [1,3,5]:
         for ground_truth in ["LME_Co_Spot","LME_Al_Spot","LME_Ni_Spot","LME_Ti_Spot","LME_Zi_Spot","LME_Le_Spot"]:
             for window in [5,10,15,20,25,30]:
@@ -33,9 +32,9 @@ if __name__ == '__main__':
                 y_va = pd.read_csv("data/Label/"+ground_truth+"_h"+str(horizon)+"_"+date+"_label"+".csv")
                 label = list(y_va['Label'])
                 ensemble=Ensemble_online(horizon=horizon,gt=ground_truth,date=date,single_window=window,label=label,delete_model = args.v)
-                alstm_ensemble = ensemble.single_model(args.model)
-                print("the length of the y_test is {}".format(len(alstm_ensemble)))
-                print("the weight ensebmle for weight voting beta precision is {}".format(metrics.accuracy_score(label[:], alstm_ensemble)))
+                ensemble = ensemble.single_model(args.model)
+                print("the length of the y_test is {}".format(len(ensemble)))
+                print("the weight ensebmle for weight voting beta precision is {}".format(metrics.accuracy_score(label[:], ensemble)))
                 print("the horizon is {}".format(horizon))
                 print("the window size is {}".format(window))
                 print("the metal is {}".format(ground_truth))
