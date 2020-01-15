@@ -6,6 +6,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 from sklearn import metrics
 import math
 import argparse
+from copy import copy
 
 class Ensemble_online():
 	"""
@@ -47,7 +48,6 @@ class Ensemble_online():
 			version_list = []
 			for file in file_list:
 				 if (self.gt+str(self.horizon)) in file:
-				 	print(file)
 				 	version = file.split("_")[-2]
 				 	if version not in version_list:
 				 		version_list.append(version)
@@ -59,29 +59,38 @@ class Ensemble_online():
 			final_list_1 = []
 			df = pd.DataFrame()
 			list_length = len(all_list)
-			error_list = [[]]*list_length
-			final_version_list = [[]]*list_length
+			#error_list = [[]]*list_length
+			final_version_list = []
+			error_list = []
+			for i in range(len(all_list)):
+				final_list = []
+				new_error_list = []
+				for j in range(len(all_list[0])):
+					if all_list[i][j]>0.5:
+						final_list.append(1)
+						# calculate the error
+						if self.label[j]!=1:
+							new_error_list.append(1)
+						else:
+							new_error_list.append(0)
+					else:
+						final_list.append(0)
+						# calculate the error
+						if self.label[j]!=0:
+							new_error_list.append(1)
+						else:
+							new_error_list.append(0)
+				error_list.append(new_error_list)
+				final_version_list.append(final_list)
 			for j in range(len(all_list[0])):
 				count=0
 				for i in range(list_length):
 					if all_list[i][j]>0.5:
-						final_version_list[i].append(1)
 						count+=1
-						# calculate the error
-						if self.label[j]!=1:
-							error_list[i].append(1)
-						else:
-							error_list[i].append(0)
 					else:
-						final_version_list[i].append(0)
 						count+=0
-						# calculate the error
-						if self.label[j]!=0:
-							error_list[i].append(1)
-						else:
-							error_list[i].append(0)
 				if list_length%2!=0:
-					if count>(list_length//2+1):
+					if count>=(list_length//2+1):
 						results.append(1)
 						if j < self.horizon:
 							final_list_1.append(1)
@@ -89,6 +98,15 @@ class Ensemble_online():
 						results.append(0)
 						if j < self.horizon:
 							final_list_1.append(0)
+				else:
+					if count>(list_length/2):
+						results.append(1)
+						if j < self.horizon:
+							final_list_1.append(1)
+					else:
+						results.append(0)
+						if j < self.horizon:
+							final_list_1.append(0)	
 			print("the voting result is {}".format(metrics.accuracy_score(self.label, results)))
 			#ensemble the data
 			window = 1
@@ -117,45 +135,79 @@ class Ensemble_online():
 		elif model == 'xgb':
 			length = 0
 			file_list = os.listdir("data/xgboost_folder/")
-			all_list = []
+			read_list = []
 			version_list = []
 			for file in file_list:
 				 if (self.gt+"_h"+str(self.horizon)) in file:
-				 	print(file)
 				 	version = file.split("_")[-1].split(".")[0]
 				 	if version not in version_list:
 				 		version_list.append(version)
 			version_list.sort()
 			for version in version_list:
-				data = np.loadtxt("data/xgboost_folder/"+self.gt+"_"+"h"+str(self.horizon)+"_"+self.date+"_xgboost_"+version".txt")
-				all_list.append(data)
+				#print("data/xgboost_folder/"+self.gt+"_h"+str(self.horizon)+"_"+self.date+"_xgboost_"+version+".txt")
+				data = np.loadtxt("data/xgboost_folder/"+self.gt+"_h"+str(self.horizon)+"_"+self.date+"_xgboost_"+version+".txt")
+				read_list.append(data)
+			#print(all_list)
 			results = []
 			final_list_1 = []
 			df = pd.DataFrame()
-			list_length = len(all_list)
-			error_list = [[]]*list_length
-			final_version_list = [[]]*list_length
+			list_length = len(read_list)
+			all_list = []
+			#error_list = [[]]*list_length
+			final_version_list = []
+			#print(len(self.label))
+			#print(len(read_list))
+			#print(len(read_list[0][0]))
+			for i in range(len(read_list)):
+				#print(i)
+				#print(len(all_list[1]))
+				new_list = []
+				for j in range(len(read_list[i])):
+					count_1 = 0
+					count_0 = 0
+					for item in read_list[i][j]:
+						if item > 0.5:
+							count_1+=1
+						else:
+							count_0+=1
+					if count_1>count_0:
+						#print(i)
+						new_list.append(1)
+					else:
+						new_list.append(0)
+				all_list.append(copy(new_list))
+			#print(all_list[0])
+			error_list = []
+			for i in range(len(all_list)):
+				final_list = []
+				new_error_list = []
+				for j in range(len(all_list[0])):
+					if all_list[i][j]>0.5:
+						final_list.append(1)
+						# calculate the error
+						if self.label[j]!=1:
+							new_error_list.append(1)
+						else:
+							new_error_list.append(0)
+					else:
+						final_list.append(0)
+						# calculate the error
+						if self.label[j]!=0:
+							new_error_list.append(1)
+						else:
+							new_error_list.append(0)
+				error_list.append(new_error_list)
+				final_version_list.append(final_list)
 			for j in range(len(all_list[0])):
 				count=0
 				for i in range(list_length):
 					if all_list[i][j]>0.5:
-						final_version_list[i].append(1)
 						count+=1
-						# calculate the error
-						if self.label[j]!=1:
-							error_list[i].append(1)
-						else:
-							error_list[i].append(0)
 					else:
-						final_version_list[i].append(0)
 						count+=0
-						# calculate the error
-						if self.label[j]!=0:
-							error_list[i].append(1)
-						else:
-							error_list[i].append(0)
 				if list_length%2!=0:
-					if count>(list_length//2+1):
+					#print(count)
+					if count>=(list_length//2+1):
 						results.append(1)
 						if j < self.horizon:
 							final_list_1.append(1)
@@ -163,14 +215,27 @@ class Ensemble_online():
 						results.append(0)
 						if j < self.horizon:
 							final_list_1.append(0)
-			print("the voting result is {}".format(metrics.accuracy_score(self.label, results)))			
+				else:
+					if count>(list_length/2):
+						results.append(1)
+						if j < self.horizon:
+							final_list_1.append(1)
+					else:
+						results.append(0)
+						if j < self.horizon:
+							final_list_1.append(0)
+									
+			print("the voting result is {}".format(metrics.accuracy_score(self.label, results)))
+			#print(len(error_list))			
 			window = 1
 			for i in range(self.horizon,len(self.label)):
 				result = 0
 				fenmu = 0
-				for j in range(len(error_list)):
-					error = np.sum(error_list[j][length:length+window])+1e-06
+				for j in range(list_length):
+					error = copy(np.sum(error_list[j][length:length+window]))+1e-06
+					#print(1/error)
 					fenmu+=1/error
+				#print(fenmu)
 				for j in range(len(error_list)):
 					error = np.sum(error_list[j][length:length+window])+1e-06
 					result+=((1/error)/fenmu) * final_version_list[j][i]			
@@ -184,27 +249,20 @@ class Ensemble_online():
 				else:
 					window+=1
 		elif model == "alstm":
-			version_dict = {}
-			if self.horizon==1:
-				alstm_v16_loss = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.4_30_5_4_v16_prediction.txt")
-				alstm_v16_accu = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.6_30_20_3_v16_prediction.txt")
-				alstm_v26_choose = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.6_30_20_4_v26_prediction.txt")
-				alstm_v26_accu = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.6_30_20_5_v26_prediction.txt")
-				alstm_v26_loss = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.6_20_20_3_v26_prediction.txt")
-			elif self.horizon==3:
-				alstm_v16_loss = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.4_50_10_3_v16_prediction.txt")
-				alstm_v16_accu = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.6_30_20_3_v16_prediction.txt")
-				alstm_v26_choose = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.6_30_20_3_v26_prediction.txt")
-				alstm_v26_accu = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.6_20_20_5_v26_prediction.txt")
-				alstm_v26_loss = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.6_20_20_3_v26_prediction.txt")
-			elif self.horizon==5:
-				alstm_v16_loss = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.6_30_10_3_v16_prediction.txt")
-				alstm_v16_accu = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.6_50_10_3_v16_prediction.txt")
-				alstm_v26_choose = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.6_20_5_4_v26_prediction.txt")
-				alstm_v26_accu = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.4_30_20_5_v26_prediction.txt")
-				alstm_v26_loss = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.6_20_20_3_v26_prediction.txt")								
-			ground_truths_list = ['LME_Co_Spot','LME_Al_Spot','LME_Le_Spot','LME_Ni_Spot','LME_Zi_Spot','LME_Ti_Spot']
-			all_length = len(alstm_v16_loss)
+			folder_list = os.listdir("data/ALSTM_prediction")
+			#print(folder_list)
+			read_list = []
+			for i in range(len(folder_list)):
+				single_file_path = "data/ALSTM_prediction/"+folder_list[i]
+				file_list = os.listdir(single_file_path)
+				#print(file_list)
+				for file in file_list:
+					if (str(self.date)+"_"+str(self.horizon)) in file:
+						#print(file)
+						data = np.loadtxt("data/ALSTM_prediction/"+folder_list[i]+"/"+file)
+						read_list.append(data)
+			all_length = len(read_list[0])					
+			ground_truths_list = ['LME_Co_Spot','LME_Al_Spot','LME_Le_Spot','LME_Ni_Spot','LME_Zi_Spot','LME_Ti_Spot']			
 			#print("the length of the ALSTM is {}".format(all_length))
 			metal_length = all_length/6
 			if self.gt == ground_truths_list[0]:
@@ -225,112 +283,86 @@ class Ensemble_online():
 			elif self.gt == ground_truths_list[5]:
 				start_index = 5*int(metal_length)
 				end_index = 6*int(metal_length)
-			alstm_v16_loss_metal = alstm_v16_loss[start_index:end_index]
-			version_dict['v16_loss']=alstm_v16_loss_metal
-			alstm_v16_accu_metal = alstm_v16_accu[start_index:end_index]
-			version_dict['v16_accu']=alstm_v16_accu_metal
-			alstm_v26_choose_metal = alstm_v26_choose[start_index:end_index]
-			version_dict['v26_choose']=alstm_v26_choose_metal
-			alstm_v26_accu_metal = alstm_v26_accu[start_index:end_index]
-			version_dict['v26_accu']=alstm_v26_accu_metal
-			alstm_v26_loss_metal = alstm_v26_loss[start_index:end_index]
-			version_dict['v26_loss']=alstm_v26_loss_metal
-			#print()
-			result_alstm_v16_loss_metal_error = []
-			result_alstm_v16_accu_metal_error = []
-			result_alstm_v26_choose_metal_error = []
-			result_alstm_v26_accu_metal_error = []
-			result_alstm_v26_loss_metal_error = []
+			all_list = []			
+			for item in read_list:
+				all_list.append(copy(item[start_index:end_index]))
+			#print(all_list)
 			results = []
 			final_list_1 = []
 			df = pd.DataFrame()
-			for j in range(len(alstm_v16_loss_metal)):
-				count=0        
-				gap=(len(version_dict.keys())-len(self.delete_model))//2+1
-				#print(length)
-				for key in version_dict.keys():
-					if key not in self.delete_model:
-						count+=version_dict[key][-1]
-				#print(np.sum(count))
-				if count >= gap:
-					results.append(1)
-					if j < self.horizon:
-						final_list_1.append(1)
-				  #print("done")
-				else:
-					results.append(0)
-					if j < self.horizon:
-				  		final_list_1.append(0)
-				# calculate the error
-				if self.label[j]!=alstm_v16_loss_metal[j]:
-					result_alstm_v16_loss_metal_error.append(1)
-				else:
-					result_alstm_v16_loss_metal_error.append(0)
+			list_length = len(all_list)
+			final_version_list = []
+			error_list = []
+			#print(all_list)
+			for i in range(len(all_list)):
+				final_list = []
+				new_error_list = []
+				for j in range(len(all_list[0])):
+					if all_list[i][j]==1:
+						final_list.append(1)
+						# calculate the error
+						if self.label[j]!=1:
+							new_error_list.append(1)
+						else:
+							new_error_list.append(0)
+					else:
+						final_list.append(0)
+						# calculate the error
+						if self.label[j]!=0:
+							new_error_list.append(1)
+						else:
+							new_error_list.append(0)
+				error_list.append(new_error_list)
+				final_version_list.append(final_list)
+			for j in range(len(all_list[0])):
+				count=0
 
-				if self.label[j]!=alstm_v16_accu_metal[j]:
-					result_alstm_v16_accu_metal_error.append(1)
+				for i in range(list_length):
+					if all_list[i][j]==1:
+						count+=1
+					else:
+						count+=0
+				if list_length%2!=0:
+					#print(list_length//2+1)
+					print(count)
+					if count>=(list_length//2+1):
+						results.append(1)
+						if j < self.horizon:
+							final_list_1.append(1)
+					else:
+						results.append(0)
+						if j < self.horizon:
+							final_list_1.append(0)
 				else:
-					result_alstm_v16_accu_metal_error.append(0)
-
-				if self.label[j]!=alstm_v26_choose_metal[j]:
-					result_alstm_v26_choose_metal_error.append(1)
-				else:
-					result_alstm_v26_choose_metal_error.append(0)
-
-				if self.label[j]!=alstm_v26_accu_metal[j]:
-					result_alstm_v26_accu_metal_error.append(1)
-				else:
-					result_alstm_v26_accu_metal_error.append(0)
-
-				if self.label[j]!=alstm_v26_loss_metal[j]:
-					result_alstm_v26_loss_metal_error.append(1)
-				else:
-					result_alstm_v26_loss_metal_error.append(0)
-
+					if count>(list_length/2):
+						results.append(1)
+						if j < self.horizon:
+							final_list_1.append(1)
+					else:
+						results.append(0)
+						if j < self.horizon:
+							final_list_1.append(0)
+			#print(results)
 			print("the voting result is {}".format(metrics.accuracy_score(self.label[:], results)))
 
 			window = 1
-			for i in range(self.horizon,len(alstm_v16_loss_metal)):
-				error_dict = {}
-				error_alstm_v16_loss = np.sum(result_alstm_v16_loss_metal_error[length:length+window])+1e-06
-				error_dict['v16_loss']=error_alstm_v16_loss
-				error_alstm_v16_accu = np.sum(result_alstm_v16_accu_metal_error[length:length+window])+1e-06
-				error_dict['v16_accu']=error_alstm_v16_accu
-				error_alstm_v26_choose = np.sum(result_alstm_v26_choose_metal_error[length:length+window])+1e-06
-				error_dict['v26_choose']=error_alstm_v26_choose
-				error_alstm_v26_accu = np.sum(result_alstm_v26_accu_metal_error[length:length+window])+1e-06
-				error_dict['v26_accu']=error_alstm_v26_accu
-				error_alstm_v26_loss = np.sum(result_alstm_v26_loss_metal_error[length:length+window])+1e-06
-				error_dict['v26_loss']=error_alstm_v26_loss
-
+			for i in range(self.horizon,len(self.label)):
 				result = 0
 				fenmu = 0
-				for key in error_dict.keys():
-					if key not in self.delete_model:
-						fenmu += 1/error_dict[key]
-				if 'v16_loss' not in self.delete_model: 
-					weight_alstm_v16_loss = float(1/error_alstm_v16_loss)/fenmu
-					result+=weight_alstm_v16_loss*alstm_v16_loss_metal[i]
-				if 'v16_accu' not in self.delete_model:
-					weight_alstm_v16_accu = float(1/error_alstm_v16_accu)/fenmu
-					result+=weight_alstm_v16_accu*alstm_v16_accu_metal[i]
-				if 'v26_choose' not in self.delete_model:
-					weight_alstm_v26_choose = float(1/error_alstm_v26_choose)/fenmu
-					result+=weight_alstm_v26_choose*alstm_v26_choose_metal[i]
-				if 'v26_accu' not in self.delete_model:
-					weight_alstm_v26_accu = float(1/error_alstm_v26_accu)/fenmu
-					result+=weight_alstm_v26_accu*alstm_v26_accu_metal[i]
-				if 'v26_loss' not in self.delete_model:
-					weight_alstm_v26_loss = float(1/error_alstm_v26_loss)/fenmu
-					result+=weight_alstm_v26_loss*alstm_v26_loss_metal[i]
+				for j in range(len(error_list)):
+					error = np.sum(error_list[j][length:length+window])+1e-06
+					fenmu+=1/error
+				for j in range(len(error_list)):
+					error = np.sum(error_list[j][length:length+window])+1e-06
+					result+=((1/error)/fenmu) * final_version_list[j][i]			
 				if result>0.5:
-				  final_list_1.append(1)
+					final_list_1.append(1)
 				else:
-				  final_list_1.append(0)
+					final_list_1.append(0)
 
 				if window==self.single_window:
-				  length+=1
+					length+=1
 				else:
-				  window+=1					
+					window+=1					
 
 		return final_list_1

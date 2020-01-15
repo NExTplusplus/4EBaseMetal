@@ -45,25 +45,10 @@ class Ensemble_online():
 			lr_v5 = np.loadtxt("data/LR_probability/"+self.gt+str(self.horizon)+"_"+self.date+"_lr_v5_probability.txt")
 			lr_v7 = np.loadtxt("data/LR_probability/"+self.gt+str(self.horizon)+"_"+self.date+"_lr_v7_probability.txt")
 			lr_v9 = np.loadtxt("data/LR_probability/"+self.gt+str(self.horizon)+"_"+self.date+"_lr_v9_probability.txt")
+			lr_v10 = np.loadtxt("data/LR_probability/"+self.gt+str(self.horizon)+"_"+self.date+"_lr_v10_probability.txt")
+			lr_v12 = np.loadtxt("data/LR_probability/"+self.gt+str(self.horizon)+"_"+self.date+"_lr_v12_probability.txt")
 			lr_v23 = np.loadtxt("data/LR_probability/"+self.gt+str(self.horizon)+"_"+self.date+"_lr_v23_probability.txt")
-			if self.gt=="LME_Co_Spot":
-				lr_v10 = np.loadtxt("data/LR_probability/"+'LMCADY'+str(self.horizon)+"_"+self.date+"_lr_v10_probability.txt")
-				lr_v12 = np.loadtxt("data/LR_probability/"+'LMCADY'+str(self.horizon)+"_"+self.date+"_lr_v12_probability.txt")
-			elif self.gt=='LME_Al_Spot':
-				lr_v10 = np.loadtxt("data/LR_probability/"+'LMAHDY'+str(self.horizon)+"_"+self.date+"_lr_v10_probability.txt")
-				lr_v12 = np.loadtxt("data/LR_probability/"+'LMAHDY'+str(self.horizon)+"_"+self.date+"_lr_v12_probability.txt")
-			elif self.gt=='LME_Le_Spot':
-				lr_v10 = np.loadtxt("data/LR_probability/"+'LMPBDY'+str(self.horizon)+"_"+self.date+"_lr_v10_probability.txt")
-				lr_v12 = np.loadtxt("data/LR_probability/"+'LMPBDY'+str(self.horizon)+"_"+self.date+"_lr_v12_probability.txt")
-			elif self.gt=='LME_Ni_Spot':
-				lr_v10 = np.loadtxt("data/LR_probability/"+'LMNIDY'+str(self.horizon)+"_"+self.date+"_lr_v10_probability.txt")
-				lr_v12 = np.loadtxt("data/LR_probability/"+'LMNIDY'+str(self.horizon)+"_"+self.date+"_lr_v12_probability.txt")
-			elif self.gt=='LME_Ti_Spot':
-				lr_v10 = np.loadtxt("data/LR_probability/"+'LMSNDY'+str(self.horizon)+"_"+self.date+"_lr_v10_probability.txt")
-				lr_v12 = np.loadtxt("data/LR_probability/"+'LMSNDY'+str(self.horizon)+"_"+self.date+"_lr_v12_probability.txt")
-			elif self.gt=='LME_Zi_Spot':
-				lr_v10 = np.loadtxt("data/LR_probability/"+'LMZSDY'+str(self.horizon)+"_"+self.date+"_lr_v10_probability.txt")
-				lr_v12 = np.loadtxt("data/LR_probability/"+'LMZSDY'+str(self.horizon)+"_"+self.date+"_lr_v12_probability.txt")
+
 			# self.label = pd.read_csv("data/Label/"+self.gt+"_h"+str(self.horizon)+"_"+date+"_label"+".csv")
 			# self.label = list(self.label['Label'])
 			result_v3_error = []
@@ -466,6 +451,7 @@ class Ensemble_online():
 				fenmu = 0
 				for key in error_dict.keys():
 					if key not in self.delete_model:
+						#print(1/error_dict[key])
 						fenmu += 1/error_dict[key]
 				#print(fenmu)
 				if 'v3' not in self.delete_model:
@@ -510,23 +496,23 @@ class Ensemble_online():
 		elif model == "alstm":
 			version_dict = {}
 			if self.horizon==1:
-				alstm_v16_loss = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.4_30_5_4_v16_prediction.txt")
-				alstm_v16_accu = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.6_30_20_3_v16_prediction.txt")
-				alstm_v26_choose = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.6_30_20_4_v26_prediction.txt")
-				alstm_v26_accu = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.6_30_20_5_v26_prediction.txt")
-				alstm_v26_loss = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.6_20_20_3_v26_prediction.txt")
+				alstm_v16_loss = np.loadtxt("data/ALSTM_prediction/v16_loss/"+str(self.date)+"_"+str(self.horizon)+"_0.4_30_5_4_v16_prediction.txt")
+				alstm_v16_accu = np.loadtxt("data/ALSTM_prediction/v16_accu/"+str(self.date)+"_"+str(self.horizon)+"_0.6_30_20_3_v16_prediction.txt")
+				alstm_v26_choose = np.loadtxt("data/ALSTM_prediction/v26_choose/"+str(self.date)+"_"+str(self.horizon)+"_0.6_30_20_4_v26_prediction.txt")
+				alstm_v26_accu = np.loadtxt("data/ALSTM_prediction/v26_accu/"+str(self.date)+"_"+str(self.horizon)+"_0.6_30_20_5_v26_prediction.txt")
+				alstm_v26_loss = np.loadtxt("data/ALSTM_prediction/v26_loss/"+str(self.date)+"_"+str(self.horizon)+"_0.6_20_20_3_v26_prediction.txt")
 			elif self.horizon==3:
-				alstm_v16_loss = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.4_50_10_3_v16_prediction.txt")
-				alstm_v16_accu = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.6_30_20_3_v16_prediction.txt")
-				alstm_v26_choose = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.6_30_20_3_v26_prediction.txt")
-				alstm_v26_accu = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.6_20_20_5_v26_prediction.txt")
-				alstm_v26_loss = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.6_20_20_3_v26_prediction.txt")
+				alstm_v16_loss = np.loadtxt("data/ALSTM_prediction/v16_loss/"+str(self.date)+"_"+str(self.horizon)+"_0.4_50_10_3_v16_prediction.txt")
+				alstm_v16_accu = np.loadtxt("data/ALSTM_prediction/v16_accu/"+str(self.date)+"_"+str(self.horizon)+"_0.6_30_20_3_v16_prediction.txt")
+				alstm_v26_choose = np.loadtxt("data/ALSTM_prediction/v26_choose/"+str(self.date)+"_"+str(self.horizon)+"_0.6_30_20_3_v26_prediction.txt")
+				alstm_v26_accu = np.loadtxt("data/ALSTM_prediction/v26_accu/"+str(self.date)+"_"+str(self.horizon)+"_0.6_20_20_5_v26_prediction.txt")
+				alstm_v26_loss = np.loadtxt("data/ALSTM_prediction/v26_loss/"+str(self.date)+"_"+str(self.horizon)+"_0.6_20_20_3_v26_prediction.txt")
 			elif self.horizon==5:
-				alstm_v16_loss = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.6_30_10_3_v16_prediction.txt")
-				alstm_v16_accu = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.6_50_10_3_v16_prediction.txt")
-				alstm_v26_choose = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.6_20_5_4_v26_prediction.txt")
-				alstm_v26_accu = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.4_30_20_5_v26_prediction.txt")
-				alstm_v26_loss = np.loadtxt("data/ALSTM_prediction/"+str(self.date)+"_"+str(self.horizon)+"_0.6_20_20_3_v26_prediction.txt")								
+				alstm_v16_loss = np.loadtxt("data/ALSTM_prediction/v16_loss/"+str(self.date)+"_"+str(self.horizon)+"_0.6_30_10_3_v16_prediction.txt")
+				alstm_v16_accu = np.loadtxt("data/ALSTM_prediction/v16_accu/"+str(self.date)+"_"+str(self.horizon)+"_0.6_50_10_3_v16_prediction.txt")
+				alstm_v26_choose = np.loadtxt("data/ALSTM_prediction/v26_choose/"+str(self.date)+"_"+str(self.horizon)+"_0.6_20_5_4_v26_prediction.txt")
+				alstm_v26_accu = np.loadtxt("data/ALSTM_prediction/v26_accu/"+str(self.date)+"_"+str(self.horizon)+"_0.4_30_20_5_v26_prediction.txt")
+				alstm_v26_loss = np.loadtxt("data/ALSTM_prediction/v26_loss/"+str(self.date)+"_"+str(self.horizon)+"_0.6_20_20_3_v26_prediction.txt")								
 			ground_truths_list = ['LME_Co_Spot','LME_Al_Spot','LME_Le_Spot','LME_Ni_Spot','LME_Zi_Spot','LME_Ti_Spot']
 			all_length = len(alstm_v16_loss)
 			#print("the length of the ALSTM is {}".format(all_length))
@@ -550,14 +536,19 @@ class Ensemble_online():
 				start_index = 5*int(metal_length)
 				end_index = 6*int(metal_length)
 			alstm_v16_loss_metal = alstm_v16_loss[start_index:end_index]
+			#print(alstm_v16_loss_metal)
 			version_dict['v16_loss']=alstm_v16_loss_metal
 			alstm_v16_accu_metal = alstm_v16_accu[start_index:end_index]
+			#print(alstm_v16_accu_metal)
 			version_dict['v16_accu']=alstm_v16_accu_metal
 			alstm_v26_choose_metal = alstm_v26_choose[start_index:end_index]
+			#print(alstm_v26_choose_metal)
 			version_dict['v26_choose']=alstm_v26_choose_metal
 			alstm_v26_accu_metal = alstm_v26_accu[start_index:end_index]
+			#print(alstm_v26_accu_metal)
 			version_dict['v26_accu']=alstm_v26_accu_metal
 			alstm_v26_loss_metal = alstm_v26_loss[start_index:end_index]
+			#print(alstm_v26_loss_metal)
 			version_dict['v26_loss']=alstm_v26_loss_metal
 			#print()
 			result_alstm_v16_loss_metal_error = []
@@ -571,11 +562,13 @@ class Ensemble_online():
 			for j in range(len(alstm_v16_loss_metal)):
 				count=0        
 				gap=(len(version_dict.keys())-len(self.delete_model))//2+1
+				#print(gap)
 				#print(length)
 				for key in version_dict.keys():
 					if key not in self.delete_model:
-						count+=version_dict[key][-1]
+						count+=version_dict[key][j]
 				#print(np.sum(count))
+				print(count)
 				if count >= gap:
 					results.append(1)
 					if j < self.horizon:
@@ -610,7 +603,7 @@ class Ensemble_online():
 					result_alstm_v26_loss_metal_error.append(1)
 				else:
 					result_alstm_v26_loss_metal_error.append(0)
-
+			print(results)
 			print("the voting result is {}".format(metrics.accuracy_score(self.label[:], results)))
 
 			window = 1

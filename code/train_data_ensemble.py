@@ -7,7 +7,7 @@ import pandas as pd
 from copy import copy
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 import warnings
-from live.ensemble_live_new import Ensemble_online
+from live.ensemble_live import Ensemble_online
 from sklearn import metrics
 
 if __name__ == '__main__':
@@ -72,21 +72,21 @@ if __name__ == '__main__':
                 #print(indicator_prediction[indicator_prediction['date']=='2017-01-04']['discrete_score'].values[0])
                 indicator_list = list(indicator_prediction['date'])
                 if horizon == 1:
-                  ensemble=Ensemble_online(horizon=horizon,gt=ground_truth,date=date,single_window=15,label=copy(label_value), delete_model=['v16_loss'])
+                  ensemble=Ensemble_online(horizon=horizon,gt=ground_truth,date=date,single_window=15,label=copy(label_value))
                   alstm_ensemble = ensemble.single_model('alstm')
                   ensemble=Ensemble_online(horizon=horizon,gt=ground_truth,date=date,single_window=15,label=copy(label_value))
                   xgb_ensemble = ensemble.single_model('xgb')
                   ensemble=Ensemble_online(horizon=horizon,gt=ground_truth,date=date,single_window=20,label=copy(label_value))
                   lr_ensemble = ensemble.single_model('lr')
                 elif horizon == 3:
-                  ensemble=Ensemble_online(horizon=horizon,gt=ground_truth,date=date,single_window=25,label=copy(label_value), delete_model=['v16_loss'])
+                  ensemble=Ensemble_online(horizon=horizon,gt=ground_truth,date=date,single_window=25,label=copy(label_value))
                   alstm_ensemble = ensemble.single_model('alstm')
                   ensemble=Ensemble_online(horizon=horizon,gt=ground_truth,date=date,single_window=25,label=copy(label_value))
                   xgb_ensemble = ensemble.single_model('xgb')
                   ensemble=Ensemble_online(horizon=horizon,gt=ground_truth,date=date,single_window=20,label=copy(label_value))
                   lr_ensemble = ensemble.single_model('lr')
                 elif horizon == 5:
-                  ensemble=Ensemble_online(horizon=horizon,gt=ground_truth,date=date,single_window=15,label=copy(label_value), delete_model=['v16_loss'])
+                  ensemble=Ensemble_online(horizon=horizon,gt=ground_truth,date=date,single_window=15,label=copy(label_value))
                   alstm_ensemble = ensemble.single_model('alstm')
                   ensemble=Ensemble_online(horizon=horizon,gt=ground_truth,date=date,single_window=15,label=copy(label_value))
                   xgb_ensemble = ensemble.single_model('xgb')
