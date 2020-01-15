@@ -7,7 +7,7 @@ import pandas as pd
 from copy import copy
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 import warnings
-from live.ensemble_live import Ensemble_online
+from live.ensemble_live_new import Ensemble_online
 from sklearn import metrics
 
 if __name__ == '__main__':
