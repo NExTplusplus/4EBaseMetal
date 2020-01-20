@@ -53,7 +53,7 @@ class Ensemble_online():
 				 		version_list.append(version)
 			version_list.sort()
 			for version in version_list:
-				data = np.loadtxt("data/LR_probability/"+self.gt+str(self.horizon)+"_"+self.date+"_lr_"+version+"_probability.txt")
+				data = np.loadtxt("result/probability/lr/"+self.gt+str(self.horizon)+"_"+self.date+"_lr_"+version+"_probability.txt")
 				all_list.append(data)
 			results = []
 			final_list_1 = []
@@ -134,7 +134,7 @@ class Ensemble_online():
 			"""
 		elif model == 'xgb':
 			length = 0
-			file_list = os.listdir("data/xgboost_folder/")
+			file_list = os.listdir("result/probability/xgboost/")
 			read_list = []
 			version_list = []
 			for file in file_list:
@@ -145,7 +145,7 @@ class Ensemble_online():
 			version_list.sort()
 			for version in version_list:
 				#print("data/xgboost_folder/"+self.gt+"_h"+str(self.horizon)+"_"+self.date+"_xgboost_"+version+".txt")
-				data = np.loadtxt("data/xgboost_folder/"+self.gt+"_h"+str(self.horizon)+"_"+self.date+"_xgboost_"+version+".txt")
+				data = np.loadtxt("result/probability/xgboost/"+self.gt+"_h"+str(self.horizon)+"_"+self.date+"_xgboost_"+version+".txt")
 				read_list.append(data)
 			#print(all_list)
 			results = []
@@ -249,17 +249,17 @@ class Ensemble_online():
 				else:
 					window+=1
 		elif model == "alstm":
-			folder_list = os.listdir("data/ALSTM_prediction")
+			folder_list = os.listdir("result/probability/alstm")
 			#print(folder_list)
 			read_list = []
 			for i in range(len(folder_list)):
-				single_file_path = "data/ALSTM_prediction/"+folder_list[i]
+				single_file_path = "result/probability/alstm"+folder_list[i]
 				file_list = os.listdir(single_file_path)
 				#print(file_list)
 				for file in file_list:
 					if (str(self.date)+"_"+str(self.horizon)) in file:
 						#print(file)
-						data = np.loadtxt("data/ALSTM_prediction/"+folder_list[i]+"/"+file)
+						data = np.loadtxt("result/probability/alstm"+folder_list[i]+"/"+file)
 						read_list.append(data)
 			all_length = len(read_list[0])					
 			ground_truths_list = ['LME_Co_Spot','LME_Al_Spot','LME_Le_Spot','LME_Ni_Spot','LME_Zi_Spot','LME_Ti_Spot']			

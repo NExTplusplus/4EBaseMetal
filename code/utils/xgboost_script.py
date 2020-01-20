@@ -3,6 +3,7 @@ import numpy as np
 from copy import copy
 from multiprocessing import Pool as pl
 from itertools import product
+from pathlib import Path
 import argparse
 import os
 
@@ -10,10 +11,14 @@ import os
     This function is used to extract the top 5 combinations of hyperparameters in terms of weighted accuracy for each voting method
 '''
 def retrieve_top(path):
+    validation_dates = path[1]
+    length = path[2]
+    path = path[0]
     all_file = []
     sub_file = []
     all_voting_Str = 'the all folder voting precision is'
     lag_Str = 'the lag is'
+    print(path)
     #read the file
     with open(path,"r") as f:
         lines = f.readlines()
@@ -38,6 +43,11 @@ def retrieve_top(path):
                     all_file+=sub_file
                     sub_file = []
 
+    path = Path(path)
+    parts = list(path.parts)
+    path = parts[-1]
+    directory = os.path.join(*(parts[:-1]))
+    
     #generate data frame to congregrate data
     file_dataframe = pd.DataFrame(all_file,columns=['all_voting',
     'near_voting','far_voting','same_voting','reverse_voting',
@@ -73,18 +83,9 @@ def retrieve_top(path):
                             reverse_mean_result = 0
                             same_mean_result = 0
                             for i in range(len(df)):
-
                                 # generate weights
-                                if df.iloc[i,-1] == "2014-07-01":
-                                    length = 129
-                                elif df.iloc[i,-1] == "2015-01-01":
-                                    length = 124
-                                elif df.iloc[i,-1] == "2015-07-01":
-                                    length = 129
-                                elif df.iloc[i,-1] == "2016-01-01":
-                                    length = 125
-                                elif df.iloc[i,-1] == "2016-07-01":
-                                    length = 128
+                                if df.iloc[i,-1] in validation_dates:
+                                    length = args.length[validation_dates.index(df.iloc[i,-1])]
                                 
                                 #calculate amount of correct predictions
                                 all_mean_result += df.iloc[i,0]*length
@@ -94,11 +95,11 @@ def retrieve_top(path):
                                 reverse_mean_result += df.iloc[i,4]*length
 
                             #Calculate accuracy
-                            all_mean_result = all_mean_result/(129+124+129+125+128)
-                            near_mean_result = near_mean_result/(129+124+129+125+128)
-                            far_mean_result = far_mean_result/(129+124+129+125+128)
-                            same_mean_result = same_mean_result/(129+124+129+125+128)
-                            reverse_mean_result = reverse_mean_result/(129+124+129+125+128)
+                            all_mean_result = all_mean_result/(sum(args.length))
+                            near_mean_result = near_mean_result/(sum(args.length))
+                            far_mean_result = far_mean_result/(sum(args.length))
+                            same_mean_result = same_mean_result/(sum(args.length))
+                            reverse_mean_result = reverse_mean_result/(sum(args.length))
 
                             #append them to congregrated list
                             mean_list.append(all_mean_result)
@@ -118,7 +119,7 @@ def retrieve_top(path):
         same_frame = new_frame.sort_values(by=['same_mean_result','lag','max_depth','learning_rate','gamma','min_child_weigh','subsample'],ascending=[False,True,True,True,True,True,True])[:5].rename(columns = {'same_mean_result':'result'}).loc[:,['lag','max_depth','learning_rate','gamma','min_child_weigh','subsample','result']].sort_values(by="result",ascending = False)
 
         frame = pd.concat([all_frame,near_frame,far_frame,reverse_frame,same_frame], axis = 0)
-        frame.to_csv(path.split("_")[0]+"_"+path.split("_")[-1].strip(".txt")+"_"+str(lag)+"_"+path.split("_")[3]+".csv",index = False)
+        frame.to_csv(os.path.join(directory,path.split("_")[0]+"_"+path.split("_")[-1].strip(".txt")+"_"+str(lag)+"_"+path.split("_")[3]+".csv"),index = False)
 
 if __name__ == '__main__':
     desc = 'the script for XGBoost'
@@ -126,7 +127,7 @@ if __name__ == '__main__':
     parser.add_argument('-s','--step_list',type=str,default="1,3,5",
                         help='list of horizons to be calculated, separated by ","')
     parser.add_argument('-gt', '--ground_truth_list', help='list of ground truths, separated by ","',
-                        type=str, default="LME_Co_Spot,LME_Al_Spot,LME_Ni_Spot,LME_Ti_Spot,LME_Zi_Spot,LME_Le_Spot")
+                        type=str, default="LME_All,LME_Co_Spot,LME_Al_Spot,LME_Ni_Spot,LME_Ti_Spot,LME_Zi_Spot,LME_Le_Spot")
     parser.add_argument(
         '-sou','--source', help='source of data to be inserted into commands', type = str, default = "4E"
     )
@@ -139,6 +140,8 @@ if __name__ == '__main__':
     parser.add_argument ('-out','--output',type = str, help='output file', default ="../../../Results/results")
     parser.add_argument('-o', '--action', type=str, default='commands',
                         help='tuning,commands, testing')
+    parser.add_argument('-d','--dates',type = str, help = "dates", default = "2014-12-31,2015-06-30,2015-12-31,2016-06-30,2016-12-31,2017-06-30,2017-12-31,2018-06-30,2018-12-31")
+    parser.add_argument('-length','--length',type = str, help = "length of each period stated in dates",default = "129,124,129,125,128")
     parser.add_argument('-p','--path',type =str, help='path to 4EBaseMetal folder',default ='NEXT/4EBaseMetal')
 
     args = parser.parse_args()
@@ -146,41 +149,101 @@ if __name__ == '__main__':
     args.ground_truth_list = args.ground_truth_list.split(",")
     args.lag_list = args.lag_list.split(",")
     args.version_list = args.version_list.split(",")
+    args.dates = args.dates.split(",")
+    args.length = [int(i) for i in args.length.split(",")]
 
     #generates the top 5 results for each voting method for every combination produced from version list, step list, ground truth list and lag list
     if args.action == "tuning":
         path_list = []
+        validation_dates = [d.split("-")[0]+"-01-01" if d[4:] == "-06-30" else d.split("-")[0]+"-07-01" for d in args.dates]
         combinations = product(args.ground_truth_list,args.lag_list,args.step_list,args.version_list)
         for c in combinations:
-            path_list.append(os.path.join(args.path,"_".join([c[0].split("_")[1],"xgboost","l"+c[1],"h"+c[2],c[3]])+".txt"))
+            
+            if "_".join([c[0].split("_")[1],"xgboost","l"+c[1],"h"+c[2],c[3]])+".txt" in os.listdir(os.path.join(os.getcwd(),"result","validation","xgboost")):
+                path_list.append([os.path.join(args.path,"_".join([c[0].split("_")[1],"xgboost","l"+c[1],"h"+c[2],c[3]])+".txt"),validation_dates,args.length])
+        print(path_list)
+
         pool = pl()
         results = pool.map_async(retrieve_top,path_list)
         pool.close()
         pool.join()
 
     #generates the command line to be used for online testing
-    if args.action == "commands":
+    if args.action == "train commands":
+        i = 0
+        with open(args.output,"w") as out:
+            for version in args.version_list:
+                print(args.version_list)
+                ground_truth_list = copy(args.ground_truth_list)
+                xgb = 0
+                if version in ["v10","v12","v16","v26"]:
+                    ground_truth_list = ["LME_All"]
+                    exp = "exp/online_v10.conf"
+                elif version in ["v5","v7"]:
+                    exp = "exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf"
+                elif version in ["v3","v23"]:
+                    exp = "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf"
+                elif version in ["v9"]:
+                    exp = "exp/online_v10.conf"
+                elif version in ["v24","v28","v30"]:
+                    ground_truth_list = ["LME_All"]
+                    exp = "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf"
+                train = "code/train_data_xgboost.py"
+                
+
+                for gt in ground_truth_list:
+                    for h in args.step_list:
+                        total = pd.DataFrame()
+                        for lag in args.lag_list:
+                            print(gt)
+                            if '_'.join([gt.split("_")[1],version,lag,"h"+h])+".csv" in os.listdir(args.path):
+                                f = pd.read_csv(os.path.join(args.path,'_'.join([gt.split("_")[1],version,lag,"h"+h])+".csv")).iloc[:5,:]
+                                total = pd.concat([total,f],axis = 0)
+                        if total.empty:
+                            continue
+                        total = total.sort_values(by=['result','lag','max_depth','learning_rate','gamma','min_child_weigh','subsample'],ascending=[False,True,True,True,True,True,True]).reset_index(drop = True)
+                        for d in args.dates:
+                          out.write(" ".join(["python",train,
+                            "-d",d,
+                            "-gt",gt,
+                            "-l",str(total.iloc[0,0]),
+                            "-s",h,
+                            "-xgb",str(xgb),
+                            "-v",version.split("_")[0],
+                            "-c",exp,
+                            "-sou",args.source,
+                            "-max_depth",str(int(total.iloc[0,1])),
+                            "-learning_rate",str(total.iloc[0,2]),
+                            "-gamma",str(total.iloc[0,3]),
+                            "-min_child",str(int(total.iloc[0,4])),
+                            "-subsample",str(total.iloc[0,5]),"-voting all","-o train",
+                            ">","/dev/null","2>&1 &"])+"\n")
+                          i+=1
+                          if i%9 == 0 and args.source == "4E":
+                            out.write("sleep 10m\n")
+                          elif args.source == "NExT" and i %20 == 0:
+                            out.write("sleep 5m\n")
+
+    #generates the command line to be used for online testing
+    if args.action == "test commands":
         i = 0
         with open(args.output,"w") as out:
             for version in args.version_list:
                 ground_truth_list = copy(args.ground_truth_list)
                 xgb = 0
-                if version in ["v10","v12"]:
-                    ground_truth_list = ["all_all"]
-                    train = "code/train/train_xgboost_online_v10_ex2.py"
+                if version in ["v10","v12","v16","v26"]:
+                    ground_truth_list = ["all"]
                     exp = "exp/online_v10.conf"
                 elif version in ["v5","v7"]:
                     exp = "exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf"
-                    train = "code/train/train_xgboost_online.py"
                 elif version in ["v3","v23"]:
                     exp = "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf"
-                    train = "code/train/train_xgboost_online.py"
                 elif version in ["v9"]:
                     exp = "exp/online_v10.conf"
-                    train = "code/train/train_xgboost_online.py"
-                elif version in ["v24"]:
+                elif version in ["v24","v28","v30"]:
+                    ground_truth_list = ["all"]
                     exp = "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf"
-                    train = "code/train/train_xgboost_online_v10_ex2.py"
+                train = "code/train_data_xgboost.py"
                 
 
                 for gt in ground_truth_list:
@@ -190,24 +253,27 @@ if __name__ == '__main__':
                             f = pd.read_csv(os.path.join(args.path,'_'.join([gt.split("_")[1],version,lag,"h"+h])+".csv")).iloc[:5,:]
                             total = pd.concat([total,f],axis = 0)
                         total = total.sort_values(by=['result','lag','max_depth','learning_rate','gamma','min_child_weigh','subsample'],ascending=[False,True,True,True,True,True,True]).reset_index(drop = True)
-                        out.write(" ".join(["python",train,
-                          "-gt",gt,
-                          "-l",str(total.iloc[0,0]),
-                          "-s",h,
-                          "-xgb",str(xgb),
-                          "-v",version.split("_")[0],
-                          "-c",exp,
-                          "-sou",args.source,
-                          "-max_depth",str(int(total.iloc[0,1])),
-                          "-learning_rate",str(total.iloc[0,2]),
-                          "-gamma",str(total.iloc[0,3]),
-                          "-min_child",str(int(total.iloc[0,4])),
-                          "-subsample",str(total.iloc[0,5]),"-voting all",
-                          ">","_".join([gt.split("_")[1],"xgboost","h"+h,version,"1718.txt"]),"2>&1 &"])+"\n")
-                        i+=1
-                        if i == 9:
-                        	i = 0
-                        	out.write("sleep 10m\n")
+                        for d in args.dates_list:
+                          out.write(" ".join(["python",train,
+                            "-d",d,
+                            "-gt",gt,
+                            "-l",str(total.iloc[0,0]),
+                            "-s",h,
+                            "-xgb",str(xgb),
+                            "-v",version.split("_")[0],
+                            "-c",exp,
+                            "-sou",args.source,
+                            "-max_depth",str(int(total.iloc[0,1])),
+                            "-learning_rate",str(total.iloc[0,2]),
+                            "-gamma",str(total.iloc[0,3]),
+                            "-min_child",str(int(total.iloc[0,4])),
+                            "-subsample",str(total.iloc[0,5]),"-voting all","-o test",
+                            ">","_".join([gt.split("_")[1],"xgboost","h"+h,version,"1718.txt"]),"2>&1 &"])+"\n")
+                          i+=1
+                          if i%9 == 0 and args.source == "4E":
+                              out.write("sleep 10m\n")
+                          elif args.source == "NExT" and i %20 == 0:
+                              out.write("sleep 5m\n")
 
     if args.action == "testing":
         total = pd.DataFrame()
