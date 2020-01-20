@@ -122,7 +122,7 @@ def read_data_with_specified_columns(source,path,start_date):
     time_series = time_series[columns_to_be_stored]
   return time_series,LME_dates,len(fname_columns[0])
 
-def prepare_data(time_series,LME_dates,horizon,ground_truth_list,lag,split_date,version_params,xgboost = False,live = False,metal_id_bool = False):
+def prepare_data(ts,LME_dates,horizon,ground_truth_list,lag,split_date,version_params,xgboost = False,live = False,metal_id_bool = False):
   '''
     prepare data based on configuration as stated in parameters
     input:

@@ -4,7 +4,7 @@ from model.base_predictor import BasePredictor
 from joblib import dump
 from sklearn.externals import joblib
 import numpy as np
- 
+import os 
 class LogReg(BasePredictor):
   def __init__(self,parameters):
     BasePredictor.__init__(self,parameters)
@@ -20,12 +20,12 @@ class LogReg(BasePredictor):
     self.model.fit(X_tr, Y_tr)
 
   def save(self, version, gt, horizon, lag,date):
-    joblib.dump(self.model,version+"_"+gt+"_"+str(horizon)+"_"+str(lag)+"_lr_"+date+'.pkl')
+    joblib.dump(self.model,os.path.join(os.getcwd(),'result','model','lr',version+"_"+gt+"_"+str(horizon)+"_"+str(lag)+"_lr_"+date+'.pkl'))
 
     # return None
     
   def load(self, version, gt, horizon, lag,date):
-    model = joblib.load(version+"_"+gt+"_"+str(horizon)+"_"+str(lag)+"_lr_"+date+'.pkl')
+    model = joblib.load(os.path.join(os.getcwd(),'result','model','lr',version+"_"+gt+"_"+str(horizon)+"_"+str(lag)+"_lr_"+date+'.pkl'))
     return model
   def log_loss(self,X,y_true):
     return log_loss(y_true,self.model.predict_proba(X))
