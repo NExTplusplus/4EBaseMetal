@@ -5,14 +5,11 @@ import argparse
 import numpy as np
 import pandas as pd
 from copy import copy
-sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
-from data.load_data import load_data
+sys.path.insert(0,os.path.abspath(os.path.join(sys.path[0],"..")))
 from model.logistic_regression import LogReg
 from utils.transform_data import flatten
 from utils.construct_data import rolling_half_year
-from utils.log_reg_functions import objective_function, loss_function
 import warnings
-import xgboost as xgb
 from matplotlib import pyplot
 from xgboost import plot_importance
 from sklearn import metrics
@@ -50,4 +47,4 @@ if __name__ == '__main__':
 		model.train(C=args.C, max_iter=args.max_iter)
 	else:
 		final = model.test()
-		final.to_csv("_".join([args.ground_truth,args.date,str(args.steps),args.version])+".csv")
+		final.to_csv(os.path.join("result","prediction","lr","_".join([args.ground_truth,args.date,str(args.steps),args.version])+".csv"))
