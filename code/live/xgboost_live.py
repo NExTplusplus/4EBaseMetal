@@ -352,6 +352,9 @@ class XGBoost_online():
       metal_id = True
       ground_truth_list = ["LME_Co_Spot","LME_Al_Spot","LME_Ni_Spot","LME_Ti_Spot","LME_Zi_Spot","LME_Le_Spot"]
 
+  
+    time_series = time_series.loc[split_dates[0]:split_dates[2]]
+
     #load data for use
     final_X_tr, final_y_tr, final_X_va, final_y_va, val_dates, column_lag_list = prepare_data(time_series,LME_dates,self.horizon,ground_truth_list,self.lag,copy(split_dates),version_params,metal_id_bool = metal_id)
 
@@ -461,6 +464,7 @@ class XGBoost_online():
     if even_version(self.version):
       metal_id = True
 
+    time_series = time_series.loc[split_dates[0]:split_dates[2]]
     #load data for use
     final_X_tr, final_y_tr, final_X_va, final_y_va,val_dates, column_lag_list = prepare_data(time_series,LME_dates,self.horizon,[self.gt],self.lag,copy(split_dates),version_params,metal_id_bool = metal_id,live = True)
 
