@@ -173,8 +173,7 @@ if __name__ == '__main__':
         i = 0
         with open(args.output,"w") as out:
             for version in args.version_list:
-                print(args.version_list)
-                ground_truth_list = copy(args.ground_truth_list)
+                ground_truth_list = copy(args.ground_truth_list[1:])
                 xgb = 0
                 if version in ["v10","v12","v16","v26"]:
                     ground_truth_list = ["LME_All"]
@@ -208,7 +207,6 @@ if __name__ == '__main__':
                             "-gt",gt,
                             "-l",str(total.iloc[0,0]),
                             "-s",h,
-                            "-xgb",str(xgb),
                             "-v",version.split("_")[0],
                             "-c",exp,
                             "-sou",args.source,
@@ -216,7 +214,7 @@ if __name__ == '__main__':
                             "-learning_rate",str(total.iloc[0,2]),
                             "-gamma",str(total.iloc[0,3]),
                             "-min_child",str(int(total.iloc[0,4])),
-                            "-subsample",str(total.iloc[0,5]),"-voting all","-o train",
+                            "-subsample",str(total.iloc[0,5]),"-o train",
                             ">","/dev/null","2>&1 &"])+"\n")
                           i+=1
                           if i%9 == 0 and args.source == "4E":
@@ -229,10 +227,9 @@ if __name__ == '__main__':
         i = 0
         with open(args.output,"w") as out:
             for version in args.version_list:
-                ground_truth_list = copy(args.ground_truth_list)
+                ground_truth_list = copy(args.ground_truth_list[1:])
                 xgb = 0
                 if version in ["v10","v12","v16","v26"]:
-                    ground_truth_list = ["all"]
                     exp = "exp/online_v10.conf"
                 elif version in ["v5","v7"]:
                     exp = "exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf"
@@ -241,7 +238,6 @@ if __name__ == '__main__':
                 elif version in ["v9"]:
                     exp = "exp/online_v10.conf"
                 elif version in ["v24","v28","v30"]:
-                    ground_truth_list = ["all"]
                     exp = "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf"
                 train = "code/train_data_xgboost.py"
                 
@@ -254,26 +250,28 @@ if __name__ == '__main__':
                             total = pd.concat([total,f],axis = 0)
                         total = total.sort_values(by=['result','lag','max_depth','learning_rate','gamma','min_child_weigh','subsample'],ascending=[False,True,True,True,True,True,True]).reset_index(drop = True)
                         for d in args.dates_list:
-                          out.write(" ".join(["python",train,
-                            "-d",d,
-                            "-gt",gt,
-                            "-l",str(total.iloc[0,0]),
-                            "-s",h,
-                            "-xgb",str(xgb),
-                            "-v",version.split("_")[0],
-                            "-c",exp,
-                            "-sou",args.source,
-                            "-max_depth",str(int(total.iloc[0,1])),
-                            "-learning_rate",str(total.iloc[0,2]),
-                            "-gamma",str(total.iloc[0,3]),
-                            "-min_child",str(int(total.iloc[0,4])),
-                            "-subsample",str(total.iloc[0,5]),"-voting all","-o test",
-                            ">","_".join([gt.split("_")[1],"xgboost","h"+h,version,"1718.txt"]),"2>&1 &"])+"\n")
-                          i+=1
-                          if i%9 == 0 and args.source == "4E":
-                              out.write("sleep 10m\n")
-                          elif args.source == "NExT" and i %20 == 0:
-                              out.write("sleep 5m\n")
+                            if "_".join([d,gt,h,lag,"0",version,"xgb.model"]) in os.listdir(os.path.join(os.getcwd(),"result","model","xgboost")) or (even_version(version) and\
+                                "_".join([d,"LME_All",h,lag,"0",version,"xgb.model"]) in os.listdir(os.path.join(os.getcwd(),"result","model","xgboost"))):
+                                out.write(" ".join(["python",train,
+                                    "-d",d,
+                                    "-gt",gt,
+                                    "-l",str(total.iloc[0,0]),
+                                    "-s",h,
+                                    "-v",version.split("_")[0],
+                                    "-c",exp,
+                                    "-sou",args.source,
+                                    "-max_depth",str(int(total.iloc[0,1])),
+                                    "-learning_rate",str(total.iloc[0,2]),
+                                    "-gamma",str(total.iloc[0,3]),
+                                    "-min_child",str(int(total.iloc[0,4])),
+                                    "-subsample",str(total.iloc[0,5]),"-o test",
+                                    ">","_".join([gt.split("_")[1],"xgboost","h"+h,version,"1718.txt"]),"2>&1 &"])+"\n")
+                                i+=1
+                                if i%9 == 0 and args.source == "4E":
+                                    out.write("sleep 10m\n")
+                                elif args.source == "NExT" and i %20 == 0:
+                                    out.write("sleep 5m\n")
+
 
     if args.action == "testing":
         total = pd.DataFrame()

@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from copy import copy
+from utils.general_functions import even_version
 import argparse
 import os
 
@@ -97,7 +98,6 @@ if __name__ == '__main__':
                 ground_truth_list = copy(args.ground_truth_list)
                 xgb = 0
                 if version in ["v10","v12","v16","v26"]:
-                    ground_truth_list = ["all"]
                     exp = "exp/online_v10.conf"
                 elif version in ["v5","v7"]:
                     exp = "exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf"
@@ -106,22 +106,21 @@ if __name__ == '__main__':
                 elif version in ["v9"]:
                     exp = "exp/online_v10.conf"
                 elif version in ["v24","v28","v30"]:
-                    ground_truth_list = ["all"]
                     exp = "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf"
                 train = "code/train_data_lr.py"
                 for gt in ground_truth_list:
                     for h in args.step_list:
                         for d in args.dates:
                             for lag in args.lag_list:
-                                if "_".join([version,gt,h,lag,"lr",d+".pkl"]) not in os.listdir(os.path.join(os.getcwd(),"result","model","lr")):
-                                    continue
-                                out.write("python "+train+" "+" ".join(["-sou",args.source,"-v",version,"-c",exp,"-s",h,"-l",lag,"-gt",gt,"-o","test",'-d',d,">","/dev/null", "2>&1", "&"]))
-                                out.write("\n")
-                                i+=1
-                                if i%9 == 0 and args.source == "4E":
-                                    out.write("sleep 10m\n")
-                                elif args.source == "NExT" and i %20 == 0:
-                                    out.write("sleep 5m\n")
+                                if "_".join([version,gt,h,lag,"lr",d+".pkl"]) in os.listdir(os.path.join(os.getcwd(),"result","model","lr")) or (even_version(version) and\
+                                    "_".join([version,"all",h,lag,"lr",d+".pkl"]) in os.listdir(os.path.join(os.getcwd(),"result","model","lr"))):
+                                    out.write("python "+train+" "+" ".join(["-sou",args.source,"-v",version,"-c",exp,"-s",h,"-l",lag,"-gt",gt,"-o","test",'-d',d,">","/dev/null", "2>&1", "&"]))
+                                    out.write("\n")
+                                    i+=1
+                                    if i%9 == 0 and args.source == "4E":
+                                        out.write("sleep 10m\n")
+                                    elif args.source == "NExT" and i %20 == 0:
+                                        out.write("sleep 5m\n")
 
     elif args.action == "testing":
         total = pd.DataFrame()

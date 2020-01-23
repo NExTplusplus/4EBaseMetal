@@ -173,6 +173,8 @@ class Logistic_online():
     #extract copy of data to process
     time_series = copy(time_series.loc[split_dates[0]:split_dates[2]])
 
+    assert_labels(LME_dates,split_dates,self.horizon)
+
     #load data for use
     final_X_tr, final_y_tr, final_X_va, final_y_va, val_dates, column_lag_list = prepare_data(time_series,LME_dates,self.horizon,ground_truth_list,self.lag,copy(split_dates),version_params,metal_id_bool = metal_id)
 
@@ -218,6 +220,8 @@ class Logistic_online():
 
     #extract copy of data to process
     time_series = copy(time_series.loc[split_dates[0]:split_dates[2]])
+
+    assert_labels(LME_dates,split_dates,self.horizon)
 
     #load data for use
     final_X_tr, final_y_tr, final_X_va, final_y_va,val_dates, column_lag_list = prepare_data(time_series,LME_dates,self.horizon,[self.gt],self.lag,copy(split_dates),version_params,metal_id_bool = metal_id,live = True)

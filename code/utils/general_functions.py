@@ -33,6 +33,8 @@ def assert_version(version,path):
     assert path == "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf"
   elif version in ["v9","v10","v12","v16","v26"]:
     assert path == "exp/online_v10.conf"
+  elif version in ["v31","v32"]:
+    assert path == "exp/supply and demand.conf"
   else:
     print("Version out of bounds!")
     os.exit()
@@ -95,7 +97,7 @@ def assert_labels(dates,split_date,horizon):
     ensure that there are enough days to generate the correct labels for training period based on horizon
   '''
   df = pd.DataFrame(index =dates)
-  index_diff = df.index.get_loc(split_date[1],method = "bfill") - df.index.get_loc(split_date[0],method = "bfill") + 1
+  index_diff = df.index.get_loc(split_date[2],method = "bfill") - df.index.get_loc(split_date[1],method = "bfill") + 1
   assert index_diff >= horizon
 
 

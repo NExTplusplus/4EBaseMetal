@@ -245,8 +245,8 @@ class Trainer:
             current_test_class = [1 if ele>thresh else 0 for ele in current_test_pred]
             #np.savetxt(split_dates[1]+"_"+str(horizon)+"_"+str(epoch)+"_"+version+"_"+"prediction.txt",current_test_class)
             if val_loss < max_loss:
-              torch.save(net, os.path.join("result","model","alstm",method,split_dates[1]+"_"+str(horizon)+"_"+str(drop_out)+"_"+str(hidden_state)+"_"+str(embedding_size)+"_"+str(lag)+"_"+version+"_"+'alstm.pkl'))
-              np.savetxt(os.path.join("result","probability","alstm",method,split_dates[1]+"_"+str(horizon)+"_"+str(drop_out)+"_"+str(hidden_state)+"_"+str(embedding_size)+"_"+str(lag)+"_"+version+"_"+"prediction.txt"),current_test_class)
+              torch.save(net, os.path.join("result","model","alstm",version+"_"+method,split_dates[1]+"_"+str(horizon)+"_"+str(drop_out)+"_"+str(hidden_state)+"_"+str(embedding_size)+"_"+str(lag)+"_"+version+"_"+'alstm.pkl'))
+              np.savetxt(os.path.join("result","probability","alstm",version+"_"+method,split_dates[1]+"_"+str(horizon)+"_"+str(drop_out)+"_"+str(hidden_state)+"_"+str(embedding_size)+"_"+str(lag)+"_"+version+"_"+"prediction.txt"),current_test_class)
               max_loss = val_loss
             #np.save(epoch+"prediction.txt",current_test_class)
             test_loss = loss_sum
@@ -377,6 +377,7 @@ class ALSTM_online():
     length = 5
     start_time,evalidate_date = get_relevant_dates(today,length,"train")
     split_dates  =  [start_time,evalidate_date,str(today)]
+    assert_labels(LME_dates,split_dates,self.horizon)
     """
     generate the version
     """			
@@ -576,6 +577,9 @@ class ALSTM_online():
     length = 5
     start_time,evalidate_date = get_relevant_dates(today,length,"test")
     split_dates  =  [start_time,evalidate_date,str(today)]
+
+    assert_labels(LME_dates,split_dates,self.horizon)
+
     """
     generate the version
     """			
@@ -722,7 +726,7 @@ class ALSTM_online():
     test_X = torch.from_numpy(final_X_te).float()
     test_Y = torch.from_numpy(final_y_te).float()
     var_x_test_id = torch.LongTensor(np.array(final_test_X_embedding))
-    net = torch.load(os.path.join('result','model','alstm',method,split_dates[1]+"_"+str(self.horizon)+"_"+str(drop_out)+"_"+str(hidden_state)+"_"+str(embedding_size)+"_"+str(self.lag)+"_"+self.version+"_"+'alstm.pkl'))
+    net = torch.load(os.path.join('result','model','alstm',self.version+"_"+method,split_dates[1]+"_"+str(self.horizon)+"_"+str(drop_out)+"_"+str(hidden_state)+"_"+str(embedding_size)+"_"+str(self.lag)+"_"+self.version+"_"+'alstm.pkl'))
     net.eval()
     test_output = net(test_X, var_x_test_id)
     #loss = loss_func(test_output, test_Y)
@@ -731,7 +735,7 @@ class ALSTM_online():
     # print(np.min(current_test_pred), np.max(current_test_pred))
     print(var_x_test_id)
     current_test_class = [1 if ele>thresh else 0 for ele in current_test_pred]
-    np.savetxt(os.path.join('result','probability','alstm',method,split_dates[1]+"_"+str(self.horizon)+"_"+self.version+"_"+"prediction.txt"),current_test_class)
+    np.savetxt(os.path.join('result','probability','alstm',self.version+"_"+method,split_dates[1]+"_"+str(self.horizon)+"_"+self.version+"_"+"prediction.txt"),current_test_class)
     #np.savetxt("preciction.txt",current_test_class)    
     
     #test_loss = loss_sum
