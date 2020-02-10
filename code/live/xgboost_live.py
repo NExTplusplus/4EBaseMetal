@@ -499,7 +499,10 @@ class XGBoost_online():
     save the model
     """
     for fold_n, (train_index, valid_index) in enumerate(folds.split(train_X)):
-      model = pickle.load(open(os.path.join("result","model","xgboost",split_dates[1]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+str(fold_n)+"_"+self.version+"_"+'xgb.model'), "rb"))
+      if not even_version(self.version):
+        model = pickle.load(open(os.path.join("result","model","xgboost",split_dates[1]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+str(fold_n)+"_"+self.version+"_"+'xgb.model'), "rb"))
+      else:
+        model = pickle.load(open(os.path.join("result","model","xgboost",split_dates[1]+"_LME_All_"+str(self.horizon)+"_"+str(self.lag)+"_"+str(fold_n)+"_"+self.version+"_"+'xgb.model'), "rb"))
       y_pred = model.predict_proba(test_X, ntree_limit=model.best_ntree_limit)[:, 1]
       y_pred = y_pred.reshape(-1, 1)
       if fold_n == 0:

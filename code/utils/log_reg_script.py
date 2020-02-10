@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 from copy import copy
-from utils.general_functions import even_version
 import argparse
 import os
 
@@ -93,6 +92,7 @@ if __name__ == '__main__':
 
     elif args.action == "test commands":
         i = 0
+        validation_dates = [d.split("-")[0]+"-01-01" if d[4:] == "-06-30" else d.split("-")[0]+"-07-01" for d in args.dates]
         with open(args.output,"w") as out:
             for version in args.version_list:
                 ground_truth_list = copy(args.ground_truth_list)
@@ -110,10 +110,10 @@ if __name__ == '__main__':
                 train = "code/train_data_lr.py"
                 for gt in ground_truth_list:
                     for h in args.step_list:
-                        for d in args.dates:
+                        for j,d in enumerate(args.dates):
                             for lag in args.lag_list:
-                                if "_".join([version,gt,h,lag,"lr",d+".pkl"]) in os.listdir(os.path.join(os.getcwd(),"result","model","lr")) or (even_version(version) and\
-                                    "_".join([version,"all",h,lag,"lr",d+".pkl"]) in os.listdir(os.path.join(os.getcwd(),"result","model","lr"))):
+                                if "_".join([version,gt,h,lag,"lr",validation_dates[j]+".pkl"]) in os.listdir(os.path.join(os.getcwd(),"result","model","lr")) or (int(version[1:]) % 2 == 0 and\
+                                    "_".join([version,"all",h,lag,"lr",validation_dates[j]+".pkl"]) in os.listdir(os.path.join(os.getcwd(),"result","model","lr"))):
                                     out.write("python "+train+" "+" ".join(["-sou",args.source,"-v",version,"-c",exp,"-s",h,"-l",lag,"-gt",gt,"-o","test",'-d',d,">","/dev/null", "2>&1", "&"]))
                                     out.write("\n")
                                     i+=1

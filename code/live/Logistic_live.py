@@ -209,7 +209,10 @@ class Logistic_online():
     start_time,evalidate_date = get_relevant_dates(today,length,"test")
     split_dates  =  [start_time,evalidate_date,str(today)]
     
-    model = pure_LogReg.load(self.version, self.gt, self.horizon, self.lag,evalidate_date)
+    if even_version(self.version):
+      model = pure_LogReg.load(self.version, "all", self.horizon, self.lag,evalidate_date)
+    else:
+      model = pure_LogReg.load(self.version, self.gt, self.horizon, self.lag,evalidate_date)
 
     #generate the version
     version_params=generate_version_params(self.version)

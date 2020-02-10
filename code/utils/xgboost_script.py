@@ -225,6 +225,7 @@ if __name__ == '__main__':
     #generates the command line to be used for online testing
     if args.action == "test commands":
         i = 0
+        validation_dates = [d.split("-")[0]+"-01-01" if d[4:] == "-06-30" else d.split("-")[0]+"-07-01" for d in args.dates]
         with open(args.output,"w") as out:
             for version in args.version_list:
                 ground_truth_list = copy(args.ground_truth_list[1:])
@@ -249,9 +250,9 @@ if __name__ == '__main__':
                             f = pd.read_csv(os.path.join(args.path,'_'.join([gt.split("_")[1],version,lag,"h"+h])+".csv")).iloc[:5,:]
                             total = pd.concat([total,f],axis = 0)
                         total = total.sort_values(by=['result','lag','max_depth','learning_rate','gamma','min_child_weigh','subsample'],ascending=[False,True,True,True,True,True,True]).reset_index(drop = True)
-                        for d in args.dates_list:
-                            if "_".join([d,gt,h,lag,"0",version,"xgb.model"]) in os.listdir(os.path.join(os.getcwd(),"result","model","xgboost")) or (even_version(version) and\
-                                "_".join([d,"LME_All",h,lag,"0",version,"xgb.model"]) in os.listdir(os.path.join(os.getcwd(),"result","model","xgboost"))):
+                        for j,d in enumerate(args.dates_list):
+                            if "_".join([validation_dates[j],gt,h,lag,"0",version,"xgb.model"]) in os.listdir(os.path.join(os.getcwd(),"result","model","xgboost")) or (int(version[1:]) % 2 == 0 and\
+                                "_".join([validation_dates[j],"LME_All",h,lag,"0",version,"xgb.model"]) in os.listdir(os.path.join(os.getcwd(),"result","model","xgboost"))):
                                 out.write(" ".join(["python",train,
                                     "-d",d,
                                     "-gt",gt,
