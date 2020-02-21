@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.stats import pearsonr
+from sklearn.metrics import cohen_kappa_score, matthews_corrcoef
 from numpy.linalg import solve
 import pandas as pd
 from copy import deepcopy
@@ -18,13 +19,10 @@ def get_W(y,hp,version,limit,corr_period = None):
     if corr_period is None:
             corr_period = len(y)
     y_ = deepcopy(y.iloc[len(y)-corr_period:,:])
-    corr = y_.corr(method = "pearson")
+    corr = y_.corr(method = matthews_corrcoef)
     corr_ = deepcopy(corr)
-    p = deepcopy(corr)
     columns = y_.columns.values.tolist()
     for comb in combinations(columns,2):
-        p.loc[comb[0],comb[1]] = pearsonr(y.loc[:,comb[0]],y.loc[:,comb[1]])[1]
-        p.loc[comb[1],comb[0]] = pearsonr(y.loc[:,comb[0]],y.loc[:,comb[1]])[1]
         if version == 1:
             if (comb[0][-1] != comb[1][-1] and comb[0][:-1] != comb[1][:-1]) or corr.loc[comb[0],comb[1]] < 0:
                 corr.loc[comb[0],comb[1]] = 0
@@ -37,16 +35,11 @@ def get_W(y,hp,version,limit,corr_period = None):
             if comb[0][-1] != comb[1][-1] or corr.loc[comb[0],comb[1]] < 0:
                 corr.loc[comb[0],comb[1]] = 0
                 corr.loc[comb[1],comb[0]] = 0
-        if corr.loc[comb[0],comb[1]] < limit:
-            corr.loc[comb[0],comb[1]] = 0
-            corr.loc[comb[1],comb[0]] = 0            
-    if hp == 0:
-        pd.set_option('display.max_columns',None)
-        print(p)
-        print(corr)
+    sorted_corr = sorted(np.array(corr).flatten())[:limit]
+    corr = corr.applymap(lambda x:  0 if x in sorted_corr else x )      
     tri = (np.array(corr) - np.identity(np.shape(corr)[0]))*hp
     mat = np.matrix(np.sum(tri,axis = 1)*np.identity(np.shape(corr)[0]) + np.identity(np.shape(corr)[0]) - tri)
-    return mat
+    return mat, corr
 
 def prediction_correction(W,y_pred):
     '''

@@ -76,7 +76,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
 
     # we construct the signal strategy of LME
     parameters['time_series'] = strategy_signal(parameters,version_params['strategy_signal'])
-    print(parameters['time_series'].columns.values.tolist())
+    #print(parameters['time_series'].columns.values.tolist())
     # save_data("i3",parameters['time_series'],parameters['time_series'].columns.values.tolist())
     # reset the split date before dealing with the abnormal value
     split_dates = reset_split_dates(parameters['time_series'],split_dates)
@@ -95,12 +95,14 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
         parameters['cat_cols'] = ['day','month']
         parameters['time_series'] = insert_date_into_feature(parameters)
     # remove the unused feature includes the unused column and the original useless feature
+    print("origin features",parameters['time_series'].columns.values.tolist())
     parameters['time_series'], parameters['org_cols'] = remove_unused_columns(parameters, version_params['remove_unused_columns'],ground_truth_columns)
     # save_data("i5",parameters['time_series'],parameters['time_series'].columns.values.tolist())
+    #print("values",parameters['time_series'].columns.values.tolist())
     parameters['time_series'] = price_normalization(parameters,version_params['price_normalization'])
     parameters['time_series'] = process_missing_value(parameters, version_params['process_missing_value'])
     split_dates = reset_split_dates(parameters['time_series'],split_dates)
-    
+    print("features",parameters['time_series'].columns.values.tolist())
     for col in parameters['time_series'].columns.values.tolist():
         if len(parameters['time_series'][col].unique().tolist()) <= 3:
             parameters['cat_cols'].append(col)
