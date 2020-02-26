@@ -246,393 +246,396 @@ class Crawler_machine:
         pre_click = False
         keyword_filter = ['铜','铅','锌','镍','铝','锡','有色'] 
         exclude_list=[]
-        
-        if website_link == 'http://www.dlqh.com/page-1-4.php':
-            analyst_company = '大陆'
-            news_type = 'Weekly'
-            keyword_report = '周报'
-            keyword_next_page = None 
-            xpath = None
-            tag_element = None
-            crawl_type = 'auto_link_crawl'
-        
-        elif website_link == 'http://www.cnhtqh.com.cn/list/664/1.shtml?id=jsqh':
-            analyst_company = '恒泰'
-            news_type = 'Weekly'
-            keyword_report = 'All'
-            keyword_next_page = '下一页' 
-            xpath = "//div[@class='kf_jynews']"
-            tag_element = 'a'
-            crawl_type = 'auto_link_crawl'
-        
-        elif website_link == 'http://www.bocifco.com/Category_86/Index.aspx':
-            analyst_company = '中银'
-            news_type = 'Weekly'
-            keyword_report = '周报'
-            keyword_next_page = '下一页' 
-            xpath = None
-            tag_element = None
-            crawl_type = 'auto_link_crawl'
-        elif website_link == 'http://www.xzfutures.com/deeconomic.html':
-            analyst_company = '兴证'
-            news_type = 'Weekly'
-            keyword_report = '精要'
-            xpath = None
-            tag_element = None
-            keyword_next_page = '下一页' 
-            crawl_type = 'auto_link_crawl'
-            keyword_filter = 'All'
-        elif website_link == 'http://www.xzfutures.com/deeconomic_cid_119.html':
-            analyst_company = '兴证'
-            news_type = 'Weekly'
-            keyword_report = '周报'
-            xpath = None
-            tag_element = None
-            keyword_next_page = '下一页' 
-            crawl_type = 'auto_link_crawl'
-        
-        elif website_link == 'https://www.mfc.com.cn/research.html':
-            pre_click = True
-            locate_action = "//div[@class='screen']"
-            click_action=["//a[contains(text(), '常规')]","//a[contains(text(), '金属')]"]
+        try:
+            if website_link == 'http://www.dlqh.com/page-1-4.php':
+                analyst_company = '大陆'
+                news_type = 'Weekly'
+                keyword_report = '周报'
+                keyword_next_page = None 
+                xpath = None
+                tag_element = None
+                crawl_type = 'auto_link_crawl'
             
-            analyst_company = '美尔雅'
-            news_type = 'Weekly'
-            keyword_report = '周报'
-            xpath = None
-            tag_element = None
-            keyword_next_page = '加载更多' 
-            crawl_type = 'same_page_click'
-        elif website_link == 'http://www.gzjkqh.com/czjy/list_36.aspx':
-            analyst_company = '广金'
-            news_type = 'Daily'           
-            keyword_report = '种操作建议'
-            xpath = None
-            tag_element = None
-            keyword_next_page = '>' 
-            crawl_type = 'auto_link_crawl'
-            keyword_filter = 'All'
-        
-        elif website_link == 'http://www.shqhgs.com/lists/Dailystudy/p/1.html':
-            analyst_company = '神华'
-            news_type = 'Daily'
-            keyword_report = '行情资信'
-            xpath = None
-            tag_element = None
-            keyword_next_page = '下一页' 
-            crawl_type = 'auto_link_crawl'
-            keyword_filter = 'All'
-        elif website_link == 'http://www.zcqh.com/zcyj_z.php?name=%E6%AF%8F%E6%97%A5%E6%97%A9%E6%8A%A5&page=1':
-            analyst_company = '中财'
-            news_type = 'Daily'
-            keyword_report = '晨会焦点'
-            xpath = None
-            tag_element = None
-            keyword_next_page = '下一页' 
-            crawl_type = 'auto_link_crawl'
-            keyword_filter = 'All'
+            elif website_link == 'http://www.cnhtqh.com.cn/list/664/1.shtml?id=jsqh':
+                analyst_company = '恒泰'
+                news_type = 'Weekly'
+                keyword_report = 'All'
+                keyword_next_page = '下一页' 
+                xpath = "//div[@class='kf_jynews']"
+                tag_element = 'a'
+                crawl_type = 'auto_link_crawl'
             
-        elif website_link == 'http://www.tqfutures.com/zpts/list_14.html':
-            analyst_company = '中投'
-            news_type = 'Morning'
-            keyword_report = '早盘分析'
-            xpath = None
-            tag_element = None
-            keyword_next_page = '下一页' 
-            crawl_type = 'auto_link_crawl'
-            keyword_filter = 'All'
+            elif website_link == 'http://www.bocifco.com/Category_86/Index.aspx':
+                analyst_company = '中银'
+                news_type = 'Weekly'
+                keyword_report = '周报'
+                keyword_next_page = '下一页' 
+                xpath = None
+                tag_element = None
+                crawl_type = 'auto_link_crawl'
+            elif website_link == 'http://www.xzfutures.com/deeconomic.html':
+                analyst_company = '兴证'
+                news_type = 'Weekly'
+                keyword_report = '精要'
+                xpath = None
+                tag_element = None
+                keyword_next_page = '下一页' 
+                crawl_type = 'auto_link_crawl'
+                keyword_filter = 'All'
+            elif website_link == 'http://www.xzfutures.com/deeconomic_cid_119.html':
+                analyst_company = '兴证'
+                news_type = 'Weekly'
+                keyword_report = '周报'
+                xpath = None
+                tag_element = None
+                keyword_next_page = '下一页' 
+                crawl_type = 'auto_link_crawl'
             
-        elif website_link == 'http://www.shcifco.com/html/yanjiuzhongxin/shishikuaixun/weipantishi/':
-            analyst_company = '上海中期'
-            news_type = 'After Market'
-            keyword_report = '尾盘研发观点'
-            xpath = None
-            tag_element = None
-            keyword_next_page = '下一页' 
-            crawl_type = 'auto_link_crawl'
-            keyword_filter = 'All'
+            elif website_link == 'https://www.mfc.com.cn/research.html':
+                pre_click = True
+                locate_action = "//div[@class='screen']"
+                click_action=["//a[contains(text(), '常规')]","//a[contains(text(), '金属')]"]
+                
+                analyst_company = '美尔雅'
+                news_type = 'Weekly'
+                keyword_report = '周报'
+                xpath = None
+                tag_element = None
+                keyword_next_page = '加载更多' 
+                crawl_type = 'same_page_click'
+            elif website_link == 'http://www.gzjkqh.com/czjy/list_36.aspx':
+                analyst_company = '广金'
+                news_type = 'Daily'           
+                keyword_report = '种操作建议'
+                xpath = None
+                tag_element = None
+                keyword_next_page = '>' 
+                crawl_type = 'auto_link_crawl'
+                keyword_filter = 'All'
             
-        elif website_link == 'https://www.dyqh.info/research/researchreport/8/2?tag=1':
-            analyst_company = '大越'
-            news_type = 'Daily'
-            keyword_report = '每日评论'
-            xpath = None
-            tag_element = None
-            keyword_next_page = '下一页' 
-            crawl_type = 'auto_link_crawl'
-        elif website_link == 'http://www.xzfutures.com/deeconomic_cid_107.html':
-            analyst_company = '兴证'
-            news_type = 'After Market'
-            keyword_report = '研发盘末提示'
-            xpath = None
-            tag_element = None
-            keyword_next_page = '下一页' 
-            crawl_type = 'auto_link_crawl'
-            keyword_filter = 'All'    
-        
-        elif website_link == 'https://www.rdqh.com/content/index/115?page=1':
-            analyst_company = '瑞达'
-            news_type = 'Daily'
-            keyword_report = '瑞达期货'
-            xpath = None
-            tag_element = None
-            keyword_next_page = '下一页' 
-            crawl_type = 'auto_link_crawl'
+            elif website_link == 'http://www.shqhgs.com/lists/Dailystudy/p/1.html':
+                analyst_company = '神华'
+                news_type = 'Daily'
+                keyword_report = '行情资信'
+                xpath = None
+                tag_element = None
+                keyword_next_page = '下一页' 
+                crawl_type = 'auto_link_crawl'
+                keyword_filter = 'All'
+            elif website_link == 'http://www.zcqh.com/zcyj_z.php?name=%E6%AF%8F%E6%97%A5%E6%97%A9%E6%8A%A5&page=1':
+                analyst_company = '中财'
+                news_type = 'Daily'
+                keyword_report = '晨会焦点'
+                xpath = None
+                tag_element = None
+                keyword_next_page = '下一页' 
+                crawl_type = 'auto_link_crawl'
+                keyword_filter = 'All'
+                
+            elif website_link == 'http://www.tqfutures.com/zpts/list_14.html':
+                analyst_company = '中投'
+                news_type = 'Morning'
+                keyword_report = '早盘分析'
+                xpath = None
+                tag_element = None
+                keyword_next_page = '下一页' 
+                crawl_type = 'auto_link_crawl'
+                keyword_filter = 'All'
+                
+            elif website_link == 'http://www.shcifco.com/html/yanjiuzhongxin/shishikuaixun/weipantishi/':
+                analyst_company = '上海中期'
+                news_type = 'After Market'
+                keyword_report = '尾盘研发观点'
+                xpath = None
+                tag_element = None
+                keyword_next_page = '下一页' 
+                crawl_type = 'auto_link_crawl'
+                keyword_filter = 'All'
+                
+            elif website_link == 'https://www.dyqh.info/research/researchreport/8/2?tag=1':
+                analyst_company = '大越'
+                news_type = 'Daily'
+                keyword_report = '每日评论'
+                xpath = None
+                tag_element = None
+                keyword_next_page = '下一页' 
+                crawl_type = 'auto_link_crawl'
+            elif website_link == 'http://www.xzfutures.com/deeconomic_cid_107.html':
+                analyst_company = '兴证'
+                news_type = 'After Market'
+                keyword_report = '研发盘末提示'
+                xpath = None
+                tag_element = None
+                keyword_next_page = '下一页' 
+                crawl_type = 'auto_link_crawl'
+                keyword_filter = 'All'    
             
-        elif website_link == 'http://www.jtqh.cn/yfzx_1.asp?fl=1&lm=2&pz=%CD%AD':
-            analyst_company = '锦泰'
-            news_type = 'Morning'
-            keyword_report = '铜'
-            xpath = None
-            tag_element = None
-            keyword_next_page = '下一页' 
-            crawl_type = 'auto_click_crawl'
-            keyword_filter = 'All'
+            elif website_link == 'https://www.rdqh.com/content/index/115?page=1':
+                analyst_company = '瑞达'
+                news_type = 'Daily'
+                keyword_report = '瑞达期货'
+                xpath = None
+                tag_element = None
+                keyword_next_page = '下一页' 
+                crawl_type = 'auto_link_crawl'
+                
+            elif website_link == 'http://www.jtqh.cn/yfzx_1.asp?fl=1&lm=2&pz=%CD%AD':
+                analyst_company = '锦泰'
+                news_type = 'Morning'
+                keyword_report = '铜'
+                xpath = None
+                tag_element = None
+                keyword_next_page = '下一页' 
+                crawl_type = 'auto_click_crawl'
+                keyword_filter = 'All'
+                
+            elif website_link == 'http://www.sdfutures.com.cn/a/sdyanjiu/jinshu/ribao/list_151_1.html':
+                analyst_company = '盛达'
+                news_type = 'Daily'
+                keyword_report = '盛达期货'
+                xpath = None
+                tag_element = None
+                keyword_next_page = '下一页' 
+                crawl_type = 'auto_link_crawl'
+                keyword_filter = 'All'
+            elif website_link == 'http://www.guosenqh.com.cn/main/yjzx/zp/zp_metal/index.shtml':
+                analyst_company = '国信'
+                news_type = 'Morning'
+                keyword_report = '早评'
+                xpath = None
+                tag_element = None
+                keyword_next_page = '下一页' 
+                crawl_type = 'auto_click_crawl'
+            elif website_link == 'http://www.gtaxqh.com/html/RESEARCH_SERVICES/pzbg/ysjgjs/':
+                analyst_company = '国投'
+                news_type = 'Morning'
+                keyword_report = '晨报'
+                xpath = None
+                tag_element = None
+                keyword_next_page = '下一页' 
+                crawl_type = 'auto_link_crawl'
             
-        elif website_link == 'http://www.sdfutures.com.cn/a/sdyanjiu/jinshu/ribao/list_151_1.html':
-            analyst_company = '盛达'
-            news_type = 'Daily'
-            keyword_report = '盛达期货'
-            xpath = None
-            tag_element = None
-            keyword_next_page = '下一页' 
-            crawl_type = 'auto_link_crawl'
-            keyword_filter = 'All'
-        elif website_link == 'http://www.guosenqh.com.cn/main/yjzx/zp/zp_metal/index.shtml':
-            analyst_company = '国信'
-            news_type = 'Morning'
-            keyword_report = '早评'
-            xpath = None
-            tag_element = None
-            keyword_next_page = '下一页' 
-            crawl_type = 'auto_click_crawl'
-        elif website_link == 'http://www.gtaxqh.com/html/RESEARCH_SERVICES/pzbg/ysjgjs/':
-            analyst_company = '国投'
-            news_type = 'Morning'
-            keyword_report = '晨报'
-            xpath = None
-            tag_element = None
-            keyword_next_page = '下一页' 
-            crawl_type = 'auto_link_crawl'
-        
-        elif website_link == 'http://www.cnhtqh.com.cn/list/654/1.shtml?id=cjzbc':
-            analyst_company = '恒泰'
-            news_type = 'Morning'
-            keyword_report = '早盘精要'
-            xpath = None
-            tag_element = None
-            keyword_next_page = '下一页' 
-            crawl_type = 'auto_link_crawl'
-            keyword_filter = 'All'
-        elif website_link == 'http://www.shcifco.com/html/yanjiuzhongxin/shishikuaixun/qishizaobanche/':
-            analyst_company = '上海中期'
-            news_type = 'Morning'
-            keyword_report = '早盘研发'
-            xpath = None
-            tag_element = None
-            keyword_next_page = '下一页' 
-            crawl_type = 'auto_link_crawl'
-            keyword_filter = 'All'
-        
-        elif website_link == 'https://www.dyqh.info/research/researchreport/6/0?tag=1':
-            analyst_company = '大越'
-            news_type = 'Daily'
-            keyword_report = '交易内参'
-            xpath = None
-            tag_element = None
-            keyword_next_page = '下一页' 
-            crawl_type = 'auto_link_crawl'
-            keyword_filter = 'All'
-        
-        elif website_link == 'http://www.xzfutures.com/deeconomic_page_1.html?cid=114':
-            analyst_company = '兴证'
-            news_type = 'Daily'
-            keyword_report = '日报'
-            xpath = None
-            tag_element = None
-            keyword_next_page = '下一页' 
-            crawl_type = 'auto_link_crawl'
-        
-        elif website_link == 'http://www.gzf2010.com.cn/ResearchCenter.aspx?c=220102&page=1':
-            analyst_company = '广州期货'
-            news_type = 'Daily'
-            keyword_report = 'All'
-            xpath = "//div[@class='r right right_all']//ul"
-            tag_element = 'a'
-            keyword_next_page = '下一页' 
-            crawl_type = 'auto_link_crawl'
-        elif website_link == 'http://www.jxgsqh.com/News_list.aspx?Sort_Id=634&Mid=629':
-            analyst_company = '国盛'
-            news_type = 'Daily'
-            keyword_report = 'All'
-            xpath = "//div[@class='ny_ri_n']//ul"
-            tag_element = 'a'
-            keyword_next_page = '下一页' 
-            crawl_type = 'auto_link_crawl'
-        elif website_link == 'http://www.hongyuanqh.com/hyqhnew/hyyj/more_index.jsp?1=1&oneMenuId=000200010015&twoMenuId=0002000100150001&threeMenuid=00020001001500010002&classId=000200010015000100020004&productid=100':
-            analyst_company = '宏源'
-            news_type = 'Morning'
-            keyword_report = '有色早评'
-            xpath = None
-            tag_element = None
-            keyword_next_page = '下一页' 
-            crawl_type = 'auto_click_crawl'
-        elif website_link == 'http://www.hhqh.com.cn/?pcyear=10-24-13':
-            analyst_company = '和合'
-            news_type = 'Morning'
-            keyword_report = '和合期货'
-            xpath = None
-            tag_element = None
-            keyword_next_page = '下一页' 
-            crawl_type = 'auto_link_crawl'
-            keyword_filter = ['铜','铅','锌','镍','铝','锡','有色','早盘提示']
-        
-        elif website_link == 'http://www.bhfcc.com/research_page_1.html?pid=88':
-            analyst_company = '渤海'
-            news_type = 'Morning'
-            keyword_report = '早盘提示'
-            xpath = None
-            tag_element = None
-            keyword_next_page = '下一页' 
-            crawl_type = 'auto_link_crawl'
-        elif website_link == 'https://www.thanf.com/list-83.html':
-            analyst_company = '天风'
-            news_type = 'Daily'
-            keyword_report = 'All'
-            xpath = "//div[@class='service-index ']"
-            tag_element = 'a'
-            keyword_next_page = '»' 
-            crawl_type = 'auto_click_crawl'
-        
-        elif website_link == 'http://www.bocifco.com/Category_28/Index.aspx':
-            analyst_company = '中银'
-            news_type = 'Daily'
-            keyword_report = '日报'
-            xpath = None
-            tag_element = None
-            keyword_next_page = '下一页' 
-            crawl_type = 'auto_click_crawl'
-        
-        elif website_link == 'http://www.ftol.com.cn/main/yfzx/rcbg/rcbg/zaoping/index.shtml':
-            analyst_company = 'Holly'
-            news_type = 'Morning'
-            keyword_report = '金属早评'
-            xpath = None
-            tag_element = None
-            keyword_next_page = "//div[@class='page_footer']" 
-            crawl_type = 'manual_num_crawl'
-            keyword_filter = 'All'
-            exclude_list = ['黑色金属早评']
-        elif website_link == 'https://www.cnzsqh.com/cms/column/index?id=116':
-            analyst_company = '浙商'
-            news_type = 'Morning'
-            keyword_report = '留单建议'
-            xpath = None
-            tag_element = None
-            keyword_next_page = "»" 
-            crawl_type = 'auto_click_crawl'
-            keyword_filter = 'All'
-        
-        elif website_link == 'http://www.fnqh.com.cn/content/index/85':
-            analyst_company = '福能'
-            news_type = 'Morning'
-            keyword_report = '早报'
-            xpath = None
-            tag_element = None
-            keyword_next_page = "»" 
-            crawl_type = 'auto_link_crawl'
-        
-        elif website_link == 'http://www.xzfutures.com/deeconomic_cid_106.html':
-            analyst_company = '兴证'
-            news_type = 'Morning'
-            keyword_report = '中心早评'
-            xpath = None
-            tag_element = None
-            keyword_next_page = "下一页" 
-            crawl_type = 'auto_link_crawl'
-            keyword_filter = 'All'
-        
-        elif website_link == 'http://www.gzf2010.com.cn/ResearchCenter.aspx?c=220101':
-            analyst_company = '广州期货'
-            news_type = 'Morning'
-            keyword_report = 'All'
-            xpath = "//div[@class='r right right_all']//ul"
-            tag_element = "a"
-            keyword_next_page = "下一页" 
-            crawl_type = 'auto_link_crawl'
-            keyword_filter = 'All'
+            elif website_link == 'http://www.cnhtqh.com.cn/list/654/1.shtml?id=cjzbc':
+                analyst_company = '恒泰'
+                news_type = 'Morning'
+                keyword_report = '早盘精要'
+                xpath = None
+                tag_element = None
+                keyword_next_page = '下一页' 
+                crawl_type = 'auto_link_crawl'
+                keyword_filter = 'All'
+            elif website_link == 'http://www.shcifco.com/html/yanjiuzhongxin/shishikuaixun/qishizaobanche/':
+                analyst_company = '上海中期'
+                news_type = 'Morning'
+                keyword_report = '早盘研发'
+                xpath = None
+                tag_element = None
+                keyword_next_page = '下一页' 
+                crawl_type = 'auto_link_crawl'
+                keyword_filter = 'All'
             
-        elif website_link == 'http://www.hlqh.com/article_cat.php?id=96&t_id=96':
-            analyst_company = '华联'
-            news_type = 'Morning'
-            keyword_report = '研究所日评'
-            xpath = None
-            tag_element = None
-            keyword_next_page = "下一页" 
-            crawl_type = 'auto_link_crawl'
-            keyword_filter = 'All'
-        
-        elif website_link == 'https://www.btqh.com/index.php?m=content&c=index&a=lists&catid=56':
-            analyst_company = '倍特'
-            news_type = 'Daily'
-            keyword_report = 'All'
-            xpath = "//ul[@class='fxd-text']"
-            tag_element = 'a'
-            keyword_next_page = ">" 
-            crawl_type = 'auto_link_crawl'
+            elif website_link == 'https://www.dyqh.info/research/researchreport/6/0?tag=1':
+                analyst_company = '大越'
+                news_type = 'Daily'
+                keyword_report = '交易内参'
+                xpath = None
+                tag_element = None
+                keyword_next_page = '下一页' 
+                crawl_type = 'auto_link_crawl'
+                keyword_filter = 'All'
             
-        elif website_link == 'http://www.szjhqh.com/index.php?s=news&c=category&id=10':
-            analyst_company = '金汇'
-            news_type = 'Daily'
-            keyword_report = '有色板块'
-            xpath = None
-            tag_element = None
-            keyword_next_page = "下一页" 
-            crawl_type = 'auto_link_crawl'
-            keyword_filter = 'All'
-        
-        elif website_link == 'https://www.htfc.com/main/yjzx/yjbg/index.shtml':
-            analyst_company = '华泰'
-            news_type = 'Daily'
-            keyword_report = '日报'
-            xpath = None
-            tag_element = None
-            keyword_next_page = "下一页" 
-            crawl_type = 'auto_click_crawl'
-            pre_click = True
-            locate_action = "//div[@class='market_box']"
-            click_action=["//a[contains(text(), '日报')]","//a[contains(text(), '金属')]"]
-        
-        elif website_link == 'http://www.guosenqh.com.cn/main/yjzx/rp/rp_metal/index.shtml':
-            analyst_company = '国信'
-            news_type = 'Daily'
-            keyword_report = '日评'
-            xpath = None
-            tag_element = None
-            keyword_next_page = "下一页" 
-            crawl_type = 'auto_click_crawl'
-
-        elif website_link == 'http://www.shcifco.com/html/yanjiuzhongxin/shishikuaixun/panzhongshidian/':
-            analyst_company = '上海中期'
-            news_type = 'After Market'
-            keyword_report = '午间评述'
-            xpath = None
-            tag_element = None
-            keyword_next_page = "下一页" 
-            crawl_type = 'auto_link_crawl'
-            keyword_filter = 'All'
-        
-        elif website_link == 'http://www.gtaxqh.com/html/RESEARCH_SERVICES/zhlcb/mrsp/':
-            analyst_company = '国投安信'
-            news_type = 'After Market'
-            keyword_report = '货每日收评'
-            xpath = None
-            tag_element = None
-            keyword_next_page = "下一页" 
-            crawl_type = 'auto_link_crawl'
-            keyword_filter = 'All'
-        else:
-            print('Website not in the class, please add under crawl function')
+            elif website_link == 'http://www.xzfutures.com/deeconomic_page_1.html?cid=114':
+                analyst_company = '兴证'
+                news_type = 'Daily'
+                keyword_report = '日报'
+                xpath = None
+                tag_element = None
+                keyword_next_page = '下一页' 
+                crawl_type = 'auto_link_crawl'
+            
+            elif website_link == 'http://www.gzf2010.com.cn/ResearchCenter.aspx?c=220102&page=1':
+                analyst_company = '广州期货'
+                news_type = 'Daily'
+                keyword_report = 'All'
+                xpath = "//div[@class='r right right_all']//ul"
+                tag_element = 'a'
+                keyword_next_page = '下一页' 
+                crawl_type = 'auto_link_crawl'
+            elif website_link == 'http://www.jxgsqh.com/News_list.aspx?Sort_Id=634&Mid=629':
+                analyst_company = '国盛'
+                news_type = 'Daily'
+                keyword_report = 'All'
+                xpath = "//div[@class='ny_ri_n']//ul"
+                tag_element = 'a'
+                keyword_next_page = '下一页' 
+                crawl_type = 'auto_link_crawl'
+            elif website_link == 'http://www.hongyuanqh.com/hyqhnew/hyyj/more_index.jsp?1=1&oneMenuId=000200010015&twoMenuId=0002000100150001&threeMenuid=00020001001500010002&classId=000200010015000100020004&productid=100':
+                analyst_company = '宏源'
+                news_type = 'Morning'
+                keyword_report = '有色早评'
+                xpath = None
+                tag_element = None
+                keyword_next_page = '下一页' 
+                crawl_type = 'auto_click_crawl'
+            elif website_link == 'http://www.hhqh.com.cn/?pcyear=10-24-13':
+                analyst_company = '和合'
+                news_type = 'Morning'
+                keyword_report = '和合期货'
+                xpath = None
+                tag_element = None
+                keyword_next_page = '下一页' 
+                crawl_type = 'auto_link_crawl'
+                keyword_filter = ['铜','铅','锌','镍','铝','锡','有色','早盘提示']
+            
+            elif website_link == 'http://www.bhfcc.com/research_page_1.html?pid=88':
+                analyst_company = '渤海'
+                news_type = 'Morning'
+                keyword_report = '早盘提示'
+                xpath = None
+                tag_element = None
+                keyword_next_page = '下一页' 
+                crawl_type = 'auto_link_crawl'
+            elif website_link == 'https://www.thanf.com/list-83.html':
+                analyst_company = '天风'
+                news_type = 'Daily'
+                keyword_report = 'All'
+                xpath = "//div[@class='service-index ']"
+                tag_element = 'a'
+                keyword_next_page = '»' 
+                crawl_type = 'auto_click_crawl'
+            
+            elif website_link == 'http://www.bocifco.com/Category_28/Index.aspx':
+                analyst_company = '中银'
+                news_type = 'Daily'
+                keyword_report = '日报'
+                xpath = None
+                tag_element = None
+                keyword_next_page = '下一页' 
+                crawl_type = 'auto_click_crawl'
+            
+            elif website_link == 'http://www.ftol.com.cn/main/yfzx/rcbg/rcbg/zaoping/index.shtml':
+                analyst_company = 'Holly'
+                news_type = 'Morning'
+                keyword_report = '金属早评'
+                xpath = None
+                tag_element = None
+                keyword_next_page = "//div[@class='page_footer']" 
+                crawl_type = 'manual_num_crawl'
+                keyword_filter = 'All'
+                exclude_list = ['黑色金属早评']
+            elif website_link == 'https://www.cnzsqh.com/cms/column/index?id=116':
+                analyst_company = '浙商'
+                news_type = 'Morning'
+                keyword_report = '留单建议'
+                xpath = None
+                tag_element = None
+                keyword_next_page = "»" 
+                crawl_type = 'auto_click_crawl'
+                keyword_filter = 'All'
+            
+            elif website_link == 'http://www.fnqh.com.cn/content/index/85':
+                analyst_company = '福能'
+                news_type = 'Morning'
+                keyword_report = '早报'
+                xpath = None
+                tag_element = None
+                keyword_next_page = "»" 
+                crawl_type = 'auto_link_crawl'
+            
+            elif website_link == 'http://www.xzfutures.com/deeconomic_cid_106.html':
+                analyst_company = '兴证'
+                news_type = 'Morning'
+                keyword_report = '中心早评'
+                xpath = None
+                tag_element = None
+                keyword_next_page = "下一页" 
+                crawl_type = 'auto_link_crawl'
+                keyword_filter = 'All'
+            
+            elif website_link == 'http://www.gzf2010.com.cn/ResearchCenter.aspx?c=220101':
+                analyst_company = '广州期货'
+                news_type = 'Morning'
+                keyword_report = 'All'
+                xpath = "//div[@class='r right right_all']//ul"
+                tag_element = "a"
+                keyword_next_page = "下一页" 
+                crawl_type = 'auto_link_crawl'
+                keyword_filter = 'All'
+                
+            elif website_link == 'http://www.hlqh.com/article_cat.php?id=96&t_id=96':
+                analyst_company = '华联'
+                news_type = 'Morning'
+                keyword_report = '研究所日评'
+                xpath = None
+                tag_element = None
+                keyword_next_page = "下一页" 
+                crawl_type = 'auto_link_crawl'
+                keyword_filter = 'All'
+            
+            elif website_link == 'https://www.btqh.com/index.php?m=content&c=index&a=lists&catid=56':
+                analyst_company = '倍特'
+                news_type = 'Daily'
+                keyword_report = 'All'
+                xpath = "//ul[@class='fxd-text']"
+                tag_element = 'a'
+                keyword_next_page = ">" 
+                crawl_type = 'auto_link_crawl'
+                
+            elif website_link == 'http://www.szjhqh.com/index.php?s=news&c=category&id=10':
+                analyst_company = '金汇'
+                news_type = 'Daily'
+                keyword_report = '有色板块'
+                xpath = None
+                tag_element = None
+                keyword_next_page = "下一页" 
+                crawl_type = 'auto_link_crawl'
+                keyword_filter = 'All'
+            
+            elif website_link == 'https://www.htfc.com/main/yjzx/yjbg/index.shtml':
+                analyst_company = '华泰'
+                news_type = 'Daily'
+                keyword_report = '日报'
+                xpath = None
+                tag_element = None
+                keyword_next_page = "下一页" 
+                crawl_type = 'auto_click_crawl'
+                pre_click = True
+                locate_action = "//div[@class='market_box']"
+                click_action=["//a[contains(text(), '日报')]","//a[contains(text(), '金属')]"]
+            
+            elif website_link == 'http://www.guosenqh.com.cn/main/yjzx/rp/rp_metal/index.shtml':
+                analyst_company = '国信'
+                news_type = 'Daily'
+                keyword_report = '日评'
+                xpath = None
+                tag_element = None
+                keyword_next_page = "下一页" 
+                crawl_type = 'auto_click_crawl'
+    
+            elif website_link == 'http://www.shcifco.com/html/yanjiuzhongxin/shishikuaixun/panzhongshidian/':
+                analyst_company = '上海中期'
+                news_type = 'After Market'
+                keyword_report = '午间评述'
+                xpath = None
+                tag_element = None
+                keyword_next_page = "下一页" 
+                crawl_type = 'auto_link_crawl'
+                keyword_filter = 'All'
+            
+            elif website_link == 'http://www.gtaxqh.com/html/RESEARCH_SERVICES/zhlcb/mrsp/':
+                analyst_company = '国投安信'
+                news_type = 'After Market'
+                keyword_report = '货每日收评'
+                xpath = None
+                tag_element = None
+                keyword_next_page = "下一页" 
+                crawl_type = 'auto_link_crawl'
+                keyword_filter = 'All'
+            else:
+                print('Website not in the class, please add under crawl function')
+                return
+        except Exception as e:
+            print('sth may change in the {}'.format(website_link))
             return
         
         # Load the Chrome Driver
