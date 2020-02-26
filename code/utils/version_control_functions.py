@@ -7,20 +7,23 @@ def generate_version_params(version):
         input:  version : a string which refers to the version of data preprocessing required
         output: ans     : a dictionary that holds the required version for each process within load data
     '''
-    ans = { "generate_norm_params":"v1","generate_tech_params":"v1","generate_strat_params":None,
+    ans = { "generate_norm_params":"v1","generate_tech_params":"v1","generate_strat_params":None, "generate_SD_params":"v1",
             "deal_with_abnormal_value":"v2", "labelling":"v1", "process_missing_value":"v1", "strategy_signal":None,
-            "normalize_without_1d_return": "v1", "technical_indication":"v1",
+            "normalize_without_1d_return": "v1", "technical_indication":"v1", "supply_and_demand":None,
             "remove_unused_columns":"v1", "price_normalization":"v1", "scaling":"v1",
             "construct":"v1"}
     ver = version.split("_")
     v = ver[0]
     ex = ver[1] if len(ver) > 1 else None
-    if v == "v7" or v=="v3":
+    if v == "v7" or v=="v3" or v == "v37":
         ans['technical_indication'] = "v2"
         if v=="v3":
             ans['remove_unused_columns'] = "v4"
+        if v=="v37":
+            ans['remove_unused_columns'] = "v5"
+            ans['normalize_without_1d_return'] = "v3"
     
-    if v in ["v9","v10","v11","v12","v14","v16","v18","v20","v22","v28","v30","v32"]:
+    if v in ["v9","v10","v11","v12","v14","v16","v18","v20","v22","v28","v30"]:
         if v == "v9":
             ans["generate_strat_params"]="v1"
         elif v== "v10":
@@ -45,8 +48,6 @@ def generate_version_params(version):
             ans["generate_strat_params"]="v10"
         elif v == "v30":
             ans["generate_strat_params"]="v11"
-        elif v == "v32":
-            ans["generate_strat_params"]="v12"
         ans['strategy_signal'] = "v1"
         ans["technical_indication"] = None
         
@@ -60,7 +61,7 @@ def generate_version_params(version):
             
         ans["scaling"] = None
     
-    if v in["v23","v24","v28","v30","v32"]:
+    if v in["v23","v24","v28","v30"]:
         ans["generate_tech_params"]="v2"
         ans['technical_indication'] = "v3"
         ans['remove_unused_columns'] = "v4"
@@ -86,6 +87,25 @@ def generate_version_params(version):
         ans['construct'] = "v1_ex2"
     if ex == "ex3":
         ans['technical_indication'] = ans['technical_indication']+"_ex3"
+    
+    if v in ["v32","v31"]:
+        ans['supply_and_demand'] = "v1"
+        ans['technical_indication'] = "v2"
+        ans["normalize_without_1d_return"] = "v1"
+        ans["price_normalization"] = "v1"
+        ans['scaling'] = "v1"
+        ans["remove_unused_columns"] = "v4" 
+
+    if v in ["v33","v35"]:
+        ans["deal_with_abnormal_value"] = "v3"
+        ans["technical_indication"] = "v2"
+        ans["remove_unused_columns"] = "v4" 
+        ans["normalize_without_1d_return"] = "v2"
+        if v == "v33":
+            ans["generate_norm_params"] = "v2"
+        if v == "v35":
+            ans["generate_norm_params"] = "v3"
+
     print(ans)
     return ans
 
@@ -95,6 +115,8 @@ def generate_norm_params(version,xgboost):
             return {'vol_norm':'v1','ex_spread_norm':'v1','spot_spread_norm':'v1','len_ma':5,'len_update':30,'both':3,'strength':0.01,'xgboost':True}
         else:
             return {'vol_norm':'v1','ex_spread_norm':'v1','spot_spread_norm':'v1','len_ma':5,'len_update':30,'both':3,'strength':0.01,'xgboost':False}
+    else:
+        return {'vol_norm':'v1','ex_spread_norm':'v1','spot_spread_norm':'v1','len_ma':5,'len_update':30,'both':3,'strength':0.01,'xgboost':False,"TPSpread":"v"+str(int(version[1])-1), 'xgboost':False}
         
 def generate_tech_params(version):
     if version == "v1":
@@ -104,6 +126,9 @@ def generate_tech_params(version):
                                'Win_MOM':[5,10,15,26,40,65,125],'PPO_Fast':[12,22],'PPO_Slow':[26,65],'Win_NATR':[14,26,65,125],'Win_VBM':[12,22],'v_VBM':[26,65],
                                'acc_initial':0.02,'acc_maximum':0.2,'Win_CCI':[12,26,40,65,125],'Win_ADX':[14,26,40,54,125],'Win_RSI':[14,26,40,54,125]}
 
+def generate_SD_params(version):
+    if version == "v1":
+        return {"Spread":"v2"}
 
 def generate_strat_params(ground_truth,steps,version):
     if version is None:
@@ -187,6 +212,11 @@ def deal_with_abnormal_value(arguments, version):
         includes processing abnormally large values and interpolation for missing values
         '''
         return deal_with_abnormal_value_v2(time_series)
+    elif version == "v3":
+        '''
+        includes processing abnormally large values and interpolation for missing values
+        '''
+        return deal_with_abnormal_value_v3(time_series)
 
 def labelling(arguments, version):
     time_series = arguments['time_series']
@@ -244,6 +274,16 @@ def normalize_without_1d_return(arguments, version):
         '''
         return normalize_without_1d_return_v1(time_series,time_series.index.get_loc(arguments['split_dates'][1]),
                                                 arguments['norm_params'])
+    if version == "v2":
+        '''
+        automated normalization for all possible combinations
+        '''
+        return normalize_without_1d_return_v2(time_series,time_series.index.get_loc(arguments['split_dates'][1]), arguments['norm_params'])
+    if version == "v3":
+        '''
+        automated normalization for all possible combinations
+        '''
+        return normalize_without_1d_return_v3(time_series,time_series.index.get_loc(arguments['split_dates'][1]), arguments['norm_params'])
 
 
 def technical_indication(arguments, version):
@@ -283,7 +323,12 @@ def technical_indication(arguments, version):
         '''
         return technical_indication_v3(time_series,time_series.index.get_loc(arguments['split_dates'][1]),
                                         arguments['tech_params'],arguments['ground_truth_columns'])
-    
+
+def supply_and_demand(arguments, version):
+    if version is None:
+        return arguments['time_series']
+    elif version == "v1":
+        return process_supply_and_demand(arguments['time_series'],arguments['SD_params'])
 
 
 def remove_unused_columns(arguments, version,ground_truth):
@@ -315,6 +360,14 @@ def remove_unused_columns(arguments, version,ground_truth):
         print("ground_truth",ground_truth)
     
         return remove_unused_columns_v4(time_series,arguments['org_cols'],ground_truth)
+    if version == "v5":
+        '''
+        remove columns that will not be used in model
+        '''
+        print("Remove Columns Version5")
+        print("ground_truth",ground_truth)
+    
+        return remove_unused_columns_v5(time_series,arguments['org_cols'],ground_truth)
 
 
 

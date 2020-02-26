@@ -239,6 +239,6 @@ class Logistic_online():
       piece_list.append(prob[i])
       final_list.append(piece_list)
       piece_list=[]
-    final_dataframe = pd.DataFrame(final_list, columns=['date','result'])
+    final_dataframe = pd.DataFrame(prob, columns=['result'],index=val_dates)
 
     return final_dataframe

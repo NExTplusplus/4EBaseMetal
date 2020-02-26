@@ -56,6 +56,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     parameters['norm_params'] = generate_norm_params(version_params['generate_norm_params'], 1 if norm_params['xgboost'] else 0)
     parameters['tech_params'] = generate_tech_params(version_params['generate_tech_params'])
     parameters['strat_params'],parameters['activation_params'] = generate_strat_params(ground_truth_columns[0], horizon, version_params['generate_strat_params'])
+    parameters['SD_params'] = generate_SD_params(version_params['generate_SD_params'])
     original_test_date = split_dates[2]
     '''
     deal with the abnormal data which we found in the data. 
@@ -95,6 +96,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
         parameters['cat_cols'] = ['day','month']
         parameters['time_series'] = insert_date_into_feature(parameters)
     # remove the unused feature includes the unused column and the original useless feature
+    parameters['time_series'] = supply_and_demand(parameters,version_params['supply_and_demand'])
     print("origin features",parameters['time_series'].columns.values.tolist())
     parameters['time_series'], parameters['org_cols'] = remove_unused_columns(parameters, version_params['remove_unused_columns'],ground_truth_columns)
     # save_data("i5",parameters['time_series'],parameters['time_series'].columns.values.tolist())
@@ -146,6 +148,8 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     '''
     create 3d array with dimensions (n_samples, lags, n_features)
     '''
+
+
 
     tra_ind = 0
     if tra_ind < lags - 1:
