@@ -121,8 +121,8 @@ def read_data_with_specified_columns(source,path,start_date):
   columns_to_be_stored = time_series.columns.values.tolist()
 
   if source=='4E':
-    from utils.read_data import read_data_v5_4E
-    time_series, LME_dates = read_data_v5_4E("2003-11-12")
+    from utils.read_data import read_data_v31_4E
+    time_series, LME_dates = read_data_v31_4E("2003-11-12")
     time_series = time_series[columns_to_be_stored]
     os.chdir("NEXT/4EBaseMetal")
   return time_series,LME_dates,len(fname_columns[0])
