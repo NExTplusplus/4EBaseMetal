@@ -7,7 +7,7 @@ import os
 if __name__ == '__main__':
     desc = 'the script for Logistic Regression'
     parser = argparse.ArgumentParser(description=desc)
-    parser.add_argument('-s','--step_list',type=str,default="1,3,5",
+    parser.add_argument('-s','--step_list',type=str,default="1,3,5,10,20,60",
                         help='list of horizons to be calculated, separated by ","')
     parser.add_argument('-gt', '--ground_truth_list', help='list of ground truths, separated by ","',
                         type=str, default="LME_Co_Spot,LME_Al_Spot,LME_Ni_Spot,LME_Ti_Spot,LME_Zi_Spot,LME_Le_Spot")
@@ -24,7 +24,7 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--action', type=str, default='commands',
                         help='commands, testing')
     parser.add_argument('-d','--dates',type = str, help = "dates", default = "2014-12-31,2015-06-30,2015-12-31,2016-06-30,2016-12-31,2017-06-30,2017-12-31,2018-06-30,2018-12-31")
-    parser.add_argument('-length','--length',type = str, help = "length of each period stated in dates",default = "129,124,129,125,128")
+    parser.add_argument('-length','--length',type = str, help = "length of each period stated in dates",default = "129,124,129,125,128,125,127,125,128")
     parser.add_argument('-p','--path',type =str, help='path to 4EBaseMetal folder',default ='/NEXT/4EBaseMetal')
 
     args = parser.parse_args()
@@ -47,13 +47,17 @@ if __name__ == '__main__':
                     exp = "exp/online_v10.conf"
                 elif version in ["v5","v7"]:
                     exp = "exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf"
-                elif version in ["v3","v23"]:
+                elif version in ["v3","v23","v37"]:
                     exp = "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf"
                 elif version in ["v9"]:
                     exp = "exp/online_v10.conf"
                 elif version in ["v24","v28","v30"]:
                     ground_truth_list = ["all"]
                     exp = "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf"
+                elif version in ["v31"]:
+                    exp = "exp/supply and demand.conf"
+                elif version in ['v33','v35']:
+                    exp = "exp/TP_v1.conf"
                 train = "code/train_data_lr.py"
                 for gt in ground_truth_list:
                     for h in args.step_list:
@@ -86,9 +90,9 @@ if __name__ == '__main__':
                             out.write("\n")
                             i+=1
                             if i%9 == 0 and args.source == "4E":
-                                out.write("sleep 10m\n")
+                                out.write("sleep 7m\n")
                             elif args.source == "NExT" and i %20 == 0:
-                                out.write("sleep 5m\n")
+                                out.write("sleep 3m\n")
 
     elif args.action == "test commands":
         i = 0
@@ -118,9 +122,9 @@ if __name__ == '__main__':
                                     out.write("\n")
                                     i+=1
                                     if i%9 == 0 and args.source == "4E":
-                                        out.write("sleep 10m\n")
+                                        out.write("sleep 7m\n")
                                     elif args.source == "NExT" and i %20 == 0:
-                                        out.write("sleep 5m\n")
+                                        out.write("sleep 3m\n")
 
     elif args.action == "testing":
         total = pd.DataFrame()

@@ -25,7 +25,7 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--action', type=str, default='commands',
                         help='commands, testing')
     parser.add_argument('-d','--dates',type = str, help = "dates", default = "2014-12-31,2015-06-30,2015-12-31,2016-06-30,2016-12-31,2017-06-30,2017-12-31,2018-06-30,2018-12-31")
-    parser.add_argument('-length','--length',type = str, help = "length of each period stated in dates",default = "129,124,129,125,128")
+    parser.add_argument('-length','--length',type = str, help = "length of each period stated in dates",default = "129,124,129,125,128,125,127,125,128")
     parser.add_argument('-p','--path',type =str, help='path to 4EBaseMetal folder',default ='/NEXT/4EBaseMetal')
 
     args = parser.parse_args()
@@ -40,29 +40,38 @@ if __name__ == '__main__':
     for version in args.version_list:
         for h in args.step_list:
             for gt in args.ground_truth_list:
+                ans["version"].append(version)
+                ans["horizon"].append(h)
+                ans["ground_truth"].append(gt)
                 for i,date in enumerate(args.dates):
+                    print(version,h,gt,date)
                     if "_".join([gt,date,h,version])+".csv" not in os.listdir(os.path.join("result","prediction",args.model)):
+                        if validation_dates[i]+"_acc" not in ans.keys():
+                            ans[validation_dates[i]+"_acc"] = [0]
+                            ans[validation_dates[i]+"_length"] = [0]
+                        else:
+                            ans[validation_dates[i]+"_acc"].append(0)
+                            ans[validation_dates[i]+"_length"].append(0)
                         continue
-                    ans["version"].append(version)
-                    ans["horizon"].append(h)
-                    ans["ground_truth"].append(gt)
                     temp = pd.read_csv(os.path.join("result","prediction",args.model,"_".join([gt,date,h,version])+".csv"),index_col = 0)
                     label = pd.read_csv(os.path.join("data","Label","_".join([gt,"h"+str(h),validation_dates[i],"label.csv"])),index_col = 0)
+                    temp = temp['result']
+                    if label.index[-1] > date:
+                        label = label.iloc[:-1,:]
                     accuracy = accuracy_score(label,temp)
                     if validation_dates[i]+"_acc" not in ans.keys():
                         ans[validation_dates[i]+"_acc"] = [accuracy]
-                        ans[valiation_dates[i]+"_length"] = [len(temp)]
+                        ans[validation_dates[i]+"_length"] = [len(temp)]
                     else:
                         ans[validation_dates[i]+"_acc"].append(accuracy)
                         ans[validation_dates[i]+"_length"].append(len(temp))
     ans = pd.DataFrame(ans)
-    total_acc = None
+    total_acc = 0.0
+    total_length = 0
     for date in validation_dates:
-        if total_acc is None:
-            total_acc = ans[date+"_acc"]*ans[date+"_length"]
-        else:
-            total_acc = total_acc + ans[date+"_acc"]*ans[date+"_length"]     
-    ans["final average"] = total_acc                   
+        total_acc = total_acc + ans[date+"_acc"]*ans[date+"_length"]
+        total_length = total_length+ans[date+"_length"]
+    ans["final average"] = total_acc/total_length
     ans.to_csv(args.output)
 
 

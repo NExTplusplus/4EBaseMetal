@@ -149,6 +149,16 @@ def normalize_3mspot_spread_ex (lme_col,shfe_col,exchange,len_update = 30 ,versi
         print("wrong version")
         return 
 
+def normalize_prediction(spot,prediction,version="v1"):
+    if version == "v1":
+        return 1*(prediction > spot)
+    elif version == "v2":
+        return np.log(prediction) - np.log(spot), 1*(prediction > spot)
+    elif version == "v3":
+        spread = prediction - spot
+        spread = spread/spread.shift(1) - 1
+        return spread, 1*(prediction > spot)
+
 # This function will normalize OI 
 # OI_col is the col the open interest
 def normalize_OI (OI_col, train_end, strength, both):

@@ -42,4 +42,4 @@ if __name__ == '__main__':
     model.train(max_depth = args.max_depth,learning_rate = args.learning_rate, gamma = args.gamma, min_child_weight = args.min_child, subsample = args.subsample)
   else:
     final = model.test()
-    final.to_csv("_".join(os.path.join(os.getcwd(),"result","prediction","xgboost",[args.ground_truth,args.date,str(args.steps),args.version]))+".csv")
+    final.to_csv(os.path.join(os.getcwd(),"result","prediction","xgboost","_".join([args.ground_truth,args.date,str(args.steps),args.version])+".csv"))

@@ -29,12 +29,14 @@ def assert_version(version,path):
   if version in ["v5","v7"]:
     #requires global data
     assert path == "exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf"
-  elif version in ["v3","v23","v24","v28","v30"]:
+  elif version in ["v3","v23","v24","v28","v30","v37"]:
     assert path == "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf"
   elif version in ["v9","v10","v12","v16","v26"]:
     assert path == "exp/online_v10.conf"
   elif version in ["v31","v32"]:
     assert path == "exp/supply and demand.conf"
+  elif version in ["v33","v35"]:
+    assert path == "exp/TP_v1.conf"
   else:
     print("Version out of bounds!")
     os.exit()
@@ -119,9 +121,10 @@ def read_data_with_specified_columns(source,path,start_date):
   columns_to_be_stored = time_series.columns.values.tolist()
 
   if source=='4E':
-    from read_data import read_data_v5_4E
+    from utils.read_data import read_data_v5_4E
     time_series, LME_dates = read_data_v5_4E("2003-11-12")
     time_series = time_series[columns_to_be_stored]
+    os.chdir("NEXT/4EBaseMetal")
   return time_series,LME_dates,len(fname_columns[0])
 
 def prepare_data(ts,LME_dates,horizon,ground_truth_list,lag,split_date,version_params,xgboost = False,live = False,metal_id_bool = False):
