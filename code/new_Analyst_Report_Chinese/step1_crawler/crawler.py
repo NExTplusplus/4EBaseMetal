@@ -638,28 +638,30 @@ class Crawler_machine:
             print('sth may change in the {}'.format(website_link))
             return
         
-        # Load the Chrome Driver
-        chrome_options = Options()
-        chrome_options.add_argument('headless')
-        driver = webdriver.Chrome(webdriver_link, chrome_options=chrome_options)
-        print('init driver')
-
-        # Open the website firstpage
-        driver.get(website_link)
-        print('Load Page')
-        time.sleep(wait_time)
-        
-        #Pre Click
-        if pre_click:
-            temp= driver.find_element_by_xpath(locate_action)
-            for action in click_action: 
-                temp.find_element_by_xpath(action).click()
-                time.sleep(5)
-                
-        res = self.raw_crawl_func(driver,crawl_type,analyst_company, news_type,website_link,switch,
-                                  keyword_report,xpath = xpath,tag_element = tag_element,
-                                  keyword_next_page =keyword_next_page,keyword_filter=keyword_filter,exclude_list=exclude_list)
-        
+        try:
+            # Load the Chrome Driver
+            chrome_options = Options()
+            chrome_options.add_argument('headless')
+            driver = webdriver.Chrome(webdriver_link, chrome_options=chrome_options)
+            print('init driver')
+    
+            # Open the website firstpage
+            driver.get(website_link)
+            print('Load Page')
+            time.sleep(wait_time)
+            
+            #Pre Click
+            if pre_click:
+                temp= driver.find_element_by_xpath(locate_action)
+                for action in click_action: 
+                    temp.find_element_by_xpath(action).click()
+                    time.sleep(5)
+                    
+            res = self.raw_crawl_func(driver,crawl_type,analyst_company, news_type,website_link,switch,
+                                      keyword_report,xpath = xpath,tag_element = tag_element,
+                                      keyword_next_page =keyword_next_page,keyword_filter=keyword_filter,exclude_list=exclude_list)
+        except:
+            res = 1
         return res
     
 website_link_lst =[]
