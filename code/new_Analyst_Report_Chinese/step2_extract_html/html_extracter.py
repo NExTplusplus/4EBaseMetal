@@ -93,29 +93,29 @@ class html_extracter:
         if keyword in fulltext_lst:
             func = lambda x: fulltext(x, 'zh')
         elif 'bocifco' in keyword:
-            func = lambda x: BeautifulSoup(x).find("div", {"class": "contArticle_text"}).text
+            func = lambda x: BeautifulSoup(x, 'lxml').find("div", {"class": "contArticle_text"}).text
         elif 'xzfutures' in keyword:
-            func = lambda x: BeautifulSoup(x).find("div", {"class": "aboutfont"}).text
+            func = lambda x: BeautifulSoup(x, 'lxml').find("div", {"class": "aboutfont"}).text
         elif 'dyqh' in keyword:
-            func = lambda x: BeautifulSoup(x).find("div", {"class": "news-list news-info"}).find("div", {"class": "cont"}).text
+            func = lambda x: BeautifulSoup(x, 'lxml').find("div", {"class": "news-list news-info"}).find("div", {"class": "cont"}).text
         elif 'sdfutures' in keyword:
-            func = lambda x: BeautifulSoup(x).find("div", {"class": "mainContent"}).text
+            func = lambda x: BeautifulSoup(x, 'lxml').find("div", {"class": "mainContent"}).text
         elif 'guosenqh' in keyword:
-            func = lambda x: BeautifulSoup(x).find("div", {"class": "jp_yyb_box"}).text
+            func = lambda x: BeautifulSoup(x, 'lxml').find("div", {"class": "jp_yyb_box"}).text
         elif 'gtaxqh' in keyword:
-            func = lambda x: BeautifulSoup(x).find("div", {"class": "right_service0"}).text
+            func = lambda x: BeautifulSoup(x, 'lxml').find("div", {"class": "right_service0"}).text
         elif 'gzf2010' in keyword :
-            func = lambda x: BeautifulSoup(x).find("div", {"class": "r right right_all"}).text
+            func = lambda x: BeautifulSoup(x, 'lxml').find("div", {"class": "r right right_all"}).text
         elif 'jxgsqh' in keyword:
-            func = lambda x: BeautifulSoup(x).find("li", {"class": "ny_li2"}).text
+            func = lambda x: BeautifulSoup(x, 'lxml').find("li", {"class": "ny_li2"}).text
         elif 'hongyuanqh' in keyword:
-            func = lambda x: BeautifulSoup(x).find("div", {"class": "about_text1"}).text
+            func = lambda x: BeautifulSoup(x, 'lxml').find("div", {"class": "about_text1"}).text
         elif 'thanf' in keyword:
-            func = lambda x: BeautifulSoup(x).find("p", {"class": "text-justify"}).text
+            func = lambda x: BeautifulSoup(x, 'lxml').find("p", {"class": "text-justify"}).text
         elif 'scqh' in keyword:
-            func = lambda x: BeautifulSoup(x).find('div', {'class':'jjyw-article clearfix'}).text
+            func = lambda x: BeautifulSoup(x, 'lxml').find('div', {'class':'jjyw-article clearfix'}).text
         elif 'xinhu' in keyword:
-            func = lambda x: BeautifulSoup(x).find('div', {'class':'content_show'}).text
+            func = lambda x: BeautifulSoup(x, 'lxml').find('div', {'class':'content_show'}).text
         else:
             raise Exception('Website not in choose_func please add it accordingly')
         return func
@@ -128,47 +128,47 @@ class html_extracter:
     
             if 'bhfcc' in keyword:
     
-                res = BeautifulSoup(html).find('div', {'class': 'research-deta-top'}).find('span').text.strip()
+                res = BeautifulSoup(html, 'lxml').find('div', {'class': 'research-deta-top'}).find('span').text.strip()
     
             elif 'bocifco' in keyword:
     
-                res = [i for i in BeautifulSoup(html).find('div', {'class': 'mainCon fr'}).findAll('span') if '更新时间：' in str(i)]
+                res = [i for i in BeautifulSoup(html, 'lxml').find('div', {'class': 'mainCon fr'}).findAll('span') if '更新时间：' in str(i)]
                 res = re.findall(r'\d{4}年\d{1,2}月\d{1,2}日', str(res[0]))[0]
                 res = res.replace('年', '-').replace('月', '-').replace('日', '')
     
             elif 'btqh' in keyword:
-                res = BeautifulSoup(html).find('div', {'class': 't-con'}).findAll('div')[0]
+                res = BeautifulSoup(html, 'lxml').find('div', {'class': 't-con'}).findAll('div')[0]
                 res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
     
             elif 'cnhtqh' in keyword:
-                res = [i for i in BeautifulSoup(html).find('div', {'class': 'htyj_nrtit'}).findAll('span') if '时间' in str(i)]
+                res = [i for i in BeautifulSoup(html, 'lxml').find('div', {'class': 'htyj_nrtit'}).findAll('span') if '时间' in str(i)]
                 res = re.findall(r'\d{4}年\d{1,2}月\d{1,2}日', str(res[0]))[0]
                 res = res.replace('年', '-').replace('月', '-').replace('日', '')
     
             elif 'dlqh' in keyword:
-                res = BeautifulSoup(html).find('div', {'class': 'subtitle'}).findAll('span')[0]
+                res = BeautifulSoup(html, 'lxml').find('div', {'class': 'subtitle'}).findAll('span')[0]
                 res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
     
             elif 'fnqh' in keyword:
-                res = BeautifulSoup(html).find('div', {'class': 'bussiness-h1'}).findAll('p')[0]
+                res = BeautifulSoup(html, 'lxml').find('div', {'class': 'bussiness-h1'}).findAll('p')[0]
                 res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
     
             elif 'ftol' in keyword:
-                res = BeautifulSoup(html).find('span', {'class': 'time ml0'})
+                res = BeautifulSoup(html, 'lxml').find('span', {'class': 'time ml0'})
                 res = re.findall(r'\d{4}年\d{1,2}月\d{1,2}日', str(res))[0]
                 res = res.replace('年', '-').replace('月', '-').replace('日', '')
     
             elif 'gtaxqh' in keyword:
-                res = BeautifulSoup(html).find('div', {'class': 'text'})
+                res = BeautifulSoup(html, 'lxml').find('div', {'class': 'text'})
                 res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
     
             elif 'guosenqh' in keyword:
-                res = BeautifulSoup(html).find('div', {'class': 'jp_yyb_box'}).find('h3')
+                res = BeautifulSoup(html, 'lxml').find('div', {'class': 'jp_yyb_box'}).find('h3')
                 res = re.findall(r'\d{8}', str(res))[0]
                 res = res[:4]+'-'+res[4:6] + '-' +res[6:]
     
             elif 'gzf2010' in keyword:
-                res = BeautifulSoup(html).find('div', {'class': 'pic1'}).find('div')
+                res = BeautifulSoup(html, 'lxml').find('div', {'class': 'pic1'}).find('div')
                 res = re.findall(r'\d{4}\/\d{1,2}\/\d{1,2}', str(res))[0]
                 res = res.split('/')
                 if len(res[1]) == 1:
@@ -176,95 +176,95 @@ class html_extracter:
                 res = '-'.join(res)
     
             elif 'gzjkqh' in keyword:
-                res = BeautifulSoup(html).find('h4', {'class': 'info_time h4'})
+                res = BeautifulSoup(html, 'lxml').find('h4', {'class': 'info_time h4'})
                 res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
     
             elif 'hhqh' in keyword:
-                res = BeautifulSoup(html).find('div', {'class': 'newsxxtitle'}).find('span')
+                res = BeautifulSoup(html, 'lxml').find('div', {'class': 'newsxxtitle'}).find('span')
                 res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
     
             elif 'hlqh' in keyword:
-                res = BeautifulSoup(html).find('h3', {'class': 'webtit2 f5 f6'}).find('span')
+                res = BeautifulSoup(html, 'lxml').find('h3', {'class': 'webtit2 f5 f6'}).find('span')
                 res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
     
             elif 'hongyuanqh' in keyword:
-                res = BeautifulSoup(html).find('div', {'class': 'line_dashed'})
+                res = BeautifulSoup(html, 'lxml').find('div', {'class': 'line_dashed'})
                 res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
     
             elif 'jtqh' in keyword:
-                res = BeautifulSoup(html).find('td', {'valign': 'middle'})
+                res = BeautifulSoup(html, 'lxml').find('td', {'valign': 'middle'})
                 res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
     
             elif 'jxgsqh' in keyword:
-                res = BeautifulSoup(html).find('li', {'class': 'ny_li'}).find('span')
+                res = BeautifulSoup(html, 'lxml').find('li', {'class': 'ny_li'}).find('span')
                 res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
     
             elif 'sdfutures' in keyword:
     
-                if BeautifulSoup(html).find('div', {'class': 'mainContent'}) != None:
-                    res = BeautifulSoup(html).find('div', {'class': 'mainContent'})
+                if BeautifulSoup(html, 'lxml').find('div', {'class': 'mainContent'}) != None:
+                    res = BeautifulSoup(html, 'lxml').find('div', {'class': 'mainContent'})
                     res = re.findall(r'\d{8}', str(res))[0]
                     res = res[:4]+'-'+res[4:6] + '-' +res[6:]                 
     
-                elif BeautifulSoup(html).find('em', {'id': 'publish_time'}) != None:
-                    res = BeautifulSoup(html).find('em', {'id': 'publish_time'})
+                elif BeautifulSoup(html, 'lxml').find('em', {'id': 'publish_time'}) != None:
+                    res = BeautifulSoup(html, 'lxml').find('em', {'id': 'publish_time'})
                     res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
                 
             elif 'shcifco' in keyword:
-                res = BeautifulSoup(html).find('div', {'class': 'title'})
+                res = BeautifulSoup(html, 'lxml').find('div', {'class': 'title'})
                 res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
     
             elif 'shqhgs' in keyword:
-                res = BeautifulSoup(html).find('div', {'class': 'con_line'})
+                res = BeautifulSoup(html, 'lxml').find('div', {'class': 'con_line'})
                 res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
     
             elif 'szjhqh' in keyword:
-                res = BeautifulSoup(html).find('div', {'id': 'artinfo'})
+                res = BeautifulSoup(html, 'lxml').find('div', {'id': 'artinfo'})
                 res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
     
             elif 'tqfutures' in keyword:
-                res = BeautifulSoup(html).find('h4', {'class': 'info_time h4'})
+                res = BeautifulSoup(html, 'lxml').find('h4', {'class': 'info_time h4'})
                 res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
     
             elif 'xzfutures' in keyword:
-                res = BeautifulSoup(html).find('div', {'class': 'homehm'}).find('h3')
+                res = BeautifulSoup(html, 'lxml').find('div', {'class': 'homehm'}).find('h3')
                 res = re.findall(r'\d{8}', str(res))[0]
                 res = res[:4]+'-'+res[4:6] + '-' +res[6:]
     
             elif 'zcqh' in keyword:
-                res = BeautifulSoup(html).find('td', {'class': 'zc_hei_in'})
+                res = BeautifulSoup(html, 'lxml').find('td', {'class': 'zc_hei_in'})
                 res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
     
             elif 'cnzsqh' in keyword:
-                res = BeautifulSoup(html).find('p', {'class': 'center fbt'})
+                res = BeautifulSoup(html, 'lxml').find('p', {'class': 'center fbt'})
                 res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
     
             elif 'dyqh' in keyword:
-                res = BeautifulSoup(html).find('div', {'class':'news-list news-info'}).find('p', {'class':'ti'})
+                res = BeautifulSoup(html, 'lxml').find('div', {'class':'news-list news-info'}).find('p', {'class':'ti'})
                 res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
     
             elif 'htfc' in keyword:
-                res = BeautifulSoup(html).find('h3', {'class': 'wztit'})
+                res = BeautifulSoup(html, 'lxml').find('h3', {'class': 'wztit'})
                 res = re.findall(r'\d{8}', str(res))[0]
                 res = res[:4]+'-'+res[4:6] + '-' +res[6:]
     
             elif 'mfc' in keyword:
-                res = BeautifulSoup(html).find('h1', {'id': 'titles'})
+                res = BeautifulSoup(html, 'lxml').find('h1', {'id': 'titles'})
                 res = re.findall(r'\d{8}', str(res))[0]
                 res = res[:4]+'-'+res[4:6] + '-' +res[6:]
             elif 'rdqh' in keyword:
-                res = BeautifulSoup(html).find('div', {'class': 'work_article'}).find('span')
+                res = BeautifulSoup(html, 'lxml').find('div', {'class': 'work_article'}).find('span')
                 res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
 
             elif 'thanf' in keyword:
-                res = BeautifulSoup(html).find('div', {'class':'service-content'}).find('h2')
+                res = BeautifulSoup(html, 'lxml').find('div', {'class':'service-content'}).find('h2')
                 res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
                 
             elif 'xinhu' in keyword:
-                res = BeautifulSoup(html).find('p', {'class':'tc mgt10'}).find('span', {'class':'light_gray'})
+                res = BeautifulSoup(html, 'lxml').find('p', {'class':'tc mgt10'}).find('span', {'class':'light_gray'})
                 res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
             elif 'scqh' in keyword:
-                res = BeautifulSoup(html).find('div', {'class':'jjyw-top clearfix'}).find('p')
+                res = BeautifulSoup(html, 'lxml').find('div', {'class':'jjyw-top clearfix'}).find('p')
                 res = re.findall(r'\d{4}-\d{1,2}-\d{1,2}', str(res))[0]
         except:
             res = 'error_page'
