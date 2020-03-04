@@ -200,7 +200,7 @@ if __name__ ==  '__main__':
                 ans = main_controller(met, metal_columns, metal_path, 
                                       [hor], train_period, predict_period,
                                       best_threshold, short_term_freq_win, short_term_repo_win,conn)  
-            ans.to_csv('./predict_result/{}/{}/{}_{}_{}.csv'.format(met, hor, predict_result_name, best_threshold, hor), index=False)
+            ans.to_csv('./predict_result/{}/{}/{}_{}_{}_{}.csv'.format(met, hor, predict_result_name, best_threshold, hor, predict_mode), index=False)
         
         #long_term prediction
         train_period,_ = tpf.find_date_in_which_half(predict_start_date, predict_end_date, long_term_predict_half)
@@ -222,4 +222,4 @@ if __name__ ==  '__main__':
                 ans = main_controller(met, metal_columns, metal_path, 
                                       [hor], train_period, predict_period,
                                       best_threshold, long_term_freq_win, long_term_repo_win,conn)  
-            ans.to_csv('./predict_result/{}/{}/{}_{}_{}.csv'.format(met, hor, predict_result_name, best_threshold, hor), index=False)
+            ans.to_csv('./predict_result/{}/{}/{}_{}_{}_{}.csv'.format(met, hor, predict_result_name, best_threshold, hor, predict_mode), index=False)
