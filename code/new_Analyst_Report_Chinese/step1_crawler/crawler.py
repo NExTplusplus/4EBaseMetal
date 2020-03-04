@@ -165,7 +165,7 @@ class Crawler_machine:
 
                         driver.switch_to.window(driver.window_handles[1])
                         driver.get(temp)              
-                        time.sleep(30)
+                        time.sleep(3)
                         
                         new_input['html'] = [str(BeautifulSoup(driver.page_source, "html.parser"))]
                         driver.switch_to.window(driver.window_handles[0])
@@ -217,7 +217,7 @@ class Crawler_machine:
                         if next_page_link:
                             current_website_link = driver.current_url
                             page_link_check = next_page_link[0].click()
-                            time.sleep(10)
+                            time.sleep(5)
                         else:
                             break
                     else:
