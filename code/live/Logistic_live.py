@@ -149,39 +149,40 @@ class Logistic_online():
     #read the data from the 4E or NExT database
     time_series,LME_dates,config_length = read_data_with_specified_columns(self.source,self.path,"2003-11-12")
 
-    #generate list of dates for today's model training period
-    today = self.date
-    length = 5
-    if even_version(self.version) and self.horizon > 5:
-      length = 4
-    start_time,evalidate_date = get_relevant_dates(today,length,"train")
-    split_dates  =  [start_time,evalidate_date,str(today)]
+    for date in self.date.split(","):
+      #generate list of dates for today's model training period
+      today = date
+      length = 5
+      if even_version(self.version) and self.horizon > 5:
+        length = 4
+      start_time,evalidate_date = get_relevant_dates(today,length,"train")
+      split_dates  =  [start_time,evalidate_date,str(today)]
 
-    #generate the version
-    version_params=generate_version_params(self.version)
+      #generate the version
+      version_params=generate_version_params(self.version)
 
-    print("the train date is {}".format(split_dates[0]))
-    print("the test date is {}".format(split_dates[1]))
+      print("the train date is {}".format(split_dates[0]))
+      print("the test date is {}".format(split_dates[1]))
 
-    #toggle metal id
-    metal_id = False
-    ground_truth_list = [self.gt]
-    if even_version(self.version):
-      metal_id = True
-      ground_truth_list = ["LME_Co_Spot","LME_Al_Spot","LME_Ni_Spot","LME_Ti_Spot","LME_Zi_Spot","LME_Le_Spot"]
+      #toggle metal id
+      metal_id = False
+      ground_truth_list = [self.gt]
+      if even_version(self.version):
+        metal_id = True
+        ground_truth_list = ["LME_Co_Spot","LME_Al_Spot","LME_Ni_Spot","LME_Ti_Spot","LME_Zi_Spot","LME_Le_Spot"]
 
-    #extract copy of data to process
-    time_series = copy(time_series.loc[split_dates[0]:split_dates[2]])
+      #extract copy of data to process
+      ts = copy(time_series.loc[split_dates[0]:split_dates[2]])
 
-    assert_labels(LME_dates,split_dates,self.horizon)
+      assert_labels(LME_dates,split_dates,self.horizon)
 
-    #load data for use
-    final_X_tr, final_y_tr, final_X_va, final_y_va, val_dates, column_lag_list = prepare_data(time_series,LME_dates,self.horizon,ground_truth_list,self.lag,copy(split_dates),version_params,metal_id_bool = metal_id)
+      #load data for use
+      final_X_tr, final_y_tr, final_X_va, final_y_va, val_dates, column_lag_list = prepare_data(ts,LME_dates,self.horizon,ground_truth_list,self.lag,copy(split_dates),version_params,metal_id_bool = metal_id)
 
-    pure_LogReg = LogReg(parameters={})
-    parameters = {"penalty":"l2", "C":C, "solver":"lbfgs", "tol":tol,"max_iter":6*4*config_length*max_iter, "verbose" : 0,"warm_start": False, "n_jobs": -1}
-    pure_LogReg.train(final_X_tr,final_y_tr.flatten(), parameters)	
-    pure_LogReg.save(self.version, self.gt, self.horizon, self.lag,evalidate_date)
+      pure_LogReg = LogReg(parameters={})
+      parameters = {"penalty":"l2", "C":C, "solver":"lbfgs", "tol":tol,"max_iter":6*4*config_length*max_iter, "verbose" : 0,"warm_start": False, "n_jobs": -1}
+      pure_LogReg.train(final_X_tr,final_y_tr.flatten(), parameters)	
+      pure_LogReg.save(self.version, self.gt, self.horizon, self.lag,evalidate_date)
 
   #-------------------------------------------------------------------------------------------------------------------------------------#
   """
@@ -201,44 +202,44 @@ class Logistic_online():
     #read the data from the 4E or NExT database
     time_series,LME_dates,config_length = read_data_with_specified_columns(self.source,self.path,"2003-11-12")
 
-    #generate list of dates for today's model training period
-    today = self.date
-    length = 5
-    if even_version(self.version) and self.horizon > 5:
-      length = 4
-    start_time,evalidate_date = get_relevant_dates(today,length,"test")
-    split_dates  =  [start_time,evalidate_date,str(today)]
-    
-    if even_version(self.version):
-      model = pure_LogReg.load(self.version, "all", self.horizon, self.lag,evalidate_date)
-    else:
-      model = pure_LogReg.load(self.version, self.gt, self.horizon, self.lag,evalidate_date)
+    for date in self.date.split(","):
+      #generate list of dates for today's model training period
+      today = date
+      length = 5
+      if even_version(self.version) and self.horizon > 5:
+        length = 4
+      start_time,evalidate_date = get_relevant_dates(today,length,"test")
+      split_dates  =  [start_time,evalidate_date,str(today)]
+      
+      if even_version(self.version):
+        model = pure_LogReg.load(self.version, "all", self.horizon, self.lag,evalidate_date)
+      else:
+        model = pure_LogReg.load(self.version, self.gt, self.horizon, self.lag,evalidate_date)
 
-    #generate the version
-    version_params=generate_version_params(self.version)
+      #generate the version
+      version_params=generate_version_params(self.version)
 
-    metal_id = False
-    if even_version(self.version):
-      metal_id = True
+      metal_id = False
+      if even_version(self.version):
+        metal_id = True
 
-    #extract copy of data to process
-    time_series = copy(time_series.loc[split_dates[0]:split_dates[2]])
+      #extract copy of data to process
+      ts = copy(time_series.loc[split_dates[0]:split_dates[2]])
 
-    assert_labels(LME_dates,split_dates,self.horizon)
+      assert_labels(LME_dates,split_dates,self.horizon)
 
-    #load data for use
-    final_X_tr, final_y_tr, final_X_va, final_y_va,val_dates, column_lag_list = prepare_data(time_series,LME_dates,self.horizon,[self.gt],self.lag,copy(split_dates),version_params,metal_id_bool = metal_id,live = True)
+      #load data for use
+      final_X_tr, final_y_tr, final_X_va, final_y_va,val_dates, column_lag_list = prepare_data(ts,LME_dates,self.horizon,[self.gt],self.lag,copy(split_dates),version_params,metal_id_bool = metal_id,live = True)
 
-    prob = model.predict(final_X_va)
-    probability = model.predict_proba(final_X_va)
-    np.savetxt(os.path.join("result","probability","lr","_".join([self.gt+str(self.horizon),self.date,"lr",self.version,"probability.txt"])),probability)
-    final_list = []
-    piece_list = []
-    for i,date in enumerate(val_dates):
-      piece_list.append(date)
-      piece_list.append(prob[i])
-      final_list.append(piece_list)
-      piece_list=[]
-    final_dataframe = pd.DataFrame(prob, columns=['result'],index=val_dates)
-
-    return final_dataframe
+      prob = model.predict(final_X_va)
+      probability = model.predict_proba(final_X_va)
+      np.savetxt(os.path.join("result","probability","lr","_".join([self.gt+str(self.horizon),self.date,"lr",self.version,"probability.txt"])),probability)
+      final_list = []
+      piece_list = []
+      for i,date in enumerate(val_dates):
+        piece_list.append(date)
+        piece_list.append(prob[i])
+        final_list.append(piece_list)
+        piece_list=[]
+      final_dataframe = pd.DataFrame(prob, columns=['result'],index=val_dates)
+      final_dataframe.to_csv(os.path.join("result","prediction","lr","_".join([self.gt,date,str(self.horizon),self.version])+".csv"))
