@@ -29,7 +29,7 @@ def assert_version(version,path):
   if version in ["v5","v7"]:
     #requires global data
     assert path == "exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf"
-  elif version in ["v3","v23","v24","v28","v30","v37"]:
+  elif version in ["v3","v23","v24","v28","v30","v37","v39","v41","v43"]:
     assert path == "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf"
   elif version in ["v9","v10","v12","v16","v26"]:
     assert path == "exp/online_v10.conf"
@@ -124,6 +124,7 @@ def read_data_with_specified_columns(source,path,start_date):
     from utils.read_data import read_data_v31_4E
     time_series, LME_dates = read_data_v31_4E("2003-11-12")
     time_series = time_series[columns_to_be_stored]
+    time_series.dropna(how = True,inplace = True)
     os.chdir("NEXT/4EBaseMetal")
   return time_series,LME_dates,len(fname_columns[0])
 
@@ -233,7 +234,10 @@ def prepare_data(ts,LME_dates,horizon,ground_truth_list,lag,split_date,version_p
   column_name = []
   for i in range(lag):
     for item in column_list[0]:
-      new_item = item+"_"+str(lag-i)
+      if metal_id_bool:
+        new_item = item.replace(ground_truth[:6],"LME_Le")+"_"+str(lag-i)
+      else:
+        new_item = item+"_"+str(lag-i)
       column_lag_list.append(new_item)
 
   #add metal id to column lag list
