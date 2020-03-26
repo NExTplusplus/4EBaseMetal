@@ -1,6 +1,6 @@
 from utils.construct_data import *
 from utils.read_data import process_missing_value_v3
-from utils.normalize_feature import log_1d_return
+from utils.normalize_feature import log_1d_return, fractional_diff
 
 def generate_version_params(version):
     '''
@@ -15,10 +15,12 @@ def generate_version_params(version):
     ver = version.split("_")
     v = ver[0]
     ex = ver[1] if len(ver) > 1 else None
-    if v == "v7" or v=="v3" or v == "v37":
+    if v in ["v7","v3","v37","v43"]:
         ans['technical_indication'] = "v2"
-        if v=="v3":
+        if v=="v3" or v=='v43':
             ans['remove_unused_columns'] = "v4"
+            if v == "v43":
+                ans['price_normalization'] = "v2"
         if v=="v37":
             ans['remove_unused_columns'] = "v5"
             ans['normalize_without_1d_return'] = "v3"
@@ -274,12 +276,12 @@ def normalize_without_1d_return(arguments, version):
         '''
         return normalize_without_1d_return_v1(time_series,time_series.index.get_loc(arguments['split_dates'][1]),
                                                 arguments['norm_params'])
-    if version == "v2":
+    elif version == "v2":
         '''
         automated normalization for all possible combinations
         '''
         return normalize_without_1d_return_v2(time_series,time_series.index.get_loc(arguments['split_dates'][1]), arguments['norm_params'])
-    if version == "v3":
+    elif version == "v3":
         '''
         automated normalization for all possible combinations
         '''
@@ -384,7 +386,7 @@ def price_normalization(arguments, version):
         '''
         DXY log returns
         '''
-        return log_1d_return(time_series,["DXY"])
+        return fractional_diff(time_series,arguments['org_cols'])
 def spot_price_normalization(arguments):
     time_series = arguments['time_series']
     ans=[]

@@ -56,6 +56,10 @@ if __name__ == '__main__':
                             continue
                         temp = pd.read_csv(os.path.join("result","prediction",args.model,"_".join([gt,date,h,version])+".csv"),index_col = 0)
                         label = pd.read_csv(os.path.join("data","Label","_".join([gt,"h"+str(h),validation_dates[i],"label.csv"])),index_col = 0)
+                        if len(temp.columns.values.tolist()) > 1:
+                            temp = temp['result'].to_frame()
+                        if len(label.columns.values.tolist()) > 1:
+                            label = label['result'].to_frame()
                         if label.index[-1] > date:
                             label = label.iloc[:-1,:]
                         accuracy = accuracy_score(label[:len(temp)],temp)
@@ -65,6 +69,12 @@ if __name__ == '__main__':
                         else:
                             ans[validation_dates[i]+"_acc"].append(accuracy)
                             ans[validation_dates[i]+"_length"].append(len(temp))
+                ans["version"].append(version)
+                ans["horizon"].append(h)
+                ans["ground_truth"].append("average")
+                for val_date in validation_dates:
+                    ans[val_date+"_acc"].append(np.average(ans[val_date+"_acc"][-6:]))
+                    ans[val_date+"_length"].append(np.average(ans[val_date+"_length"][-6:]))
         ans = pd.DataFrame(ans)
         total_acc = 0.0
         total_length = 0
@@ -74,7 +84,6 @@ if __name__ == '__main__':
         ans["final average"] = total_acc/total_length
         ans.to_csv(args.output)
     elif args.model in ["alstm"]:
-        args.ground_truth_list = ['LME_Co_Spot','LME_Al_Spot','LME_Le_Spot','LME_Ni_Spot','LME_Zi_Spot','LME_Ti_Spot']
         ans = {"version":[],"horizon":[],"ground_truth":[]}
         validation_dates = [d.split("-")[0]+"-01-01" if d[5:7] <= "06" else d.split("-")[0]+"-07-01" for d in args.dates]
         for version in args.version_list:
@@ -86,8 +95,7 @@ if __name__ == '__main__':
                     ans["ground_truth"].append(gt)
                     for i,date in enumerate(args.dates):
                         print(version,h,gt,date)
-                        if "_".join([date,h,v])+".txt" not in os.listdir(os.path.join("result","prediction",args.model,version)):
-                            print(version,h,gt,date)
+                        if "_".join([gt,date,h,v])+".csv" not in os.listdir(os.path.join("result","prediction",args.model,version)):
                             if validation_dates[i]+"_acc" not in ans.keys():
                                 ans[validation_dates[i]+"_acc"] = [0]
                                 ans[validation_dates[i]+"_length"] = [0]
@@ -95,8 +103,7 @@ if __name__ == '__main__':
                                 ans[validation_dates[i]+"_acc"].append(0)
                                 ans[validation_dates[i]+"_length"].append(0)
                             continue
-                        temp = np.loadtxt(os.path.join("result","prediction",args.model,version,"_".join([date,h,v])+".txt"))
-                        temp = temp[j*int(len(temp)/6):(j+1)*int(len(temp)/6)]
+                        temp = pd.read_csv(os.path.join("result","prediction",args.model,version,"_".join([gt,date,h,v])+".csv"),index_col = 0)
                         label = pd.read_csv(os.path.join("data","Label","_".join([gt,"h"+str(h),validation_dates[i],"label.csv"])),index_col = 0)
                         if label.index[-1] > date:
                             label = label.iloc[:-1,:]
@@ -107,6 +114,12 @@ if __name__ == '__main__':
                         else:
                             ans[validation_dates[i]+"_acc"].append(accuracy)
                             ans[validation_dates[i]+"_length"].append(len(temp))
+                ans["version"].append(version)
+                ans["horizon"].append(h)
+                ans["ground_truth"].append("average")
+                for val_date in validation_dates:
+                    ans[val_date+"_acc"].append(np.average(ans[val_date+"_acc"][-6:]))
+                    ans[val_date+"_length"].append(np.average(ans[val_date+"_length"][-6:]))
         ans = pd.DataFrame(ans)
         total_acc = 0.0
         total_length = 0

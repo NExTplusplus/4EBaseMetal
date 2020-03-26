@@ -26,9 +26,10 @@ from xgboost import plot_importance
 from sklearn import metrics
 from sklearn.model_selection import KFold
 from utils.version_control_functions import generate_version_params
+sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
+print(sys.path)
 from sklearn.externals import joblib
 from train.grid_search import grid_search_alstm
-sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 from data.load_data import load_data
 from model.model_embedding import MultiHeadAttention, attention, bilstm
 from utils.construct_data import rolling_half_year
@@ -306,10 +307,7 @@ class ALSTM_online():
             batch=512):
     print("begin to choose the parameter")
 
-    if self.version in ['v16','v26']:
-      assert (self.path == 'exp/online_v10.conf')
-    else:
-      print("the path is error")
+    assert_version(self.version,self.path)
 
     #the param we want to use
     selected_parameters = ['lag', 'hidden', 'embedding_size', 'drop_out', 'batch']
@@ -331,7 +329,8 @@ class ALSTM_online():
     }
     #we begin to search the param
     grid_search_alstm(selected_parameters, parameter_values, init_para,
-          script=script, log_file=log, steps=self.horizon, version=self.version)
+          script=script, log_file=log, steps=self.horizon, version=self.version,
+          date = self.date, gt = self.gt, source = self.source)
   #-------------------------------------------------------------------------------------------------------------------------------------#
   """
   this function is used to train the model and save it
@@ -363,6 +362,8 @@ class ALSTM_online():
     save_loss: whether to save loss results
     save_prediction: whether to save prediction results
     """
+    sys.path[0] = os.curdir
+    print(sys.path)
     print("begin to train")
     #assert that the configuration path is correct
     assert_version(self.version,self.path)
@@ -373,179 +374,173 @@ class ALSTM_online():
     """
     begin to split the train data
     """
-    today = self.date
-    length = 5
-    start_time,evalidate_date = get_relevant_dates(today,length,"train")
-    split_dates  =  [start_time,evalidate_date,str(today)]
-    assert_labels(LME_dates,split_dates,self.horizon)
-    """
-    generate the version
-    """			
-    version_params=generate_version_params(self.version)
-    print("the train date is {}".format(split_dates[0]))
-    print("the test date is {}".format(split_dates[1]))
-    norm_volume = "v1"
-    norm_3m_spread = "v1"
-    norm_ex = "v1"
-    len_ma = 5
-    len_update = 30
-    tol = 1e-7
-    pure_LogReg = LogReg(parameters={})
-    norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
-            'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False}
-    tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
-                    'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2,"live":None}
-    '''
-      for versions that tune over 6 metals 
-    '''
-    final_X_tr = []
-    final_y_tr = []
-    final_X_val = []
-    final_y_val = []
-    final_X_te = []
-    final_y_te = []
-    final_y_te_class_list = []
-    final_y_te_class_top_list = []
-    final_y_te_top_ind_list = []
-    final_y_te_class_bot_list = []
-    final_y_te_bot_ind_list = []
-    final_train_X_embedding = []
-    final_test_X_embedding = []
-    final_val_X_embedding = []
+    for date in self.date.split(","):
+      today = date
+      length = 5
+      if even_version(self.version) and self.horizon > 5:
+          length = 4
+      start_time,evalidate_date = get_relevant_dates(today,length,"train")
+      split_dates  =  [start_time,evalidate_date,str(today)]
+      assert_labels(LME_dates,split_dates,self.horizon)
+      """
+      generate the version
+      """			
+      version_params=generate_version_params(self.version)
+      print("the train date is {}".format(split_dates[0]))
+      print("the test date is {}".format(split_dates[1]))
+      norm_volume = "v1"
+      norm_3m_spread = "v1"
+      norm_ex = "v1"
+      len_ma = 5
+      len_update = 30
+      tol = 1e-7
+      norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
+              'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False}
+      tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
+                      'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2,"live":None}
+      '''
+        for versions that tune over 6 metals 
+      '''
+      final_X_tr = []
+      final_y_tr = []
+      final_X_val = []
+      final_y_val = []
+      final_X_te = []
+      final_y_te = []
+      final_y_te_class_list = []
+      final_y_te_class_top_list = []
+      final_y_te_top_ind_list = []
+      final_y_te_class_bot_list = []
+      final_y_te_bot_ind_list = []
+      final_train_X_embedding = []
+      final_test_X_embedding = []
+      final_val_X_embedding = []
 
-    i = 0
-    ground_truths_list = ['LME_Co_Spot','LME_Al_Spot','LME_Le_Spot','LME_Ni_Spot','LME_Zi_Spot','LME_Ti_Spot']
-    for ground_truth in ground_truths_list:
-      print(ground_truth)
-      new_time_series = copy(time_series)
-      spot_list = np.array(new_time_series[ground_truth])
-      new_time_series['spot_price'] = spot_list
-      ts = new_time_series.loc[split_dates[0]:split_dates[2]]
-      X_tr, y_tr, \
-      X_va, y_va, \
-      X_te, y_te, \
-      norm_check, column_list,val_dates = load_data(
-        copy(ts), LME_dates, self.horizon, [ground_truth], self.lag,
-        copy(split_dates), norm_params, tech_params,
-        version_params
-      )
-      # remove the list wrapper
-      X_tr = np.concatenate(X_tr)
-      y_tr = np.concatenate(y_tr)
-      X_va = np.concatenate(X_va)
-      y_va = np.concatenate(y_va)
+      i = 0
+      #toggle metal id
+      metal_id = False
+      ground_truths_list = ['LME_Co_Spot','LME_Al_Spot','LME_Le_Spot','LME_Ni_Spot','LME_Zi_Spot','LME_Ti_Spot']
+      for ground_truth in ground_truths_list:
+        print(ground_truth)
+        new_time_series = copy(time_series)
+        spot_list = np.array(new_time_series[ground_truth])
+        new_time_series['spot_price'] = spot_list
+        ts = new_time_series.loc[split_dates[0]:split_dates[2]]
 
-      # split validation
-      X_ta = X_tr[:int(len(X_tr) * split), :, :]
-      y_ta = y_tr[:int(len(y_tr) * split)]
+        #load data for use
+        X_tr, y_tr, X_va, y_va, val_dates, column_lag_list = prepare_data(ts,LME_dates,self.horizon,[ground_truth],self.lag,copy(split_dates),version_params,metal_id_bool = metal_id,reshape = False)
+                
+        # split validation
+        X_ta = X_tr[:int(len(X_tr) * split), :, :]
+        y_ta = y_tr[:int(len(y_tr) * split)]
 
-      X_val = X_tr[int(len(X_tr) * split):, :, :]
-      y_val = y_tr[int(len(y_tr) * split):]
+        X_val = X_tr[int(len(X_tr) * split):, :, :]
+        y_val = y_tr[int(len(y_tr) * split):]
 
-      X_te = X_va
-      y_te = y_va
+        X_te = X_va
+        y_te = y_va
 
-      ###############################
-      # to replace the old code (Fuli)
-      ###############################
+        ###############################
+        # to replace the old code (Fuli)
+        ###############################
 
-      # generate metal id for embedding lookup
-      train_X_id_embedding = [i]*len(X_ta)
-      val_X_id_embedding = [i]*len(X_val)
-      test_X_id_embedding = [i]*len(X_te)
+        # generate metal id for embedding lookup
+        train_X_id_embedding = [i]*len(X_ta)
+        val_X_id_embedding = [i]*len(X_val)
+        test_X_id_embedding = [i]*len(X_te)
 
-      if len(final_X_tr) == 0:
-        final_X_tr = copy(X_ta)
-      else:
-        final_X_tr = np.concatenate((final_X_tr, X_ta), axis=0)
-      if len(final_y_tr) == 0:
-        final_y_tr = copy(y_ta)
-      else:
-        final_y_tr = np.concatenate((final_y_tr, y_ta), axis=0)
-
-      if len(final_X_te) == 0:
-        final_X_te = copy(X_te)
-      else:
-        final_X_te = np.concatenate((final_X_te, X_te), axis=0)
-      if len(final_y_te) == 0:
-        final_y_te = copy(y_te)
-      else:
-        final_y_te = np.concatenate((final_y_te, y_te), axis=0)
-
-      y_te_rank = np.argsort(y_te[:,0])
-      y_te_class = []
-      for item in y_te:
-        if item >= thresh:
-          y_te_class.append(1)
+        if len(final_X_tr) == 0:
+          final_X_tr = copy(X_ta)
         else:
-          y_te_class.append(0)
-      final_y_te_class_list.append(y_te_class)
-      split_position = len(y_te) // 3
-      final_y_te_bot_ind_list.append(y_te_rank[:split_position])
-      final_y_te_top_ind_list.append(y_te_rank[-split_position:])
-      y_te_class = np.array(y_te_class)
-      final_y_te_class_bot_list.append(
-        y_te_class[y_te_rank[:split_position]])
-      final_y_te_class_top_list.append(
-        y_te_class[y_te_rank[-split_position:]])
-      # final_y_te_class_bot_list.append(y_te_class[y_te_rank[:split_position]])
-      # final_y_te_class_top_list.append(y_te_class[y_te_rank[-split_position:]])
+          final_X_tr = np.concatenate((final_X_tr, X_ta), axis=0)
+        if len(final_y_tr) == 0:
+          final_y_tr = copy(y_ta)
+        else:
+          final_y_tr = np.concatenate((final_y_tr, y_ta), axis=0)
 
-      if len(final_X_val) == 0:
-        final_X_val = copy(X_val)
-      else:
-        final_X_val = np.concatenate((final_X_val, X_val), axis=0)
-      if len(final_y_val) == 0:
-        final_y_val = copy(y_val)
-      else:
-        final_y_val = np.concatenate((final_y_val, y_val), axis=0)
+        if len(final_X_te) == 0:
+          final_X_te = copy(X_te)
+        else:
+          final_X_te = np.concatenate((final_X_te, X_te), axis=0)
+        if len(final_y_te) == 0:
+          final_y_te = copy(y_te)
+        else:
+          final_y_te = np.concatenate((final_y_te, y_te), axis=0)
+
+        y_te_rank = np.argsort(y_te[:,0])
+        y_te_class = []
+        for item in y_te:
+          if item >= thresh:
+            y_te_class.append(1)
+          else:
+            y_te_class.append(0)
+        final_y_te_class_list.append(y_te_class)
+        split_position = len(y_te) // 3
+        final_y_te_bot_ind_list.append(y_te_rank[:split_position])
+        final_y_te_top_ind_list.append(y_te_rank[-split_position:])
+        y_te_class = np.array(y_te_class)
+        final_y_te_class_bot_list.append(
+          y_te_class[y_te_rank[:split_position]])
+        final_y_te_class_top_list.append(
+          y_te_class[y_te_rank[-split_position:]])
+        # final_y_te_class_bot_list.append(y_te_class[y_te_rank[:split_position]])
+        # final_y_te_class_top_list.append(y_te_class[y_te_rank[-split_position:]])
+
+        if len(final_X_val) == 0:
+          final_X_val = copy(X_val)
+        else:
+          final_X_val = np.concatenate((final_X_val, X_val), axis=0)
+        if len(final_y_val) == 0:
+          final_y_val = copy(y_val)
+        else:
+          final_y_val = np.concatenate((final_y_val, y_val), axis=0)
+        ###############################
+        # to replace the old code (Fuli)
+        ###############################
+
+        final_train_X_embedding+=train_X_id_embedding
+        final_test_X_embedding+=test_X_id_embedding
+        final_val_X_embedding+=val_X_id_embedding
+
+        # update metal index
+        i+=1
+      print('Dataset statistic: #examples')
+      print('Train:', len(final_X_tr), len(final_y_tr), len(final_train_X_embedding))
+      print(np.max(final_X_tr), np.min(final_X_tr), np.max(final_y_tr), np.min(final_y_tr))
+      print('Validation:', len(final_X_val), len(final_y_val), len(final_val_X_embedding))
+      print('Testing:', len(final_X_te), len(final_y_te), len(final_test_X_embedding))
+      # begin to train the model
+      input_dim = final_X_tr.shape[-1]
+      window_size = self.lag
+      case_number = len(ground_truths_list)
+      start = time.time()
+      trainer = Trainer(input_dim, hidden_state, window_size, lrate,
+              drop_out, case_number, attention_size,
+              embedding_size,
+              final_X_tr, final_y_tr,
+              final_X_te, final_y_te,
+              final_X_val, final_y_val,
+              final_train_X_embedding,
+              final_test_X_embedding,
+              final_val_X_embedding,
+              final_y_te_class_list,
+              final_y_te_class_top_list,
+              final_y_te_class_bot_list,
+              final_y_te_top_ind_list,
+              final_y_te_bot_ind_list
+              )
+      #torch.save(trainer, PATH)
+      end = time.time()
       ###############################
       # to replace the old code (Fuli)
       ###############################
-
-      final_train_X_embedding+=train_X_id_embedding
-      final_test_X_embedding+=test_X_id_embedding
-      final_val_X_embedding+=val_X_id_embedding
-
-      # update metal index
-      i+=1
-    print('Dataset statistic: #examples')
-    print('Train:', len(final_X_tr), len(final_y_tr), len(final_train_X_embedding))
-    print(np.max(final_X_tr), np.min(final_X_tr), np.max(final_y_tr), np.min(final_y_tr))
-    print('Validation:', len(final_X_val), len(final_y_val), len(final_val_X_embedding))
-    print('Testing:', len(final_X_te), len(final_y_te), len(final_test_X_embedding))
-    # begin to train the model
-    input_dim = final_X_tr.shape[-1]
-    window_size = self.lag
-    case_number = len(ground_truths_list)
-    start = time.time()
-    trainer = Trainer(input_dim, hidden_state, window_size, lrate,
-            drop_out, case_number, attention_size,
-            embedding_size,
-            final_X_tr, final_y_tr,
-            final_X_te, final_y_te,
-            final_X_val, final_y_val,
-            final_train_X_embedding,
-            final_test_X_embedding,
-            final_val_X_embedding,
-            final_y_te_class_list,
-            final_y_te_class_top_list,
-            final_y_te_class_bot_list,
-            final_y_te_top_ind_list,
-            final_y_te_bot_ind_list
-            )
-    #torch.save(trainer, PATH)
-    end = time.time()
-    ###############################
-    # to replace the old code (Fuli)
-    ###############################
-    print("pre-processing time: {}".format(end-start))
-    print("the split date is {}".format(split_dates[1]))
-    #out_val_pred, out_test_pred, out_loss = trainer.train_minibatch(num_epochs, batch_size, interval)
-    save = 1
-    net=trainer.train_minibatch(num_epochs, batch_size, interval, self.version, self.horizon, split_dates, drop_out, hidden_state, embedding_size, self.lag,method)
-    #np.savetxt(split_dates[1]+"_"+str(horizon)+"_"+"train_prediction.txt",test_label)
-    #torch.save(net, split_dates[0]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+self.version+"_"+'alstm.pkl')
+      print("pre-processing time: {}".format(end-start))
+      print("the split date is {}".format(split_dates[1]))
+      #out_val_pred, out_test_pred, out_loss = trainer.train_minibatch(num_epochs, batch_size, interval)
+      save = 1
+      net=trainer.train_minibatch(num_epochs, batch_size, interval, self.version, self.horizon, split_dates, drop_out, hidden_state, embedding_size, self.lag,method)
+      #np.savetxt(split_dates[1]+"_"+str(horizon)+"_"+"train_prediction.txt",test_label)
+      #torch.save(net, split_dates[0]+"_"+self.gt+"_"+str(self.horizon)+"_"+str(self.lag)+"_"+self.version+"_"+'alstm.pkl')
   #-------------------------------------------------------------------------------------------------------------------------------------#
   """
   this function is used to predict the date
@@ -563,6 +558,8 @@ class ALSTM_online():
         save_loss=0,
         save_prediction=0,
         method = ""):
+    sys.path[0] = os.curdir
+    print(sys.path)
     print("begin to test")
     #assert that the configuration path is correct
     assert_version(self.version,self.path)
@@ -573,205 +570,203 @@ class ALSTM_online():
     """
     begin to split the train data
     """
-    today = self.date
-    length = 5
-    start_time,evalidate_date = get_relevant_dates(today,length,"test")
-    split_dates  =  [start_time,evalidate_date,str(today)]
+    for date in self.date.split(","):
+      today = date
+      length = 5
+      if even_version(self.version) and self.horizon > 5:
+          length = 4
+      start_time,evalidate_date = get_relevant_dates(today,length,"test")
+      split_dates  =  [start_time,evalidate_date,str(today)]
 
-    assert_labels(LME_dates,split_dates,self.horizon)
+      assert_labels(LME_dates,split_dates,self.horizon)
 
-    """
-    generate the version
-    """			
-    version_params=generate_version_params(self.version)
-    #print("the train date is {}".format(split_dates[0]))
-    print("the test date is {}".format(split_dates[1]))
-    norm_volume = "v1"
-    norm_3m_spread = "v1"
-    norm_ex = "v1"
-    len_ma = 5
-    len_update = 30
-    tol = 1e-7
-    pure_LogReg = LogReg(parameters={})
-    norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
-            'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False}
-    tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
-                    'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2,"live":None}
-    '''
-      for versions that tune over 6 metals 
-    '''
-    final_X_tr = []
-    final_y_tr = []
-    final_X_val = []
-    final_y_val = []
-    final_X_te = []
-    final_y_te = []
-    final_y_te_class_list = []
-    final_y_te_class_top_list = []
-    final_y_te_top_ind_list = []
-    final_y_te_class_bot_list = []
-    final_y_te_bot_ind_list = []
-    final_train_X_embedding = []
-    final_test_X_embedding = []
-    final_val_X_embedding = []
+      """
+      generate the version
+      """			
+      version_params=generate_version_params(self.version)
+      #print("the train date is {}".format(split_dates[0]))
+      print("the test date is {}".format(split_dates[1]))
+      norm_volume = "v1"
+      norm_3m_spread = "v1"
+      norm_ex = "v1"
+      len_ma = 5
+      len_update = 30
+      tol = 1e-7
+      norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
+              'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False}
+      tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
+                      'Fast':12,'Slow':26,'Win_NATR':10,'Win_VBM':22,'acc_initial':0.02,'acc_maximum':0.2,"live":None}
+      '''
+        for versions that tune over 6 metals 
+      '''
+      final_X_tr = []
+      final_y_tr = []
+      final_X_val = []
+      final_y_val = []
+      final_X_te = []
+      final_y_te = []
+      final_y_te_class_list = []
+      final_y_te_class_top_list = []
+      final_y_te_top_ind_list = []
+      final_y_te_class_bot_list = []
+      final_y_te_bot_ind_list = []
+      final_train_X_embedding = []
+      final_test_X_embedding = []
+      final_val_X_embedding = []
 
-    i = 0
-    ground_truths_list = ['LME_Co_Spot','LME_Al_Spot','LME_Le_Spot','LME_Ni_Spot','LME_Zi_Spot','LME_Ti_Spot']
-    for ground_truth in ground_truths_list:
-      print(ground_truth)
-      new_time_series = copy(time_series)
-      spot_list = np.array(new_time_series[ground_truth])
-      new_time_series['spot_price'] = spot_list
-      ts = new_time_series.loc[split_dates[0]:split_dates[2]]
-      X_tr, y_tr, \
-      X_va, y_va, \
-      X_te, y_te, \
-      norm_check, column_list,val_dates = load_data(
-        copy(ts), LME_dates, self.horizon, [ground_truth], self.lag,
-        copy(split_dates), norm_params, tech_params,
-        version_params
-      )
-      # remove the list wrapper
-      X_tr = np.concatenate(X_tr)
-      y_tr = np.concatenate(y_tr)
-      X_va = np.concatenate(X_va)
-      y_va = np.concatenate(y_va)
+      i = 0
+      #toggle metal id
+      metal_id = False
+      ground_truths_list = ['LME_Co_Spot','LME_Al_Spot','LME_Le_Spot','LME_Ni_Spot','LME_Zi_Spot','LME_Ti_Spot']
+      for ground_truth in ground_truths_list:
+        print(ground_truth)
+        new_time_series = copy(time_series)
+        spot_list = np.array(new_time_series[ground_truth])
+        new_time_series['spot_price'] = spot_list
+        ts = new_time_series.loc[split_dates[0]:split_dates[2]]
 
-      # split validation
-      X_ta = X_tr[:int(len(X_tr) * split), :, :]
-      y_ta = y_tr[:int(len(y_tr) * split)]
+        #load data for use
+        X_tr, y_tr, X_va, y_va, val_dates, column_lag_list = prepare_data(ts,LME_dates,self.horizon,[ground_truth],self.lag,copy(split_dates),version_params,metal_id_bool = metal_id,reshape = False,live = True)
+                
+        # split validation
+        X_ta = X_tr[:int(len(X_tr) * split), :, :]
+        y_ta = y_tr[:int(len(y_tr) * split)]
 
-      X_val = X_tr[int(len(X_tr) * split):, :, :]
-      y_val = y_tr[int(len(y_tr) * split):]
+        X_val = X_tr[int(len(X_tr) * split):, :, :]
+        y_val = y_tr[int(len(y_tr) * split):]
 
-      X_te = X_va
-      y_te = y_va
+        X_te = X_va
+        y_te = y_va
 
-      ###############################
-      # to replace the old code (Fuli)
-      ###############################
+        ###############################
+        # to replace the old code (Fuli)
+        ###############################
 
-      # generate metal id for embedding lookup
-      train_X_id_embedding = [i]*len(X_ta)
-      val_X_id_embedding = [i]*len(X_val)
-      test_X_id_embedding = [i]*len(X_te)
+        # generate metal id for embedding lookup
+        train_X_id_embedding = [i]*len(X_ta)
+        val_X_id_embedding = [i]*len(X_val)
+        test_X_id_embedding = [i]*len(X_te)
 
-      if len(final_X_tr) == 0:
-        final_X_tr = copy(X_ta)
-      else:
-        final_X_tr = np.concatenate((final_X_tr, X_ta), axis=0)
-      if len(final_y_tr) == 0:
-        final_y_tr = copy(y_ta)
-      else:
-        final_y_tr = np.concatenate((final_y_tr, y_ta), axis=0)
-
-      if len(final_X_te) == 0:
-        final_X_te = copy(X_te)
-      else:
-        final_X_te = np.concatenate((final_X_te, X_te), axis=0)
-      if len(final_y_te) == 0:
-        final_y_te = copy(y_te)
-      else:
-        final_y_te = np.concatenate((final_y_te, y_te), axis=0)
-
-      y_te_rank = np.argsort(y_te[:,0])
-      y_te_class = []
-      for item in y_te:
-        if item >= thresh:
-          y_te_class.append(1)
+        if len(final_X_tr) == 0:
+          final_X_tr = copy(X_ta)
         else:
-          y_te_class.append(0)
-      final_y_te_class_list.append(y_te_class)
-      split_position = len(y_te) // 3
-      final_y_te_bot_ind_list.append(y_te_rank[:split_position])
-      final_y_te_top_ind_list.append(y_te_rank[-split_position:])
-      y_te_class = np.array(y_te_class)
-      final_y_te_class_bot_list.append(
-        y_te_class[y_te_rank[:split_position]])
-      final_y_te_class_top_list.append(
-        y_te_class[y_te_rank[-split_position:]])
-      # final_y_te_class_bot_list.append(y_te_class[y_te_rank[:split_position]])
-      # final_y_te_class_top_list.append(y_te_class[y_te_rank[-split_position:]])
+          final_X_tr = np.concatenate((final_X_tr, X_ta), axis=0)
+        if len(final_y_tr) == 0:
+          final_y_tr = copy(y_ta)
+        else:
+          final_y_tr = np.concatenate((final_y_tr, y_ta), axis=0)
 
-      if len(final_X_val) == 0:
-        final_X_val = copy(X_val)
-      else:
-        final_X_val = np.concatenate((final_X_val, X_val), axis=0)
-      if len(final_y_val) == 0:
-        final_y_val = copy(y_val)
-      else:
-        final_y_val = np.concatenate((final_y_val, y_val), axis=0)
+        if len(final_X_te) == 0:
+          final_X_te = copy(X_te)
+        else:
+          final_X_te = np.concatenate((final_X_te, X_te), axis=0)
+        if len(final_y_te) == 0:
+          final_y_te = copy(y_te)
+        else:
+          final_y_te = np.concatenate((final_y_te, y_te), axis=0)
+
+        y_te_rank = np.argsort(y_te[:,0])
+        y_te_class = []
+        for item in y_te:
+          if item >= thresh:
+            y_te_class.append(1)
+          else:
+            y_te_class.append(0)
+        final_y_te_class_list.append(y_te_class)
+        split_position = len(y_te) // 3
+        final_y_te_bot_ind_list.append(y_te_rank[:split_position])
+        final_y_te_top_ind_list.append(y_te_rank[-split_position:])
+        y_te_class = np.array(y_te_class)
+        final_y_te_class_bot_list.append(
+          y_te_class[y_te_rank[:split_position]])
+        final_y_te_class_top_list.append(
+          y_te_class[y_te_rank[-split_position:]])
+        # final_y_te_class_bot_list.append(y_te_class[y_te_rank[:split_position]])
+        # final_y_te_class_top_list.append(y_te_class[y_te_rank[-split_position:]])
+
+        if len(final_X_val) == 0:
+          final_X_val = copy(X_val)
+        else:
+          final_X_val = np.concatenate((final_X_val, X_val), axis=0)
+        if len(final_y_val) == 0:
+          final_y_val = copy(y_val)
+        else:
+          final_y_val = np.concatenate((final_y_val, y_val), axis=0)
+        ###############################
+        # to replace the old code (Fuli)
+        ###############################
+
+        final_train_X_embedding+=train_X_id_embedding
+        final_test_X_embedding+=test_X_id_embedding
+        final_val_X_embedding+=val_X_id_embedding
+
+        # update metal index
+        i+=1
+      print('Dataset statistic: #examples')
+      #print('Train:', len(final_X_tr), len(final_y_tr), len(final_train_X_embedding))
+      #print(np.max(final_X_tr), np.min(final_X_tr), np.max(final_y_tr), np.min(final_y_tr))
+      #print('Validation:', len(final_X_val), len(final_y_val), len(final_val_X_embedding))
+      print('Testing:', len(final_X_te), len(final_y_te), len(final_test_X_embedding))
+      # begin to train the model
+      input_dim = final_X_tr.shape[-1]
+      window_size = self.lag
+      case_number = len(ground_truths_list)
+      # begin to predict
+      start = time.time()
+      test_loss_list = []
+      test_X = torch.from_numpy(final_X_te).float()
+      test_Y = torch.from_numpy(final_y_te).float()
+      var_x_test_id = torch.LongTensor(np.array(final_test_X_embedding))
+      net = torch.load(os.path.join('result','model','alstm',self.version+"_"+method,split_dates[1]+"_"+str(self.horizon)+"_"+str(drop_out)+"_"+str(hidden_state)+"_"+str(embedding_size)+"_"+str(self.lag)+"_"+self.version+"_"+'alstm.pkl'))
+      net.eval()
+      test_output = net(test_X, var_x_test_id)
+      #loss = loss_func(test_output, test_Y)
+      #loss_sum = loss.detach()
+      current_test_pred = list(test_output.detach().view(-1,))
+      # print(np.min(current_test_pred), np.max(current_test_pred))
+      print(var_x_test_id)
+      current_test_class = [1 if ele>thresh else 0 for ele in current_test_pred]
+      np.savetxt(os.path.join('result','probability','alstm',self.version+"_"+method,split_dates[1]+"_"+str(self.horizon)+"_"+self.version+".txt"),current_test_class)
+      #np.savetxt("preciction.txt",current_test_class)    
+      
+      #test_loss = loss_sum
+      #test_loss_list.append(float(test_loss))
+      
+      # test_f1 = f1_score(test_y_class, current_test_class)
+      # test_f1_list.append(test_f1)
+
+      #test_acc = accuracy_score(test_y_class, current_test_class)
+      #test_acc_list.append(test_acc)
+
+      #print('average test loss: {:.6f}, accuracy: {:.4f}'.format(
+      #		test_loss, test_acc)
+      #)
+      #trainer = Trainer(input_dim, hidden_state, window_size, lr,
+      #				dropout, case_number, attention_size,
+      #				embedding_size,
+      #				final_X_tr, final_y_tr,
+      #				final_X_te, final_y_te,
+      #				final_X_val, final_y_val,
+      #				final_train_X_embedding,
+      #				final_test_X_embedding,
+      #				final_val_X_embedding,
+      #				final_y_te_class_list,
+      #				final_y_te_class_top_list,
+      #				final_y_te_class_bot_list,
+      #				final_y_te_top_ind_list,
+      #				final_y_te_bot_ind_list
+      #				)
+      #torch.save(trainer, PATH)
+      print(val_dates)
+      pred_length = int(len(current_test_class)/6)
+      print(pred_length)
+      for num,gt in enumerate(ground_truths_list):
+        final_list = pd.DataFrame(current_test_class[num*pred_length:(num+1)*pred_length],index = val_dates, columns = ["Prediction"])
+        final_list.to_csv(os.path.join(os.getcwd(),"result","prediction","alstm",self.version+"_"+method,"_".join([gt,date,str(self.horizon),self.version])+".csv"))
+      end = time.time()
       ###############################
       # to replace the old code (Fuli)
       ###############################
-
-      final_train_X_embedding+=train_X_id_embedding
-      final_test_X_embedding+=test_X_id_embedding
-      final_val_X_embedding+=val_X_id_embedding
-
-      # update metal index
-      i+=1
-    print('Dataset statistic: #examples')
-    #print('Train:', len(final_X_tr), len(final_y_tr), len(final_train_X_embedding))
-    #print(np.max(final_X_tr), np.min(final_X_tr), np.max(final_y_tr), np.min(final_y_tr))
-    #print('Validation:', len(final_X_val), len(final_y_val), len(final_val_X_embedding))
-    print('Testing:', len(final_X_te), len(final_y_te), len(final_test_X_embedding))
-    # begin to train the model
-    input_dim = final_X_tr.shape[-1]
-    window_size = self.lag
-    case_number = len(ground_truths_list)
-    # begin to predict
-    start = time.time()
-    test_loss_list = []
-    test_X = torch.from_numpy(final_X_te).float()
-    test_Y = torch.from_numpy(final_y_te).float()
-    var_x_test_id = torch.LongTensor(np.array(final_test_X_embedding))
-    net = torch.load(os.path.join('result','model','alstm',self.version+"_"+method,split_dates[1]+"_"+str(self.horizon)+"_"+str(drop_out)+"_"+str(hidden_state)+"_"+str(embedding_size)+"_"+str(self.lag)+"_"+self.version+"_"+'alstm.pkl'))
-    net.eval()
-    test_output = net(test_X, var_x_test_id)
-    #loss = loss_func(test_output, test_Y)
-    #loss_sum = loss.detach()
-    current_test_pred = list(test_output.detach().view(-1,))
-    # print(np.min(current_test_pred), np.max(current_test_pred))
-    print(var_x_test_id)
-    current_test_class = [1 if ele>thresh else 0 for ele in current_test_pred]
-    np.savetxt(os.path.join('result','probability','alstm',self.version+"_"+method,split_dates[1]+"_"+str(self.horizon)+"_"+self.version+"_"+"prediction.txt"),current_test_class)
-    #np.savetxt("preciction.txt",current_test_class)    
-    
-    #test_loss = loss_sum
-    #test_loss_list.append(float(test_loss))
-    
-    # test_f1 = f1_score(test_y_class, current_test_class)
-    # test_f1_list.append(test_f1)
-
-    #test_acc = accuracy_score(test_y_class, current_test_class)
-    #test_acc_list.append(test_acc)
-
-    #print('average test loss: {:.6f}, accuracy: {:.4f}'.format(
-    #		test_loss, test_acc)
-    #)
-    #trainer = Trainer(input_dim, hidden_state, window_size, lr,
-    #				dropout, case_number, attention_size,
-    #				embedding_size,
-    #				final_X_tr, final_y_tr,
-    #				final_X_te, final_y_te,
-    #				final_X_val, final_y_val,
-    #				final_train_X_embedding,
-    #				final_test_X_embedding,
-    #				final_val_X_embedding,
-    #				final_y_te_class_list,
-    #				final_y_te_class_top_list,
-    #				final_y_te_class_bot_list,
-    #				final_y_te_top_ind_list,
-    #				final_y_te_bot_ind_list
-    #				)
-    #torch.save(trainer, PATH)
-    print(val_dates)
-    end = time.time()
-    ###############################
-    # to replace the old code (Fuli)
-    ###############################
-    #print("pre-processing time: {}".format(end-start))
-    #print("the split date is {}".format(split_date[1]))
-    print("predict time: {}".format(end-start))
-    return current_test_class
+      #print("pre-processing time: {}".format(end-start))
+      #print("the split date is {}".format(split_date[1]))
+      print("predict time: {}".format(end-start))

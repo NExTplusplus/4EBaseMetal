@@ -123,12 +123,11 @@ def read_data_with_specified_columns(source,path,start_date):
   if source=='4E':
     from utils.read_data import read_data_v31_4E
     time_series, LME_dates = read_data_v31_4E("2003-11-12")
-    time_series = time_series[columns_to_be_stored]
-    time_series.dropna(how = True,inplace = True)
+    time_series = time_series[columns_to_be_stored]\
     os.chdir("NEXT/4EBaseMetal")
   return time_series,LME_dates,len(fname_columns[0])
 
-def prepare_data(ts,LME_dates,horizon,ground_truth_list,lag,split_date,version_params,xgboost = False,live = False,metal_id_bool = False):
+def prepare_data(ts,LME_dates,horizon,ground_truth_list,lag,split_date,version_params,xgboost = False,live = False,metal_id_bool = False, reshape = True):
   '''
     prepare data based on configuration as stated in parameters
     input:
@@ -176,11 +175,12 @@ def prepare_data(ts,LME_dates,horizon,ground_truth_list,lag,split_date,version_p
       val_dates = None
       X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(ts,LME_dates,horizon,[ground_truth],lag,copy(split_date),copy(norm_params),copy(tech_params),version_params)
     X_tr = np.concatenate(X_tr)
-    X_tr = X_tr.reshape(len(X_tr),lag*len(column_list[0]))
     y_tr = np.concatenate(y_tr)
     X_va = np.concatenate(X_va)
-    X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
     y_va = np.concatenate(y_va)
+    if reshape:
+      X_tr = X_tr.reshape(len(X_tr),lag*len(column_list[0]))
+      X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
 
     #if version is even, add metal id to X
     if metal_id_bool and not live:

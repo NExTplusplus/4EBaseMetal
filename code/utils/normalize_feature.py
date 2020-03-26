@@ -2,6 +2,14 @@ from copy import copy
 import statsmodels.api as sm
 import pandas as pd
 import numpy as np
+from utils.seasonal_decomp import custom_seasonal_decomp
+from statsmodels.tsa.seasonal import seasonal_decompose
+import numpy as np
+import pandas as pd
+from pandas.core.nanops import nanmean as pd_nanmean
+from statsmodels.tsa._stl import STL
+from utils.fracdiff import frac_diff_ffd
+
 
 '''
 parameters:
@@ -31,6 +39,11 @@ def log_1d_return(X,cols):
 # "volume" is the volume colume we want to process and "OI" is the OI column contained open interest
 # version can be v1,v2,v3 or v4 as stated in the file. v1,v2 and v3 will require Open Interest column ("OI_name")
 # and for v3 and v4 length of moving average is required
+
+def fractional_diff(X,cols):
+    for col in cols:
+        X[col] = frac_diff_ffd(X[col].to_frame(),0.3,0.01)
+    return X
 
 def normalize_volume(volume,OI=None,len_ma=None,version="v1", train_end=0 ,strength = 0.01,both = 0):
 
@@ -181,3 +194,16 @@ def normalize_OI (OI_col, train_end, strength, both):
         elif nOI[i] < mn:
             nOI[i] = mn
     return nOI
+
+def STL_decomposition_trend(col):
+    res = seasonal_decompose(col, freq = 5, two_sided= False)
+    trend = np.log(res.trend) - np.log(res.trend.shift(1))
+    return res.trend
+
+def STL_decomposition_seasonal(col):
+    res = seasonal_decompose(col, freq = 5, two_sided= False)
+    return res.seasonal
+
+def custom_seasonal_decompose(col,train_end):
+    res = custom_seasonal_decomp(col,train_end, period = 5,two_sided= False)
+    return res.seasonal

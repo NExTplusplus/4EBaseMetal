@@ -14,8 +14,6 @@ from utils.supply_and_demand import *
 from sklearn import preprocessing
 import json
 import scipy.stats as sct
-from statsmodels.tsa.seasonal import STL
-
 #load the strategy parameters for version 9
 def generate_strat_params_v1(ground_truth,steps):
     with open(os.path.join(sys.path[0],"exp","strat_param_v9.conf")) as f:
@@ -503,12 +501,136 @@ def normalize_without_1d_return_v3(timeseries,train_end, params):
                                                                                     len_update=params['len_update'],
                                                                                     version = params['ex_spread_norm'])
         if "Spot" in col:
-            stl = STL(timeseries[col],period = 5, seasonal = 53)
-            res = stl.fit()
-            timeseries[col[:-4]+"Trend"] = res.trend
-            timeseries[col[:-4]+"Season"] = res.seasonal
+            # timeseries[col[:-4]+"Trend"] = timeseries[col].expanding(255).apply(STL_decomposition_trend)
+            # timeseries[col[:-4]+"Season"] = timeseries[col].expanding(255).apply(STL_decomposition_seasonal)
+            timeseries[col[:-4]+"Trend"] = STL_decomposition_trend(timeseries[col])
+            timeseries[col[:-4]+"Season"] = STL_decomposition_seasonal(timeseries[col])
+    
     return timeseries,ans
 
+
+def normalize_without_1d_return_v4(timeseries,train_end, params):
+    """
+    timeseries: the dataframe we get from the data source
+    train_end: string which we use to define the range we use to train
+    params: A dictionary we use to feed the parameter
+    """
+    ans = {"nVol":False,"nSpread":False,"nEx":False}
+    
+    cols = timeseries.columns.values.tolist()
+    ex = False
+    if "CNYUSD" in cols:
+        print("Considering Exchange Rate")
+        ex = True
+    #normalize the data based on the specific column
+    for col in cols:
+        #use the normalize_OI function to deal with the OI
+        if col[:-2]+"OI" == col:
+            print("Normalizing OI:"+"=>".join((col,col[:-2]+"nOI")))
+            timeseries[col[:-2]+"nOI"] = normalize_OI(copy(timeseries[col]),train_end,strength = params['strength'], both = params['both'])
+        #use the normalize_volume function to deal with the volume
+        if col[:-6]+"Volume" == col:
+            setting = col[:-6]
+            if setting+"OI" in cols:
+                ans["nVol"] = True
+                print("Normalizing Volume:"+"=>".join((col,setting+"OI")))
+                timeseries[setting+"nVolume"] = normalize_volume(copy(timeseries[col]), train_end = train_end, OI = copy(timeseries[setting+"OI"]),
+                                                        len_ma = params['len_ma'],version = params['vol_norm'], 
+                                                        strength = params['strength'], both = params['both'])
+        #use the normalize_3mspot_spread function to create 3 month close to spot spread
+        if col[:-5]+"Close" == col:
+            setting = col[:-5]
+            if setting+"Spot" in cols:
+                ans["nSpread"] = True
+                print("Normalizing Spread:"+"=>".join((col,setting+"Spot")))
+                timeseries[setting+"n3MSpread"] = normalize_3mspot_spread(copy(timeseries[col]),copy(timeseries[setting+"Spot"]),
+                                                                len_update=params['len_update'],
+                                                                version = params['spot_spread_norm'])
+        #use the normalize_3mspot_spread_ex function to create cross exchange spread
+        if "SHFE" == col[:4] and "Close" == col[-5:] and ex:
+            metal = col.split("_")[1]
+            if "_".join(("LME",metal,"Spot")) in cols:
+                ans["nEx"] = True
+                print("+".join((col,"_".join(("LME",metal,"Spot"))))+"=>"+"_".join(("SHFE",metal,"nEx3MSpread")))
+                timeseries["_".join(("SHFE",metal,"nEx3MSpread"))] = normalize_3mspot_spread_ex(copy(timeseries["_".join(("LME",metal,"Spot"))]),
+                                                                                    copy(timeseries[col]),copy(timeseries["CNYUSD"]),
+                                                                                    len_update=params['len_update'],
+                                                                                    version = params['ex_spread_norm'])
+            if "_".join(("LME",metal,"Close")) in cols:
+                ans["nEx"] = True
+                print("+".join((col,"_".join(("LME",metal,"Close"))))+"=>"+"_".join(("SHFE",metal,"nEx3MSpread")))
+                timeseries["_".join(("SHFE",metal,"nExSpread"))] = normalize_3mspot_spread_ex(copy(timeseries["_".join(("LME",metal,"Close"))]),
+                                                                                    copy(timeseries[col]),copy(timeseries["CNYUSD"]),
+                                                                                    len_update=params['len_update'],
+                                                                                    version = params['ex_spread_norm'])
+        if "Spot" in col:
+            # timeseries[col[:-4]+"Trend"] = timeseries[col].expanding(255).apply(STL_decomposition_trend)
+            # timeseries[col[:-4]+"Season"] = timeseries[col].expanding(255).apply(STL_decomposition_seasonal)
+            timeseries[col[:-4]+"Trend"] = STL_decomposition_trend(timeseries[col])
+    
+    return timeseries,ans
+
+def normalize_without_1d_return_v5(timeseries,train_end, params):
+    """
+    timeseries: the dataframe we get from the data source
+    train_end: string which we use to define the range we use to train
+    params: A dictionary we use to feed the parameter
+    """
+    ans = {"nVol":False,"nSpread":False,"nEx":False}
+    
+    cols = timeseries.columns.values.tolist()
+    ex = False
+    if "CNYUSD" in cols:
+        print("Considering Exchange Rate")
+        ex = True
+    #normalize the data based on the specific column
+    for col in cols:
+        #use the normalize_OI function to deal with the OI
+        if col[:-2]+"OI" == col:
+            print("Normalizing OI:"+"=>".join((col,col[:-2]+"nOI")))
+            timeseries[col[:-2]+"nOI"] = normalize_OI(copy(timeseries[col]),train_end,strength = params['strength'], both = params['both'])
+        #use the normalize_volume function to deal with the volume
+        if col[:-6]+"Volume" == col:
+            setting = col[:-6]
+            if setting+"OI" in cols:
+                ans["nVol"] = True
+                print("Normalizing Volume:"+"=>".join((col,setting+"OI")))
+                timeseries[setting+"nVolume"] = normalize_volume(copy(timeseries[col]), train_end = train_end, OI = copy(timeseries[setting+"OI"]),
+                                                        len_ma = params['len_ma'],version = params['vol_norm'], 
+                                                        strength = params['strength'], both = params['both'])
+        #use the normalize_3mspot_spread function to create 3 month close to spot spread
+        if col[:-5]+"Close" == col:
+            setting = col[:-5]
+            if setting+"Spot" in cols:
+                ans["nSpread"] = True
+                print("Normalizing Spread:"+"=>".join((col,setting+"Spot")))
+                timeseries[setting+"n3MSpread"] = normalize_3mspot_spread(copy(timeseries[col]),copy(timeseries[setting+"Spot"]),
+                                                                len_update=params['len_update'],
+                                                                version = params['spot_spread_norm'])
+        #use the normalize_3mspot_spread_ex function to create cross exchange spread
+        if "SHFE" == col[:4] and "Close" == col[-5:] and ex:
+            metal = col.split("_")[1]
+            if "_".join(("LME",metal,"Spot")) in cols:
+                ans["nEx"] = True
+                print("+".join((col,"_".join(("LME",metal,"Spot"))))+"=>"+"_".join(("SHFE",metal,"nEx3MSpread")))
+                timeseries["_".join(("SHFE",metal,"nEx3MSpread"))] = normalize_3mspot_spread_ex(copy(timeseries["_".join(("LME",metal,"Spot"))]),
+                                                                                    copy(timeseries[col]),copy(timeseries["CNYUSD"]),
+                                                                                    len_update=params['len_update'],
+                                                                                    version = params['ex_spread_norm'])
+            if "_".join(("LME",metal,"Close")) in cols:
+                ans["nEx"] = True
+                print("+".join((col,"_".join(("LME",metal,"Close"))))+"=>"+"_".join(("SHFE",metal,"nEx3MSpread")))
+                timeseries["_".join(("SHFE",metal,"nExSpread"))] = normalize_3mspot_spread_ex(copy(timeseries["_".join(("LME",metal,"Close"))]),
+                                                                                    copy(timeseries[col]),copy(timeseries["CNYUSD"]),
+                                                                                    len_update=params['len_update'],
+                                                                                    version = params['ex_spread_norm'])
+        if "Spot" in col:
+            # timeseries[col[:-4]+"Trend"] = timeseries[col].expanding(255).apply(STL_decomposition_trend)
+            # timeseries[col[:-4]+"Season"] = timeseries[col].expanding(255).apply(STL_decomposition_seasonal)
+            timeseries[col[:-4]+"Trend"] = STL_decomposition_trend(timeseries[col])
+            timeseries[col[:-4]+"Season"] = custom_seasonal_decompose(timeseries[col],train_end)
+    
+    return timeseries,ans
 #This function is for one-hot encoding.
 def one_hot(dataframe):
     output = pd.DataFrame(index = dataframe.index)

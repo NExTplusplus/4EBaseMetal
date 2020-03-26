@@ -80,6 +80,10 @@ if __name__ == '__main__':
       '-savel','--save_loss',type=bool, default=0,
       help='whether to save loss results'
   )
+  parser.add_argument(
+      '-method','--method',type=str, default="best_acc",
+      help='method to choose hyperparameter'
+  )
   args = parser.parse_args()
   model = ALSTM_online(lag = args.lag, horizon = args.steps, version = args.version, gt = args.ground_truth, date = args.date, source = args.source, path =args.config)
   if args.action=="tune":
@@ -97,7 +101,8 @@ if __name__ == '__main__':
         interval=args.interval,
         lambd=args.lambd,
         save_loss=args.save_loss,
-        save_prediction=args.save_prediction)
+        save_prediction=args.save_prediction,
+        method = args.method)
   else:
     final = model.test(num_epochs=args.epoch,
         batch_size=args.batch,
@@ -110,5 +115,6 @@ if __name__ == '__main__':
         interval=args.interval,
         lambd=args.lambd,
         save_loss=args.save_loss,
-        save_prediction=args.save_prediction)
+        save_prediction=args.save_prediction,
+        method = args.method)
     print("the result of the test is {}".format(final))

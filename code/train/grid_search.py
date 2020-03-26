@@ -22,7 +22,8 @@ def _gen_grid_search_all_para(parameter_combinations, paras, para_values,
 
 
 def grid_search_alstm(sel_paras, cand_values, init_paras, script='code/train/train_alstm.py',
-                      log_file='./tune.log', steps=5, version='v16'):
+                      log_file='./tune.log', steps=5, version='v16', date = "2017-06-30",
+                         gt = "LME_Co_Spot",source = "NExT"):
     # init_paras = model_paras
     print('selected parameters:', sel_paras)
     print('parameter candidates:', cand_values)
@@ -41,7 +42,10 @@ def grid_search_alstm(sel_paras, cand_values, init_paras, script='code/train/tra
              '--hidden', str(cur_paras['hidden']),
              '--embedding_size', str(cur_paras['embedding_size']),
              '--steps', str(steps),
-             '--version', str(version)
+             '--version', str(version),
+             '--ground_truth', gt,
+             '--source', source,
+             '--date', date
              ]
         )
         print('\n\t\t', cur_paras)
@@ -52,7 +56,8 @@ def grid_search_alstm(sel_paras, cand_values, init_paras, script='code/train/tra
 
 def grid_search_alstm_mc(sel_paras, cand_values, init_paras,
                          script='code/train/train_alstm_mc.py',
-                         log_file='./tune.log', steps=5):
+                         log_file='./tune.log', steps=5, date = "2017-06-30",
+                         gt = "LME_Co_Spot",source = "NExT"):
     # init_paras = model_paras
     print('selected parameters:', sel_paras)
     print('parameter candidates:', cand_values)
@@ -72,7 +77,10 @@ def grid_search_alstm_mc(sel_paras, cand_values, init_paras,
              '--repeat_mc', str(cur_paras['repeat_mc']),
              '--hidden', str(cur_paras['hidden']),
              '--embedding_size', str(cur_paras['embedding_size']),
-             '--steps', str(steps)
+             '--steps', str(steps),
+             '--ground_truth', gt,
+             '--source', source,
+             '--date', date
              ]
         )
         print('\n\t\t', cur_paras)
