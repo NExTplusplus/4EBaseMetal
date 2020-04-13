@@ -31,11 +31,11 @@ if __name__ == '__main__':
     args = parser.parse_args()
     args.step_list = args.step_list.split(",")
     args.ground_truth_list = args.ground_truth_list.split(",")
-    args.version_list = args.version_list.split(",")
     args.dates = args.dates.split(",")
     args.length = [int(i) for i in args.length.split(",")]
 
     if args.model in ['lr','xgboost']:
+        args.version_list = args.version_list.split(",")
         ans = {"version":[],"horizon":[],"ground_truth":[]}
         validation_dates = [d.split("-")[0]+"-01-01" if d[5:7] <= "06" else d.split("-")[0]+"-07-01" for d in args.dates]
         for version in args.version_list:
@@ -84,6 +84,7 @@ if __name__ == '__main__':
         ans["final average"] = total_acc/total_length
         ans.to_csv(args.output)
     elif args.model in ["alstm"]:
+        args.version_list = args.version_list.split(",")
         ans = {"version":[],"horizon":[],"ground_truth":[]}
         validation_dates = [d.split("-")[0]+"-01-01" if d[5:7] <= "06" else d.split("-")[0]+"-07-01" for d in args.dates]
         for version in args.version_list:
@@ -120,6 +121,52 @@ if __name__ == '__main__':
                 for val_date in validation_dates:
                     ans[val_date+"_acc"].append(np.average(ans[val_date+"_acc"][-6:]))
                     ans[val_date+"_length"].append(np.average(ans[val_date+"_length"][-6:]))
+        ans = pd.DataFrame(ans)
+        total_acc = 0.0
+        total_length = 0
+        for date in validation_dates:
+            total_acc = total_acc + ans[date+"_acc"]*ans[date+"_length"]
+            total_length = total_length+ans[date+"_length"]
+        ans["final average"] = total_acc/total_length
+        ans.to_csv(args.output)
+    elif args.model in ["ensemble"]:
+        version = args.version_list
+        ans = {"version":[],"horizon":[],"ground_truth":[]}
+        validation_dates = [d.split("-")[0]+"-01-01" if d[5:7] <= "06" else d.split("-")[0]+"-07-01" for d in args.dates]
+        for v in version.split(','):
+            for h in args.step_list:
+                for j,gt in enumerate(args.ground_truth_list):
+                    print(v,h,gt)
+                    ans["version"].append(v)
+                    ans["horizon"].append(h)
+                    ans["ground_truth"].append(gt)
+                    for i,date in enumerate(args.dates):
+                        if "_".join([gt,date,h,v])+".csv" not in os.listdir(os.path.join("result","prediction","ensemble")):
+                            if validation_dates[i]+"_acc" not in ans.keys():
+                                ans[validation_dates[i]+"_acc"] = [0]
+                                ans[validation_dates[i]+"_length"] = [0]
+                            else:
+                                ans[validation_dates[i]+"_acc"].append(0)
+                                ans[validation_dates[i]+"_length"].append(0)
+                            continue
+                        temp = pd.read_csv(os.path.join("result","prediction",args.model,"_".join([gt,date,h,v])+".csv"),index_col = 0)
+                        label = pd.read_csv(os.path.join("data","Label","_".join([gt,"h"+str(h),validation_dates[i],"label.csv"])),index_col = 0)
+                        if label.index[-1] > date:
+                            label = label.iloc[:-1,:]
+                        accuracy = accuracy_score(label[:len(temp)],temp)
+                        if validation_dates[i]+"_acc" not in ans.keys():
+                            ans[validation_dates[i]+"_acc"] = [accuracy]
+                            ans[validation_dates[i]+"_length"] = [len(temp)]
+                        else:
+                            ans[validation_dates[i]+"_acc"].append(accuracy)
+                            ans[validation_dates[i]+"_length"].append(len(temp))
+                ans["version"].append(v)
+                ans["horizon"].append(h)
+                ans["ground_truth"].append("average")
+                for val_date in validation_dates:
+                    ans[val_date+"_acc"].append(np.average(ans[val_date+"_acc"][-6:]))
+                    ans[val_date+"_length"].append(np.average(ans[val_date+"_length"][-6:]))
+        print(ans)
         ans = pd.DataFrame(ans)
         total_acc = 0.0
         total_length = 0
