@@ -11,9 +11,9 @@ from copy import copy
 from multiprocessing import Pool as pl
 from itertools import combinations,product
 
-def read_config(model, version):
+def read_config(model, version, config):
   string = ""
-  with open(os.path.join(os.getcwd(),"exp","ensemble_tune.conf")) as f:
+  with open(os.path.join(os.getcwd(),config)) as f:
     config = json.load(f)
   if model.split("_")[0] == "ensemble":
     for j,v in enumerate(version.split(":")):
@@ -60,12 +60,14 @@ class Ensemble_online():
                 dates,
                 window = "0:0:0",
                 version = "",
+                config = os.path.join('exp','ensemble_tune.conf'),
                 hierarchical = True):
         self.horizon = horizon
         self.gt = gt
         self.dates = dates
         self.window = [int(x) for x in window.split(":")]
         self.version = version
+        self.config = config
         self.hierarchical = hierarchical
         
 
@@ -119,7 +121,7 @@ class Ensemble_online():
             elif i == 2:
                 model = "alstm"
             
-            versions = read_config(model,version)
+            versions = read_config(model,version,self.config)
 
             for window in [10,15,20,25]:
                 ans["window"].append(window)
@@ -192,7 +194,7 @@ class Ensemble_online():
             elif i == 2:
                 model = "alstm"
             if not direct:
-                versions = read_config(model,version)
+                versions = read_config(model,version,self.config)
             else:
                 versions = version
             df = self.sm_predict(model, date, versions, self.window[i], sm_methods[i])
@@ -223,7 +225,7 @@ class Ensemble_online():
                 model = "xgboost"
             elif i == 2:
                 model = "alstm"
-            vers = read_config(model,version)
+            vers = read_config(model,version,self.config)
             total_list = total_list+[model+" "+v for v in vers.split(',')]
         
         version_list = list(combinations(total_list,len(total_list) - length))

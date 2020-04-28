@@ -16,6 +16,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=desc)
     parser.add_argument('-s','--steps',type=str,default="5",
                         help='steps in the future to be predicted')
+    parser.add_argument('-c','--config',type=str,default="exp/ensemble_tune.conf",
+                        help='configuration file path')
     parser.add_argument('-l','--length',type=int,default=1,
                         help='steps in the future to be predicted')
     parser.add_argument('-model','--model', help='which single model we want to ensemble', type = str, default = 'alstm')
@@ -52,12 +54,13 @@ if __name__ == '__main__':
     args = parser.parse_args()
     args.steps = args.steps.split(",")
     args.ground_truth = args.ground_truth.split(",")
-    args.hierarchical = args.hierarchical == "True"
+    args.config = args.config, hierarchical = args.hierarchical == "True"
+    args.config = os.path.join(*args.config.split('/'))
     
     if args.action == "tune":
         for horizon in [int(step) for step in args.steps]:
             for ground_truth in args.ground_truth:
-                ensemble = Ensemble_online(horizon=horizon,gt = ground_truth,dates = args.dates, window = args.window, version = args.version, hierarchical = args.hierarchical)
+                ensemble = Ensemble_online(horizon=horizon,gt = ground_truth,dates = args.dates, window = args.window, version = args.version, config = args.config, hierarchical = args.hierarchical)
                 results = ensemble.choose_parameter()
                 results.to_csv(os.path.join('result','validation','ensemble','_'.join([ground_truth,str(horizon),args.version+".csv"])))
     if args.action == "test":
@@ -65,7 +68,7 @@ if __name__ == '__main__':
             for ground_truth in args.ground_truth:
                 for date in args.dates.split(","):
                     print(ground_truth,horizon,date)
-                    ensemble = Ensemble_online(horizon=horizon,gt = ground_truth,dates = args.dates, window = args.window, version = args.version, hierarchical = args.hierarchical) 
+                    ensemble = Ensemble_online(horizon=horizon,gt = ground_truth,dates = args.dates, window = args.window, version = args.version, config = args.config, hierarchical = args.hierarchical) 
                     prediction = ensemble.predict(date, args.version, args.sm_methods, args.ens_method).to_frame()
                     prediction.columns = ['result']
                     prediction.to_csv(os.path.join(os.getcwd(),"result","prediction","ensemble",'_'.join([ground_truth,date,str(horizon),args.version,args.sm_methods,args.ens_method,'hier',str(args.hierarchical)+".csv"])))
@@ -80,7 +83,7 @@ if __name__ == '__main__':
                         ans[validation_date+"_acc"]=[]
                         ans[validation_date+"_length"]= []
                     print(ground_truth,horizon,date)
-                    ensemble = Ensemble_online(horizon=horizon,gt = ground_truth,dates = args.dates, window = args.window, version = args.version, hierarchical = args.hierarchical) 
+                    ensemble = Ensemble_online(horizon=horizon,gt = ground_truth,dates = args.dates, window = args.window, version = args.version, config = args.config, hierarchical = args.hierarchical) 
                     prediction = ensemble.delete_model(date, args.version, args.sm_methods,args.ens_method, args.length)
                     for col in prediction.columns:
                         label = pd.read_csv("data/Label/"+ground_truth+"_h"+str(horizon)+"_"+validation_date+"_label.csv",index_col = 0)[:len(prediction.index)]
