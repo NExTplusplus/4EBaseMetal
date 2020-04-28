@@ -74,7 +74,7 @@ class Logistic_online():
         #prepare holder for results
         ans = {"C":[]}
         
-        for s, split_date in enumerate(split_dates[:-1]):
+        for s, split_date in enumerate(split_dates[1:-1]):
 
             print("the train date is {}".format(split_date[0]))
             print("the test date is {}".format(split_date[1]))
@@ -87,7 +87,7 @@ class Logistic_online():
                 ground_truth_list = ["LME_Co_Spot","LME_Al_Spot","LME_Ni_Spot","LME_Ti_Spot","LME_Zi_Spot","LME_Le_Spot"]
 
             #extract copy of data to process
-            ts = copy(time_series.loc[split_date[0]:split_dates[s+1][2]])
+            ts = copy(time_series.loc[split_dates[s][0]:split_dates[s+2][2]])
 
             #load data for use
             final_X_tr, final_y_tr, final_X_va, final_y_va, val_dates, column_lag_list = prepare_data(ts,LME_dates,self.horizon,ground_truth_list,self.lag,copy(split_date),version_params,metal_id_bool = metal_id)
@@ -155,8 +155,8 @@ class Logistic_online():
             length = 5
             if even_version(self.version) and self.horizon > 5:
                 length = 4
-            start_time,evalidate_date = get_relevant_dates(today,length,"train")
-            split_dates  =  [start_time,evalidate_date,str(today)]
+            start_time,train_time,evalidate_date = get_relevant_dates(today,length,"train")
+            split_dates  =  [train_time,evalidate_date,str(today)]
 
             #generate the version
             version_params=generate_version_params(self.version)
@@ -172,9 +172,9 @@ class Logistic_online():
                 ground_truth_list = ["LME_Co_Spot","LME_Al_Spot","LME_Ni_Spot","LME_Ti_Spot","LME_Zi_Spot","LME_Le_Spot"]
 
             #extract copy of data to process
-            ts = copy(time_series.loc[split_dates[0]:split_dates[2]])
+            ts = copy(time_series.loc[start_time:split_dates[2]])
 
-            assert_labels(LME_dates,split_dates,self.horizon)
+            
 
             #load data for use
             final_X_tr, final_y_tr, final_X_va, final_y_va, val_dates, column_lag_list = prepare_data(ts,LME_dates,self.horizon,ground_truth_list,self.lag,copy(split_dates),version_params,metal_id_bool = metal_id)
@@ -208,8 +208,8 @@ class Logistic_online():
             length = 5
             if even_version(self.version) and self.horizon > 5:
                 length = 4
-            start_time,evalidate_date = get_relevant_dates(today,length,"test")
-            split_dates  =  [start_time,evalidate_date,str(today)]
+            start_time,train_time,evalidate_date = get_relevant_dates(today,length,"test")
+            split_dates  =  [train_time,evalidate_date,str(today)]
             
             if even_version(self.version):
                 model = pure_LogReg.load(self.version, "all", self.horizon, self.lag,evalidate_date)
@@ -224,9 +224,9 @@ class Logistic_online():
                 metal_id = True
 
             #extract copy of data to process
-            ts = copy(time_series.loc[split_dates[0]:split_dates[2]])
+            ts = copy(time_series.loc[start_time:split_dates[2]])
 
-            assert_labels(LME_dates,split_dates,self.horizon)
+            
 
             #load data for use
             final_X_tr, final_y_tr, final_X_va, final_y_va,val_dates, column_lag_list = prepare_data(ts,LME_dates,self.horizon,[self.gt],self.lag,copy(split_dates),version_params,metal_id_bool = metal_id,live = True)

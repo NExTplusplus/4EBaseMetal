@@ -81,10 +81,12 @@ class Ensemble_online():
         df = pd.DataFrame()
         for v in version.split(","):
             if model in ['lr','xgboost']:
-                df = pd.read_csv("result/prediction/"+model+"/"+self.gt+"_"+date+"_"+str(self.horizon)+"_"+v+".csv",index_col = 0,names = [model+" "+v],header = 0)
+                filepath = "result/prediction/"+model+"/"+self.gt+"_"+date+"_"+str(self.horizon)+"_"+v+".csv"
             else:
-                df = pd.read_csv("result/prediction/"+model+"/"+v+"/"+self.gt+"_"+date+"_"+str(self.horizon)+"_"+v.split("_")[0]+".csv",index_col = 0,names = [model+" "+v],header = 0)
-            total_df = pd.concat([total_df,df],axis = 1)
+                filepath = "result/prediction/"+model+"/"+v+"/"+self.gt+"_"+date+"_"+str(self.horizon)+"_"+v.split("_")[0]+".csv"
+            if filepath.split('/')[-1] in os.listdir('/'.join(filepath.split('/')[:-1])):
+                df = pd.read_csv(filepath,index_col = 0, names = [model+' '+v],header = 0)
+                total_df = pd.concat([total_df,df],axis = 1)
         if self.hierarchical:
             if method == "vote":
                 return voting(total_df)
@@ -171,7 +173,7 @@ class Ensemble_online():
                 
         return pd.DataFrame(final_ans)
     
-    def predict(self, date, versions_list, sm_methods, ens_method):
+    def predict(self, date, versions_list, sm_methods, ens_method, direct = False):
         '''
         '''
         validation_date = date.split("-")[0]+"-01-01" if date[5:7] <= "06" else date.split("-")[0]+"-07-01" 
@@ -189,9 +191,10 @@ class Ensemble_online():
                 model = "xgboost"
             elif i == 2:
                 model = "alstm"
-            
-            versions = read_config(model,version)
-
+            if not direct:
+                versions = read_config(model,version)
+            else:
+                versions = version
             df = self.sm_predict(model, date, versions, self.window[i], sm_methods[i])
             total_df = pd.concat([total_df,df],axis = 1)
         if ens_method == "vote":
@@ -202,11 +205,13 @@ class Ensemble_online():
             return weight(total_df,label,self.window[3],self.horizon)
 
     
-    def delete_model(self, date, versions_list, method, length):
+    def delete_model(self, date, versions_list, sm_methods, ens_method, length):
 
         validation_date = date.split("-")[0]+"-01-01" if date[5:7] <= "06" else date.split("-")[0]+"-07-01" 
         total_df = pd.DataFrame()
         name_list = []
+        total_list = []
+        
         for i,version in enumerate(versions_list.split(":")):
 
             if version == "":
@@ -218,16 +223,21 @@ class Ensemble_online():
                 model = "xgboost"
             elif i == 2:
                 model = "alstm"
-            
-            versions = read_config(model,version).split(",")
-            version_list = list(combinations(versions,len(versions) - length))
-            name_list.extend([model + str(set(versions) - set(v)) for v in version_list])
-            print(name_list)
-            version_list = [",".join(x) for x in version_list]
-            print(version_list)
-            for v in version_list:
-                pred = self.sm_predict(model,date,v,5,method)
-                total_df = pd.concat([total_df, pred], axis = 1)
+            vers = read_config(model,version)
+            total_list = total_list+[model+" "+v for v in vers.split(',')]
+        
+        version_list = list(combinations(total_list,len(total_list) - length))
+        for version in version_list:
+            versions = ""
+            for i,v in enumerate(version):
+                versions += v.split(' ')[1]+","
+                if i != len(version) - 1 and version[i+1][:2] != version[i][:2] :
+                    versions = versions[:-1]+":"
+                if i == len(version) - 1:
+                    versions = versions[:-1]
+            pred = self.predict(date,versions,sm_methods,ens_method,direct = True)
+            total_df = pd.concat([total_df, pred], axis = 1)
+        name_list = [str(set(total_list) - set(v)) for v in version_list]
         total_df.columns = name_list
         return total_df
 

@@ -150,8 +150,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     '''
 
 
-
-    tra_ind = 0
+    tra_ind = parameters['time_series'][0].index.get_loc(split_dates[0]) - horizon + 1
     if tra_ind < lags - 1:
         tra_ind = lags - 1
     val_ind = parameters['time_series'][0].index.get_loc(split_dates[1])
@@ -171,7 +170,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
     for ind in range(len(parameters['time_series'])):
         # construct the training
         parameters['start_ind'] = tra_ind
-        parameters['end_ind'] = val_ind
+        parameters['end_ind'] = val_ind - horizon + 1
         temp = construct(ind, parameters,version_params['construct'])
         X_tr.append(temp[0])
         y_tr.append(temp[1])
@@ -193,8 +192,7 @@ def load_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  spli
         else:
             X_te = None
             y_te = None
-    
-    
+
     if "live" not in tech_params.keys():
         return X_tr, y_tr, X_va, y_va, X_te, y_te,parameters['norm_check'], parameters['all_cols']
     else:

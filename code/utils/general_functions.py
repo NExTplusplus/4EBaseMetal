@@ -63,12 +63,12 @@ def get_relevant_dates(date, length, version):
         '''
         if month <= 6:
             start_year = year - 3 - length
-            start_time = str(start_year)+"-07-01"
+            start_time = str(start_year)+"-01-01"
             end_time = str(year) +"-07-01"
         else:
-            start_year = year - 2 - length
+            start_year = year - 3 - length
             end_year = year + 1
-            start_time = str(start_year)+"-01-01"
+            start_time = str(start_year)+"-07-01"
             end_time = str(end_year)+"-01-01"
         
         return start_time,end_time
@@ -79,17 +79,21 @@ def get_relevant_dates(date, length, version):
             check for labels is relegated to later
         '''
         if month <=6:
-            start_year = year - length
-            start_time = str(start_year)+"-01-01"
+            start_year = year - length - 1
+            start_time = str(start_year)+"-07-01"
+            train_time = str(start_year+1) +"-01-01"
             evalidate_year = int(year)
             evalidate_date = str(evalidate_year)+"-01-01"
             end_time = str(date)
         else:
             start_year = year - length
-            start_time = str(start_year)+"-07-01"
+            start_time = str(start_year)+"-01-01"
+            train_time = str(start_year) +"-07-01"
             evalidate_date = str(year)+"-07-01"
             end_time = str(date)
-        return start_time,evalidate_date
+        
+        print(start_time,evalidate_date)
+        return start_time,train_time,evalidate_date
     else:
         print("Version out of bounds!")
         os.exit()
@@ -182,6 +186,7 @@ def prepare_data(ts,LME_dates,horizon,ground_truth_list,lag,split_date,version_p
             X_tr = X_tr.reshape(len(X_tr),lag*len(column_list[0]))
             X_va = X_va.reshape(len(X_va),lag*len(column_list[0]))
 
+        
         #if version is even, add metal id to X
         if metal_id_bool and not live:
             metal_id = [0,0,0,0,0,0]

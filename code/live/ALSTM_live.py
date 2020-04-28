@@ -379,9 +379,9 @@ class ALSTM_online():
       length = 5
       if even_version(self.version) and self.horizon > 5:
           length = 4
-      start_time,evalidate_date = get_relevant_dates(today,length,"train")
-      split_dates  =  [start_time,evalidate_date,str(today)]
-      assert_labels(LME_dates,split_dates,self.horizon)
+      start_time,train_time,evalidate_date = get_relevant_dates(today,length,"train")
+      split_dates  =  [train_time,evalidate_date,str(today)]
+      
       """
       generate the version
       """			
@@ -425,7 +425,7 @@ class ALSTM_online():
         new_time_series = copy(time_series)
         spot_list = np.array(new_time_series[ground_truth])
         new_time_series['spot_price'] = spot_list
-        ts = new_time_series.loc[split_dates[0]:split_dates[2]]
+        ts = new_time_series.loc[start_time:split_dates[2]]
 
         #load data for use
         X_tr, y_tr, X_va, y_va, val_dates, column_lag_list = prepare_data(ts,LME_dates,self.horizon,[ground_truth],self.lag,copy(split_dates),version_params,metal_id_bool = metal_id,reshape = False)
@@ -575,10 +575,10 @@ class ALSTM_online():
       length = 5
       if even_version(self.version) and self.horizon > 5:
           length = 4
-      start_time,evalidate_date = get_relevant_dates(today,length,"test")
-      split_dates  =  [start_time,evalidate_date,str(today)]
+      start_time,train_time,evalidate_date = get_relevant_dates(today,length,"test")
+      split_dates  =  [train_time,evalidate_date,str(today)]
 
-      assert_labels(LME_dates,split_dates,self.horizon)
+      
 
       """
       generate the version
@@ -623,7 +623,7 @@ class ALSTM_online():
         new_time_series = copy(time_series)
         spot_list = np.array(new_time_series[ground_truth])
         new_time_series['spot_price'] = spot_list
-        ts = new_time_series.loc[split_dates[0]:split_dates[2]]
+        ts = new_time_series.loc[start_time:split_dates[2]]
 
         #load data for use
         X_tr, y_tr, X_va, y_va, val_dates, column_lag_list = prepare_data(ts,LME_dates,self.horizon,[ground_truth],self.lag,copy(split_dates),version_params,metal_id_bool = metal_id,reshape = False,live = True)

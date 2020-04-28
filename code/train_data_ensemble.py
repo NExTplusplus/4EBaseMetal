@@ -66,8 +66,9 @@ if __name__ == '__main__':
                 for date in args.dates.split(","):
                     print(ground_truth,horizon,date)
                     ensemble = Ensemble_online(horizon=horizon,gt = ground_truth,dates = args.dates, window = args.window, version = args.version, hierarchical = args.hierarchical) 
-                    prediction = ensemble.predict(date, args.version, args.sm_methods, args.ens_method)
-                    prediction.to_csv(os.path.join("result","prediction","ensemble",'_'.join([ground_truth,date,str(horizon),args.version,args.sm_methods,args.ens_method,'hier',str(args.hierarchical)+".csv"])))
+                    prediction = ensemble.predict(date, args.version, args.sm_methods, args.ens_method).to_frame()
+                    prediction.columns = ['result']
+                    prediction.to_csv(os.path.join(os.getcwd(),"result","prediction","ensemble",'_'.join([ground_truth,date,str(horizon),args.version,args.sm_methods,args.ens_method,'hier',str(args.hierarchical)+".csv"])))
     if args.action == "delete":
         ans = {'horizon':[],"ground_truth":[],"version":[]}
         for horizon in [int(step) for step in args.steps]:
@@ -80,7 +81,7 @@ if __name__ == '__main__':
                         ans[validation_date+"_length"]= []
                     print(ground_truth,horizon,date)
                     ensemble = Ensemble_online(horizon=horizon,gt = ground_truth,dates = args.dates, window = args.window, version = args.version, hierarchical = args.hierarchical) 
-                    prediction = ensemble.delete_model(date, args.version, args.sm_methods, args.length)
+                    prediction = ensemble.delete_model(date, args.version, args.sm_methods,args.ens_method, args.length)
                     for col in prediction.columns:
                         label = pd.read_csv("data/Label/"+ground_truth+"_h"+str(horizon)+"_"+validation_date+"_label.csv",index_col = 0)[:len(prediction.index)]
                         acc = metrics.accuracy_score(label,prediction[col])
@@ -99,7 +100,8 @@ if __name__ == '__main__':
             average += ans[validation_date+"_acc"]*ans[validation_date+"_length"]
             length += ans[validation_date+"_length"]
         ans['average'] = average/length
-        ans.to_csv("delete_model.csv")
+        ans.sort_values(by = ['version','horizon','ground_truth'],ascending = [True,True,True],inplace = True)
+        ans.to_csv("delete_model"+'_'+','.join(args.steps)+'_'+str(args.length)+".csv")
     
 
 

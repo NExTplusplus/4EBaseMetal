@@ -129,7 +129,7 @@ if __name__ == '__main__':
             total_length = total_length+ans[date+"_length"]
         ans["final average"] = total_acc/total_length
         ans.to_csv(args.output)
-    elif args.model in ["ensemble"]:
+    elif args.model in ["ensemble",'post_process']:
         version = args.version_list
         ans = {"version":[],"horizon":[],"ground_truth":[]}
         validation_dates = [d.split("-")[0]+"-01-01" if d[5:7] <= "06" else d.split("-")[0]+"-07-01" for d in args.dates]
@@ -141,7 +141,7 @@ if __name__ == '__main__':
                     ans["horizon"].append(h)
                     ans["ground_truth"].append(gt)
                     for i,date in enumerate(args.dates):
-                        if "_".join([gt,date,h,v])+".csv" not in os.listdir(os.path.join("result","prediction","ensemble")):
+                        if "_".join([gt,date,h,v])+".csv" not in os.listdir(os.path.join("result","prediction",args.model)):
                             if validation_dates[i]+"_acc" not in ans.keys():
                                 ans[validation_dates[i]+"_acc"] = [0]
                                 ans[validation_dates[i]+"_length"] = [0]
