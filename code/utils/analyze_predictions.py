@@ -3,11 +3,15 @@ import numpy as np
 from copy import copy
 import argparse
 import os
+import json
 from sklearn.metrics import accuracy_score
 
 if __name__ == '__main__':
     desc = 'the script for Logistic Regression'
     parser = argparse.ArgumentParser(description=desc)
+    parser.add_argument('-c','--config',type = str,default = 'exp/classification_post_process.conf',
+                        help = 'configuration file for post process'
+)
     parser.add_argument('-s','--step_list',type=str,default="1,3,5",
                         help='list of horizons to be calculated, separated by ","')
     parser.add_argument('-gt', '--ground_truth_list', help='list of ground truths, separated by ","',
@@ -33,12 +37,21 @@ if __name__ == '__main__':
     args.ground_truth_list = args.ground_truth_list.split(",")
     args.dates = args.dates.split(",")
     args.length = [int(i) for i in args.length.split(",")]
+    with open(args.config) as f:
+        config = json.load(f)
 
     args.version_list = args.version_list.split(",")
     ans = {"version":[],"horizon":[],"ground_truth":[]}
     validation_dates = [d.split("-")[0]+"-01-01" if d[5:7] <= "06" else d.split("-")[0]+"-07-01" for d in args.dates]
+    for d in validation_dates:
+        ans[d+"_acc"] = []
+        ans[d+"_length"] = []
     for version in args.version_list:
         v = version.split('_')[0]
+        dc = None
+        for key in config.keys():
+            if version.split('_')[1] in config[key].keys():
+                dc = config[key][version.split('_')[1]][version.split('_')[0]] 
         for h in args.step_list:
             for gt in args.ground_truth_list:
                 ans["version"].append(version)
@@ -51,28 +64,25 @@ if __name__ == '__main__':
                     if args.model in ['alstm']:
                         filepath = os.path.join("result","prediction",args.model,version)
                         f = "_".join([gt,date,h,v])+".csv"
-                    if f not in os.listdir(filepath):
-                        if args.model not in ['post_process']:
-                            if validation_dates[i]+"_acc" not in ans.keys():
-                                ans[validation_dates[i]+"_acc"] = [0]
-                                ans[validation_dates[i]+"_length"] = [0]
-                            else:
-                                ans[validation_dates[i]+"_acc"].append(0)
-                                ans[validation_dates[i]+"_length"].append(0)
+                    if args.model not in ['post_process']:
+                        if f not in os.listdir(filepath):
+                            ans[validation_dates[i]+"_acc"].append(0)
+                            ans[validation_dates[i]+"_length"].append(0)
                             continue
-                        else:
-                            f = "_".join([gt,date,h])+".csv"
+                    else:
+                        if int(h) not in dc[gt]:
+                            f = "_".join([gt,date,h,v])+".csv"
+                        elif f not in os.listdir(filepath):
+                            ans[validation_dates[i]+"_acc"].append(0)
+                            ans[validation_dates[i]+"_length"].append(0)
+                            continue
                     temp = pd.read_csv(os.path.join(filepath, f),index_col = 0)
                     label = pd.read_csv(os.path.join("data","Label","_".join([gt,"h"+str(h),validation_dates[i],"label.csv"])),index_col = 0)
                     if label.index[-1] > date:
                         label = label.iloc[:-1,:]
                     accuracy = accuracy_score(label[:len(temp)],temp)
-                    if validation_dates[i]+"_acc" not in ans.keys():
-                        ans[validation_dates[i]+"_acc"] = [accuracy]
-                        ans[validation_dates[i]+"_length"] = [len(temp)]
-                    else:
-                        ans[validation_dates[i]+"_acc"].append(accuracy)
-                        ans[validation_dates[i]+"_length"].append(len(temp))
+                    ans[validation_dates[i]+"_acc"].append(accuracy)
+                    ans[validation_dates[i]+"_length"].append(len(temp))
             ans["version"].append(version)
             ans["horizon"].append(h)
             ans["ground_truth"].append("average")

@@ -33,14 +33,14 @@ class Post_process():
 
         def predict(self,sm_methods = 'vote:vote:vote',ens_method = 'vote',hier = False,versions = "v1:v1:v1"):
             for date in self.dates.split(','):
-                for comb in self.applied_comb:
-                    prediction = read_ensemble(comb[0],str(comb[1]),date,sm_methods,ens_method,hier,versions)
-                    prediction.to_csv(os.path.join('result','prediction','post_process',"_".join([comb[0],date,str(comb[1])+".csv"])))
+                for comb in self.full_comb:
+                    prediction = self.read_ensemble(comb[0],str(comb[1]),date,sm_methods,ens_method,hier,versions)
+                    prediction.to_csv(os.path.join('result','prediction','post_process',"_".join([comb[0],date,str(comb[1]),versions+".csv"])))
                             
 
 class Post_process_substitution(Post_process):
     def __init__(self,applied_comb,dates,version):
-        super(Post_process_substitution, self).__init__(self,applied_comb,dates,version)
+        super(Post_process_substitution, self).__init__(applied_comb,dates,version)
     
     @staticmethod
     def get_ind_metal(string):
@@ -59,15 +59,18 @@ class Post_process_substitution(Post_process):
 
     def predict(self, sm_methods, ens_method, hier, versions):
         validation_dates = [date.split("-")[0]+"-01-01" if date[5:7] <= "06" else date.split("-")[0]+"-07-01" for date in self.dates.split(',')]
+        base_results_completed = False
         for date in self.dates.split(','):
             for comb in self.full_comb:
-                if comb not in self.applied_comb:
+                if comb not in self.applied_comb and not base_results_completed:
                     super(Post_process_substitution,self).predict(sm_methods,ens_method,hier,versions)
-                else:
+                    base_results_completed = True
+                elif comb in self.applied_comb:
+                    print(date,comb)
                     new_date = "".join(date.split("-"))
                     prediction = super(Post_process_substitution,self).read_ensemble(comb[0],str(comb[1]),date,sm_methods,ens_method,hier,versions)
                     if self.version == 'analyst':
-                        ground_truth = get_ind_metal(comb[0])
+                        ground_truth = self.get_ind_metal(comb[0])
                         f =list(filter(lambda x: new_date in x and len(x.split('_')) >= 6 , os.listdir(os.path.join('code','new_Analyst_Report_Chinese','step4_sentiment_analysis',"predict_result",ground_truth,str(comb[1])))))[0]
                         indicator = pd.read_csv(os.path.join('code','new_Analyst_Report_Chinese','step4_sentiment_analysis',"predict_result",ground_truth,str(comb[1]),f))
                         sub_prediction = indicator[['date','discrete_score']][indicator['discrete_score']!=0.0]
@@ -75,5 +78,5 @@ class Post_process_substitution(Post_process):
                     for d in prediction.index:
                         if d in sub_prediction.index:
                             prediction.loc[d,'result'] = 1 if sub_prediction.loc[d,'discrete_score'] == 1 else 0
-                    prediction.to_csv(os.path.join('result','prediction','post_process',"_".join([comb[0],date,str(comb[1]),self.version+".csv"])))
+                    prediction.to_csv(os.path.join('result','prediction','post_process',"_".join([comb[0],date,str(comb[1]),versions,self.version+".csv"])))
     
