@@ -37,6 +37,8 @@ def assert_version(version,path):
         assert path == "exp/supply and demand.conf"
     elif version in ["v33","v35"]:
         assert path == "exp/TP_v1.conf"
+    elif version in ['r2']:
+        assert path == 'exp/regression_r2.conf'
     else:
         print("Version out of bounds!")
         os.exit()

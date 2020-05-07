@@ -173,7 +173,7 @@ if __name__ == '__main__':
         i = 0
         with open(args.output,"w") as out:
             for version in args.version_list:
-                ground_truth_list = copy(args.ground_truth_list[1:])
+                ground_truth_list = copy(args.ground_truth_list)
                 xgb = 0
                 if version in ["v10","v12","v16","v26"]:
                     ground_truth_list = ["LME_All"]
