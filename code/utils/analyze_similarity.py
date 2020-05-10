@@ -1,0 +1,89 @@
+import pandas as pd
+import numpy as np
+from copy import copy
+import argparse
+import os
+from sklearn.metrics import accuracy_score
+from multiprocessing import Pool as pl
+from itertools import product
+
+if __name__ == '__main__':
+    desc = 'the script for Logistic Regression'
+    parser = argparse.ArgumentParser(description=desc)
+    parser.add_argument('-s','--step_list',type=str,default="1,3,5",
+                        help='list of horizons to be calculated, separated by ","')
+    parser.add_argument('-gt', '--ground_truth_list', help='list of ground truths, separated by ","',
+                        type=str, default="LME_Al_Spot,LME_Co_Spot,LME_Le_Spot,LME_Ni_Spot,LME_Ti_Spot,LME_Zi_Spot")
+    parser.add_argument(
+        '-m','--model', help='model used', type = str, default = "lr"
+    )
+    parser.add_argument(
+        '-l','--lag_list', type=str, default = "1,5,10,20,30", help='list of lags, separated by ","'
+    )
+    parser.add_argument(
+        '-v','--version_list', help='list of versions, separated by ","', type = str, default = 'v10'
+    )
+    parser.add_argument ('-out','--output',type = str, help='output file', default ="../../../Results/results")
+    parser.add_argument('-o', '--action', type=str, default='commands',
+                        help='commands, testing')
+    parser.add_argument('-d','--dates',type = str, help = "dates", default = "2014-12-31,2015-06-30,2015-12-31,2016-06-30,2016-12-31,2017-06-30,2017-12-31,2018-06-30,2018-12-31")
+    parser.add_argument('-length','--length',type = str, help = "length of each period stated in dates",default = "129,124,129,125,128,125,127,125,128")
+    parser.add_argument('-p','--path',type =str, help='path to 4EBaseMetal folder',default ='/NEXT/4EBaseMetal')
+
+    args = parser.parse_args()
+    args.step_list = args.step_list.split(",")
+    args.ground_truth_list = args.ground_truth_list.split(",")
+    args.version_list = args.version_list.split(",")
+    args.dates = args.dates.split(",")
+    args.length = [int(i) for i in args.length.split(",")]
+
+    if args.model in ['lr','xgboost']:
+        ans = {"version1":[],"version2":[],"horizon":[],"ground_truth":[]}
+        validation_dates = [d.split("-")[0]+"-01-01" if d[5:7] <= "06" else d.split("-")[0]+"-07-01" for d in args.dates]
+        
+        for h in args.step_list:
+            for gt in args.ground_truth_list:
+                for version1 in args.version_list:
+                    for version2 in args.version_list:
+                        if version1 == version2:
+                            continue
+                        ans["version1"].append(version1)
+                        ans["version2"].append(version2)
+                        ans["horizon"].append(h)
+                        ans["ground_truth"].append(gt)
+                        for i,date in enumerate(args.dates):
+                            print(h,gt,version1,version2,date)
+                            if "_".join([gt,date,h,version1])+".csv" not in os.listdir(os.path.join("result","prediction",args.model)) or \
+                                "_".join([gt,date,h,version2])+".csv" not in os.listdir(os.path.join("result","prediction",args.model)):
+                                if validation_dates[i]+"_acc" not in ans.keys():
+                                    ans[validation_dates[i]+"_acc"] = [0]
+                                    ans[validation_dates[i]+"_length"] = [0]
+                                else:
+                                    ans[validation_dates[i]+"_acc"].append(0)
+                                    ans[validation_dates[i]+"_length"].append(0)
+                                continue
+                            temp = pd.read_csv(os.path.join("result","prediction",args.model,"_".join([gt,date,h,version1])+".csv"),index_col = 0)
+                            label = pd.read_csv(os.path.join("result","prediction",args.model,"_".join([gt,date,h,version2])+".csv"),index_col = 0)
+                            if len(temp.columns.values.tolist()) > 1:
+                                temp = temp['result'].to_frame()
+                            if len(label.columns.values.tolist()) > 1:
+                                label = label['result'].to_frame()
+                            
+                            # if label.index[-1] > date:
+                            #     label = label.iloc[:-1,:]
+                            accuracy = accuracy_score(label,temp)
+                            if validation_dates[i]+"_acc" not in ans.keys():
+                                ans[validation_dates[i]+"_acc"] = [accuracy]
+                                ans[validation_dates[i]+"_length"] = [len(temp)]
+                            else:
+                                ans[validation_dates[i]+"_acc"].append(accuracy)
+                                ans[validation_dates[i]+"_length"].append(len(temp))
+        ans = pd.DataFrame(ans)
+        total_acc = 0.0
+        total_length = 0
+        for date in validation_dates:
+            total_acc = total_acc + ans[date+"_acc"]*ans[date+"_length"]
+            total_length = total_length+ans[date+"_length"]
+        ans["final average"] = total_acc/total_length
+        ans.to_csv(args.output)
+

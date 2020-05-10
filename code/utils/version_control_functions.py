@@ -1,6 +1,6 @@
 from utils.construct_data import *
 from utils.read_data import process_missing_value_v3
-from utils.normalize_feature import log_1d_return
+from utils.normalize_feature import log_1d_return, fractional_diff
 
 def generate_version_params(version):
     '''
@@ -15,10 +15,12 @@ def generate_version_params(version):
     ver = version.split("_")
     v = ver[0]
     ex = ver[1] if len(ver) > 1 else None
-    if v == "v7" or v=="v3" or v == "v37":
+    if v in ["v7","v3","v37","v43"]:
         ans['technical_indication'] = "v2"
-        if v=="v3":
+        if v=="v3" or v=='v43':
             ans['remove_unused_columns'] = "v4"
+            if v == "v43":
+                ans['price_normalization'] = "v2"
         if v=="v37":
             ans['remove_unused_columns'] = "v5"
             ans['normalize_without_1d_return'] = "v3"
@@ -106,6 +108,14 @@ def generate_version_params(version):
         if v == "v35":
             ans["generate_norm_params"] = "v3"
 
+    if v in ['r2']:
+        ans["generate_tech_params"]="v3"
+        ans['labelling'] = "v3"
+        ans['construct'] = 'v4'
+        ans['technical_indication'] = 'v4'
+        ans['remove_unused_columns'] = 'v6'
+        ans['price_normalization'] = 'v3'
+        ans['scaling'] = None
     print(ans)
     return ans
 
@@ -125,7 +135,8 @@ def generate_tech_params(version):
         return {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':[12,26,40,65,125],'Win_Bollinger':[5,10,15,20,30,65],
                                'Win_MOM':[5,10,15,26,40,65,125],'PPO_Fast':[12,22],'PPO_Slow':[26,65],'Win_NATR':[14,26,65,125],'Win_VBM':[12,22],'v_VBM':[26,65],
                                'acc_initial':0.02,'acc_maximum':0.2,'Win_CCI':[12,26,40,65,125],'Win_ADX':[14,26,40,54,125],'Win_RSI':[14,26,40,54,125]}
-
+    elif version == "v3":
+        return {'strength':0.01,'both':3,'Win_EMA':[12,26,40,65,125],'Win_Bollinger':[12,26,40,65,125]}
 def generate_SD_params(version):
     if version == "v1":
         return {"Spread":"v2"}
@@ -239,12 +250,20 @@ def labelling(arguments, version):
         return labelling_v1_ex1(time_series, arguments['horizon'], 
                                 arguments['ground_truth_columns'], arguments['lags'])
 
+    elif version == "v3":
+        '''
+        regression
+        '''
+        return labelling_v3(time_series, arguments['horizon'],
+                                arguments['ground_truth_columns'])
+    
     elif version == "v1_ex2":
         '''
         three classifier
         '''
         return labelling_v1_ex2(time_series, arguments['horizon'],
                                 arguments['ground_truth_columns'], arguments['split_dates'][2])
+
 
 
 def process_missing_value(arguments, version):
@@ -274,12 +293,12 @@ def normalize_without_1d_return(arguments, version):
         '''
         return normalize_without_1d_return_v1(time_series,time_series.index.get_loc(arguments['split_dates'][1]),
                                                 arguments['norm_params'])
-    if version == "v2":
+    elif version == "v2":
         '''
         automated normalization for all possible combinations
         '''
         return normalize_without_1d_return_v2(time_series,time_series.index.get_loc(arguments['split_dates'][1]), arguments['norm_params'])
-    if version == "v3":
+    elif version == "v3":
         '''
         automated normalization for all possible combinations
         '''
@@ -324,6 +343,12 @@ def technical_indication(arguments, version):
         return technical_indication_v3(time_series,time_series.index.get_loc(arguments['split_dates'][1]),
                                         arguments['tech_params'],arguments['ground_truth_columns'])
 
+    elif version == "v4":
+        '''
+        automated generation of technical indicators for all possible combinations (only LME Ground Truth)
+        '''
+        return technical_indication_v4(time_series,time_series.index.get_loc(arguments['split_dates'][1]),
+                                        arguments['tech_params'],arguments['ground_truth_columns'])
 def supply_and_demand(arguments, version):
     if version is None:
         return arguments['time_series']
@@ -368,6 +393,14 @@ def remove_unused_columns(arguments, version,ground_truth):
         print("ground_truth",ground_truth)
     
         return remove_unused_columns_v5(time_series,arguments['org_cols'],ground_truth)
+    if version == "v6":
+        '''
+        remove columns that will not be used in model
+        '''
+        print("Remove Columns Version6")
+        print("ground_truth",ground_truth)
+    
+        return remove_unused_columns_v6(time_series,arguments['org_cols'],ground_truth)
 
 
 
@@ -384,7 +417,10 @@ def price_normalization(arguments, version):
         '''
         DXY log returns
         '''
-        return log_1d_return(time_series,["DXY"])
+        return fractional_diff(time_series,arguments['org_cols'])
+    if version == "v3":
+        return rel_to_open(time_series,arguments['org_cols'])
+
 def spot_price_normalization(arguments):
     time_series = arguments['time_series']
     ans=[]
@@ -455,4 +491,12 @@ def construct(ind, arguments, version):
         return construct_v3(time_series[ind][arguments['all_cols'][ind]], time_series[ind]["Label"], 
                     arguments['start_ind'], arguments['end_ind'], 
                     arguments['lags'], arguments['horizon'])
+    
+    elif version == "v4":
+        '''
+        construct ndarray for standard labelling
+        '''
+        return construct_v4(time_series[ind][arguments['all_cols'][ind]], time_series[ind][["Label","Regression Label"]], 
+                            arguments['start_ind'], arguments['end_ind'], 
+                            arguments['lags'], arguments['horizon'])
 

@@ -14,8 +14,6 @@ from utils.supply_and_demand import *
 from sklearn import preprocessing
 import json
 import scipy.stats as sct
-from statsmodels.tsa.seasonal import STL
-
 #load the strategy parameters for version 9
 def generate_strat_params_v1(ground_truth,steps):
     with open(os.path.join(sys.path[0],"exp","strat_param_v9.conf")) as f:
@@ -279,6 +277,23 @@ def labelling_v2(X,horizon, ground_truth_columns):
         ans.append(labels)
     return ans
 
+def labelling_v3(X,horizon, ground_truth_columns):
+    """
+    X: which quals the timeseries
+    horizon: the time horizon
+    ground_truth_columns: the column we predict
+    """
+    assert ground_truth_columns != []
+    ans=[]
+    for ground in ground_truth_columns:
+        labels = copy(X[ground].to_frame())
+        labels.columns = ["Regression Label"]
+        price_changes = labels.shift(-horizon) - labels
+        labels['Label'] = price_changes.divide(labels)
+        print(labels)
+        ans.append(labels)
+
+    return ans
 
 def labelling_v1_ex1(X,horizon,ground_truth_columns,lag):
     '''
@@ -503,10 +518,135 @@ def normalize_without_1d_return_v3(timeseries,train_end, params):
                                                                                     len_update=params['len_update'],
                                                                                     version = params['ex_spread_norm'])
         if "Spot" in col:
-            stl = STL(timeseries[col],period = 5, seasonal = 53)
-            res = stl.fit()
-            timeseries[col[:-4]+"Trend"] = res.trend
-            timeseries[col[:-4]+"Season"] = res.seasonal
+            # timeseries[col[:-4]+"Trend"] = timeseries[col].expanding(255).apply(STL_decomposition_trend)
+            # timeseries[col[:-4]+"Season"] = timeseries[col].expanding(255).apply(STL_decomposition_seasonal)
+            timeseries[col[:-4]+"Trend"] = STL_decomposition_trend(timeseries[col])
+            timeseries[col[:-4]+"Season"] = STL_decomposition_seasonal(timeseries[col])
+    
+    return timeseries,ans
+
+
+def normalize_without_1d_return_v4(timeseries,train_end, params):
+    """
+    timeseries: the dataframe we get from the data source
+    train_end: string which we use to define the range we use to train
+    params: A dictionary we use to feed the parameter
+    """
+    ans = {"nVol":False,"nSpread":False,"nEx":False}
+    
+    cols = timeseries.columns.values.tolist()
+    ex = False
+    if "CNYUSD" in cols:
+        print("Considering Exchange Rate")
+        ex = True
+    #normalize the data based on the specific column
+    for col in cols:
+        #use the normalize_OI function to deal with the OI
+        if col[:-2]+"OI" == col:
+            print("Normalizing OI:"+"=>".join((col,col[:-2]+"nOI")))
+            timeseries[col[:-2]+"nOI"] = normalize_OI(copy(timeseries[col]),train_end,strength = params['strength'], both = params['both'])
+        #use the normalize_volume function to deal with the volume
+        if col[:-6]+"Volume" == col:
+            setting = col[:-6]
+            if setting+"OI" in cols:
+                ans["nVol"] = True
+                print("Normalizing Volume:"+"=>".join((col,setting+"OI")))
+                timeseries[setting+"nVolume"] = normalize_volume(copy(timeseries[col]), train_end = train_end, OI = copy(timeseries[setting+"OI"]),
+                                                        len_ma = params['len_ma'],version = params['vol_norm'], 
+                                                        strength = params['strength'], both = params['both'])
+        #use the normalize_3mspot_spread function to create 3 month close to spot spread
+        if col[:-5]+"Close" == col:
+            setting = col[:-5]
+            if setting+"Spot" in cols:
+                ans["nSpread"] = True
+                print("Normalizing Spread:"+"=>".join((col,setting+"Spot")))
+                timeseries[setting+"n3MSpread"] = normalize_3mspot_spread(copy(timeseries[col]),copy(timeseries[setting+"Spot"]),
+                                                                len_update=params['len_update'],
+                                                                version = params['spot_spread_norm'])
+        #use the normalize_3mspot_spread_ex function to create cross exchange spread
+        if "SHFE" == col[:4] and "Close" == col[-5:] and ex:
+            metal = col.split("_")[1]
+            if "_".join(("LME",metal,"Spot")) in cols:
+                ans["nEx"] = True
+                print("+".join((col,"_".join(("LME",metal,"Spot"))))+"=>"+"_".join(("SHFE",metal,"nEx3MSpread")))
+                timeseries["_".join(("SHFE",metal,"nEx3MSpread"))] = normalize_3mspot_spread_ex(copy(timeseries["_".join(("LME",metal,"Spot"))]),
+                                                                                    copy(timeseries[col]),copy(timeseries["CNYUSD"]),
+                                                                                    len_update=params['len_update'],
+                                                                                    version = params['ex_spread_norm'])
+            if "_".join(("LME",metal,"Close")) in cols:
+                ans["nEx"] = True
+                print("+".join((col,"_".join(("LME",metal,"Close"))))+"=>"+"_".join(("SHFE",metal,"nEx3MSpread")))
+                timeseries["_".join(("SHFE",metal,"nExSpread"))] = normalize_3mspot_spread_ex(copy(timeseries["_".join(("LME",metal,"Close"))]),
+                                                                                    copy(timeseries[col]),copy(timeseries["CNYUSD"]),
+                                                                                    len_update=params['len_update'],
+                                                                                    version = params['ex_spread_norm'])
+        if "Spot" in col:
+            # timeseries[col[:-4]+"Trend"] = timeseries[col].expanding(255).apply(STL_decomposition_trend)
+            # timeseries[col[:-4]+"Season"] = timeseries[col].expanding(255).apply(STL_decomposition_seasonal)
+            timeseries[col[:-4]+"Trend"] = STL_decomposition_trend(timeseries[col])
+    
+    return timeseries,ans
+
+def normalize_without_1d_return_v5(timeseries,train_end, params):
+    """
+    timeseries: the dataframe we get from the data source
+    train_end: string which we use to define the range we use to train
+    params: A dictionary we use to feed the parameter
+    """
+    ans = {"nVol":False,"nSpread":False,"nEx":False}
+    
+    cols = timeseries.columns.values.tolist()
+    ex = False
+    if "CNYUSD" in cols:
+        print("Considering Exchange Rate")
+        ex = True
+    #normalize the data based on the specific column
+    for col in cols:
+        #use the normalize_OI function to deal with the OI
+        if col[:-2]+"OI" == col:
+            print("Normalizing OI:"+"=>".join((col,col[:-2]+"nOI")))
+            timeseries[col[:-2]+"nOI"] = normalize_OI(copy(timeseries[col]),train_end,strength = params['strength'], both = params['both'])
+        #use the normalize_volume function to deal with the volume
+        if col[:-6]+"Volume" == col:
+            setting = col[:-6]
+            if setting+"OI" in cols:
+                ans["nVol"] = True
+                print("Normalizing Volume:"+"=>".join((col,setting+"OI")))
+                timeseries[setting+"nVolume"] = normalize_volume(copy(timeseries[col]), train_end = train_end, OI = copy(timeseries[setting+"OI"]),
+                                                        len_ma = params['len_ma'],version = params['vol_norm'], 
+                                                        strength = params['strength'], both = params['both'])
+        #use the normalize_3mspot_spread function to create 3 month close to spot spread
+        if col[:-5]+"Close" == col:
+            setting = col[:-5]
+            if setting+"Spot" in cols:
+                ans["nSpread"] = True
+                print("Normalizing Spread:"+"=>".join((col,setting+"Spot")))
+                timeseries[setting+"n3MSpread"] = normalize_3mspot_spread(copy(timeseries[col]),copy(timeseries[setting+"Spot"]),
+                                                                len_update=params['len_update'],
+                                                                version = params['spot_spread_norm'])
+        #use the normalize_3mspot_spread_ex function to create cross exchange spread
+        if "SHFE" == col[:4] and "Close" == col[-5:] and ex:
+            metal = col.split("_")[1]
+            if "_".join(("LME",metal,"Spot")) in cols:
+                ans["nEx"] = True
+                print("+".join((col,"_".join(("LME",metal,"Spot"))))+"=>"+"_".join(("SHFE",metal,"nEx3MSpread")))
+                timeseries["_".join(("SHFE",metal,"nEx3MSpread"))] = normalize_3mspot_spread_ex(copy(timeseries["_".join(("LME",metal,"Spot"))]),
+                                                                                    copy(timeseries[col]),copy(timeseries["CNYUSD"]),
+                                                                                    len_update=params['len_update'],
+                                                                                    version = params['ex_spread_norm'])
+            if "_".join(("LME",metal,"Close")) in cols:
+                ans["nEx"] = True
+                print("+".join((col,"_".join(("LME",metal,"Close"))))+"=>"+"_".join(("SHFE",metal,"nEx3MSpread")))
+                timeseries["_".join(("SHFE",metal,"nExSpread"))] = normalize_3mspot_spread_ex(copy(timeseries["_".join(("LME",metal,"Close"))]),
+                                                                                    copy(timeseries[col]),copy(timeseries["CNYUSD"]),
+                                                                                    len_update=params['len_update'],
+                                                                                    version = params['ex_spread_norm'])
+        if "Spot" in col:
+            # timeseries[col[:-4]+"Trend"] = timeseries[col].expanding(255).apply(STL_decomposition_trend)
+            # timeseries[col[:-4]+"Season"] = timeseries[col].expanding(255).apply(STL_decomposition_seasonal)
+            timeseries[col[:-4]+"Trend"] = STL_decomposition_trend(timeseries[col])
+            timeseries[col[:-4]+"Season"] = custom_seasonal_decompose(timeseries[col],train_end)
+    
     return timeseries,ans
 
 #This function is for one-hot encoding.
@@ -682,6 +822,40 @@ def technical_indication_v3(X,train_end,params,ground_truth_columns):
                 
     return X
 
+def technical_indication_v4(X,train_end,params,ground_truth_columns):
+    """
+    X: which equals the timeseries
+    train_end: string which we use to define the range we use to train
+    params: A dictionary we use to feed the parameter
+    """
+    print('====================================technical indicator_v3========================================')
+    cols = X.columns.values.tolist()
+
+    if 'COMEX_GC_lag1_Close' in cols and 'COMEX_SI_lag1_Close' in cols and 'COMEX_PA_lag1_Close' in cols and 'COMEX_PL_lag1_Close' in cols:
+        X["COMEX"] = X.loc[:,["COMEX_GC_lag1_Close","COMEX_SI_lag1_Close","COMEX_PA_lag1_Close","COMEX_PL_lag1_Close"]].mean(axis = 1)
+        cols = list(set(cols) - set(['COMEX_GC_lag1_Close','COMEX_SI_lag1_Close','COMEX_PA_lag1_Close','COMEX_PL_lag1_Close'])) +["COMEX"]
+    if 'SHFE_RT_Close' in cols and 'SHFE_Al_Close' in cols:
+        X["SHFE"] = X.loc[:,["SHFE_RT_Close","SHFE_Al_Close"]].mean(axis = 1)
+        cols = list(set(cols) - set(['SHFE_RT_Close','SHFE_Al_Close']))+["SHFE"]
+    if 'DCE_AC_Close' in cols and 'DCE_AK_Close' in cols and 'DCE_AE_Close' in cols:
+        X["DCE"] = X.loc[:,["DCE_AC_Close","DCE_AK_Close","DCE_AE_Close"]].mean(axis = 1)
+        cols = list(set(cols) - set(['DCE_AC_Close','DCE_AK_Close','DCE_AE_Close']))+['DCE']
+    if 'SHCOMP' in cols and 'SHSZ300' in cols and 'HSI' in cols:
+        X["China"] = X.loc[:,["SHCOMP","SHSZ300","HSI"]].mean(axis = 1)
+        cols = list(set(cols) - set(['SHCOMP',"SHSZ300","HSI"]))+["China"]
+
+    for col in cols:
+        setting = col[:-5]
+        ground_truth = ground_truth_columns[0][4:6]
+        if (setting+"Close" == col and ground_truth in setting) or (len(col.split('_')) == 1 and col != "CNYUSD"):
+            for i in range(len(params['Win_EMA'])):
+                X[col+"_EMA"+str(params['Win_EMA'][i])] = ema(copy(X[col]),params['Win_EMA'][i])
+                
+        if (setting+"Close" == col and ground_truth in setting):
+            for i in range(len(params['Win_Bollinger'])):
+                X[col+"_bollinger"+str(params['Win_Bollinger'][i])] = rrange = X[col].rolling(params['Win_Bollinger'][i]).std()
+                
+    return X
 #process supply and demand data
 def process_supply_and_demand(X,params):
     cols = X.columns.values.tolist()
@@ -902,7 +1076,7 @@ def remove_unused_columns_v4(time_series,org_cols,ground_truth):
     return time_series,org_cols
 
 def remove_unused_columns_v5(time_series,org_cols,ground_truth):
-    print("#####################remove_unused_columns_v4#####################")
+    print("#####################remove_unused_columns_v5#####################")
     target = ground_truth[0][:-5]
     print("target",target)
     for col in copy(time_series.columns):
@@ -914,6 +1088,33 @@ def remove_unused_columns_v5(time_series,org_cols,ground_truth):
                 org_cols.remove(col)
     print(time_series.columns)
     return time_series,org_cols
+
+def remove_unused_columns_v6(time_series,org_cols,ground_truth):
+    print("#####################remove_unused_columns_v6#####################")
+    target = ground_truth[0][:-5]
+    print("target",target)
+    for col in copy(time_series.columns):
+        if (target not in col and len(col.split('_'))>2) or (target not in col and "LME" in col) or col==target+'_OI' or col==target+'_Volume' or col == target+"_Spot" or 'Spread' in col or 'CNYUSD' == col:
+            if col == "day" or col == "month":
+                continue
+            time_series = time_series.drop(col,axis = 1)
+            if col in org_cols:
+                org_cols.remove(col)
+    print(time_series.columns)
+    return time_series,org_cols
+
+def rel_to_open(time_series,org_cols):
+    for col in time_series.columns.values.tolist():
+        if "High" in col:
+            time_series[col] = (time_series[col] - time_series[col[:-4]+"Open"]) / time_series[col[:-4]+"Open"]
+        if "Low" in col:
+            time_series[col] = (time_series[col] - time_series[col[:-3]+"Open"]) / time_series[col[:-3]+"Open"]
+        if "Close" in col or len(col.split('_')) == 1:
+            time_series[col] = (time_series[col] - time_series[col].shift(1))/time_series[col].shift(1)
+    for col in time_series.columns.values.tolist():
+        if "Open" in col:
+            time_series = time_series.drop(col,axis = 1)
+    return time_series
 
 #this function is to scale the data use the standardscaler
 def scaling_v1(X,train_end):
@@ -1033,7 +1234,34 @@ def construct_v3(time_series, ground_truth, start_ind, end_ind, T, h):
             y[sample_ind, 0] = ground_truth.values[ind]
             sample_ind += 1
     
+    return X,y
 
+def construct_v4(time_series, ground_truth, start_ind, end_ind, T, h):
+    num = 0
+    '''
+        convert 2d numpy array of time series data into 3d numpy array, with extra dimension for lags, i.e.
+        input of (n_samples, n_features) becomes (n_samples, T, n_features)
+        time_series (2d np.array): financial time series data
+        ground_truth (1d np.array): column which is used as ground truth
+        start_index (string): string which is the date that we wish to begin including from.
+        end_index (string): string which is the date that we wish to include last.
+        T (int): number of lags
+    '''
+    for ind in range(start_ind, end_ind):
+        if not time_series.iloc[ind - T + 1: ind + 1].isnull().values.any():
+            num += 1
+    X = np.zeros([num, T, time_series.shape[1]], dtype=np.float32)
+    y = np.zeros([num, 2], dtype=np.float32)
+    #construct the data by the time index
+    sample_ind = 0
+    for ind in range(start_ind, end_ind):
+        if not time_series.iloc[ind - T + 1 : ind + 1].isnull().values.any():
+            X[sample_ind] = time_series.values[ind - T + 1: ind + 1, :]
+            y[sample_ind, 0] = ground_truth.values[ind][0]
+            y[sample_ind, 1] = ground_truth.values[ind][1]
+            sample_ind += 1
+    
+    print(y)
     return X,y
 
 def construct_v1_ex2(time_series, ground_truth, start_ind, end_ind, T, h):

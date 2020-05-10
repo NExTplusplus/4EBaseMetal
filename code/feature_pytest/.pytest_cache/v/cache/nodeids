@@ -1,3 +1,4 @@
 [
-  "pass_test.py::test_one"
+  "pass_test.py::test_one",
+  "pass_test.py::test"
 ]

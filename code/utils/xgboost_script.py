@@ -149,13 +149,13 @@ if __name__ == '__main__':
     args.ground_truth_list = args.ground_truth_list.split(",")
     args.lag_list = args.lag_list.split(",")
     args.version_list = args.version_list.split(",")
-    args.dates = args.dates.split(",")
+    dates_list = args.dates.split(",")
     args.length = [int(i) for i in args.length.split(",")]
 
     #generates the top 5 results for each voting method for every combination produced from version list, step list, ground truth list and lag list
     if args.action == "tuning":
         path_list = []
-        validation_dates = [d.split("-")[0]+"-01-01" if d[4:] == "-06-30" else d.split("-")[0]+"-07-01" for d in args.dates]
+        validation_dates = [d.split("-")[0]+"-01-01" if d[5:7] <= "06" else d.split("-")[0]+"-07-01" for d in dates_list]
         combinations = product(args.ground_truth_list,args.lag_list,args.step_list,args.version_list)
         for c in combinations:
             
@@ -173,7 +173,7 @@ if __name__ == '__main__':
         i = 0
         with open(args.output,"w") as out:
             for version in args.version_list:
-                ground_truth_list = copy(args.ground_truth_list[1:])
+                ground_truth_list = copy(args.ground_truth_list)
                 xgb = 0
                 if version in ["v10","v12","v16","v26"]:
                     ground_truth_list = ["LME_All"]
@@ -201,31 +201,30 @@ if __name__ == '__main__':
                         if total.empty:
                             continue
                         total = total.sort_values(by=['result','lag','max_depth','learning_rate','gamma','min_child_weigh','subsample'],ascending=[False,True,True,True,True,True,True]).reset_index(drop = True)
-                        for d in args.dates:
-                          out.write(" ".join(["python",train,
-                            "-d",d,
-                            "-gt",gt,
-                            "-l",str(total.iloc[0,0]),
-                            "-s",h,
-                            "-v",version.split("_")[0],
-                            "-c",exp,
-                            "-sou",args.source,
-                            "-max_depth",str(int(total.iloc[0,1])),
-                            "-learning_rate",str(total.iloc[0,2]),
-                            "-gamma",str(total.iloc[0,3]),
-                            "-min_child",str(int(total.iloc[0,4])),
-                            "-subsample",str(total.iloc[0,5]),"-o train",
-                            ">","/dev/null","2>&1 &"])+"\n")
-                          i+=1
-                          if i%9 == 0 and args.source == "4E":
+                        out.write(" ".join(["python",train,
+                        "-d",args.dates,
+                        "-gt",gt,
+                        "-l",str(total.iloc[0,0]),
+                        "-s",h,
+                        "-v",version.split("_")[0],
+                        "-c",exp,
+                        "-sou",args.source,
+                        "-max_depth",str(int(total.iloc[0,1])),
+                        "-learning_rate",str(total.iloc[0,2]),
+                        "-gamma",str(total.iloc[0,3]),
+                        "-min_child",str(int(total.iloc[0,4])),
+                        "-subsample",str(total.iloc[0,5]),"-o train",
+                        ">","/dev/null","2>&1 &"])+"\n")
+                        i+=1
+                        if i%9 == 0 and args.source == "4E":
                             out.write("sleep 10m\n")
-                          elif args.source == "NExT" and i %20 == 0:
+                        elif args.source == "NExT" and i %20 == 0:
                             out.write("sleep 5m\n")
 
     #generates the command line to be used for online testing
     if args.action == "test commands":
         i = 0
-        validation_dates = [d.split("-")[0]+"-01-01" if d[4:] == "-06-30" else d.split("-")[0]+"-07-01" for d in args.dates]
+        validation_dates = [d.split("-")[0]+"-01-01" if d[5:7] <= "06" else d.split("-")[0]+"-07-01" for d in dates_list]
         with open(args.output,"w") as out:
             for version in args.version_list:
                 ground_truth_list = copy(args.ground_truth_list[1:])
@@ -241,37 +240,40 @@ if __name__ == '__main__':
                 elif version in ["v24","v28","v30"]:
                     exp = "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf"
                 train = "code/train_data_xgboost.py"
-                
-
                 for gt in ground_truth_list:
                     for h in args.step_list:
                         total = pd.DataFrame()
                         for lag in args.lag_list:
-                            f = pd.read_csv(os.path.join(args.path,'_'.join([gt.split("_")[1],version,lag,"h"+h])+".csv")).iloc[:5,:]
-                            total = pd.concat([total,f],axis = 0)
+                            if int(version[1:]) %2 == 0:
+                                ground_truth = "LME_All"
+                            else:
+                                ground_truth = gt
+                            if '_'.join([ground_truth.split("_")[1],version,lag,"h"+h])+".csv" in os.listdir(args.path):
+                                print(gt,h,lag)
+                                f = pd.read_csv(os.path.join(args.path,'_'.join([ground_truth.split("_")[1],version,lag,"h"+h])+".csv")).iloc[:5,:]
+                                total = pd.concat([total,f],axis = 0)
+                        if total.empty:
+                            continue
                         total = total.sort_values(by=['result','lag','max_depth','learning_rate','gamma','min_child_weigh','subsample'],ascending=[False,True,True,True,True,True,True]).reset_index(drop = True)
-                        for j,d in enumerate(args.dates_list):
-                            if "_".join([validation_dates[j],gt,h,lag,"0",version,"xgb.model"]) in os.listdir(os.path.join(os.getcwd(),"result","model","xgboost")) or (int(version[1:]) % 2 == 0 and\
-                                "_".join([validation_dates[j],"LME_All",h,lag,"0",version,"xgb.model"]) in os.listdir(os.path.join(os.getcwd(),"result","model","xgboost"))):
-                                out.write(" ".join(["python",train,
-                                    "-d",d,
-                                    "-gt",gt,
-                                    "-l",str(total.iloc[0,0]),
-                                    "-s",h,
-                                    "-v",version.split("_")[0],
-                                    "-c",exp,
-                                    "-sou",args.source,
-                                    "-max_depth",str(int(total.iloc[0,1])),
-                                    "-learning_rate",str(total.iloc[0,2]),
-                                    "-gamma",str(total.iloc[0,3]),
-                                    "-min_child",str(int(total.iloc[0,4])),
-                                    "-subsample",str(total.iloc[0,5]),"-o test",
-                                    ">","_".join([gt.split("_")[1],"xgboost","h"+h,version,"1718.txt"]),"2>&1 &"])+"\n")
-                                i+=1
-                                if i%9 == 0 and args.source == "4E":
-                                    out.write("sleep 10m\n")
-                                elif args.source == "NExT" and i %20 == 0:
-                                    out.write("sleep 5m\n")
+                        out.write(" ".join(["python",train,
+                            "-d",args.dates,
+                            "-gt",gt,
+                            "-l",str(total.iloc[0,0]),
+                            "-s",h,
+                            "-v",version.split("_")[0],
+                            "-c",exp,
+                            "-sou",args.source,
+                            "-max_depth",str(int(total.iloc[0,1])),
+                            "-learning_rate",str(total.iloc[0,2]),
+                            "-gamma",str(total.iloc[0,3]),
+                            "-min_child",str(int(total.iloc[0,4])),
+                            "-subsample",str(total.iloc[0,5]),"-o test",
+                            "> /dev/null 2>&1 &"])+"\n")
+                        i+=1
+                        if i%9 == 0 and args.source == "4E":
+                            out.write("sleep 10m\n")
+                        elif args.source == "NExT" and i %20 == 0:
+                            out.write("sleep 5m\n")
 
 
     if args.action == "testing":

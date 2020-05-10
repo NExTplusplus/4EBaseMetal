@@ -225,7 +225,7 @@ def read_data_NExT(config,start_date):
         temp = copy(df.loc[start_date:])
         data.append(df)
         # put in dates all dates that LME has operations (even if only there are metals that are not traded)
-        if "LME" in fname:
+        if "LME" in fname and "1GQ" not in config[fname][0]:
             dates.append(temp.index)
     for date in dates:
         if LME_dates is None:
@@ -342,27 +342,8 @@ def read_data_v31_4E(start_date):
     '''
     import rpy2.robjects as robjects
     robjects.r('.sourceAlfunction()')
-    LME = robjects.r('''merge(getSecurity("LMCADY Comdty", start = "'''+start_date+'''"), getSecurity("LMAHDY Comdty", start = "'''+start_date+'''"),
-                            getSecurity("LMPBDY Comdty", start = "'''+start_date+'''"), getSecurity("LMZSDY Comdty", start = "'''+start_date+'''"), 
-                            getSecurity("LMNIDY Comdty", start = "'''+start_date+'''"), getSecurity("LMSNDY Comdty", start = "'''+start_date+'''"), 
-                            getSecurityOHLCV("LMCADS03 Comdty", start = "'''+start_date+'''"), 
-                            getSecurityOHLCV("LMPBDS03 Comdty", start = "'''+start_date+'''"), 
-                            getSecurityOHLCV("LMNIDS03 Comdty", start = "'''+start_date+'''"), 
-                            getSecurityOHLCV("LMSNDS03 Comdty", start = "'''+start_date+'''"), 
-                            getSecurityOHLCV("LMZSDS03 Comdty", start = "'''+start_date+'''"), 
-                            getSecurityOHLCV("LMAHDS03 Comdty", start = "'''+start_date+'''"),
-                            getTickersBaseMetalMacro("LEAH", asPrice = TRUE, start = "'''+start_date+'''"),
-                            getTickersBaseMetalMacro("LECA", asPrice = TRUE, start = "'''+start_date+'''"),
-                            getTickersBaseMetalMacro("LENI", asPrice = TRUE, start = "'''+start_date+'''"),
-                            getTickersBaseMetalMacro("LEPB", asPrice = TRUE, start = "'''+start_date+'''"),
-                            getTickersBaseMetalMacro("LESN", asPrice = TRUE, start = "'''+start_date+'''"),
-                            getTickersBaseMetalMacro("LEZS", asPrice = TRUE, start = "'''+start_date+'''"),
-                            getTickersBaseMetalMacro("LSAH", asPrice = TRUE, start = "'''+start_date+'''"),
-                            getTickersBaseMetalMacro("LSCA", asPrice = TRUE, start = "'''+start_date+'''"),
-                            getTickersBaseMetalMacro("LSNI", asPrice = TRUE, start = "'''+start_date+'''"),
-                            getTickersBaseMetalMacro("LSPB", asPrice = TRUE, start = "'''+start_date+'''"),
-                            getTickersBaseMetalMacro("LSSN", asPrice = TRUE, start = "'''+start_date+'''"),
-                            getTickersBaseMetalMacro("LSZS", asPrice = TRUE, start = "'''+start_date+'''")
+    LME = robjects.r('''merge(getSecurity(c("LMCADY Comdty","LMAHDY Comdty","LMPBDY Comdty","LMZSDY Comdty","LMNIDY Comdty","LMSNDY Comdty"), start = "'''+start_date+'''"), 
+                            getSecurityOHLCV(c("LMCADS03 Comdty","LMPBDS03 Comdty","LMNIDS03 Comdty","LMSNDS03 Comdty","LMZSDS03 Comdty","LMAHDS03 Comdty"), start = "'''+start_date+'''")
                             )
                         ''')
     LME.colnames = robjects.vectors.StrVector(["LME_Co_Spot","LME_Al_Spot","LME_Le_Spot","LME_Zi_Spot","LME_Ni_Spot","LME_Ti_Spot"
@@ -372,9 +353,14 @@ def read_data_v31_4E(start_date):
                     ,"LME_Ti_Open","LME_Ti_High","LME_Ti_Low","LME_Ti_Close","LME_Ti_Volume","LME_Ti_OI"
                     ,"LME_Zi_Open","LME_Zi_High","LME_Zi_Low","LME_Zi_Close","LME_Zi_Volume","LME_Zi_OI"
                     ,"LME_Al_Open","LME_Al_High","LME_Al_Low","LME_Al_Close","LME_Al_Volume","LME_Al_OI"
-                    ,"LME_Al_Demand","LME_Co_Demand","LME_Ni_Demand","LME_Le_Demand","LME_Ti_Demand","LME_Zi_Demand"
-                    ,"LME_Al_Supply","LME_Co_Supply","LME_Ni_Supply","LME_Le_Supply","LME_Ti_Supply","LME_Zi_Supply"
                     ])
+    
+    LME_SD = robjects.r('''getTickersBaseMetalsMacro(c("LEAH","LECA","LENI","LEPB","LESN","LEZS","LSAH","LSCA","LSNI","LSPB","LSSN","LSZS"), asPrice = TRUE, zoom = "'''+start_date+'''::")
+                            ''')
+    LME_SD.colnames = robjects.vectors.StrVector([
+                    "LME_Al_Demand","LME_Co_Demand","LME_Ni_Demand","LME_Le_Demand","LME_Ti_Demand","LME_Zi_Demand"
+                    ,"LME_Al_Supply","LME_Co_Supply","LME_Ni_Supply","LME_Le_Supply","LME_Ti_Supply","LME_Zi_Supply"])
+
     COMEX_HG = robjects.r('''getGenOHLCV("HG", start = "'''+start_date+'''")''')
     COMEX_PA = robjects.r('''getGen("PA1S",zoom="'''+start_date+'''::")''')
     COMEX_PL = robjects.r('''getGenOHLCV("PL", start = "'''+start_date+'''")[,4]''')
@@ -417,23 +403,18 @@ def read_data_v31_4E(start_date):
     SPX.colnames = robjects.vectors.StrVector(["SPX"])
     VIX.colnames = robjects.vectors.StrVector(["VIX"])
 
-    index = robjects.r('''merge(getSecurity("HSI Index", start = "'''+start_date+'''"),getSecurity("NKY Index", start = "'''+start_date+'''"),
-                                getSecurity("SHCOMP Index", start = "'''+start_date+'''"), getSecurity("SHSZ300 Index", start = "'''+start_date+'''")
-                        )''')
+    index = robjects.r('''getSecurity(c("HSI Index","NKY Index","SHCOMP Index","SHSZ300 Index"), start = "'''+start_date+'''")
+                        ''')
     index.colnames = robjects.vectors.StrVector(["HSI","NKY","SHCOMP","SHSZ300"])
 
-    Third_Party = robjects.r('''merge(getTickersBaseMetalsForecast("METFA3 1GQ", asPrice = TRUE, start_date = "'''+start_date+'''"),
-                                        getTickersBaseMetalsForecast("METFC3 1GQ", asPrice = TRUE, start_date = "'''+start_date+'''"),
-                                        getTickersBaseMetalsForecast("METFN3 1GQ", asPrice = TRUE, start_date = "'''+start_date+'''"),
-                                        getTickersBaseMetalsForecast("METFL3 1GQ", asPrice = TRUE, start_date = "'''+start_date+'''"),
-                                        getTickersBaseMetalsForecast("METFT3 1GQ", asPrice = TRUE, start_date = "'''+start_date+'''"),
-                                        getTickersBaseMetalsForecast("METFZ3 1GQ", asPrice = TRUE, start_date = "'''+start_date+'''")
+    Third_Party = robjects.r('''merge(getTickersBaseMetalsForecast(c("METFA3 1GQ","METFC3 1GQ","METFN3 1GQ","METFL3 1GQ","METFT3 1GQ","METFZ3 1GQ"), asPrice = TRUE, zoom = "'''+start_date+'''::")
                                         )'''
                                         )
     Third_Party.colnames = robjects.vectors.StrVector(["METFA3 1GQ","METFC3 1GQ","METFN3 1GQ","METFL3 1GQ","METFT3 1GQ","METFZ3 1GQ"])
 
 
     LME = m2ar(LME)
+    LME_SD = m2ar(LME_SD)
     COMEX_PA = m2ar(COMEX_PA, lag = True)
     COMEX_HG = m2ar(COMEX_HG, lag = True)
     COMEX_GC = m2ar(COMEX_GC, lag = True)
@@ -451,6 +432,6 @@ def read_data_v31_4E(start_date):
     LME_temp = copy(LME.loc['2004-11-12':])
     dates = LME_temp.index.values.tolist()
 
-    data = LME.join([DCE,SHFE,index,COMEX_HG,COMEX_GC,COMEX_SI,COMEX_PA,COMEX_PL,DXY,SX5E,UKX,SPX,VIX,Third_Party], how = "outer")
+    data = LME.join([LME_SD,DCE,SHFE,index,COMEX_HG,COMEX_GC,COMEX_SI,COMEX_PA,COMEX_PL,DXY,SX5E,UKX,SPX,VIX,Third_Party], how = "outer")
     return data, dates
 

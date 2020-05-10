@@ -1,4 +1,5 @@
 {
+  "pass_test.py::test": true,
   "pass_test.py::test_feature": true,
   "pass_test.py::test_one": true
 }

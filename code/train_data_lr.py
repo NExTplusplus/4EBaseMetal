@@ -47,4 +47,3 @@ if __name__ == '__main__':
         model.train(C=args.C, max_iter=args.max_iter)
     else:
         final = model.test()
-        final.to_csv(os.path.join("result","prediction","lr","_".join([args.ground_truth,args.date,str(args.steps),args.version])+".csv"))
