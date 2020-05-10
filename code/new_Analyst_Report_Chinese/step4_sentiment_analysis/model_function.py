@@ -11,6 +11,7 @@ import time
 import datetime
 import numpy as np
 import pandas as pd
+from copy import copy
 from tqdm import tqdm
 import sqlalchemy as sq
 from scipy.stats import norm
@@ -19,10 +20,72 @@ from configparser import ConfigParser
 sys.path.append('../other_function/')
 import other_function
 
-#this function mainly to extract the price for a certain period.
-def get_price(metal_path, metal_columns, window_list, time_selection):
+#this function mainly to transform the matrix into the array
+def m2ar(matrix,lag = False):
     '''
-    :param metal_path: str, the file of the certain metal
+        convert from rmatrix to pandas DataFrame (4E server only)
+        Input
+        matrix(rmatrix)		: rmatrix that holds data with index of date
+        lag(bool)			: Boolean to decide whether lagging is required 
+        Output
+        time_series(df)		: Pandas DataFrame similar to output of read_single_csv
+    '''
+    from rpy2.robjects.packages import importr
+    rbase = importr('base')
+    rzoo = importr('zoo')
+    arr = np.array(matrix)
+    '''Get index'''
+    idx = rbase.as_character(rzoo.index(matrix))
+    '''Convert to pandas dataframe'''
+    if not lag:
+        time_series = pd.DataFrame(arr,index=idx)
+    else:
+        time_series = pd.DataFrame(arr[:-1],index = idx[1:])
+    '''Assign proper column names'''
+    time_series.columns = matrix.colnames
+    return time_series
+
+#this function mainly to get the data from the 4E server
+def get_4e_data(metal_columns, start_date = '2004-01-01'):
+
+    import rpy2.robjects as robjects
+    robjects.r('.sourceAlfunction()')
+    LME = robjects.r('''merge(getSecurity(c("LMCADY Comdty","LMAHDY Comdty","LMPBDY Comdty","LMZSDY Comdty","LMNIDY Comdty","LMSNDY Comdty"), start = "'''+start_date+'''"), 
+                        getSecurityOHLCV(c("LMCADS03 Comdty","LMPBDS03 Comdty","LMNIDS03 Comdty","LMSNDS03 Comdty","LMZSDS03 Comdty","LMAHDS03 Comdty"), start = "'''+start_date+'''")
+                            )
+                        ''')
+    LME.colnames = robjects.vectors.StrVector(["LME_Co_Spot","LME_Al_Spot","LME_Le_Spot","LME_Zi_Spot","LME_Ni_Spot","LME_Ti_Spot"
+                    ,"LME_Co_Open","LME_Co_High","LME_Co_Low","LME_Co_Close","LME_Co_Volume","LME_Co_OI"
+                    ,"LME_Le_Open","LME_Le_High","LME_Le_Low","LME_Le_Close","LME_Le_Volume","LME_Le_OI"
+                    ,"LME_Ni_Open","LME_Ni_High","LME_Ni_Low","LME_Ni_Close","LME_Ni_Volume","LME_Ni_OI"
+                    ,"LME_Ti_Open","LME_Ti_High","LME_Ti_Low","LME_Ti_Close","LME_Ti_Volume","LME_Ti_OI"
+                    ,"LME_Zi_Open","LME_Zi_High","LME_Zi_Low","LME_Zi_Close","LME_Zi_Volume","LME_Zi_OI"
+                    ,"LME_Al_Open","LME_Al_High","LME_Al_Low","LME_Al_Close","LME_Al_Volume","LME_Al_OI"
+                    ])
+    
+    LME = m2ar(LME)
+    LME_temp = copy(LME.loc['2004-11-12':])
+    dates = LME_temp.index.values.tolist()
+    
+    res = pd.DataFrame()
+    res['Index'] = dates
+    if metal_columns == 'LMCADY':
+        res['LMCADY'] = list(LME_temp['LME_Co_Spot'])
+    elif metal_columns == 'LMAHDY':
+        res['LMAHDY'] = list(LME_temp['LME_Al_Spot'])
+    elif metal_columns == 'LMZSDY':
+        res['LMZSDY'] = list(LME_temp['LME_Zi_Spot'])
+    elif metal_columns == 'LMPBDY':
+        res['LMPBDY'] = list(LME_temp['LME_Le_Spot'])
+    elif metal_columns == 'LMNIDY':
+        res['LMNIDY'] = list(LME_temp['LME_Ni_Spot'])
+    elif metal_columns == 'LMSNDY':
+        res['LMSNDY'] = list(LME_temp['LME_Ti_Spot'])
+    return res
+
+#this function mainly to extract the price for a certain period.
+def get_price(metal_columns, window_list, time_selection):
+    '''
     :param metal_columns: str, the certrain col of the metal in the dataframe
 
     :param time_selection:list, element is datetime, containing the start date and the end date
@@ -31,7 +94,7 @@ def get_price(metal_path, metal_columns, window_list, time_selection):
     :return price_forward:df, containing the original price, the rolling std.
     '''
     #this part used to select the data with certain time_selection
-    price = pd.read_csv(metal_path)
+    price = get_4e_data(metal_columns)
     price['Index'] =  pd.to_datetime(price['Index'])
     price = price[(price['Index']<=time_selection[1])&(price['Index']>=time_selection[0])]
     

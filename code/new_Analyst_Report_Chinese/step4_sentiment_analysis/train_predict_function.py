@@ -224,8 +224,7 @@ def choose_best_threshold(window_list, threshold_list, total_df, choose_for_hori
 
 #this function is used to select the best threshold for the prediction
 def adjust_param(met, 
-                 metal_columns, 
-                 metal_path, 
+                 metal_columns,  
                  window_list,
                  train_period,
                  predict_period,
@@ -239,7 +238,6 @@ def adjust_param(met,
     '''
     :param met:str, the metal we need to predict
     :param metal_columns: str, the metal column in the LME file
-    :param metal_path:str, the path of the LME file of the metal 
     :param window_list: [1, 3, 5, 10, 20, 60]
     :param train_period:list, [datetime1, datetim2], the training period
     :param predict_period:list, [datetime1, datetim2], the predicting period
@@ -272,10 +270,10 @@ def adjust_param(met,
             t_p_end = datetime.datetime.strftime(t_p[1], '%Y%m%d')
             tmp_train_period, _ = find_date_in_which_half(t_p[0], t_p[1], use_half)
 
-            discrete_param, accur = train_func(met, metal_columns, metal_path, 
+            discrete_param, accur = train_func(met, metal_columns, 
                                                window_list, tmp_train_period, t_p, threshold, 
                                                freq_win, repo_win, conn)
-            true_price, score = train_func_predict(met, metal_columns, metal_path, window_list, 
+            true_price, score = train_func_predict(met, metal_columns, window_list, 
                                                    tmp_train_period,t_p,threshold, freq_win, 
                                                    repo_win,discrete_param,accur, conn)
             tmp_process_score_true_price = process_score_true_price(true_price, score, window_list, threshold, [t_p_start, t_p_end])
@@ -291,7 +289,6 @@ def adjust_param(met,
 #this function is used for the prediction with the groundtruth
 def train_func_predict(met, 
                        metal_columns, 
-                       metal_path, 
                        window_list, 
                        train_period,
                        predict_period,
@@ -304,7 +301,6 @@ def train_func_predict(met,
     '''
     :param met:str, the metal we need to predict
     :param metal_columns: str, the metal column in the LME file
-    :param metal_path:str, the path of the LME file of the metal 
     :param window_list: [1, 3, 5, 10, 20, 60]
     :param train_period:list, [datetime1, datetim2], the training period
     :param predict_period:list, [datetime1, datetim2], the predicting period
@@ -319,7 +315,7 @@ def train_func_predict(met,
     :return scor:dataframe, the predict score of the predict period
     '''
     
-    price_forward = mf.get_price(metal_path, metal_columns, window_list, [predict_period[0], predict_period[1]+datetime.timedelta(95)])
+    price_forward = mf.get_price(metal_columns, window_list, [predict_period[0], predict_period[1]+datetime.timedelta(95)])
     sentiment = mf.get_sentiment(met, predict_period, conn)
     
     price_sentiment = price_forward.merge(sentiment, left_on='Index', right_on='date',how='inner')
@@ -351,7 +347,6 @@ def train_func_predict(met,
 #this fucntion is used for the prediction without the groundtruth
 def predict_func(met, 
                  metal_columns, 
-                 metal_path, 
                  window_list, 
                  train_period,
                  predict_period,
@@ -364,7 +359,6 @@ def predict_func(met,
     '''
     :param met:str, the metal we need to predict
     :param metal_columns: str, the metal column in the LME file
-    :param metal_path:str, the path of the LME file of the metal 
     :param window_list: [1, 3, 5, 10, 20, 60]
     :param train_period:list, [datetime1, datetim2], the training period
     :param predict_period:list, [datetime1, datetim2], the predicting period
@@ -396,8 +390,7 @@ def predict_func(met,
 
 #this function is to get the accuracy and the discrete quantile of the training period.
 def train_func(met, 
-               metal_columns, 
-               metal_path, 
+               metal_columns,  
                window_list, 
                train_period, 
                predict_period,
@@ -408,7 +401,6 @@ def train_func(met,
     '''
     :param met:str, the metal we need to predict
     :param metal_columns: str, the metal column in the LME file
-    :param metal_path:str, the path of the LME file of the metal 
     :param window_list: [1, 3, 5, 10, 20, 60]
     :param train_period:list, [datetime1, datetim2], the training period
     :param predict_period:list, [datetime1, datetim2], the predicting period
@@ -430,7 +422,7 @@ def train_func(met,
     #bottom because the bottom data we can not get the future result, hence the return
     #price would be NaN
     #window_list could be [1, 3, 5, 10, 20, 60]
-    price_forward = mf.get_price(metal_path, metal_columns, [1, 3, 5, 10, 20, 60], train_period)
+    price_forward = mf.get_price(metal_columns, [1, 3, 5, 10, 20, 60], train_period)
     print('the length before price_forward merge is : {}'.format(len(price_forward)))
     
     #here we define the discrete points for the return price and the sentiment_article

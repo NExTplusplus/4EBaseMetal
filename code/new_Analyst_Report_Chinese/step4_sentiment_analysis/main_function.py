@@ -20,7 +20,6 @@ import other_function
 #this function is used to the daily prediction
 def main_controller(met, 
                     metal_columns, 
-                    metal_path, 
                     window_list, 
                     train_period, 
                     predict_period,
@@ -32,7 +31,6 @@ def main_controller(met,
     '''
     :param met:str, the metal we need to predict
     :param metal_columns: str, the metal column in the LME file
-    :param metal_path:str, the path of the LME file of the metal 
     :param window_list: [1, 3, 5, 10, 20, 60]
     :param train_period:list, [datetime1, datetim2], the training period
     :param predict_period:list, [datetime1, datetim2], the predicting period
@@ -53,12 +51,12 @@ def main_controller(met,
 #                                    window_list, train_period, threshold, 
 #                                    freq_win, repo_win, conn)
     #get the discrete quantile and the accuracy.
-    discrete_param, accur = tpf.train_func(met, metal_columns, metal_path, 
+    discrete_param, accur = tpf.train_func(met, metal_columns, 
                                            window_list, train_period, predict_period, threshold, 
                                            freq_win, repo_win, conn)
 
     #compute the predicting period score.
-    ans = tpf.predict_func(met, metal_columns, metal_path, window_list, 
+    ans = tpf.predict_func(met, metal_columns, window_list, 
                            train_period,predict_period,threshold, freq_win, 
                            repo_win,discrete_param,accur, conn)
     return ans
@@ -67,7 +65,6 @@ def main_controller(met,
 #this function is specified for the reproduction of the online testing
 def online_reproduction(met, 
                         metal_columns, 
-                        metal_path, 
                         window_list, 
                         train_period, 
                         predict_period,
@@ -79,7 +76,6 @@ def online_reproduction(met,
     '''
     :param met:str, the metal we need to predict
     :param metal_columns: str, the metal column in the LME file
-    :param metal_path:str, the path of the LME file of the metal 
     :param window_list: [1, 3, 5, 10, 20, 60]
     :param train_period:list, [datetime1, datetim2], the training period
     :param predict_period:list, [datetime1, datetim2], the predicting period
@@ -99,10 +95,10 @@ def online_reproduction(met,
 #        discrete_param = train_func(met, metal_columns, metal_path, 
 #                                    window_list, train_period, threshold, 
 #                                    freq_win, repo_win, conn)
-    discrete_param, accur = tpf.train_func(met, metal_columns, metal_path, 
+    discrete_param, accur = tpf.train_func(met, metal_columns, 
                                            window_list, train_period, predict_period, threshold, 
                                            freq_win, repo_win, conn)
-    true_price, ans = tpf.train_func_predict(met, metal_columns, metal_path, window_list, 
+    true_price, ans = tpf.train_func_predict(met, metal_columns, window_list, 
                                              train_period,predict_period,threshold, freq_win, 
                                              repo_win,discrete_param,accur, conn)
     
@@ -124,24 +120,17 @@ if __name__ ==  '__main__':
     conf.read(config_path)
     
     #default_param
-    metal_data_path = eval(conf.get('default_param', 'metal_data_path'))
     metal_list = eval(conf.get('default_param', 'metal_list'))
     window_list = eval(conf.get('default_param', 'window_list'))
     
     #construct the path of the metal
     metal_dict = {}
-    metal_dict['Cu'] = ['LMCADY',
-                       metal_data_path + 'LMCADY.csv']
-    metal_dict['Al'] = ['LMAHDY',
-                       metal_data_path + 'LMAHDY.csv']
-    metal_dict['Zn'] = ['LMZSDY',
-                       metal_data_path + 'LMZSDY.csv']
-    metal_dict['Pb'] = ['LMPBDY',
-                       metal_data_path + 'LMPBDY.csv']
-    metal_dict['Ni'] = ['LMNIDY',
-                       metal_data_path + 'LMNIDY.csv']
-    metal_dict['Xi'] = ['LMSNDY',
-                       metal_data_path + 'LMSNDY.csv']
+    metal_dict['Cu'] = ['LMCADY']
+    metal_dict['Al'] = ['LMAHDY']
+    metal_dict['Zn'] = ['LMZSDY']
+    metal_dict['Pb'] = ['LMPBDY']
+    metal_dict['Ni'] = ['LMNIDY']
+    metal_dict['Xi'] = ['LMSNDY']
     
     #database param
     use_account = conf.get('database_param', 'account')
@@ -160,9 +149,6 @@ if __name__ ==  '__main__':
         
         metal_columns = metal_dict[metal][0]
         print('use columns:{}'.format(metal_columns))
-        
-        metal_path = metal_dict[metal][1]
-        print('current metal path: {}'.format(metal_path))
         
         threshold_lst = eval(conf.get('predict_param', 'default_threshold'))
         #here we define the parameter for predicting certain metal in long term
@@ -185,7 +171,7 @@ if __name__ ==  '__main__':
         train_period,_ = tpf.find_date_in_which_half(predict_start_date, predict_end_date, short_term_predict_half)
         predict_period = [datetime.datetime.strptime(predict_start_date, '%Y-%m-%d'), datetime.datetime.strptime(predict_end_date, '%Y-%m-%d')]
         
-        best_param, res = tpf.adjust_param(met,  metal_columns, metal_path, 
+        best_param, res = tpf.adjust_param(met,  metal_columns,  
                                            short_term_horizon,train_period,predict_period,
                                            threshold_lst,short_term_freq_win,short_term_repo_win,
                                            short_term_predict_half, 
@@ -193,11 +179,11 @@ if __name__ ==  '__main__':
         res.to_csv('./adjustment_intermediate/{}/{}_{}_{}_short_term_adjustment.csv'.format(met, met, predict_start_date, predict_end_date), index=False)
         for hor, best_threshold in best_param.items():
             if predict_mode == 'reproduction':
-                ans = online_reproduction(met, metal_columns, metal_path, 
+                ans = online_reproduction(met, metal_columns,  
                                           [hor], train_period, predict_period,
                                           best_threshold, short_term_freq_win, short_term_repo_win,conn)  
             elif predict_mode == 'run':
-                ans = main_controller(met, metal_columns, metal_path, 
+                ans = main_controller(met, metal_columns,  
                                       [hor], train_period, predict_period,
                                       best_threshold, short_term_freq_win, short_term_repo_win,conn)  
             ans.to_csv('./predict_result/{}/{}/{}_{}_{}_{}.csv'.format(met, hor, predict_result_name, best_threshold, hor, predict_mode), index=False)
@@ -206,7 +192,7 @@ if __name__ ==  '__main__':
         train_period,_ = tpf.find_date_in_which_half(predict_start_date, predict_end_date, long_term_predict_half)
         predict_period = [datetime.datetime.strptime(predict_start_date, '%Y-%m-%d'), datetime.datetime.strptime(predict_end_date, '%Y-%m-%d')]
 
-        best_param, res = tpf.adjust_param(met,  metal_columns, metal_path, 
+        best_param, res = tpf.adjust_param(met,  metal_columns,  
                                            long_term_horizon,train_period,predict_period,
                                            threshold_lst,long_term_freq_win,long_term_repo_win,
                                            long_term_predict_half, 
@@ -215,11 +201,11 @@ if __name__ ==  '__main__':
         
         for hor, best_threshold in best_param.items():
             if predict_mode == 'reproduction':
-                ans = online_reproduction(met, metal_columns, metal_path, 
+                ans = online_reproduction(met, metal_columns,  
                                           [hor], train_period, predict_period,
                                           best_threshold, long_term_freq_win, long_term_repo_win,conn)  
             elif predict_mode == 'run':
-                ans = main_controller(met, metal_columns, metal_path, 
+                ans = main_controller(met, metal_columns,  
                                       [hor], train_period, predict_period,
                                       best_threshold, long_term_freq_win, long_term_repo_win,conn)  
             ans.to_csv('./predict_result/{}/{}/{}_{}_{}_{}.csv'.format(met, hor, predict_result_name, best_threshold, hor, predict_mode), index=False)
