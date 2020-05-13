@@ -5,6 +5,7 @@ Created on Sat Oct  5 11:10:41 2019
 @author: Kwoks
 """
 import re
+import datetime
 import pandas as pd
 from tqdm import tqdm
 from bs4 import BeautifulSoup
@@ -20,7 +21,7 @@ class html_extracter:
     def build_content_db(self):
         # Function: Set up a database to store accuracy with the following setting. 
         # Note that: All functions in this class will follow this setting, pls set up ur database accordingly to avoid error
-        self.conn_extracter.execute('CREATE TABLE `content`(`url` VARCHAR(750) NOT NULL,`id` INT NOT NULL AUTO_INCREMENT,`date` DATETIME NOT NULL,`company` VARCHAR(30) NULL,`type` VARCHAR(45) NULL,`title` TINYTEXT NULL,`content` MEDIUMTEXT NULL,PRIMARY KEY (`url`),KEY(`id`));')
+        self.conn_extracter.execute('CREATE TABLE `content`(`url` VARCHAR(750) NOT NULL,`id` INT NOT NULL AUTO_INCREMENT,`published_date` DATETIME NOT NULL, `date` DATETIME NOT NULL, `company` VARCHAR(30) NULL,`type` VARCHAR(45) NULL,`title` TINYTEXT NULL,`content` MEDIUMTEXT NULL,PRIMARY KEY (`url`),KEY(`id`));')
     
     def extract(self,df_news):
         # Function: This function will extract content from html
@@ -34,7 +35,7 @@ class html_extracter:
         if  not result.first():
 #            raise Exception('Database not exist, please use build_content_db function')
             print('can not find the content table, will create it automatically')
-            self.conn_extracter.execute('CREATE TABLE `content`(`url` VARCHAR(750) NOT NULL,`id` INT NOT NULL AUTO_INCREMENT,`date` DATETIME NOT NULL,`company` VARCHAR(30) NULL,`type` VARCHAR(45) NULL,`title` TINYTEXT NULL,`content` MEDIUMTEXT NULL,PRIMARY KEY (`url`),KEY(`id`));')
+            self.conn_extracter.execute('CREATE TABLE `content`(`url` VARCHAR(750) NOT NULL,`id` INT NOT NULL AUTO_INCREMENT,`published_date` DATETIME NOT NULL, `date` DATETIME NOT NULL, `company` VARCHAR(30) NULL,`type` VARCHAR(45) NULL,`title` TINYTEXT NULL,`content` MEDIUMTEXT NULL,PRIMARY KEY (`url`),KEY(`id`));')
 
         # Record data that has problems when we try to extract
         already_url = list(pd.read_sql('select * from content', con=self.conn_extracter)['url'])
@@ -45,8 +46,8 @@ class html_extracter:
             try:
                 new_input = {}
                 extract_date = self.function_date(url, html)
-                new_input['date'] = [extract_date]
-                #new_input['date'] = [date]
+                new_input['published_date'] = [extract_date]
+                new_input['date'] = [datetime.datetime.strftime(datetime.date.today(), '%Y-%m-%d')]
                 new_input['company'] = [name]
                 new_input['type'] = [type1]
                 new_input['title'] = [title]

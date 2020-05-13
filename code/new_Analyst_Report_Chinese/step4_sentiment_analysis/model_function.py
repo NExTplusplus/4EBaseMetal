@@ -123,6 +123,7 @@ def get_sentiment(met, time_selection, conn):
     #sentiment = pd.read_csv(metal_sentiment_path)
     sentiment['Sentiment_article'] = sentiment['Sentiment_article']*100
     sentiment['date'] = sentiment['date'].apply(lambda x: pd.to_datetime(x).floor('D'))
+    sentiment['published_date'] = sentiment['published_date'].apply(lambda x: pd.to_datetime(x).floor('D'))
     
     sentiment.dropna(inplace=True)
     sentiment = sentiment[(sentiment['date']<=time_selection[1])&(sentiment['date']>=time_selection[0])]

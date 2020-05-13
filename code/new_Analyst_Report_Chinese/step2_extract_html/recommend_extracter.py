@@ -19,7 +19,7 @@ class recommend_extracter:
     def build_recommend_db(self):
         # Function: Set up a database to store accuracy with the following setting. 
         # Note that: All functions in this class will follow this setting, pls set up ur database accordingly to avoid error
-        self.conn_extracter.execute("CREATE TABLE `recommend`(`url` varchar(700) NOT NULL,`id` int(11) NOT NULL AUTO_INCREMENT,`company` varchar(20) DEFAULT NULL,`news_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,`date` datetime DEFAULT NULL,`title` varchar(100) DEFAULT NULL,`Cu_fact` mediumtext COMMENT '\n',`Cu_action` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci,`Zn_fact` mediumtext,`Zn_action` mediumtext,`Pb_fact` mediumtext,`Pb_action` mediumtext,`Al_fact` mediumtext,`Al_action` mediumtext,`Ni_action` mediumtext,`Ni_fact` mediumtext,`Xi_action` mediumtext,`Xi_fact` mediumtext,`Other` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci,PRIMARY KEY (`url`),KEY(`id`));")
+        self.conn_extracter.execute("CREATE TABLE `recommend`(`url` varchar(700) NOT NULL,`id` int(11) NOT NULL AUTO_INCREMENT,`company` varchar(20) DEFAULT NULL,`news_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,`published_date` datetime DEFAULT NULL,`date` datetime DEFAULT NULL,`title` varchar(100) DEFAULT NULL,`Cu_fact` mediumtext COMMENT '\n',`Cu_action` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci,`Zn_fact` mediumtext,`Zn_action` mediumtext,`Pb_fact` mediumtext,`Pb_action` mediumtext,`Al_fact` mediumtext,`Al_action` mediumtext,`Ni_action` mediumtext,`Ni_fact` mediumtext,`Xi_action` mediumtext,`Xi_fact` mediumtext,`Other` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci,PRIMARY KEY (`url`),KEY(`id`));")
     
     def cleaning(self,text,stop_words=[]):
         # Function: This function will split article into paragraph and replace all stop_words into empty string
@@ -178,13 +178,13 @@ class recommend_extracter:
 
         df_content = df_content[~df_content['url'].isin(already_url)].reset_index(drop=True)
 
-        for idx, url,com, news_type, date, title, content in tqdm(zip(df_content['id'], df_content['url'],df_content['company'],df_content['type'],
-                                                                 df_content['date'],df_content['title'],df_content['content']), desc='extracting recommend'):
+        for idx, url,com, news_type, published_date, crawled_date, title, content in tqdm(zip(df_content['id'], df_content['url'],df_content['company'],df_content['type'],
+                                                                 df_content['published_date'],df_content['date'],df_content['title'],df_content['content']), desc='extracting recommend'):
             
             try:
                 result = {}
                 # Create dictionary input
-                for key in ['url','company', 'news_type', 'date', 'title', 'Cu_fact', 'Cu_action','Zn_fact', 
+                for key in ['url','company', 'news_type', 'published_date', 'date', 'title', 'Cu_fact', 'Cu_action','Zn_fact', 
                             'Zn_action', 'Pb_fact', 'Pb_action', 'Al_fact', 'Al_action',
                             'Ni_action', 'Ni_fact', 'Xi_action', 'Xi_fact', 'Other']:
                     result[key] = []
@@ -194,7 +194,8 @@ class recommend_extracter:
                 result['url'].append(url)
                 result['company'].append(com)
                 result['news_type'].append(news_type)
-                result['date'].append(date)
+                result['published_date'].append(published_date)
+                result['date'].append(crawled_date)
                 result['title'].append(title)
                 categories = self.classify(self.cleaning(content,stop_words=stop_words))
                     

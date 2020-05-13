@@ -42,7 +42,7 @@ def get_metal_df(met, recommend):
     
     :return df:, df, datafram with the columns we need
     '''    
-    tmp = recommend[['url', 'company', 'news_type', 
+    tmp = recommend[['url', 'company', 'news_type', 'published_date',
                     'date', 'title', met + '_fact', met + '_action']]
     
     df = tmp.copy()
@@ -51,7 +51,7 @@ def get_metal_df(met, recommend):
     
     df[met + '_action'] = df[met + '_action'].apply(lambda x : '。'.join(x.split('\n')[1:]))
     
-    df.sort_values(by = ['date'], inplace = True)
+    df.sort_values(by = ['published_date'], inplace = True)
     
     df.reset_index(inplace =  True, drop = True)
     
@@ -64,7 +64,7 @@ def build_sentiment_article(con, met):
     :param met:str, the metal names, like 'Cu', 'Zn',
     :param database:str, the database we use, it is not advised to use different for different steps
     '''
-    con.execute("CREATE TABLE `{}`(`url` varchar(700) NOT NULL,`id` int(11) NOT NULL AUTO_INCREMENT,`company` varchar(20) DEFAULT NULL,`news_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,`date` datetime DEFAULT NULL,`title` varchar(100) DEFAULT NULL,`{}_fact` mediumtext COMMENT '\n',`{}_action` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci,`{}_new_action` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci, `Sentiment`  mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci, `Sentiment_article` FLOAT NULL,PRIMARY KEY (`url`),KEY(`id`));".format('{}_sentiment'.format(met), met, met, met))
+    con.execute("CREATE TABLE `{}`(`url` varchar(700) NOT NULL,`id` int(11) NOT NULL AUTO_INCREMENT,`company` varchar(20) DEFAULT NULL,`news_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,`published_date` datetime DEFAULT NULL,`date` datetime DEFAULT NULL,`title` varchar(100) DEFAULT NULL,`{}_fact` mediumtext COMMENT '\n',`{}_action` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci,`{}_new_action` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci, `Sentiment`  mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci, `Sentiment_article` FLOAT NULL,PRIMARY KEY (`url`),KEY(`id`));".format('{}_sentiment'.format(met), met, met, met))
 
 #change the type of some columns, please use this function carefully
 def change_type(df):
@@ -74,7 +74,7 @@ def change_type(df):
     :return df:df, the dataframe we have changed the column type
     '''
     
-    stable_columns = ['date', 'Sentiment_article']
+    stable_columns = ['published_date', 'date', 'Sentiment_article']
     
     for col in df.columns:
         if col not in stable_columns:
@@ -170,6 +170,7 @@ def main_function(metal_lst, metal_dict, recommend, conn, client):
             raise_error[post_pre_sentiment['url'][i]] = err
             
             tmp_to_sql_df = pd.DataFrame(post_pre_sentiment.loc[i, list(post_pre_sentiment.columns)]).T.reset_index(drop=True)
+            tmp_to_sql_df['published_date'] = tmp_to_sql_df['published_date'].apply(lambda x: pd.to_datetime(x).floor('D'))
             tmp_to_sql_df['date'] = tmp_to_sql_df['date'].apply(lambda x: pd.to_datetime(x).floor('D'))
             tmp_to_sql_df['Sentiment'] = [res]
             tmp_to_sql_df['Sentiment_article'] = tmp_to_sql_df['Sentiment'].apply(lambda x: sen_art(x))

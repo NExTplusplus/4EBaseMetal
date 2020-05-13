@@ -40,7 +40,7 @@ class Crawler_machine:
     def build_html_db(self):
         # Function: Set up a database to store accuracy with the following setting. 
         # Note that: All functions in this class will follow this setting, pls set up ur database accordingly to avoid error
-        self.conn_html.execute('CREATE TABLE `Alternative_DB`.`html`(`url` VARCHAR(750) NOT NULL,`id` INT NOT NULL AUTO_INCREMENT,`company` VARCHAR(30) NULL,`type` VARCHAR(45) NULL,`title` TINYTEXT NULL,`html` MEDIUMTEXT NULL,PRIMARY KEY (`url`),KEY(`id`));')
+        self.conn_html.execute('CREATE TABLE `html`(`url` VARCHAR(750) NOT NULL,`id` INT NOT NULL AUTO_INCREMENT,`company` VARCHAR(30) NULL,`type` VARCHAR(45) NULL,`title` TINYTEXT NULL,`html` MEDIUMTEXT NULL,PRIMARY KEY (`url`),KEY(`id`));')
     
     def raw_crawl_func(self,driver,crawl_type,analyst_company, news_type,website_link,early_stop=True, keyword_report = 'All',
                              xpath = None,tag_element = None,keyword_next_page =None,keyword_filter = [],exclude_list=[]):
@@ -58,7 +58,7 @@ class Crawler_machine:
         
         if  not result.first():
             print('cannot find the table, we will create it')
-            self.conn_html.execute('CREATE TABLE `Alternative_DB`.`html`(`url` VARCHAR(750) NOT NULL,`id` INT NOT NULL AUTO_INCREMENT,`company` VARCHAR(30) NULL,`type` VARCHAR(45) NULL,`title` TINYTEXT NULL,`html` MEDIUMTEXT NULL,PRIMARY KEY (`url`),KEY(`id`));')
+            self.conn_html.execute('CREATE TABLE `html`(`url` VARCHAR(750) NOT NULL,`id` INT NOT NULL AUTO_INCREMENT,`company` VARCHAR(30) NULL,`type` VARCHAR(45) NULL,`title` TINYTEXT NULL,`html` MEDIUMTEXT NULL,PRIMARY KEY (`url`),KEY(`id`));')
 
 #            driver.close()
 #            raise Exception('Database not exist, please use build_html_db function')
