@@ -186,13 +186,13 @@ if __name__ ==  '__main__':
         short_train_period_str1 = datetime.datetime.strftime(train_period[1], '%Y%m%d')
         short_period_key = short_train_period_str0+'_'+short_train_period_str1        
 
-        if short_period_key in hyper_param['short_term'][met].keys() and not whether_retrain:
+        if short_period_key in hyper_param['short_term'][met].keys() and not eval(whether_retrain):
             best_param_tmp = hyper_param['short_term'][met][short_period_key]
             best_param = {}
             for key, val in best_param_tmp.items():
                 best_param[eval(key)] = val
         else:
-            best_param, res = tpf.adjust_param(met,  metal_columns,  
+            best_param, res = tpf.adjust_param(price_4e, met,  metal_columns,  
                                                short_term_horizon,train_period,predict_period,
                                                threshold_lst,short_term_freq_win,short_term_repo_win,
                                                short_term_predict_half, 
@@ -203,11 +203,11 @@ if __name__ ==  '__main__':
         
         for hor, best_threshold in best_param.items():
             if predict_mode == 'reproduction':
-                ans = online_reproduction(met, metal_columns,  
+                ans = online_reproduction(price_4e, met, metal_columns,  
                                           [hor], train_period, predict_period,
                                           best_threshold, short_term_freq_win, short_term_repo_win,conn)  
             elif predict_mode == 'run':
-                ans = main_controller(met, metal_columns,  
+                ans = main_controller(price_4e, met, metal_columns,  
                                       [hor], train_period, predict_period,
                                       best_threshold, short_term_freq_win, short_term_repo_win,conn)  
             ans.to_csv('./predict_result/{}/{}/{}_{}_{}_{}.csv'.format(met, hor, predict_result_name, best_threshold, hor, predict_mode), index=False)
@@ -220,13 +220,13 @@ if __name__ ==  '__main__':
         long_train_period_str1 = datetime.datetime.strftime(train_period[1], '%Y%m%d')
         long_period_key = long_train_period_str0+'_'+long_train_period_str1
         
-        if long_period_key in hyper_param['long_term'][met].keys() and not whether_retrain:
+        if long_period_key in hyper_param['long_term'][met].keys() and not eval(whether_retrain):
             best_param_tmp = hyper_param['long_term'][met][long_period_key]
             best_param = {}
             for key, val in best_param_tmp.items():
                 best_param[eval(key)] = val
         else:        
-            best_param, res = tpf.adjust_param(met,  metal_columns,  
+            best_param, res = tpf.adjust_param(price_4e, met,  metal_columns,  
                                                long_term_horizon,train_period,predict_period,
                                                threshold_lst,long_term_freq_win,long_term_repo_win,
                                                long_term_predict_half, 
@@ -237,11 +237,11 @@ if __name__ ==  '__main__':
             
         for hor, best_threshold in best_param.items():
             if predict_mode == 'reproduction':
-                ans = online_reproduction(met, metal_columns,  
+                ans = online_reproduction(price_4e, met, metal_columns,  
                                           [hor], train_period, predict_period,
                                           best_threshold, long_term_freq_win, long_term_repo_win,conn)  
             elif predict_mode == 'run':
-                ans = main_controller(met, metal_columns,  
+                ans = main_controller(price_4e, met, metal_columns,  
                                       [hor], train_period, predict_period,
                                       best_threshold, long_term_freq_win, long_term_repo_win,conn)  
             ans.to_csv('./predict_result/{}/{}/{}_{}_{}_{}.csv'.format(met, hor, predict_result_name, best_threshold, hor, predict_mode), index=False)
