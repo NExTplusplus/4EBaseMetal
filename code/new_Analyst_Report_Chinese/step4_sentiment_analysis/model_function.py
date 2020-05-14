@@ -86,7 +86,7 @@ def get_4e_data(metal_columns, start_date = '2004-01-01'):
     return res
 
 #this function mainly to extract the price for a certain period.
-def get_price(metal_columns, window_list, time_selection):
+def get_price(price_4e, metal_columns, window_list, time_selection):
     '''
     :param metal_columns: str, the certrain col of the metal in the dataframe
 
@@ -96,7 +96,8 @@ def get_price(metal_columns, window_list, time_selection):
     :return price_forward:df, containing the original price, the rolling std.
     '''
     #this part used to select the data with certain time_selection
-    price = get_4e_data(metal_columns)
+    #price = get_4e_data(metal_columns)
+    price = price_4e.copy()
     price['Index'] =  pd.to_datetime(price['Index'])
     price = price[(price['Index']<=time_selection[1])&(price['Index']>=time_selection[0])]
     
@@ -366,7 +367,7 @@ class Score(object):
         print('no_dup cop_score:{}'.format(len(no_dup_df)))
         
         if self.keep_intermediate:
-            no_dup_df.to_csv('./accur_score_intermediate/accur/' + self.table_name+'_train_accur.csv', index=False)
+            no_dup_df.to_csv('./accur_score_intermediate/accur/' + self.table_name+'_train_accur.csv', index=False, encoding='utf-8')
         
         #insert into the mysql.
 #        no_dup_df.to_sql(self.table_name+'_train_accur', con=self.conn, if_exists='append', index=False, chunksize=1000)
@@ -512,9 +513,9 @@ class Score(object):
         
         
         if self.keep_intermediate and predict:
-            final_df.to_csv('./accur_score_intermediate/score/'+self.table_name+'_predict_score.csv', index=False)
+            final_df.to_csv('./accur_score_intermediate/score/'+self.table_name+'_predict_score.csv', index=False, encoding='utf-8')
         else:
-            final_df.to_csv('./accur_score_intermediate/score/'+self.table_name+'_train_score.csv', index=False)  
+            final_df.to_csv('./accur_score_intermediate/score/'+self.table_name+'_train_score.csv', index=False, encoding='utf-8')  
 #        if predict:
 #            final_df.to_sql(self.table_name+'_predict_score', con=self.conn, if_exists='append', index=False, chunksize=1000)
 #        else:

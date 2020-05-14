@@ -18,7 +18,8 @@ import other_function
 
 
 #this function is used to the daily prediction
-def main_controller(met, 
+def main_controller(price_4e,
+                    met, 
                     metal_columns, 
                     window_list, 
                     train_period, 
@@ -29,6 +30,7 @@ def main_controller(met,
                     conn
                     ):
     '''
+    :param price_4e:df, the total data we get from 4e
     :param met:str, the metal we need to predict
     :param metal_columns: str, the metal column in the LME file
     :param window_list: [1, 3, 5, 10, 20, 60]
@@ -51,7 +53,7 @@ def main_controller(met,
 #                                    window_list, train_period, threshold, 
 #                                    freq_win, repo_win, conn)
     #get the discrete quantile and the accuracy.
-    discrete_param, accur = tpf.train_func(met, metal_columns, 
+    discrete_param, accur = tpf.train_func(price_4e, met, metal_columns, 
                                            window_list, train_period, predict_period, threshold, 
                                            freq_win, repo_win, conn)
 
@@ -63,7 +65,8 @@ def main_controller(met,
     ###########################################################################
 
 #this function is specified for the reproduction of the online testing
-def online_reproduction(met, 
+def online_reproduction(price_4e,
+                        met, 
                         metal_columns, 
                         window_list, 
                         train_period, 
@@ -74,6 +77,7 @@ def online_reproduction(met,
                         conn
                         ):
     '''
+    :param price_4e:df, the total data we get from 4e
     :param met:str, the metal we need to predict
     :param metal_columns: str, the metal column in the LME file
     :param window_list: [1, 3, 5, 10, 20, 60]
@@ -95,10 +99,10 @@ def online_reproduction(met,
 #        discrete_param = train_func(met, metal_columns, metal_path, 
 #                                    window_list, train_period, threshold, 
 #                                    freq_win, repo_win, conn)
-    discrete_param, accur = tpf.train_func(met, metal_columns, 
+    discrete_param, accur = tpf.train_func(price_4e, met, metal_columns, 
                                            window_list, train_period, predict_period, threshold, 
                                            freq_win, repo_win, conn)
-    true_price, ans = tpf.train_func_predict(met, metal_columns, window_list, 
+    true_price, ans = tpf.train_func_predict(price_4e, met, metal_columns, window_list, 
                                              train_period,predict_period,threshold, freq_win, 
                                              repo_win,discrete_param,accur, conn)
     
@@ -141,7 +145,11 @@ if __name__ ==  '__main__':
     
     engine = sq.create_engine("mysql+pymysql://{}:{}@{}:{}/{}?charset=utf8".format(use_account, use_psw, use_host, use_port, use_database))
     conn = engine.connect()
-    
+
+    #get the hyper param
+    hyper_path = './step4_data/hyper_param.json'
+    hyper_param = other_function.load_json(hyper_path)
+    whether_retrain = conf.get('predict_param', 'whether_retrain')
     for met in metal_list:
         
         metal = met
@@ -149,6 +157,9 @@ if __name__ ==  '__main__':
         
         metal_columns = metal_dict[metal][0]
         print('use columns:{}'.format(metal_columns))
+        
+        #get the data from 4e
+        price_4e = mf.get_4e_data(metal_columns)        
         
         threshold_lst = eval(conf.get('predict_param', 'default_threshold'))
         #here we define the parameter for predicting certain metal in long term
@@ -171,12 +182,25 @@ if __name__ ==  '__main__':
         train_period,_ = tpf.find_date_in_which_half(predict_start_date, predict_end_date, short_term_predict_half)
         predict_period = [datetime.datetime.strptime(predict_start_date, '%Y-%m-%d'), datetime.datetime.strptime(predict_end_date, '%Y-%m-%d')]
         
-        best_param, res = tpf.adjust_param(met,  metal_columns,  
-                                           short_term_horizon,train_period,predict_period,
-                                           threshold_lst,short_term_freq_win,short_term_repo_win,
-                                           short_term_predict_half, 
-                                           short_term_whether_use_threshold_for_horizons,conn)        
-        res.to_csv('./adjustment_intermediate/{}/{}_{}_{}_short_term_adjustment.csv'.format(met, met, predict_start_date, predict_end_date), index=False)
+        short_train_period_str0 = datetime.datetime.strftime(train_period[0], '%Y%m%d')
+        short_train_period_str1 = datetime.datetime.strftime(train_period[1], '%Y%m%d')
+        short_period_key = short_train_period_str0+'_'+short_train_period_str1        
+
+        if short_period_key in hyper_param['short_term'][met].keys() and not whether_retrain:
+            best_param_tmp = hyper_param['short_term'][met][short_period_key]
+            best_param = {}
+            for key, val in best_param_tmp.items():
+                best_param[eval(key)] = val
+        else:
+            best_param, res = tpf.adjust_param(met,  metal_columns,  
+                                               short_term_horizon,train_period,predict_period,
+                                               threshold_lst,short_term_freq_win,short_term_repo_win,
+                                               short_term_predict_half, 
+                                               short_term_whether_use_threshold_for_horizons,conn)        
+            res.to_csv('./adjustment_intermediate/{}/{}_{}_{}_short_term_adjustment.csv'.format(met, met, predict_start_date, predict_end_date), index=False)
+            hyper_param['short_term'][met][short_period_key] = best_param
+            other_function.dump_json(hyper_param, hyper_path)            
+        
         for hor, best_threshold in best_param.items():
             if predict_mode == 'reproduction':
                 ans = online_reproduction(met, metal_columns,  
@@ -191,14 +215,26 @@ if __name__ ==  '__main__':
         #long_term prediction
         train_period,_ = tpf.find_date_in_which_half(predict_start_date, predict_end_date, long_term_predict_half)
         predict_period = [datetime.datetime.strptime(predict_start_date, '%Y-%m-%d'), datetime.datetime.strptime(predict_end_date, '%Y-%m-%d')]
-
-        best_param, res = tpf.adjust_param(met,  metal_columns,  
-                                           long_term_horizon,train_period,predict_period,
-                                           threshold_lst,long_term_freq_win,long_term_repo_win,
-                                           long_term_predict_half, 
-                                           long_term_whether_use_threshold_for_horizons,conn)        
-        res.to_csv('./adjustment_intermediate/{}/{}_{}_{}_long_term_adjustment.csv'.format(met, met, predict_start_date, predict_end_date), index=False)
         
+        long_train_period_str0 = datetime.datetime.strftime(train_period[0], '%Y%m%d')
+        long_train_period_str1 = datetime.datetime.strftime(train_period[1], '%Y%m%d')
+        long_period_key = long_train_period_str0+'_'+long_train_period_str1
+        
+        if long_period_key in hyper_param['long_term'][met].keys() and not whether_retrain:
+            best_param_tmp = hyper_param['long_term'][met][long_period_key]
+            best_param = {}
+            for key, val in best_param_tmp.items():
+                best_param[eval(key)] = val
+        else:        
+            best_param, res = tpf.adjust_param(met,  metal_columns,  
+                                               long_term_horizon,train_period,predict_period,
+                                               threshold_lst,long_term_freq_win,long_term_repo_win,
+                                               long_term_predict_half, 
+                                               long_term_whether_use_threshold_for_horizons,conn)        
+            res.to_csv('./adjustment_intermediate/{}/{}_{}_{}_long_term_adjustment.csv'.format(met, met, predict_start_date, predict_end_date), index=False)
+            hyper_param['long_term'][met][long_period_key] = best_param
+            other_function.dump_json(hyper_param, hyper_path)
+            
         for hor, best_threshold in best_param.items():
             if predict_mode == 'reproduction':
                 ans = online_reproduction(met, metal_columns,  
