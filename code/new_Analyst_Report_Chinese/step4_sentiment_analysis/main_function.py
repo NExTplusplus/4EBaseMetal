@@ -148,7 +148,7 @@ if __name__ ==  '__main__':
 
     #get the hyper param
     hyper_path = './step4_data/hyper_param.json'
-    hyper_param = other_function.load_json(hyper_path)
+    
     whether_retrain = conf.get('predict_param', 'whether_retrain')
     for met in metal_list:
         
@@ -182,6 +182,7 @@ if __name__ ==  '__main__':
         train_period,_ = tpf.find_date_in_which_half(predict_start_date, predict_end_date, short_term_predict_half)
         predict_period = [datetime.datetime.strptime(predict_start_date, '%Y-%m-%d'), datetime.datetime.strptime(predict_end_date, '%Y-%m-%d')]
         
+        hyper_param = other_function.load_json(hyper_path)
         short_train_period_str0 = datetime.datetime.strftime(train_period[0], '%Y%m%d')
         short_train_period_str1 = datetime.datetime.strftime(train_period[1], '%Y%m%d')
         short_period_key = short_train_period_str0+'_'+short_train_period_str1        
@@ -190,7 +191,7 @@ if __name__ ==  '__main__':
             best_param_tmp = hyper_param['short_term'][met][short_period_key]
             best_param = {}
             for key, val in best_param_tmp.items():
-                best_param[eval(key)] = val
+                best_param[eval(key)] = eval(val)
         else:
             best_param, res = tpf.adjust_param(price_4e, met,  metal_columns,  
                                                short_term_horizon,train_period,predict_period,
@@ -198,7 +199,10 @@ if __name__ ==  '__main__':
                                                short_term_predict_half, 
                                                short_term_whether_use_threshold_for_horizons,conn)        
             res.to_csv('./adjustment_intermediate/{}/{}_{}_{}_short_term_adjustment.csv'.format(met, met, predict_start_date, predict_end_date), index=False)
-            hyper_param['short_term'][met][short_period_key] = best_param
+            best_param_out = {}
+            for key, val in best_param.items():
+                best_param_out[str(key)] = str(val)
+            hyper_param['short_term'][met][short_period_key] = best_param_out
             other_function.dump_json(hyper_param, hyper_path)            
         
         for hor, best_threshold in best_param.items():
@@ -216,6 +220,7 @@ if __name__ ==  '__main__':
         train_period,_ = tpf.find_date_in_which_half(predict_start_date, predict_end_date, long_term_predict_half)
         predict_period = [datetime.datetime.strptime(predict_start_date, '%Y-%m-%d'), datetime.datetime.strptime(predict_end_date, '%Y-%m-%d')]
         
+        hyper_param = other_function.load_json(hyper_path)
         long_train_period_str0 = datetime.datetime.strftime(train_period[0], '%Y%m%d')
         long_train_period_str1 = datetime.datetime.strftime(train_period[1], '%Y%m%d')
         long_period_key = long_train_period_str0+'_'+long_train_period_str1
@@ -224,7 +229,7 @@ if __name__ ==  '__main__':
             best_param_tmp = hyper_param['long_term'][met][long_period_key]
             best_param = {}
             for key, val in best_param_tmp.items():
-                best_param[eval(key)] = val
+                best_param[eval(key)] = eval(val)
         else:        
             best_param, res = tpf.adjust_param(price_4e, met,  metal_columns,  
                                                long_term_horizon,train_period,predict_period,
@@ -232,7 +237,10 @@ if __name__ ==  '__main__':
                                                long_term_predict_half, 
                                                long_term_whether_use_threshold_for_horizons,conn)        
             res.to_csv('./adjustment_intermediate/{}/{}_{}_{}_long_term_adjustment.csv'.format(met, met, predict_start_date, predict_end_date), index=False)
-            hyper_param['long_term'][met][long_period_key] = best_param
+            best_param_out = {}
+            for key, val in best_param.items():
+                best_param_out[str(key)] = str(val)
+            hyper_param['long_term'][met][short_period_key] = best_param_out
             other_function.dump_json(hyper_param, hyper_path)
             
         for hor, best_threshold in best_param.items():
