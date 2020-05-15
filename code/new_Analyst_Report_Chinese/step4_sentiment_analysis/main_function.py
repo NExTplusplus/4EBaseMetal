@@ -240,7 +240,7 @@ if __name__ ==  '__main__':
             best_param_out = {}
             for key, val in best_param.items():
                 best_param_out[str(key)] = str(val)
-            hyper_param['long_term'][met][short_period_key] = best_param_out
+            hyper_param['long_term'][met][long_period_key] = best_param_out
             other_function.dump_json(hyper_param, hyper_path)
             
         for hor, best_threshold in best_param.items():
