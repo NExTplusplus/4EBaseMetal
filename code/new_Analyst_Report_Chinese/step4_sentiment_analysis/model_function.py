@@ -82,7 +82,7 @@ def get_4e_data(metal_columns, start_date = '2004-01-01'):
     elif metal_columns == 'LMSNDY':
         res['LMSNDY'] = list(LME_temp['LME_Ti_Spot'])
     import os 
-    os.chdir('NEXT/4EBaseMetal/code/new_Analyst_Report_Chinese/step4_sentiment_analysis/')
+    os.chdir('/mnt/gluster/Alphien/paperTrading/Team/NEXT/4EBaseMetal/code/new_Analyst_Report_Chinese/step4_sentiment_analysis/')
     return res
 
 #this function mainly to extract the price for a certain period.
