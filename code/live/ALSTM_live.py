@@ -319,7 +319,7 @@ class ALSTM_online():
       [0.2, 0.4, 0.6],
       [512]
     ]
-    #we inite the param
+    #we init the param
     init_para = {
       'drop_out': drop_out,
       'hidden': hidden,

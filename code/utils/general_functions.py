@@ -156,9 +156,6 @@ def prepare_data(ts,LME_dates,horizon,ground_truth_list,lag,split_date,version_p
 
     '''
 
-    #ensure that there is no mislabelling of training period due to lack of data
-    assert_labels(LME_dates,split_date,horizon)
-
     #params that can be manually added
     norm_params = {"xgboost":xgboost}
     tech_params = {}
