@@ -16,19 +16,25 @@ if __name__ == '__main__':
         '-f','--files', help='comma-separated files', type = str, 
         default = 'v16_h1_para.txt,v16_h3_para.txt,v16_h5_para.txt,v16_h10_para.txt,v16_h20_para.txt,v16_h60_para.txt,v26_h1_para.txt,v26_h3_para.txt,v26_h5_para.txt,v26_h10_para.txt,v26_h20_para.txt,v26_h60_para.txt'
     )
-    parser.add_argument('-o','--action', default = 'train')
+    parser.add_argument(
+        '-c','--config',help='configuration file',type = str
+    )
+    parser.add_argument('-r','--regression', default = 0, type = int)
     parser.add_argument('-d','--date',type = str, help = "dates", default = "2014-12-31,2015-06-30,2015-12-31,2016-06-30,2016-12-31,2017-06-30,2017-12-31,2018-06-30,2018-12-31")
 
     args = parser.parse_args()
     files =args.files.split(",")
     best_loss_parameters = ""
     best_acc_parameters = ""
-    average_acc_parameters = {'batch':512}
-    average_loss_parameters = {'batch':512}
+    average_acc_parameters = {}
+    average_loss_parameters = {}
     best_loss_str = ""
     best_acc_str = ""
     average_loss_str = ""
     average_acc_str = ""
+    train = "train_data_ALSTM"
+    if args.regression != 0:
+        train = "train_data_alstm_reg"
     for f in files:
         step = f.split("_")[1]
         version = f.split("_")[0]
@@ -48,6 +54,8 @@ if __name__ == '__main__':
                         best_acc_parameters = ast.literal_eval(line.strip())
                 if "(" == line[0]:
                     curr = lines[l+1].strip()
+                    if '(' == curr[0]:
+                        average_acc_parameters[line.split("'")[1]] = int(line.split("[")[1].split(']')[0])
                 if "[" == line[0] and curr != "":
                     va_loss = [float(i) for i in lines[l+1][10:-2].split(" ") if i != ""]
                     va_acc = [float(i) for i in lines[l+2][9:-2].split(" ") if i != ""]
@@ -56,13 +64,13 @@ if __name__ == '__main__':
                     param_combination = [float(i.strip()) if curr == "drop_out" else int(i.strip()) for i in line[1:-2].split(",")]
                     average_acc_parameters[curr]=param_combination[va_acc]
                     average_loss_parameters[curr]=param_combination[va_loss]
-            best_loss_str += ' '.join(["python code/train_data_ALSTM.py","-a 2","-b",str(best_loss_parameters["batch"]),'-drop',str(best_loss_parameters["drop_out"]),'-embed',str(best_loss_parameters['embedding_size']),'-e 50','-hidden', str(best_loss_parameters['hidden']),'-i 1','-l',str(best_loss_parameters['lag']),'-lambd 0','-lrate 0.001','-savel 0','-savep 0', '-split 0.9','-s', step[1:],'-v',version,'-c exp/online_v10.conf','-sou '+args.source,'-o '+args.action,'-d '+args.date,'-method best_loss','>',"/dev/null",'2>&1 &'])+"\n"
+            best_loss_str += ' '.join(["python code/"+train+".py","-a 2","-b",str(best_loss_parameters["batch"]),'-drop',str(best_loss_parameters["drop_out"]),'-embed',str(best_loss_parameters['embedding_size']),'-e 50','-hidden', str(best_loss_parameters['hidden']),'-i 1','-l',str(best_loss_parameters['lag']),'-lambd 0','-lrate 0.001','-savel 0','-savep 0', '-split 0.9','-s', step[1:],'-v',version,'-c',args.config,'-sou '+args.source,'-o '+args.action,'-d '+args.date,'-method best_loss','>',"/dev/null",'2>&1 &'])+"\n"
 
-            best_acc_str += ' '.join(["python code/train_data_ALSTM.py","-a 2","-b",str(best_acc_parameters["batch"]),'-drop',str(best_acc_parameters["drop_out"]),'-embed',str(best_acc_parameters['embedding_size']),'-e 50','-hidden', str(best_acc_parameters['hidden']),'-i 1','-l',str(best_acc_parameters['lag']),'-lambd 0','-lrate 0.001','-savel 0','-savep 0', '-split 0.9','-s', step[1:],'-v',version,'-c exp/online_v10.conf','-sou '+args.source,'-o '+args.action,'-d '+args.date,'-method best_acc','>',"/dev/null",'2>&1 &'])+"\n"
+            best_acc_str += ' '.join(["python code/"+train+".py","-a 2","-b",str(best_acc_parameters["batch"]),'-drop',str(best_acc_parameters["drop_out"]),'-embed',str(best_acc_parameters['embedding_size']),'-e 50','-hidden', str(best_acc_parameters['hidden']),'-i 1','-l',str(best_acc_parameters['lag']),'-lambd 0','-lrate 0.001','-savel 0','-savep 0', '-split 0.9','-s', step[1:],'-v',version,'-c',args.config,'-sou '+args.source,'-o '+args.action,'-d '+args.date,'-method best_acc','>',"/dev/null",'2>&1 &'])+"\n"
             
-            average_loss_str += ' '.join(["python code/train_data_ALSTM.py","-a 2","-b",str(average_loss_parameters["batch"]),'-drop',str(average_loss_parameters["drop_out"]),'-embed',str(average_loss_parameters['embedding_size']),'-e 50','-hidden', str(average_loss_parameters['hidden']),'-i 1','-l',str(average_loss_parameters['lag']),'-lambd 0','-lrate 0.001','-savel 0','-savep 0', '-split 0.9','-s', step[1:],'-v',version,'-c exp/online_v10.conf','-sou '+args.source,'-o '+args.action,'-d '+args.date,'-method ave_loss','>',"/dev/null",'2>&1 &'])+"\n"
+            average_loss_str += ' '.join(["python code/"+train+".py","-a 2","-b",str(average_loss_parameters["batch"]),'-drop',str(average_loss_parameters["drop_out"]),'-embed',str(average_loss_parameters['embedding_size']),'-e 50','-hidden', str(average_loss_parameters['hidden']),'-i 1','-l',str(average_loss_parameters['lag']),'-lambd 0','-lrate 0.001','-savel 0','-savep 0', '-split 0.9','-s', step[1:],'-v',version,'-c',args.config,'-sou '+args.source,'-o '+args.action,'-d '+args.date,'-method ave_loss','>',"/dev/null",'2>&1 &'])+"\n"
 
-            average_acc_str += ' '.join(["python code/train_data_ALSTM.py","-a 2","-b",str(average_acc_parameters["batch"]),'-drop',str(average_acc_parameters["drop_out"]),'-embed',str(average_acc_parameters['embedding_size']),'-e 50','-hidden', str(average_acc_parameters['hidden']),'-i 1','-l',str(average_acc_parameters['lag']),'-lambd 0','-lrate 0.001','-savel 0','-savep 0', '-split 0.9','-s', step[1:],'-v',version,'-c exp/online_v10.conf','-sou '+args.source,'-o '+args.action,'-d '+args.date,'-method ave_acc','>',"/dev/null",'2>&1 &'])+"\n"
+            average_acc_str += ' '.join(["python code/"+train+".py","-a 2","-b",str(average_acc_parameters["batch"]),'-drop',str(average_acc_parameters["drop_out"]),'-embed',str(average_acc_parameters['embedding_size']),'-e 50','-hidden', str(average_acc_parameters['hidden']),'-i 1','-l',str(average_acc_parameters['lag']),'-lambd 0','-lrate 0.001','-savel 0','-savep 0', '-split 0.9','-s', step[1:],'-v',version,'-c',args.config,'-sou '+args.source,'-o '+args.action,'-d '+args.date,'-method ave_acc','>',"/dev/null",'2>&1 &'])+"\n"
 
         with open("best_loss_"+args.action+".sh","w") as bl:
             bl.write("#!/bin/bash\n")

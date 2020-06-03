@@ -4,34 +4,30 @@ from copy import copy
 import argparse
 import os
 import json
+import sys
+sys.path.insert(0,os.path.abspath(os.path.join(sys.path[0],'..')))
+from utils.general_functions import read_data_with_specified_columns
 from sklearn.metrics import accuracy_score,mean_absolute_error,mean_squared_error
 
 if __name__ == '__main__':
-    desc = 'the script for Logistic Regression'
+    desc = 'the script for analyze predictions'
     parser = argparse.ArgumentParser(description=desc)
     parser.add_argument('-c','--config',type = str,default = 'exp/classification_post_process.conf',
                         help = 'configuration file for post process'
 )
-    parser.add_argument('-s','--step_list',type=str,default="1,3,5",
+    parser.add_argument('-s','--step_list',type=str,default="1,3,5,10,20,60",
                         help='list of horizons to be calculated, separated by ","')
     parser.add_argument('-gt', '--ground_truth_list', help='list of ground truths, separated by ","',
-                        type=str, default="LME_Co_Spot,LME_Al_Spot,LME_Ni_Spot,LME_Ti_Spot,LME_Zi_Spot,LME_Le_Spot")
+                        type=str, default="LME_Al_Spot,LME_Co_Spot,LME_Le_Spot,LME_Ni_Spot,LME_Ti_Spot,LME_Zi_Spot")
     parser.add_argument(
         '-m','--model', help='model used', type = str, default = "lr"
-    )
-    parser.add_argument(
-        '-l','--lag_list', type=str, default = "1,5,10,20,30", help='list of lags, separated by ","'
     )
     parser.add_argument(
         '-v','--version_list', help='list of versions, separated by ","', type = str, default = 'v10'
     )
     parser.add_argument ('-out','--output',type = str, help='output file', default ="../../../Results/results")
-    parser.add_argument('-o', '--action', type=str, default='commands',
-                        help='commands, testing')
     parser.add_argument('-d','--dates',type = str, help = "dates", default = "2014-12-31,2015-06-30,2015-12-31,2016-06-30,2016-12-31,2017-06-30,2017-12-31,2018-06-30,2018-12-31")
-    parser.add_argument('-length','--length',type = str, help = "length of each period stated in dates",default = "129,124,129,125,128,125,127,125,128")
-    parser.add_argument('-p','--path',type =str, help='path to 4EBaseMetal folder',default ='/NEXT/4EBaseMetal')
-    parser.add_argument('-r','--regression',type = int, help = 'whether prediction is for regression', default = 1)
+    parser.add_argument('-r','--regression',type = str, help = 'whether prediction is for regression', default = "off")
 
     args = parser.parse_args()
     args.step_list = args.step_list.split(",")
@@ -44,7 +40,7 @@ if __name__ == '__main__':
     args.version_list = args.version_list.split(",")
     ans = {"version":[],"horizon":[],"ground_truth":[]}
     validation_dates = [d.split("-")[0]+"-01-01" if d[5:7] <= "06" else d.split("-")[0]+"-07-01" for d in args.dates]
-    if args.regression  == 0:
+    if args.regression  == "off":
         for d in validation_dates:
             ans[d+"_acc"] = []
             ans[d+"_length"] = []
@@ -142,6 +138,11 @@ if __name__ == '__main__':
                         label = pd.read_csv(os.path.join("data","Label","_".join([gt,"h"+str(h),validation_dates[i],"reg_label.csv"])),index_col = 0)
                         if label.index[-1] > date:
                             label = label.iloc[:-1,:]
+                        data, LME_dates, length = read_data_with_specified_columns(args.source,'exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf','2003-11-12')
+                        spot = data.loc[label.index[0]:label.index[-1],gt].to_frame()
+                        if args.regression == "ret":
+                            temp = (temp - np.array(spot)) / np.array(spot)
+                            label = (label - np.array(spot)) / np.array(spot)
                         mae = mean_absolute_error(label[:len(temp)],temp)
                         mse = mean_squared_error(label[:len(temp)],temp)
                         ans[validation_dates[i]+"_mae"].append(mae)

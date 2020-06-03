@@ -8,6 +8,7 @@ import math
 import argparse
 import json
 from copy import copy
+import multiprocessing
 from multiprocessing import Pool as pl
 from itertools import combinations,product
 
@@ -206,6 +207,16 @@ class Ensemble_online():
             label = pd.read_csv("data/Label/"+self.gt+"_h"+str(self.horizon)+"_"+validation_date+"_label.csv",index_col = 0)[:len(total_df.index)]
             return weight(total_df,label,self.window[3],self.horizon)
 
+    def predict_in_deletion(self,version,date,sm_methods,ens_method):
+        versions = ""
+        for i,v in enumerate(version):
+            versions += v.split(' ')[1]+","
+            if i != len(version) - 1 and version[i+1][:2] != version[i][:2] :
+                versions = versions[:-1]+":"
+            if i == len(version) - 1:
+                versions = versions[:-1]
+        pred = self.predict(date,versions,sm_methods,ens_method,direct = True)
+        return pred
     
     def delete_model(self, date, versions_list, sm_methods, ens_method, length):
 
@@ -227,20 +238,13 @@ class Ensemble_online():
                 model = "alstm"
             vers = read_config(model,version,self.config)
             total_list = total_list+[model+" "+v for v in vers.split(',')]
+
         
         version_list = list(combinations(total_list,len(total_list) - length))
-        for version in version_list:
-            versions = ""
-            for i,v in enumerate(version):
-                versions += v.split(' ')[1]+","
-                if i != len(version) - 1 and version[i+1][:2] != version[i][:2] :
-                    versions = versions[:-1]+":"
-                if i == len(version) - 1:
-                    versions = versions[:-1]
-            pred = self.predict(date,versions,sm_methods,ens_method,direct = True)
-            total_df = pd.concat([total_df, pred], axis = 1)
+        p = pl(multiprocessing.cpu_count())
+        pred = p.starmap(self.predict_in_deletion,product(version_list,[date],[sm_methods],[ens_method]))
+        p.close()
+        total_df = pd.concat(pred, axis = 1)
         name_list = [str(set(total_list) - set(v)) for v in version_list]
         total_df.columns = name_list
         return total_df
-
-            

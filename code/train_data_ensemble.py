@@ -54,7 +54,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     args.steps = args.steps.split(",")
     args.ground_truth = args.ground_truth.split(",")
-    args.config = args.config, hierarchical = args.hierarchical == "True"
+    args.config = args.config
+    hierarchical = args.hierarchical == "True"
     args.config = os.path.join(*args.config.split('/'))
     
     if args.action == "tune":
