@@ -105,9 +105,11 @@ def online_reproduction(price_4e,
     true_price, ans = tpf.train_func_predict(price_4e, met, metal_columns, window_list, 
                                              train_period,predict_period,threshold, freq_win, 
                                              repo_win,discrete_param,accur, conn)
-    
-    true_pred_df = true_price.merge(ans, left_on='date', right_on='date')
-    
+    if len(true_price) == 0:
+        print('the label is empty, code will only output the predictions')
+        true_pred_df = ans
+    else:
+        true_pred_df = true_price.merge(ans, left_on='date', right_on='date')
     return true_pred_df
 
 if __name__ ==  '__main__':
