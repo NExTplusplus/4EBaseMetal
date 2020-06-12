@@ -119,14 +119,26 @@ if __name__ ==  '__main__':
     #want to predict one day, for example, you need to enter '2019-08-01' and '2019-08-01'
     predict_start_date = sys.argv[1]
     predict_end_date = sys.argv[2]
-    predict_mode = sys.argv[3]
-
+    predict_metal = sys.argv[3]
+    predict_mode = sys.argv[4]
+    
+    
     config_path = './step4_data/config.ini'
     conf = ConfigParser()
     conf.read(config_path)
     
     #default_param
-    metal_list = eval(conf.get('default_param', 'metal_list'))
+    use_metal_dict = {}
+    use_metal_dict['Copper'] = 'Cu'
+    use_metal_dict['Aluminum'] = 'Al'
+    use_metal_dict['Zinc'] = 'Zn'
+    use_metal_dict['Lead'] = 'Pb'
+    use_metal_dict['Nickel'] = 'Ni'
+    use_metal_dict['Tin'] = 'Xi'
+    if predict_metal == 'all':
+        metal_list = eval(conf.get('default_param', 'metal_list'))
+    else:
+        metal_list = [use_metal_dict[predict_metal]]
     window_list = eval(conf.get('default_param', 'window_list'))
     
     #construct the path of the metal

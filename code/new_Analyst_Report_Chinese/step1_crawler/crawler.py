@@ -662,6 +662,11 @@ class Crawler_machine:
                                       keyword_next_page =keyword_next_page,keyword_filter=keyword_filter,exclude_list=exclude_list)
         except:
             res = 1
+            
+        try:
+            driver.quit()
+        except:
+            pass
         return res
     
 website_link_lst =[]
