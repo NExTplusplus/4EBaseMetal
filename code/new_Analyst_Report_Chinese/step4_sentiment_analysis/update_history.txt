@@ -1,0 +1,4 @@
+#update date: 2020-06-14
+This time will update the following things
+
+1) The parameter of the code is refined, and we add a new parameter so that you can run the prediction for a certain metal.
