@@ -77,17 +77,17 @@ def total_main_controller(data_preprocess, run_prediction, predict_period, predi
         step1_path = '/mnt/gluster/Alphien/paperTrading/Team/NEXT/4EBaseMetal/code/new_Analyst_Report_Chinese/step1_crawler/'
         step1_code = 'python crawler.py run'
         print('------------------running step 1-------------------------------')
-        os.popen('cd {};{}'.format(step1_path, step1_code))
+        os.system('cd {};{}'.format(step1_path, step1_code))
         
         step2_path = '/mnt/gluster/Alphien/paperTrading/Team/NEXT/4EBaseMetal/code/new_Analyst_Report_Chinese/step2_extract_html/'
         step2_code = 'python step2_main_contraoller.py'
         print('------------------running step 2-------------------------------')
-        os.popen('cd {};{}'.format(step2_path, step2_code))
+        os.system('cd {};{}'.format(step2_path, step2_code))
         
         step3_path = '/mnt/gluster/Alphien/paperTrading/Team/NEXT/4EBaseMetal/code/new_Analyst_Report_Chinese/step3_extract_recommendation/'
         step3_code = 'python call_aip.py run'
         print('------------------running step 3-------------------------------')
-        os.popen('cd {};{}'.format(step3_path, step3_code))
+        os.system('cd {};{}'.format(step3_path, step3_code))
 
     if eval(run_prediction) == True:
         
@@ -105,7 +105,7 @@ def total_main_controller(data_preprocess, run_prediction, predict_period, predi
         
         for per in use_prediction_period:
             
-            os.popen('cd {};python main_function.py {} {} {} {}'.format(step4_path, per[0], per[1], predict_metal, run_mode))
+            os.system('cd {};python main_function.py {} {} {} {}'.format(step4_path, per[0], per[1], predict_metal, run_mode))
     
     
 if __name__ ==  '__main__':    
