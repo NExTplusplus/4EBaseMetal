@@ -24,7 +24,6 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--action', type=str, default='commands',
                         help='commands, testing')
     parser.add_argument('-d','--dates',type = str, help = "dates", default = "2014-12-31,2015-06-30,2015-12-31,2016-06-30,2016-12-31,2017-06-30,2017-12-31,2018-06-30,2018-12-31")
-    parser.add_argument('-length','--length',type = str, help = "length of each period stated in dates",default = "129,124,129,125,128,125,127,125,128")
     parser.add_argument('-p','--path',type =str, help='path to 4EBaseMetal folder',default ='/NEXT/4EBaseMetal')
 
     args = parser.parse_args()
@@ -33,7 +32,6 @@ if __name__ == '__main__':
     args.lag_list = args.lag_list.split(",")
     args.version_list = args.version_list.split(",")
     dates_list = args.dates.split(",")
-    args.length = [int(i) for i in args.length.split(",")]
 
     if args.action == "train commands":
         i = 0
@@ -75,14 +73,11 @@ if __name__ == '__main__':
                         for col in total.columns.values.tolist():
                             if "_length" in col:
                                 split_date = col[:-7]
-                                if split_date in validation_dates:
-                                    length = args.length[validation_dates.index(split_date)]
-                                curr_ave = [i*length for i in list(total[split_date+"_acc"])]
+                                curr_ave = list(total[split_date+"_acc"]*total[col])
                                 temp_arr['average'] = [sum(x) for x in zip(temp_arr['average'],list(curr_ave))]
-                                temp_arr['length'] = [sum(x) for x in zip(temp_arr['length'],list([length]*len(total[col])))]
+                                temp_arr['length'] = [sum(x) for x in zip(temp_arr['length'],list(total[col]))]
 
                         temp = pd.DataFrame({"true_average":np.true_divide(temp_arr['average'],temp_arr['length'])})
-                    
                         ans = pd.concat([total,temp],axis = 1).sort_values(by = ["true_average","lag","C"], ascending = [False,True,True])
                         
                         out.write("python "+train+" "+" ".join(["-sou",args.source,"-v",version,"-c",exp,"-s",h,"-l",str(ans.iloc[0,0]),"-C",str(ans.iloc[0,2]),"-gt",gt,"-o","train",'-d',args.dates,">","/dev/null", "2>&1", "&"]))
@@ -137,11 +132,9 @@ if __name__ == '__main__':
                         for col in total.columns.values.tolist():
                             if "_length" in col:
                                 split_date = col[:-7]
-                                if split_date in validation_dates:
-                                    length = args.length[validation_dates.index(split_date)]
-                                curr_ave = [i*length for i in list(total[split_date+"_acc"])]
+                                curr_ave = list(total[split_date+"_acc"]*total[col])
                                 temp_arr['average'] = [sum(x) for x in zip(temp_arr['average'],list(curr_ave))]
-                                temp_arr['length'] = [sum(x) for x in zip(temp_arr['length'],list([length]*len(total[col])))]
+                                temp_arr['length'] = [sum(x) for x in zip(temp_arr['length'],list(total[col]))]
 
                         temp = pd.DataFrame({"true_average":np.true_divide(temp_arr['average'],temp_arr['length'])})
                     

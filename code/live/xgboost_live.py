@@ -108,6 +108,8 @@ class XGBoost_online():
                     for gamma in [0.6,0.7,0.8,0.9]:
                         for min_child_weight in [3,4,5,6]:
                             for subsample in [0.6,0.7,0.85,0.9]:
+                                if max_depth != 3 or learning_rate != 0.6 or gamma != 0.6 or min_child_weight != 3 or subsample not in [0.6,0.7]:
+                                    continue
                                 from sklearn.metrics import accuracy_score
                                 model = xgb.XGBClassifier(max_depth=max_depth,
                                                         learning_rate = learning_rate,
@@ -316,6 +318,7 @@ class XGBoost_online():
             print("the lag is {}".format(self.lag))
             print("the train date is {}".format(split_date[0]))
             print("the test date is {}".format(split_date[1]))
+            print("the length is {}".format(len(test_X)))
 
 
     #-------------------------------------------------------------------------------------------------------------------------------------#

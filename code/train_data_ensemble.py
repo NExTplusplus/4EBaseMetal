@@ -64,7 +64,7 @@ if __name__ == '__main__':
                 ensemble = Ensemble_online(horizon=horizon,gt = ground_truth,dates = args.dates, window = args.window, version = args.version, config = args.config, hierarchical = args.hierarchical)
                 results = ensemble.choose_parameter()
                 results.to_csv(os.path.join('result','validation','ensemble','_'.join([ground_truth,str(horizon),args.version+".csv"])))
-    if args.action == "test":
+    elif args.action == "test":
         for horizon in [int(step) for step in args.steps]:
             for ground_truth in args.ground_truth:
                 for date in args.dates.split(","):
@@ -73,7 +73,8 @@ if __name__ == '__main__':
                     prediction = ensemble.predict(date, args.version, args.sm_methods, args.ens_method).to_frame()
                     prediction.columns = ['result']
                     prediction.to_csv(os.path.join(os.getcwd(),"result","prediction","ensemble",'_'.join([ground_truth,date,str(horizon),args.version,args.sm_methods,args.ens_method,'hier',str(args.hierarchical)+".csv"])))
-    if args.action == "delete":
+    
+    elif args.action == "delete":
         ans = {'horizon':[],"ground_truth":[],"version":[]}
         for horizon in [int(step) for step in args.steps]:
             for ground_truth in args.ground_truth:
@@ -107,7 +108,13 @@ if __name__ == '__main__':
         ans.sort_values(by = ['version','horizon','ground_truth'],ascending = [True,True,True],inplace = True)
         ans.to_csv("delete_model"+'_'+','.join(args.steps)+'_'+str(args.length)+".csv")
     
-
-
-
-        
+    elif args.action == "uncertainty":
+        for horizon in [int(step) for step in args.steps]:
+            for ground_truth in args.ground_truth:
+                for date in args.dates.split(","):
+                    validation_date = date.split("-")[0]+"-01-01" if date[5:7] <= "06" else date.split("-")[0]+"-07-01" 
+                    print(ground_truth,horizon,date)
+                    ensemble = Ensemble_online(horizon=horizon,gt = ground_truth,dates = args.dates, window = args.window, version = args.version, config = args.config, hierarchical = False) 
+                    prediction = ensemble.generate_uncertainty(date, args.version).to_frame()
+                    prediction.columns = ['uncertainty']
+                    prediction.to_csv(os.path.join(os.getcwd(),"result","uncertainty","classification",'_'.join([ground_truth,validation_date,str(horizon),args.version+".csv"])))
