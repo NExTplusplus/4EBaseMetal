@@ -10,7 +10,7 @@ import datetime
 
 def get_half_date(input_date_period):
     '''
-    :param input_date_period: str, '2018:', ':2020', '2018:2020'
+    :param input_date_period: str, '2018:', ':2020', '2018:2020', "::"
     :return res:[['2017-01-01', '2017-06-30']], the date we need to predict
     '''
     if input_date_period.endswith(':') and input_date_period.startswith(':'):
