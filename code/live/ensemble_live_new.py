@@ -248,3 +248,28 @@ class Ensemble_online():
         name_list = [str(set(total_list) - set(v)) for v in version_list]
         total_df.columns = name_list
         return total_df
+
+    def generate_uncertainty(self, date, versions_list, direct = False):
+        assert not self.hierarchical, "hierarchical must be False"
+        validation_date = date.split("-")[0]+"-01-01" if date[5:7] <= "06" else date.split("-")[0]+"-07-01" 
+
+        total_df = pd.DataFrame()
+        for i,version in enumerate(versions_list.split(":")):
+
+            if version == "":
+                continue 
+            if i == 0:
+                model = "lr"
+            elif i == 1:
+                model = "xgboost"
+            elif i == 2:
+                model = "alstm"
+            if not direct:
+                versions = read_config(model,version,self.config)
+            else:
+                versions = version
+            df = self.sm_predict(model, date, versions, self.window[i], "vote")
+            total_df = pd.concat([total_df,df],axis = 1)
+        ans = total_df.aggregate(np.sum,axis = 1)
+        ans = (len(total_df.columns.values.tolist()) - ans) / len(total_df.columns.values.tolist())
+        return ans

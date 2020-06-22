@@ -12,7 +12,6 @@ import os
 '''
 def retrieve_top(path):
     validation_dates = path[1]
-    length = path[2]
     path = path[0]
     all_file = []
     sub_file = []
@@ -40,6 +39,7 @@ def retrieve_top(path):
                         result.append(lines[i+10].strip("\n").split(" ")[-1])
                         result.append(lines[i+11].strip("\n").split(" ")[-1])
                         result.append(lines[i+12].strip("\n").split(" ")[-1])
+                        result.append(lines[i+13].strip("\n").split(" ")[-1])
                     all_file+=sub_file
                     sub_file = []
 
@@ -51,7 +51,7 @@ def retrieve_top(path):
     #generate data frame to congregrate data
     file_dataframe = pd.DataFrame(all_file,columns=['all_voting',
     'near_voting','far_voting','same_voting','reverse_voting',
-    'max_depth','learning_rate','gamma','min_child_weight','subsample','lag','train_date','test_date'
+    'max_depth','learning_rate','gamma','min_child_weight','subsample','lag','train_date','test_date','length'
     ])
     lag_list = list(file_dataframe['lag'].unique())
     max_depth_list = list(file_dataframe['max_depth'].unique())
@@ -82,24 +82,24 @@ def retrieve_top(path):
                             far_mean_result = 0
                             reverse_mean_result = 0
                             same_mean_result = 0
+
+                            total_length = 0
                             for i in range(len(df)):
-                                # generate weights
-                                if df.iloc[i,-1] in validation_dates:
-                                    length = args.length[validation_dates.index(df.iloc[i,-1])]
-                                
                                 #calculate amount of correct predictions
-                                all_mean_result += df.iloc[i,0]*length
-                                near_mean_result += df.iloc[i,1]*length
-                                far_mean_result += df.iloc[i,2]*length
-                                same_mean_result += df.iloc[i,3]*length
-                                reverse_mean_result += df.iloc[i,4]*length
+                                df.iloc[i,-1] = int(df.iloc[i,-1])
+                                all_mean_result += df.iloc[i,0]*df.iloc[i,-1]
+                                near_mean_result += df.iloc[i,1]*df.iloc[i,-1]
+                                far_mean_result += df.iloc[i,2]*df.iloc[i,-1]
+                                same_mean_result += df.iloc[i,3]*df.iloc[i,-1]
+                                reverse_mean_result += df.iloc[i,4]*df.iloc[i,-1]
+                                total_length += df.iloc[i,-1]
 
                             #Calculate accuracy
-                            all_mean_result = all_mean_result/(sum(args.length))
-                            near_mean_result = near_mean_result/(sum(args.length))
-                            far_mean_result = far_mean_result/(sum(args.length))
-                            same_mean_result = same_mean_result/(sum(args.length))
-                            reverse_mean_result = reverse_mean_result/(sum(args.length))
+                            all_mean_result = all_mean_result/total_length
+                            near_mean_result = near_mean_result/total_length
+                            far_mean_result = far_mean_result/total_length
+                            same_mean_result = same_mean_result/total_length
+                            reverse_mean_result = reverse_mean_result/total_length
 
                             #append them to congregrated list
                             mean_list.append(all_mean_result)
@@ -141,7 +141,6 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--action', type=str, default='commands',
                         help='tuning,commands, testing')
     parser.add_argument('-d','--dates',type = str, help = "dates", default = "2014-12-31,2015-06-30,2015-12-31,2016-06-30,2016-12-31,2017-06-30,2017-12-31,2018-06-30,2018-12-31")
-    parser.add_argument('-length','--length',type = str, help = "length of each period stated in dates",default = "129,124,129,125,128")
     parser.add_argument('-p','--path',type =str, help='path to 4EBaseMetal folder',default ='NEXT/4EBaseMetal')
 
     args = parser.parse_args()
@@ -150,7 +149,6 @@ if __name__ == '__main__':
     args.lag_list = args.lag_list.split(",")
     args.version_list = args.version_list.split(",")
     dates_list = args.dates.split(",")
-    args.length = [int(i) for i in args.length.split(",")]
 
     #generates the top 5 results for each voting method for every combination produced from version list, step list, ground truth list and lag list
     if args.action == "tuning":
@@ -160,7 +158,7 @@ if __name__ == '__main__':
         for c in combinations:
             
             if "_".join([c[0].split("_")[1],"xgboost","l"+c[1],"h"+c[2],c[3]])+".txt" in os.listdir(os.path.join(os.getcwd(),"result","validation","xgboost")):
-                path_list.append([os.path.join(args.path,"_".join([c[0].split("_")[1],"xgboost","l"+c[1],"h"+c[2],c[3]])+".txt"),validation_dates,args.length])
+                path_list.append([os.path.join(args.path,"_".join([c[0].split("_")[1],"xgboost","l"+c[1],"h"+c[2],c[3]])+".txt"),validation_dates])
         print(path_list)
 
         pool = pl()

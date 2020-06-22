@@ -34,7 +34,7 @@ if __name__ == '__main__':
       '-e', '--epoch', type=int, default=50,
       help='the number of epochs')
   parser.add_argument(
-      '-b', '--batch', type=int, default=1024,
+      '-b', '--batch', type=int, default=512,
       help='the mini-batch size')
   parser.add_argument(
       '-i', '--interval', type=int, default=1,
@@ -57,7 +57,7 @@ if __name__ == '__main__':
       '-split', '--split', type=float, default=0.9,
       help='the split ratio of validation set')
   parser.add_argument(
-      '-drop','--drop_out', type=float, default = 0.3,
+      '-drop','--drop_out', type=float, default = 0.0,
       help='the dropout rate of LSTM network'
   )
   parser.add_argument(
@@ -84,16 +84,31 @@ if __name__ == '__main__':
       '-method','--method',type=str, default="best_acc",
       help='method to choose hyperparameter'
   )
+  parser.add_argument(
+      '--drop_out_mc',type = float, default= 0.0
+  )
+  parser.add_argument(
+      '--repeat_mc',type = int, default= 10
+  )
+  parser.add_argument(
+      '--mc',type = int, default= 0
+  )
   args = parser.parse_args()
-  model = ALSTM_reg_online(lag = args.lag, horizon = args.steps, version = args.version, gt = args.ground_truth, date = args.date, source = args.source, path =args.config)
+  args.mc = args.mc != 0
+  model = ALSTM_reg_online(lag = args.lag, horizon = args.steps, version = args.version, gt = args.ground_truth, date = args.date, source = args.source, path =args.config,mc = args.mc)
   if args.action=="tune":
-    model.choose_parameter(log = args.log, script = args.script)
+    model.choose_parameter(log = args.log, script = args.script, drop_out = args.drop_out, hidden = args.hidden_state, \
+                            embedding_size = args.embedding_size,batch = args.batch, drop_out_mc = args.drop_out_mc, \
+                            repeat_mc = args.repeat_mc    
+                            )
   elif args.action=='train':
     model.train(
         num_epochs=args.epoch,
         batch_size=args.batch,
         split=args.split,
         drop_out=args.drop_out,
+        drop_out_mc = args.drop_out_mc,
+        repeat_mc = args.repeat_mc,
         hidden_state=args.hidden_state,
         embedding_size=args.embedding_size,
         lrate=args.lrate,
@@ -108,6 +123,8 @@ if __name__ == '__main__':
         batch_size=args.batch,
         split=args.split,
         drop_out=args.drop_out,
+        drop_out_mc = args.drop_out_mc,
+        repeat_mc = args.repeat_mc,
         hidden_state=args.hidden_state,
         embedding_size=args.embedding_size,
         lrate=args.lrate,

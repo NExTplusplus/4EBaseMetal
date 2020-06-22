@@ -23,9 +23,10 @@ from utils.version_control_functions import generate_version_params
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 print(sys.path)
 from sklearn.externals import joblib
-from train.grid_search import grid_search_alstm
+from train.grid_search import grid_search_alstm, grid_search_alstm_mc
 from data.load_data import load_data
-from model.model_embedding import MultiHeadAttention, attention, bilstm
+from model.model_embedding import bilstm
+from model.model_embedding_mc import bilstm as bilstm_mc
 from utils.version_control_functions import generate_version_params
 import numpy as np
 torch.manual_seed(1)
@@ -44,6 +45,7 @@ def memory_usage():
 class Trainer:
     def __init__(self, input_dim, hidden_state, time_step, lr, dropout,
                  case_number, attention_size, embedding_size,
+                 dropout_mc, repeat_mc,
                  train_X, train_y,
                  test_X, test_y,
                  val_X, val_y,
@@ -54,7 +56,8 @@ class Trainer:
                  test_y_class_top_case,
                  test_y_class_bot_case,
                  test_y_top_ind_case,
-                 test_y_bot_ind_case
+                 test_y_bot_ind_case,
+                 mc = False
                  ):
         self.window_size = time_step
         self.feature_size = input_dim
@@ -68,7 +71,13 @@ class Trainer:
         self.loss_func = nn.L1Loss()
         self.embedding_size = embedding_size
         self.attention_size = attention_size
+        self.mc = mc
         
+        # MC
+        if self.mc:
+            self.dropout_mc = dropout_mc
+            self.repeat_mc = repeat_mc
+
         # get the train data and test data
         self.train_X = train_X
         self.train_y = train_y
@@ -111,16 +120,28 @@ class Trainer:
                                      case[self.test_y_bot_ind_case[i]])
             print('top acc: {:.4f} ::: bot acc: {:.4f}'.format(top_acc, bot_acc))
 
-    def train_minibatch(self, num_epochs, batch_size, interval, version, horizon, split_dates, drop_out, hidden_state, embedding_size, lag, method):
+    def train_minibatch(self, num_epochs, batch_size, interval, lag, version, horizon, split_dates, method):
         start = time.time()
-        net = bilstm(input_dim=self.feature_size,
+        if self.mc:
+            net = bilstm_mc(input_dim=self.feature_size,
                      hidden_dim=self.hidden_state,
                      num_layers=2,
                      lag=self.window_size,
                      h=self.attention_size,
                      dropout=self.dropout,
+                     dropout_test=self.dropout_mc,
                      case_number=self.case_number,
                      embedding_size=self.embedding_size)
+            print('train dropout: {} test dropout: {}'.format(self.dropout, self.dropout_mc))
+        else:
+            net = bilstm(input_dim=self.feature_size,
+                        hidden_dim=self.hidden_state,
+                        num_layers=2,
+                        lag=self.window_size,
+                        h=self.attention_size,
+                        dropout=self.dropout,
+                        case_number=self.case_number,
+                        embedding_size=self.embedding_size)
         end = time.time()
         print("net initializing with time: {}".format(end-start))
         start = time.time()
@@ -149,6 +170,8 @@ class Trainer:
 
             '''start train'''
             net.train()
+            if self.mc:
+                net.train_dropout()
             print('current epoch:', epoch+1)
             
             i = 0
@@ -177,14 +200,26 @@ class Trainer:
             #start eval
 
             # evaluate on validation set
-            net.eval()
+            if self.mc:
+                net.train()
+                net.test_dropout()
+            else:
+                net.eval()
             loss_sum = 0
             if if_eval_train:
 
                 val_X = torch.from_numpy(self.val_X).float()
                 val_Y = torch.from_numpy(self.val_y).float()
                 var_x_val_id = torch.LongTensor(np.array(self.val_embedding))
-                val_output = net(val_X, var_x_val_id)
+                if self.mc:
+                    for rep in range(self.repeat_mc):
+                        if rep == 0:
+                            val_output = net(val_X, var_x_val_id).detach()
+                        else:
+                            val_output += net(val_X, var_x_val_id).detach()
+                    val_output /= self.repeat_mc
+                else:
+                    val_output = net(val_X, var_x_val_id)
                 loss = loss_func(val_output, val_Y)
                 loss_sum = loss.detach()
                 current_val_pred = list(val_output.detach().view(-1, ))
@@ -197,28 +232,40 @@ class Trainer:
                     val_loss, val_acc)
                 )
             
-            test_X = torch.from_numpy(self.test_X).float()
-            test_Y = torch.from_numpy(self.test_y).float()
-            var_x_test_id = torch.LongTensor(np.array(self.test_embedding))
+            # test_X = torch.from_numpy(self.test_X).float()
+            # test_Y = torch.from_numpy(self.test_y).float()
+            # var_x_test_id = torch.LongTensor(np.array(self.test_embedding))
 
-            test_output = net(test_X, var_x_test_id)
-            loss = loss_func(test_output, test_Y)
-            loss_sum = loss.detach()
-            current_test_pred = list(test_output.detach().view(-1,))
+            # if mc:
+            #     for rep in range(self.repeat_mc):
+            #         # print(rep)
+            #         if rep == 0:
+            #             test_output = net(test_X, var_x_test_id).detach()
+            #         else:
+            #             test_output += net(test_X, var_x_test_id).detach()
+            #     test_output /= self.repeat_mc
+            # else:
+            #     test_output = net(test_X, var_x_test_id)
+            # loss = loss_func(test_output, test_Y)
+            # loss_sum = loss.detach()
+            # current_test_pred = list(test_output.detach().view(-1,))
             
             if val_loss < max_loss:
-                torch.save(net, os.path.join("result","model","alstm",version+"_"+method,split_dates[1]+"_"+str(horizon)+"_"+str(drop_out)+"_"+str(hidden_state)+"_"+str(embedding_size)+"_"+str(lag)+"_"+version+"_"+'alstm.pkl'))
+                if self.mc:
+                    torch.save(net, os.path.join("result","model","alstm",version+"_"+method,split_dates[1]+"_"+str(horizon)+"_"+str(self.dropout)+"_"+str(self.hidden_state)+"_"+str(self.embedding_size)+"_"+str(lag)+"_"+str(self.dropout_mc)+"_"+str(self.repeat_mc)+"_"+version+"_"+'alstm.pkl'))
+                else:
+                    torch.save(net, os.path.join("result","model","alstm",version+"_"+method,split_dates[1]+"_"+str(horizon)+"_"+str(self.dropout)+"_"+str(self.hidden_state)+"_"+str(self.embedding_size)+"_"+str(lag)+"_"+version+"_"+'alstm.pkl'))
                 max_loss = val_loss
-            test_loss = loss_sum
-            test_loss_list.append(float(test_loss))
+            # # test_loss = loss_sum
+            # # test_loss_list.append(float(test_loss))
 
-            test_acc = mean_absolute_error(self.test_y, current_test_pred)
-            test_acc_list.append(test_acc)
+            # # test_acc = mean_absolute_error(self.test_y, current_test_pred)
+            # # test_acc_list.append(test_acc)
 
-            print('average test loss: {:.6f}, accuracy: {:.4f}'.format(
-                test_loss, test_acc)
-            )
-            self.evaluate_by_case(current_test_pred)
+            # print('average test loss: {:.6f}, accuracy: {:.4f}'.format(
+            #     test_loss, test_acc)
+            # )
+            # self.evaluate_by_case(current_test_pred)
 
         return net
 
@@ -241,7 +288,8 @@ class ALSTM_reg_online():
         gt,
         date,
         source,
-        path):
+        path,
+        mc):
         self.lag = lag
         self.horizon = horizon
         self.version = version
@@ -249,42 +297,64 @@ class ALSTM_reg_online():
         self.date = date
         self.source = source
         self.path = path
+        self.mc = mc
     """
     this function is used to choose the parameter
     """
     def choose_parameter(self,
             log='./tune.log',
-            script='code/train/train_alstm.py',
+            script='code/train/train_alstm_reg.py',
             drop_out=0.0,
             hidden=50,
             embedding_size=5,
-            batch=512):
+            batch=512,
+            drop_out_mc = 0.0,
+            repeat_mc = 10
+            ):
         print("begin to choose the parameter")
 
         assert_version(self.version,self.path)
+        if self.mc:
+            selected_parameters = ['drop_out_mc', 'repeat_mc']
+            parameter_values = [
+                [0.05, 0.1, 0.15],
+                [50]
+            ]
+            init_para = {
+                'drop_out': drop_out,
+                'drop_out_mc': drop_out_mc,
+                'repeat_mc': repeat_mc,
+                'hidden': hidden,
+                'embedding_size': embedding_size,
+                'batch': batch,
+                'lag': self.lag
+            }
 
-        #the param we want to use
-        selected_parameters = ['lag', 'hidden', 'embedding_size', 'drop_out', 'batch']
-        # the range of the param we want to use
-        parameter_values = [
-          [3, 4, 5],
-          [10, 20, 30],
-          [5],
-          [0.2, 0.4, 0.6],
-          [512]
-        ]
-        #we init the param
-        init_para = {
-          'drop_out': drop_out,
-          'hidden': hidden,
-          'embedding_size': embedding_size,
-          'batch': batch,
-          'lag':self.lag
-        }
-        #we begin to search the param
-        grid_search_alstm(selected_parameters, parameter_values, init_para,
-              script=script, log_file=log, steps=self.horizon, version=self.version,
-              date = self.date, gt = self.gt, source = self.source)
+            grid_search_alstm_mc(selected_parameters, parameter_values, init_para,
+                                script=script, log_file=log, steps=self.horizon,version=self.version,
+                                date = self.date, gt = self.gt, source = self.source)
+        else:
+            selected_parameters = ['lag', 'hidden', 'embedding_size', 'drop_out', 'batch']
+            # the range of the param we want to use
+            parameter_values = [
+            [3, 4, 5],
+            [10, 20, 30],
+            [5],
+            [0.2, 0.4, 0.6],
+            [512]
+            ]
+            #we init the param
+            init_para = {
+            'drop_out': drop_out,
+            'hidden': hidden,
+            'embedding_size': embedding_size,
+            'batch': batch,
+            'lag':self.lag
+            }
+            #we begin to search the param
+            grid_search_alstm(selected_parameters, parameter_values, init_para,
+                script=script, log_file=log, steps=self.horizon, version=self.version,
+                date = self.date, gt = self.gt, source = self.source)
     #-------------------------------------------------------------------------------------------------------------------------------------#
     """
     this function is used to train the model and save it
@@ -293,6 +363,8 @@ class ALSTM_reg_online():
         self,split = 0.9,
         num_epochs=50,
         drop_out=0.0,
+        drop_out_mc = 0.0,
+        repeat_mc = 10,
         embedding_size=5,
         batch_size=512,
         hidden_state=50,
@@ -461,6 +533,7 @@ class ALSTM_reg_online():
         trainer = Trainer(input_dim, hidden_state, window_size, lrate,
                 drop_out, case_number, attention_size,
                 embedding_size,
+                drop_out_mc,repeat_mc,
                 final_X_tr, final_y_tr,
                 final_X_te, final_y_te,
                 final_X_val, final_y_val,
@@ -471,13 +544,14 @@ class ALSTM_reg_online():
                 final_y_te_class_top_list,
                 final_y_te_class_bot_list,
                 final_y_te_top_ind_list,
-                final_y_te_bot_ind_list
+                final_y_te_bot_ind_list,
+                self.mc
                 )
         end = time.time()
         print("pre-processing time: {}".format(end-start))
         print("the split date is {}".format(split_dates[1]))
         save = 1
-        net=trainer.train_minibatch(num_epochs, batch_size, interval, self.version, self.horizon, split_dates, drop_out, hidden_state, embedding_size, self.lag,method)
+        net=trainer.train_minibatch(num_epochs, batch_size, interval, self.lag, self.version, self.horizon, split_dates, method)
     #-------------------------------------------------------------------------------------------------------------------------------------#
     """
     this function is used to predict the date
@@ -485,6 +559,8 @@ class ALSTM_reg_online():
     def test(self,split = 0.9,
         num_epochs=50,
         drop_out=0.0,
+        drop_out_mc = 0.0,
+        repeat_mc = 10,
         embedding_size=5,
         batch_size=512,
         hidden_state=50,
@@ -636,18 +712,22 @@ class ALSTM_reg_online():
             test_X = torch.from_numpy(final_X_te).float()
             test_Y = torch.from_numpy(final_y_te).float()
             var_x_test_id = torch.LongTensor(np.array(final_test_X_embedding))
-            net = torch.load(os.path.join('result','model','alstm',self.version+"_"+method,split_dates[1]+"_"+str(self.horizon)+"_"+str(drop_out)+"_"+str(hidden_state)+"_"+str(embedding_size)+"_"+str(self.lag)+"_"+self.version+"_"+'alstm.pkl'))
-            net.eval()
-            test_output = net(test_X, var_x_test_id)
+            if self.mc:
+                net = torch.load(os.path.join('result','model','alstm',self.version+"_"+method,split_dates[1]+"_"+str(self.horizon)+"_"+str(drop_out)+"_"+str(hidden_state)+"_"+str(embedding_size)+"_"+str(self.lag)+"_"+str(drop_out_mc)+"_"+str(repeat_mc)+"_"+self.version+"_"+'alstm.pkl'))
+                for rep in range(repeat_mc):
+                    if rep == 0:
+                        test_output = net(test_X, var_x_test_id).detach()
+                    else:
+                        test_output += net(test_X, var_x_test_id).detach()
+                test_output /= repeat_mc
+            else:
+                net = torch.load(os.path.join('result','model','alstm',self.version+"_"+method,split_dates[1]+"_"+str(self.horizon)+"_"+str(drop_out)+"_"+str(hidden_state)+"_"+str(embedding_size)+"_"+str(self.lag)+"_"+self.version+"_"+'alstm.pkl'))
+                net.eval()
+                test_output = net(test_X, var_x_test_id)
             current_test_pred = list((1+test_output.detach().view(-1,).numpy()) * spot_list)
-            print(var_x_test_id)
-            np.savetxt(os.path.join('result','probability','alstm',self.version+"_"+method,split_dates[1]+"_"+str(self.horizon)+"_"+self.version+".txt"),current_test_pred)
-            
-            print(val_dates)
             pred_length = int(len(current_test_pred)/6)
-            print(pred_length)
             for num,gt in enumerate(ground_truths_list):
               final_list = pd.DataFrame(current_test_pred[num*pred_length:(num+1)*pred_length],index = val_dates, columns = ["Prediction"])
-              final_list.to_csv(os.path.join(os.getcwd(),"result","prediction","alstm",self.version+"_"+method,"_".join([gt,date,str(self.horizon),self.version])+".csv"))
+              final_list.to_csv(os.path.join(os.getcwd(),"result","prediction","alstm",self.version+"_"+method,"_".join([gt,date,str(self.horizon),self.version,str(self.mc)])+".csv"))
             end = time.time()
             print("predict time: {}".format(end-start))
