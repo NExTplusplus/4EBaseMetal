@@ -9,9 +9,9 @@ There are totally 6 parameters:
 4. int, how many recent days we need to predict
 5. str, the certain metal we need to predict, the values should be "Copper", "Nickel", "Zinc", "Lead", "Tin", "Aluminum", "all", when the value is "all", then will run for all the metal.
 6. str, the mode for prediction, the possible values are "run" and "reproduction"
-
+7. bool, whether to get the output dataframe, the values should be "True" or "False", please pay attention to the capital letter
 (P.S. if we get the time zoom, then we will ignore the )
 
 #run the code
 1)open the terminal, and change the directory to step4_sentiment_analysis
-2)python main_controller.py True True 2018: 2 Copper run
+2)python main_controller.py True True 2018: 2 Copper run True

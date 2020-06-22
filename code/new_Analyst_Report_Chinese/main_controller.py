@@ -6,8 +6,73 @@ Created on Thu Jun 11 18:11:48 2020
 """
 import os
 import sys
+import pandas as pd
 import datetime
 
+def get_return_df(start_date, end_date, run_mode, metal):
+    
+    start_date = start_date.replace('-', '')
+    end_date = end_date.replace('-', '')
+    
+    use_metal_dict = {}
+    use_metal_dict['Copper'] = 'Cu'
+    use_metal_dict['Aluminum'] = 'Al'
+    use_metal_dict['Zinc'] = 'Zn'
+    use_metal_dict['Lead'] = 'Pb'
+    use_metal_dict['Nickel'] = 'Ni'
+    use_metal_dict['Tin'] = 'Xi'
+    
+    predict_result_path = './step4_sentiment_analysis/predict_result/'
+    
+    if metal != 'all':
+        use_metal = [use_metal_dict[metal]]
+    else:
+        use_metal = ['Cu', 'Al', 'Zn', 'Pb', 'Ni', 'Xi']
+    total_df = []
+    
+    for met in use_metal:
+        
+        total_date_index = []
+        for hor in [1, 3, 5, 10, 20, 60]:
+            try:
+                tmp_df = pd.read_csv([predict_result_path + '{}/{}/'.format(met, hor)+i for i in os.listdir(predict_result_path + '{}/{}/'.format(met, hor)) if start_date in i and end_date in i and run_mode in i][0])
+                total_date_index += list(tmp_df['date'])
+            except Exception as e:
+                pass
+        total_date_index = list(set(total_date_index))
+        try:
+            del tmp_df
+        except:
+            pass
+        
+        
+        new_df = pd.DataFrame()
+        new_df['date'] = total_date_index
+        new_df['metal'] = met
+        if run_mode == 'run':
+            
+            for hor in [1, 3, 5, 10, 20, 60]:
+                try:
+                    tmp_df = pd.read_csv([predict_result_path + '{}/{}/'.format(met, hor)+i for i in os.listdir(predict_result_path + '{}/{}/'.format(met, hor)) if start_date in i and end_date in i and run_mode in i][0])
+                    new_df = pd.merge(new_df, tmp_df[['date', 'discrete_score']], how='left', on=['date'])
+                    new_df['{}_d_prediction'.format(hor)] = new_df['discrete_score'].copy()
+                    del new_df['discrete_score']
+                except:
+                    new_df['{}_d_prediction'.format(hor)] = None
+        elif run_mode == 'reproduction':
+            for hor in [1, 3, 5, 10, 20, 60]:
+                try:
+                    tmp_df = pd.read_csv([predict_result_path + '{}/{}/'.format(met, hor)+i for i in os.listdir(predict_result_path + '{}/{}/'.format(met, hor)) if start_date in i and end_date in i and run_mode in i][0])
+                    new_df = pd.merge(new_df, tmp_df[['date', 'discrete_{}d'.format(hor), 'discrete_score']], how='left', on=['date'])
+                    new_df['{}_d_label'.format(hor)] = new_df['discrete_{}d'.format(hor)].copy()
+                    new_df['{}_d_prediction'.format(hor)] = new_df['discrete_score'].copy()
+                    del new_df['discrete_score'], new_df['discrete_{}d'.format(hor)]
+                except:
+                    new_df['{}_d_label'.format(hor)] = None
+                    new_df['{}_d_prediction'.format(hor)] = None
+        total_df.append(new_df)        
+    return total_df
+        
 def get_half_date(input_date_period):
     '''
     :param input_date_period: str, '2018:', ':2020', '2018:2020', "::"
@@ -61,7 +126,7 @@ def get_half_date(input_date_period):
     res = get_date(process_period)
     return res
 
-def total_main_controller(data_preprocess, run_prediction, predict_period, predict_recent_days, predict_metal, run_mode):
+def total_main_controller(data_preprocess, run_prediction, predict_period, predict_recent_days, predict_metal, run_mode, whether_return_df):
     '''
     :param data_preprocess: bool, whether to do the step 1 to step 3
     :param run_prediction: bool, whether to do the step 4
@@ -69,6 +134,7 @@ def total_main_controller(data_preprocess, run_prediction, predict_period, predi
     :param predict_recent_days:, str, how many recent days we need to predict
     :param predict_metal: str, the certain metal we need to predict, when it is 'all', predict all the metal
     :param run_mode: str, whether to compare the results with the labels
+    :param whether_return_df: bool, whether to give the output results
     '''
 
     if eval(data_preprocess) == True:
@@ -107,6 +173,15 @@ def total_main_controller(data_preprocess, run_prediction, predict_period, predi
             
             os.system('cd {};python main_function.py {} {} {} {}'.format(step4_path, per[0], per[1], predict_metal, run_mode))
     
+    if eval(whether_return_df) == True:
+        
+        total_df = []
+        for per in use_prediction_period:
+            total_df += get_return_df(per[0], per[1], run_mode, predict_metal)
+        
+        res = pd.concat(total_df).reset_index(drop=True)
+        res = res.sort_values(by=['date', 'metal'], ascending=[True, True]).reset_index(drop=True)
+        return res
     
 if __name__ ==  '__main__':    
     
@@ -116,8 +191,9 @@ if __name__ ==  '__main__':
     predict_recent_days = sys.argv[4]
     predict_metal = sys.argv[5]
     run_mode = sys.argv[6]
+    whether_return_df = sys.argv[7]
     
-    total_main_controller(data_preprocess, run_prediction, predict_period, predict_recent_days, predict_metal, run_mode)    
+    total_main_controller(data_preprocess, run_prediction, predict_period, predict_recent_days, predict_metal, run_mode, whether_return_df)    
         
         
         
