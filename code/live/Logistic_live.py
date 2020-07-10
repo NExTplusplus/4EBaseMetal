@@ -1,25 +1,12 @@
 import os
 import sys
-import json
 import argparse
-import numpy as np
 import pandas as pd
+import numpy as np
 from copy import copy
-from data.load_data import load_data
 from model.logistic_regression import LogReg
-from utils.transform_data import flatten
-from utils.construct_data import rolling_half_year
-from utils.log_reg_functions import objective_function, loss_function
-from utils.read_data import read_data_NExT
-from utils.general_functions import *
-import warnings
-import xgboost as xgb
-from matplotlib import pyplot
-from xgboost import plot_importance
-from sklearn import metrics
-from sklearn.model_selection import KFold
+import utils.general_functions as gn
 from utils.version_control_functions import generate_version_params
-from sklearn.externals import joblib
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '4EBaseMetal')))
 
 
@@ -38,61 +25,60 @@ class Logistic_online():
                 version,
                 gt,
                 date,
-                source,
-                path):
+                source):
         self.lag = lag
         self.horizon = horizon
         self.version = version
         self.gt = gt
         self.date = date
         self.source = source
-        self.path = path
     """
-    this function is used to choose the parameter
+    this function tunes the model using grid search over a defined set of hyperparameter values
     """
-    def choose_parameter(self,max_iter):
-        print("begin to choose the parameter")
+    def tune(self,max_iter):
+        print("begin to tune")
 
-        #assert that the configuration path is correct
-        assert_version(self.version,self.path)
+        #identify the configuration file for data based on version
+        self.path = gn.generate_config_path(self.version)
 
-        #read the data from the 4E or NExT database
-        time_series,LME_dates,config_length = read_data_with_specified_columns(self.source,self.path,"2003-11-12")
+        #read the data from the 4E or NExT database with configuration file to determine columns to that are required
+        time_series,LME_dates,config_length = gn.read_data_with_specified_columns(self.source,self.path,"2003-11-12")
 
-        #generate list of list of dates to be used to roll over 5 half years
+        #generate list of list of dates for rolling window
         today = self.date
         length = 5
-        if even_version(self.version) and self.horizon > 5:
+        if gn.even_version(self.version) and self.horizon > 5:
             length = 4
-        start_time,end_time = get_relevant_dates(today,length,"tune")
-        split_dates = rolling_half_year(start_time,end_time,length)
-        split_dates  =  split_dates[:]
-        
-        #generate the version
-        version_params=generate_version_params(self.version)
+        start_time,end_time = gn.get_relevant_dates(today,length,"tune")
+        split_dates = gn.rolling_half_year(start_time,end_time,length)
+
+        #generate the version parameters (parameters that control the preprocess)
+        version_params = generate_version_params(self.version)
 
         #prepare holder for results
         ans = {"C":[]}
         
-        for s, split_date in enumerate(split_dates[1:-1]):
+        #loop over each half year
+        for s, split_date in enumerate(split_dates):
 
-            print("the train date is {}".format(split_date[0]))
-            print("the test date is {}".format(split_date[1]))
+            print("the train date is {}".format(split_date[1]))
+            print("the test date is {}".format(split_date[2]))
 
             #toggle metal id
             metal_id = False
             ground_truth_list = [self.gt]
-            if even_version(self.version):
+            if gn.even_version(self.version):
                 metal_id = True
                 ground_truth_list = ["LME_Co_Spot","LME_Al_Spot","LME_Ni_Spot","LME_Ti_Spot","LME_Zi_Spot","LME_Le_Spot"]
 
             #extract copy of data to process
-            ts = copy(time_series.loc[split_dates[s][0]:split_dates[s+2][2]])
+            ts = copy(time_series.loc[split_date[0]:split_date[-1]])
+            tvt_date = split_date[1:-1]
 
-            #load data for use
-            final_X_tr, final_y_tr, final_X_va, final_y_va, val_dates, column_lag_list = prepare_data(ts,LME_dates,self.horizon,ground_truth_list,self.lag,copy(split_date),version_params,metal_id_bool = metal_id)
+            #prepare data according to model type and version parameters
+            final_X_tr, final_y_tr, final_X_va, final_y_va, val_dates, column_lag_list = gn.prepare_data(ts,LME_dates,self.horizon,ground_truth_list,self.lag,copy(tvt_date),version_params,metal_id_bool = metal_id)
                 
-            #Create list of hyperparameter combinations
+            #generate hyperparameters instances
             if self.horizon <=5:
                 if self.version == "v23":
                     C_list = [0.01,0.1,1.0,10.0,100.0,1000.0]
@@ -104,7 +90,7 @@ class Logistic_online():
                 else:
                     C_list = [1e-5,0.0001,0.001,0.01,0.1,1.0,10.0]
 
-            #tune parameters
+            #generate model results for each hyperparameter instance for each half year
             for C in C_list:
                 if C not in ans['C']:
                     ans["C"].append(C)
@@ -119,10 +105,12 @@ class Logistic_online():
                 acc = pure_LogReg.test(final_X_va,final_y_va.flatten())
                 ans[split_date[1]+"_acc"].append(acc)
                 ans[split_date[1]+"_length"].append(len(final_y_va.flatten()))
-            
+
         ans = pd.DataFrame(ans)
         ave = None
         length = None
+
+        #generate total average across all half years
         for col in ans.columns.values.tolist():
             if "_acc" in col:
                 if ave is None:
@@ -133,29 +121,31 @@ class Logistic_online():
                     length = length + ans.loc[:,col[:-3]+"length"]
         ave = ave/length
         ans = pd.concat([ans,pd.DataFrame({"average": ave})],axis = 1)
+        
+        #store results in csv
         pd.DataFrame(ans).to_csv(os.path.join(os.getcwd(),'result','validation','lr',\
                                                         "_".join(["log_reg",self.gt,self.version,str(self.lag),str(self.horizon)+".csv"])))
 
     #-------------------------------------------------------------------------------------------------------------------------------------#
     """
-    this function is used to train the model and save it
+    power
     """
     def train(self,C=0.01,tol=1e-7,max_iter=100):
         print("begin to train")
 
-        #assert that the configuration path is correct
-        assert_version(self.version,self.path)
+        #identify the configuration file for data based on version
+        self.path = gn.generate_config_path(self.version)
 
-        #read the data from the 4E or NExT database
-        time_series,LME_dates,config_length = read_data_with_specified_columns(self.source,self.path,"2003-11-12")
+        #read the data from the 4E or NExT database with configuration file to determine columns to that are required
+        time_series,LME_dates,config_length = gn.read_data_with_specified_columns(self.source,self.path,"2003-11-12")
 
         for date in self.date.split(","):
             #generate list of dates for today's model training period
             today = date
             length = 5
-            if even_version(self.version) and self.horizon > 5:
+            if gn.even_version(self.version) and self.horizon > 5:
                 length = 4
-            start_time,train_time,evalidate_date = get_relevant_dates(today,length,"train")
+            start_time,train_time,evalidate_date = gn.get_relevant_dates(today,length,"train")
             split_dates  =  [train_time,evalidate_date,str(today)]
 
             #generate the version
@@ -167,7 +157,7 @@ class Logistic_online():
             #toggle metal id
             metal_id = False
             ground_truth_list = [self.gt]
-            if even_version(self.version):
+            if gn.even_version(self.version):
                 metal_id = True
                 ground_truth_list = ["LME_Co_Spot","LME_Al_Spot","LME_Ni_Spot","LME_Ti_Spot","LME_Zi_Spot","LME_Le_Spot"]
 
@@ -177,7 +167,7 @@ class Logistic_online():
             
 
             #load data for use
-            final_X_tr, final_y_tr, final_X_va, final_y_va, val_dates, column_lag_list = prepare_data(ts,LME_dates,self.horizon,ground_truth_list,self.lag,copy(split_dates),version_params,metal_id_bool = metal_id)
+            final_X_tr, final_y_tr, final_X_va, final_y_va, val_dates, column_lag_list = gn.prepare_data(ts,LME_dates,self.horizon,ground_truth_list,self.lag,copy(split_dates),version_params,metal_id_bool = metal_id)
 
             pure_LogReg = LogReg(parameters={})
             parameters = {"penalty":"l2", "C":C, "solver":"lbfgs", "tol":tol,"max_iter":6*4*config_length*max_iter, "verbose" : 0,"warm_start": False, "n_jobs": -1}
@@ -189,29 +179,26 @@ class Logistic_online():
     this function is used to predict the date
     """
     def test(self):
-        """
-        split the date
-        """
-        #os.chdir(os.path.abspath(sys.path[0]))
         print("begin to test")
+
         pure_LogReg = LogReg(parameters={})
 
-        #assert that the configuration path is correct
-        assert_version(self.version,self.path)
+        #identify the configuration file for data based on version
+        self.path = gn.generate_config_path(self.version)
 
-        #read the data from the 4E or NExT database
-        time_series,LME_dates,config_length = read_data_with_specified_columns(self.source,self.path,"2003-11-12")
+        #read the data from the 4E or NExT database with configuration file to determine columns to that are required
+        time_series,LME_dates,config_length = gn.read_data_with_specified_columns(self.source,self.path,"2003-11-12")
 
         for date in self.date.split(","):
             #generate list of dates for today's model training period
             today = date
             length = 5
-            if even_version(self.version) and self.horizon > 5:
+            if gn.even_version(self.version) and self.horizon > 5:
                 length = 4
-            start_time,train_time,evalidate_date = get_relevant_dates(today,length,"test")
+            start_time,train_time,evalidate_date = gn.get_relevant_dates(today,length,"test")
             split_dates  =  [train_time,evalidate_date,str(today)]
             
-            if even_version(self.version):
+            if gn.even_version(self.version):
                 model = pure_LogReg.load(self.version, "all", self.horizon, self.lag,evalidate_date)
             else:
                 model = pure_LogReg.load(self.version, self.gt, self.horizon, self.lag,evalidate_date)
@@ -220,7 +207,7 @@ class Logistic_online():
             version_params=generate_version_params(self.version)
 
             metal_id = False
-            if even_version(self.version):
+            if gn.even_version(self.version):
                 metal_id = True
 
             #extract copy of data to process
@@ -229,7 +216,7 @@ class Logistic_online():
             
 
             #load data for use
-            final_X_tr, final_y_tr, final_X_va, final_y_va,val_dates, column_lag_list = prepare_data(ts,LME_dates,self.horizon,[self.gt],self.lag,copy(split_dates),version_params,metal_id_bool = metal_id,live = True)
+            final_X_tr, final_y_tr, final_X_va, final_y_va,val_dates, column_lag_list = gn.prepare_data(ts,LME_dates,self.horizon,[self.gt],self.lag,copy(split_dates),version_params,metal_id_bool = metal_id,live = True)
 
             prob = model.predict(final_X_va)
             probability = model.predict_proba(final_X_va)

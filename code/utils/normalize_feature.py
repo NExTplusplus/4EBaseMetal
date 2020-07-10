@@ -19,38 +19,38 @@ returns:
 X_norm (2d numpy array): note that the dimension of X_norm is different from
     that of X since it less one row (cannot calculate return for the 1st day).
 '''
+#daily log returns
 def log_1d_return(X,cols):
-    # assert type(X) == np.ndarray, 'only 2d numpy array is accepted'
     for col in cols:
         if type(X[col]) == np.ndarray:
             X[col] = np.log(np.true_divide(X[col][1:], X[col][:-1]))
         else:
             X[col].values[1:] = np.log(np.true_divide(X[col].values[1:],
                                                 X[col].values[:-1]))
-    # if type(X) == np.ndarray:
-    #     return np.log(np.true_divide(X[1:, :], X[:-1, :]))
-    # else:
-    #     X.values[1:, :] = np.log(np.true_divide(X.values[1:, :],
-    #                                             X.values[:-1, :]))
     return X
 
-
+#daily log difference between Close, High, and Low to Open
+def rel_to_open(X,org_cols):
+    for col in X.columns.values.tolist():
+        if "High" in col:
+            X[col] = (X[col] - X[col[:-4]+"Open"]) / X[col[:-4]+"Open"]
+        if "Low" in col:
+            X[col] = (X[col] - X[col[:-3]+"Open"]) / X[col[:-3]+"Open"]
+        if "Close" in col or len(col.split('_')) == 1:
+            X[col] = (X[col] - X[col].shift(1))/X[col].shift(1)
+    for col in X.columns.values.tolist():
+        if "Open" in col:
+            X = X.drop(col,axis = 1)
+    return X
+    
 # See "Volume normalization methods" in google drive/ data cleaning file/volume normalization for more explanations
 # "volume" is the volume colume we want to process and "OI" is the OI column contained open interest
 # version can be v1,v2,v3 or v4 as stated in the file. v1,v2 and v3 will require Open Interest column ("OI_name")
 # and for v3 and v4 length of moving average is required
-
-def fractional_diff(X,cols):
-    for col in cols:
-        X[col] = frac_diff_ffd(X[col].to_frame(),0.3,0.01)
-    return X
-
 def normalize_volume(volume,OI=None,len_ma=None,version="v1", train_end=0 ,strength = 0.01,both = 0):
 
     if version == "v1":
         nVol = volume/OI
-
-
     elif version == "v2":
             turn_over = np.log(volume/OI)
             nVol = turn_over - turn_over.shift(1)
@@ -97,7 +97,6 @@ def normalize_volume(volume,OI=None,len_ma=None,version="v1", train_end=0 ,stren
 # "close is the close price column and spot_col is the spot price column
 # len_update is for v2, it is after how many days we should update the relationship between spot price and 3month forward price
 # version can be v1 or v2 as stated in the file.
-
 def normalize_3mspot_spread (close,spot_col,len_update = 30 ,version="v1"):
     if version == "v1":
             return np.log(close)- np.log(spot_col)
@@ -162,16 +161,6 @@ def normalize_3mspot_spread_ex (lme_col,shfe_col,exchange,len_update = 30 ,versi
         print("wrong version")
         return 
 
-def normalize_prediction(spot,prediction,version="v1"):
-    if version == "v1":
-        return 1*(prediction > spot)
-    elif version == "v2":
-        return np.log(prediction) - np.log(spot), 1*(prediction > spot)
-    elif version == "v3":
-        spread = prediction - spot
-        spread = spread/spread.shift(1) - 1
-        return spread, 1*(prediction > spot)
-
 # This function will normalize OI 
 # OI_col is the col the open interest
 def normalize_OI (OI_col, train_end, strength, both):
@@ -195,14 +184,35 @@ def normalize_OI (OI_col, train_end, strength, both):
             nOI[i] = mn
     return nOI
 
+
+#this function will normalize predictions with spot price
+def normalize_prediction(spot,prediction,version="v1"):
+    if version == "v1":
+        return 1*(prediction > spot)
+    elif version == "v2":
+        return np.log(prediction) - np.log(spot), 1*(prediction > spot)
+    elif version == "v3":
+        spread = prediction - spot
+        spread = spread/spread.shift(1) - 1
+        return spread, 1*(prediction > spot)
+
+#this function will fractionally difference the selected columns
+def fractional_diff(X,cols):
+    for col in cols:
+        X[col] = frac_diff_ffd(X[col].to_frame(),0.3,0.01)
+    return X
+
+#this function will return the log return of the STL decomposition trend of column
 def STL_decomposition_trend(col):
     res = seasonal_decompose(col, freq = 5, two_sided= False)
     trend = np.log(res.trend) - np.log(res.trend.shift(1))
     return res.trend
 
+#this function will return the log return of the STL decomposition seasonal component of column
 def STL_decomposition_seasonal(col):
     res = seasonal_decompose(col, freq = 5, two_sided= False)
     return res.seasonal
+
 
 def custom_seasonal_decompose(col,train_end):
     res = custom_seasonal_decomp(col,train_end, period = 5,two_sided= False)

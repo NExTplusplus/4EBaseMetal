@@ -1,58 +1,74 @@
 import os
 import json
-from utils.read_data import read_data_NExT
-from data.load_data import load_data
+from data.preprocess_data import preprocess_data
 import pandas as pd
 import numpy as np
 from copy import copy
 
+#creates the split dates array which rolls forward every 6 months
+#[[2009-01-01,2009-07-01,2014-07-01,2015-01-01,2015-07-01],...]
+def rolling_half_year(start_date,end_date,length):
+    '''
+        Input   :   start_date(str) : date to start creating split_dates
+                    end_date(str)   : date to stop creating split_dates
+                    length(int)     : number of years for training set
+        Output  :   split_dates(list)   : list of list. Each list holds 5 dates, data start,train start, val start, and val end, data end.
+    '''
+    start_year = start_date.split("-")[0]
+    end_year = end_date.split("-")[0]
+    split_dates = []
+
+    for year in range(int(start_year),int(end_year)+1):
+        split_dates.append([str(year-1)+"-07-01",str(year)+"-01-01",str(int(year)+length)+"-01-01",str(int(year)+length)+"-07-01",str(int(year)+length+1)+"-01-01"])
+        split_dates.append([str(year)+"-01-01",str(year)+"-07-01",str(int(year)+length)+"-07-01",str(int(year)+length+1)+"-01-01",str(int(year)+length+1)+"-07-01"])
+    
+    while split_dates[0][1] < start_date:
+        del split_dates[0]
+    
+    while split_dates[-1][-2] > end_date:
+        del split_dates[-1]
+    
+    return split_dates
+
+# check if version is even numbered
 def even_version(version):
     '''
-        check if version is odd numbered or even numbered
-        input:
-            version:  string of version
-        output:
-            even: boolean stating whether the version number is even or otherwise 
+        input:  version:  string of version
+        output: even: boolean stating whether the version number is even or otherwise 
     '''
     version_num = int(version[1:])
     return (version_num % 2 == 0)
 
-def assert_version(version,path):
+#generate the configuration file path holding the data columns that are required for a particular version
+def generate_config_path(version):
     '''
-        confirm that the version and path are as predetermined
-        input:
-            version:  string which hold the version
-            path:     string which holds the path to the configuration file
-        There is not output, however if the path and version do not coincide then the assertions will fail,
-        resulting in the termination of the program
+        input:  version:  string which hold the version
+        output: config_path: string which holds the path to configuration file
     '''
     if version in ["v5","v7"]:
         #requires global data
-        assert path == "exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf"
+        return "exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf"
     elif version in ["v3","v23","v24","v28","v30","v37","v39","v41","v43"]:
-        assert path == "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf"
+        return "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf"
     elif version in ["v9","v10","v12","v16","v26"]:
-        assert path == "exp/online_v10.conf"
+        return "exp/online_v10.conf"
     elif version in ["v31","v32"]:
-        assert path == "exp/supply and demand.conf"
+        return "exp/supply and demand.conf"
     elif version in ["v33","v35"]:
-        assert path == "exp/TP_v1.conf"
+        return "exp/TP_v1.conf"
     elif version in ['r2']:
-        assert path == 'exp/regression_r2.conf'
+        return 'exp/regression_r2.conf'
     else:
         print("Version out of bounds!")
         os.exit()
 
 
-
+#generate relevant dates for tuning,training and testing
 def get_relevant_dates(date, length, version):
     '''
-        generate relevant dates for tuning,training and testing
-        input:
-            date:     string containing the time point's year, month and day
-            length:   length of training period required
-            version:  tuning,training or testing
-        output:
+        input:  date:     string containing the time point's year, month and day
+                length:   length of training period required
+                version:  tuning,training or testing
     '''
     #ensure date is of correct format
     assert date[4] == '-' and date[7] == '-' and int(date[5:7]) <=12 and int(date[5:7]) >=1
@@ -60,26 +76,22 @@ def get_relevant_dates(date, length, version):
     month = int(str(date).split("-")[1])
     year = int(str(date).split("-")[0])
     if version == "tune":
-        '''
-            requires enough data for 5 rolling half years and their respective training periods of length years before stated date
-        '''
+        
+        #requires enough data for 5 rolling half years and their respective training periods of length years before stated date
         if month <= 6:
             start_year = year - 3 - length
-            start_time = str(start_year)+"-01-01"
-            end_time = str(year) +"-07-01"
-        else:
-            start_year = year - 3 - length
-            end_year = year + 1
             start_time = str(start_year)+"-07-01"
-            end_time = str(end_year)+"-01-01"
+            end_time = str(year) +"-01-01"
+        else:
+            start_year = year - 3 - length + 1
+            end_year = year
+            start_time = str(start_year)+"-01-01"
+            end_time = str(end_year)+"-07-01"
         
         return start_time,end_time
 
     elif version == "train" or version == "test":
-        '''
-            only requires the preceding years for training
-            check for labels is relegated to later
-        '''
+        #only requires the preceding years for training
         if month <=6:
             start_year = year - length - 1
             start_time = str(start_year)+"-07-01"
@@ -100,64 +112,50 @@ def get_relevant_dates(date, length, version):
         print("Version out of bounds!")
         os.exit()
 
-def assert_labels(dates,split_date,horizon):
-    '''
-        ensure that there are enough days to generate the correct labels for training period based on horizon
-    '''
-    df = pd.DataFrame(index =dates)
-    index_diff = df.index.get_loc(split_date[2],method = "bfill") - df.index.get_loc(split_date[1],method = "bfill") + 1
-    assert index_diff >= horizon
-
-
+#read data from either 4E or NExT database with path to generate configuration, to ensure that the data is consistent across both databases
 def read_data_with_specified_columns(source,path,start_date):
     '''
-        read data from either 4E or NExT database with path to generate configuration, to ensure that the data is consistent across both databases
-        input:
-            source:     4E/NExT
-            path:       path to configuration file, which specifies the columns to be loaded in
-            start_date: date to begin collecting of data
-        output:
-            time_series:  pandas dataframe that holds all available information from start date with configuration as stated in path
-            LME_dates:    a list of dates of which LME is trading
+        input:  source:     4E/NExT
+                path:       path to configuration file, which specifies the columns to be loaded in
+                start_date: date to begin collecting of data
+        output: time_series:  pandas dataframe that holds all available information from start date with configuration as stated in path
+                LME_dates:    a list of dates of which LME is trading
     '''
     with open(os.path.join(os.getcwd(),path)) as fin:
         fname_columns = json.load(fin)
-    time_series, LME_dates = read_data_NExT(fname_columns[0], "2003-11-12")
-    time_series = pd.concat(time_series, axis = 1, sort = True)
-    columns_to_be_stored = time_series.columns.values.tolist()
 
-    if source=='4E':
-        from utils.read_data import read_data_v31_4E
-        time_series, LME_dates = read_data_v31_4E("2003-11-12")
-        time_series = time_series[columns_to_be_stored]
+    if source == "NExT":
+        from utils.read_data import read_data_NExT
+        time_series, LME_dates = read_data_NExT(fname_columns[0], "2003-11-12")
+    elif source=='4E':
+        from utils.read_data import read_data_4E
+        time_series, LME_dates = read_data_4E("2003-11-12")
         os.chdir("NEXT/4EBaseMetal")
     return time_series,LME_dates,len(fname_columns[0])
 
-def prepare_data(ts,LME_dates,horizon,ground_truth_list,lag,split_date,version_params,xgboost = False,live = False,metal_id_bool = False, reshape = True):
+#prepare data based on configuration as stated in parameters
+def prepare_data(time_series,LME_dates,horizon,ground_truth_list,lag,split_date,version_params,date = False,live = False,metal_id_bool = False, reshape = True):
     '''
-        prepare data based on configuration as stated in parameters
-        input:
-            time_series:        pandas dataframe that holds all information
-            LME_dates:          a list of dates of which LME has trading operations
-            horizon:            amount of days ahead that we need to predict
-            ground_truth_list:  list of ground truths
-            lag:                number of lags for load data to build
-            split_date:         list of dates with 1st being beginning of training, 2nd being beginning of validation, and 3rd being end of validation
-            version_params:     dictionary holding the trigger for version control within load_data
-            xgboost:            boolean which controls inclusion of date
-            live:               boolean which controls inclusion of live
-            metal_id_bool:      boolean which controls inclusion of metal_id
-        output:
-            final_X_tr:         training samples
-            final_y_tr:         training labels
-            final_X_va:         validation samples
-            final_y_va:         validation labels
-            column_lag_list:    list of columns with lag taken into account
-
+        
+        input:  time_series:        pandas dataframe that holds all information
+                LME_dates:          a list of dates of which LME has trading operations
+                horizon:            amount of days ahead that we need to predict
+                ground_truth_list:  list of ground truths
+                lag:                number of lags for load data to build
+                split_date:         list of dates with 1st being beginning of training, 2nd being beginning of validation, and 3rd being end of validation
+                version_params:     dictionary holding the trigger for version control within load_data
+                date:               boolean which controls inclusion of date as data column
+                live:               boolean which controls inclusion of live
+                metal_id_bool:      boolean which controls inclusion of metal_id
+        output: final_X_tr:         training samples
+                final_y_tr:         training labels
+                final_X_va:         validation samples
+                final_y_va:         validation labels
+                column_lag_list:    list of columns with lag taken into account
     '''
 
     #params that can be manually added
-    norm_params = {"xgboost":xgboost}
+    norm_params = {"date":date}
     tech_params = {}
     if live:
         tech_params["live"] = None
@@ -169,14 +167,14 @@ def prepare_data(ts,LME_dates,horizon,ground_truth_list,lag,split_date,version_p
     final_y_va = []
     i = 0
 
-    #load data
+    #preprocess data
     for ground_truth in ground_truth_list:
         print(norm_params)
         if live:
-            X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list,val_dates = load_data(ts,LME_dates,horizon,[ground_truth],lag,copy(split_date),copy(norm_params),copy(tech_params),version_params)
+            X_tr, y_tr, X_va, y_va, norm_check,column_list,val_dates = preprocess_data(time_series,LME_dates,horizon,[ground_truth],lag,copy(split_date),copy(norm_params),copy(tech_params),version_params)
         else:
             val_dates = None
-            X_tr, y_tr, X_va, y_va, X_te, y_te, norm_check,column_list = load_data(ts,LME_dates,horizon,[ground_truth],lag,copy(split_date),copy(norm_params),copy(tech_params),version_params)
+            X_tr, y_tr, X_va, y_va, norm_check,column_list = preprocess_data(time_series,LME_dates,horizon,[ground_truth],lag,copy(split_date),copy(norm_params),copy(tech_params),version_params)
         X_tr = np.concatenate(X_tr)
         y_tr = np.concatenate(y_tr)
         X_va = np.concatenate(X_va)

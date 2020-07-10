@@ -1,21 +1,8 @@
 import os
 import sys
-import json
 import argparse
-import numpy as np
-import pandas as pd
 from copy import copy
 sys.path.insert(0,os.path.abspath(os.path.join(sys.path[0],"..")))
-from model.logistic_regression import LogReg
-from utils.transform_data import flatten
-from utils.construct_data import rolling_half_year
-import warnings
-from matplotlib import pyplot
-from xgboost import plot_importance
-from sklearn import metrics
-from sklearn.model_selection import KFold
-from utils.version_control_functions import generate_version_params
-
 from live.Logistic_live import Logistic_online
 
 if __name__ == '__main__':
@@ -39,10 +26,10 @@ if __name__ == '__main__':
     parser.add_argument('-d', '--date', help = "the date is the final data's date which you want to use for testing",type=str)	
     parser.add_argument('-C', '--C', type=float)
     args = parser.parse_args()
-    model = Logistic_online(lag = args.lag, horizon = args.steps, version = args.version, gt = args.ground_truth, date = args.date, source = args.source, path =args.config)
+    model = Logistic_online(lag = args.lag, horizon = args.steps, version = args.version, gt = args.ground_truth, date = args.date, source = args.source)
     if args.action=="tune":
     #model = Logistic_online(lag = 5, horizon = 5, version = 'v9', gt = 'LME_Co_Spot', date = '2016-05-01', source = 'NExT')
-        model.choose_parameter(100)
+        model.tune(100)
     elif args.action=='train':
         model.train(C=args.C, max_iter=args.max_iter)
     else:

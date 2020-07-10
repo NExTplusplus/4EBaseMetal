@@ -15,26 +15,7 @@ def pvt (idx,Close,Volume):
     ans.loc[ans==0] = -1
     
     return ans
-
-#def divergence_pvt_OI(idx,Close,OI,train_end,params):
-#    
-#    pvt = np.log(Close/Close.shift(1))*OI
-#    pvt = pd.Series(index = idx[1:],data = accumulate(pvt.dropna()))
-#
-#    divPT = pvt/pvt.shift(1) - Close/Close.shift(1)
-#    temp = sorted(copy(divPT[:train_end]))
-#    mx = temp[-1]
-#    mn = temp[0]
-#    if params['both'] == 1:
-#        mx = temp[int(np.floor((1-params['strength'])*len(temp)))]
-#    elif params['both'] == 2:
-#        mn = temp[int(np.ceil(params['strength']*len(temp)))]
-#    elif params['both'] == 3:
-#        mx = temp[int(np.floor((1-params['strength'])*len(temp)))]
-#        mn = temp[int(np.ceil(params['strength']*len(temp)))]
-#    divPT = divPT.apply(lambda x: min(x,mx))
-#    divPT = divPT.apply(lambda x: max(x,mn))
-
+    
 def divergence_pvt(close,volume,train_end,params):
     
     pvt = close.shift(1)
@@ -73,6 +54,7 @@ def vsd(High,Low,Open,window):
     tmp = np.array(sdiff_win)>0
     vsd.iloc[1:] = tmp[:-1]*1
     return vsd
+
 #This function will calculate Bollinger Bands.
 #Close is a series of close price.
 #When the price of the commodity considered is volatile, the bands tend to expand.
