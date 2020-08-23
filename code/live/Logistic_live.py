@@ -1,12 +1,11 @@
 import os
 import sys
-import argparse
 import pandas as pd
 import numpy as np
 from copy import copy
 from model.logistic_regression import LogReg
 import utils.general_functions as gn
-from utils.version_control_functions import generate_version_params
+from utils.data_preprocess_version_control import generate_version_params
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '4EBaseMetal')))
 
 
@@ -32,9 +31,8 @@ class Logistic_online():
         self.gt = gt
         self.date = date
         self.source = source
-    """
-    this function tunes the model using grid search over a defined set of hyperparameter values
-    """
+    
+    #this function tunes the model using grid search over a defined set of hyperparameter values
     def tune(self,max_iter):
         print("begin to tune")
 
@@ -95,16 +93,16 @@ class Logistic_online():
                 if C not in ans['C']:
                     ans["C"].append(C)
                 if split_date[1]+"_acc" not in ans.keys():
-                    ans[split_date[1]+"_acc"] = []
-                    ans[split_date[1]+"_length"] = []
+                    ans[split_date[2]+"_acc"] = []
+                    ans[split_date[2]+"_length"] = []
 
                 pure_LogReg = LogReg(parameters={})
                 max_iter = max_iter
                 parameters = {"penalty":"l2", "C":C, "solver":"lbfgs", "tol":1e-7,"max_iter":6*4*config_length*max_iter, "verbose" : 0,"warm_start": False, "n_jobs": -1}
                 pure_LogReg.train(final_X_tr,final_y_tr.flatten(), parameters)
                 acc = pure_LogReg.test(final_X_va,final_y_va.flatten())
-                ans[split_date[1]+"_acc"].append(acc)
-                ans[split_date[1]+"_length"].append(len(final_y_va.flatten()))
+                ans[split_date[2]+"_acc"].append(acc)
+                ans[split_date[2]+"_length"].append(len(final_y_va.flatten()))
 
         ans = pd.DataFrame(ans)
         ave = None
@@ -123,13 +121,12 @@ class Logistic_online():
         ans = pd.concat([ans,pd.DataFrame({"average": ave})],axis = 1)
         
         #store results in csv
-        pd.DataFrame(ans).to_csv(os.path.join(os.getcwd(),'result','validation','lr',\
+        pd.DataFrame(ans).to_csv(os.path.join(os.getcwd(),'result','validation','logistic',\
                                                         "_".join(["log_reg",self.gt,self.version,str(self.lag),str(self.horizon)+".csv"])))
 
     #-------------------------------------------------------------------------------------------------------------------------------------#
-    """
-    power
-    """
+    
+    #this function generates the model instances
     def train(self,C=0.01,tol=1e-7,max_iter=100):
         print("begin to train")
 
@@ -175,9 +172,8 @@ class Logistic_online():
             pure_LogReg.save(self.version, self.gt, self.horizon, self.lag,evalidate_date)
 
     #-------------------------------------------------------------------------------------------------------------------------------------#
-    """
-    this function is used to predict the date
-    """
+    
+    #this function is used to generate prediction 
     def test(self):
         print("begin to test")
 
@@ -199,7 +195,7 @@ class Logistic_online():
             split_dates  =  [train_time,evalidate_date,str(today)]
             
             if gn.even_version(self.version):
-                model = pure_LogReg.load(self.version, "all", self.horizon, self.lag,evalidate_date)
+                model = pure_LogReg.load(self.version, "LME_All_Spot", self.horizon, self.lag,evalidate_date)
             else:
                 model = pure_LogReg.load(self.version, self.gt, self.horizon, self.lag,evalidate_date)
 
@@ -213,14 +209,12 @@ class Logistic_online():
             #extract copy of data to process
             ts = copy(time_series.loc[start_time:split_dates[2]])
 
-            
-
             #load data for use
             final_X_tr, final_y_tr, final_X_va, final_y_va,val_dates, column_lag_list = gn.prepare_data(ts,LME_dates,self.horizon,[self.gt],self.lag,copy(split_dates),version_params,metal_id_bool = metal_id,live = True)
 
             prob = model.predict(final_X_va)
             probability = model.predict_proba(final_X_va)
-            np.savetxt(os.path.join("result","probability","lr","_".join([self.gt+str(self.horizon),date,"lr",self.version,"probability.txt"])),probability)
+            np.savetxt(os.path.join("result","probability","logistic","_".join([self.gt+str(self.horizon),date,"lr",self.version,"probability.txt"])),probability)
             final_list = []
             piece_list = []
             for i,val_date in enumerate(val_dates):
@@ -228,5 +222,5 @@ class Logistic_online():
                 piece_list.append(prob[i])
                 final_list.append(piece_list)
                 piece_list=[]
-            final_dataframe = pd.DataFrame(prob, columns=['result'],index=val_dates)
-            final_dataframe.to_csv(os.path.join("result","prediction","lr","_".join([self.gt,date,str(self.horizon),self.version])+".csv"))
+            final_dataframe = pd.DataFrame(prob, columns=['prediction'],index=val_dates)
+            final_dataframe.to_csv(os.path.join("result","prediction","logistic","_".join([self.gt,date,str(self.horizon),self.version])+".csv"))

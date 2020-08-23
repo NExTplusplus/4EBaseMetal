@@ -12,8 +12,6 @@ from live.ALSTM_live import ALSTM_online
 if __name__ == '__main__':
   desc = 'the XGBoost model'
   parser = argparse.ArgumentParser(description=desc)
-  parser.add_argument('-c','--config',type=str,default="",
-            help='configuration file path')
   parser.add_argument('-s','--steps',type=int,default=5,
             help='steps in the future to be predicted')
   parser.add_argument('-gt', '--ground_truth', help='ground truth column',
@@ -85,9 +83,9 @@ if __name__ == '__main__':
       help='method to choose hyperparameter'
   )
   args = parser.parse_args()
-  model = ALSTM_online(lag = args.lag, horizon = args.steps, version = args.version, gt = args.ground_truth, date = args.date, source = args.source, path =args.config)
+  model = ALSTM_online(lag = args.lag, horizon = args.steps, version = args.version, gt = args.ground_truth, date = args.date, source = args.source)
   if args.action=="tune":
-    model.choose_parameter(log = args.log, script = args.script)
+    model.tune(log = args.log, script = args.script)
   elif args.action=='train':
     model.train(
         num_epochs=args.epoch,

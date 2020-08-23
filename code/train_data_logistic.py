@@ -1,17 +1,15 @@
 import os
 import sys
-import json
 import argparse
-import numpy as np
-import pandas as pd
 from copy import copy
-sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
-import warnings
-from live.xgboost_live import XGBoost_online
+sys.path.insert(0,os.path.abspath(os.path.join(sys.path[0],"..")))
+from live.Logistic_live import Logistic_online
 
 if __name__ == '__main__':
-    desc = 'the XGBoost model'
+    desc = 'the logistic regression model'
     parser = argparse.ArgumentParser(description=desc)
+    parser.add_argument('-c','--config',type=str,default="",
+                        help='configuration file path')
     parser.add_argument('-s','--steps',type=int,default=5,
                         help='steps in the future to be predicted')
     parser.add_argument('-gt', '--ground_truth', help='ground truth column',
@@ -26,16 +24,12 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--action', type=str, default='train',
                         help='train, test, tune')
     parser.add_argument('-d', '--date', help = "the date is the final data's date which you want to use for testing",type=str)	
-    parser.add_argument('-max_depth', '--max_depth', type=int)
-    parser.add_argument('-learning_rate', '--learning_rate', type=float)
-    parser.add_argument('-gamma', '--gamma', type=float)
-    parser.add_argument('-min_child', '--min_child', type=int)
-    parser.add_argument('-subsample', '--subsample', type=float)
+    parser.add_argument('-C', '--C', type=float)
     args = parser.parse_args()
-    model = XGBoost_online(lag = args.lag, horizon = args.steps, version = args.version, gt = args.ground_truth, date = args.date, source = args.source)
+    model = Logistic_online(lag = args.lag, horizon = args.steps, version = args.version, gt = args.ground_truth, date = args.date, source = args.source)
     if args.action=="tune":
-        model.tune()
+        model.tune(100)
     elif args.action=='train':
-        model.train(max_depth = args.max_depth,learning_rate = args.learning_rate, gamma = args.gamma, min_child_weight = args.min_child, subsample = args.subsample)
+        model.train(C=args.C, max_iter=args.max_iter)
     else:
         final = model.test()

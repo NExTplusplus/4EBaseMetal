@@ -45,78 +45,61 @@ def analyze_zoom(zoom):
 
     return output
 
-def get_config(version):
-    '''
-        get configuration file
-        Input
-            version (str)   :   string which hold the version
-        Output
-            config  (str)   :   configuration filepath
-    '''
-    if version in ["v5","v7"]:
-        #requires global data
-        return "exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf"
-    elif version in ["v3","v23","v24","v28","v30","v37","v39","v41","v43"]:
-        return "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf"
-    elif version in ["v9","v10","v12","v16","v26"]:
-        return "exp/online_v10.conf"
-    elif version in ["v31","v32"]:
-        return "exp/supply and demand.conf"
-    elif version in ["v33","v35"]:
-        return "exp/TP_v1.conf"
-    elif version in ['r2']:
-        return 'exp/regression_r2.conf'
-    else:
-        print("Version out of bounds!")
-
+#generate and process tuning commands
 def run_tune(ground_truth, step, sou, version, model, regression, date):
     train = "code/train_data_"+model+".py"
-    config = get_config(version)
-    if model == "lr":
-        for l in [1,5,10,20]:
-            lag = str(l)
-            os.system(' '.join(['python', train, \
-                                '-gt', ground_truth, \
-                                '-s', step, \
-                                '-c', config, \
-                                '-sou', sou, \
-                                '-l', lag, \
-                                '-v', version, \
-                                '-d', date, \
-                                '-o', 'tune', \
-                                '>', \
-                                '1', \
-                                '2>&1', '&']))
+    command = ""
 
-    elif model == "xgboost":
-        for l in [1,5,10]:
-            lag = str(l)
-            os.system(' '.join(['python', train, \
-                                '-gt', ground_truth, \
-                                '-s', step, \
-                                '-c', config, \
-                                '-sou', sou, \
-                                '-l', lag, \
-                                '-v', version, \
-                                '-d', date, \
-                                '-o', "tune", \
-                                '>', \
-                                'result/validation/'+model+'/' \
-                                +'_'.join([ground_truth, 'xgboost', 'l1', 'h'+step, version+".txt"]), \
-                                '2>&1', '&']))
+    #generate tune command for logistic regression
+    if model == "logistic":
+        lag = '1,5,10,20'
+        for l in lag.split(','):
+            command += ' '.join(['python', train, \
+                                    '-gt', ground_truth, \
+                                    '-s', step, \
+                                    '-sou', sou, \
+                                    '-l', l, \
+                                    '-v', version, \
+                                    '-d', date, \
+                                    '-o', 'tune', \
+                                    '>', \
+                                    '/dev/null', \
+                                    '2>&1', '&',"\n"])
+            if int(version[1:]) >= 23:
+                break
     
+    #generate tune command for xgboost
+    elif model == "xgboost":
+        lag = "1,5,10"
+        for l in lag.split(','):
+            command += ' '.join(['python', train, \
+                                    '-gt', ground_truth, \
+                                    '-s', step, \
+                                    '-sou', sou, \
+                                    '-l', l, \
+                                    '-v', version, \
+                                    '-d', date, \
+                                    '-o', "tune", \
+                                    '>', \
+                                    'result/validation/'+model+'/' \
+                                    +'_'.join([ground_truth.split("_")[1], 'xgboost', 'l'+lag, 'h'+step, version+".txt"]), \
+                                    '2>&1', '&',"\n"])
+            if int(version[1:]) >= 23:
+                break
+    
+    #generate tune command for ALSTM(classification)
     elif model == "alstm":
-        os.system(' '.join(['python', train, \
+        train = "code/train_data_ALSTM.py"
+        command += ' '.join(['python', train, \
                             '-s', step, \
-                            '-c', config, \
                             '-sou', sou, \
                             '-v', version, \
                             '-d', date, \
                             '-o', "tune", \
                             '-log', \
-                            '.result/validation/'+model+'/' \
+                            './result/validation/'+model+'/' \
                             +'_'.join([version, 'h'+step, "tune.log"]), \
-                            '2>&1', '&']))
+                            '2>&1', '&',"\n"])
 
     
     elif model == "ensemble":
@@ -125,26 +108,28 @@ def run_tune(ground_truth, step, sou, version, model, regression, date):
         return
     elif model == "pp":
         return
+    print(command)
+    os.system(command)
 
+#extraction of tuning results and generation and processing of training commands
 def run_train(ground_truths_str, steps, sou, versions, model, regression, dates):
 
     date = ','.join(dates[1:])
     # case if model is lr or xgboost
-    if model in ["lr","xgboost"]:
-        model_str = model if model != "lr" else "log_reg"
-
+    if model in ["logistic","xgboost"]:
         lag = '1,5,10' if model == "xgboost" else '1,5,10,20'
+
         #generate commands to call script
-        tune_script = ' '.join(['python', 'code/utils/'+model_str+"_script.py", \
+        tune_script = ' '.join(['python', 'code/utils/'+model+"_script.py", \
                             '-gt', ground_truths_str, \
                             '-s', steps, \
                             '-sou', sou, \
                             '-l', lag, \
                             '-v', versions, \
                             '-p', './result/validation/'+model, \
-                            '-o', '"tuning"']
+                            '-o', 'tune']
                         )
-        train_script = ' '.join(['python', 'code/utils/'+model_str+"_script.py", \
+        train_script = ' '.join(['python', 'code/utils/'+model+"_script.py", \
                             '-gt', ground_truths_str, \
                             '-s', steps, \
                             '-sou', sou, \
@@ -152,11 +137,14 @@ def run_train(ground_truths_str, steps, sou, versions, model, regression, dates)
                             '-v', versions, \
                             '-p', './result/validation/'+model, \
                             '-out', model+"_train.sh", \
-                            '-o', '"train commands"', \
+                            '-o', 'train', \
                             '-d', date]
                         )
         
-        #xgboost requires additional to aextract tuning results
+        print(tune_script)
+        print(train_script)
+        
+        #xgboost requires additional to extract tuning results
         if model  == "xgboost":
             os.system(tune_script)
 
@@ -171,46 +159,48 @@ def run_train(ground_truths_str, steps, sou, versions, model, regression, dates)
         #generate tuning results from log
         filepath = ''
         for version in versions.split(','):
+            v = version.split('_')[0]
+            method = '_'.join(version.split('_')[1:])
             for step in steps.split(','):
                 os.system(
-                        ' '.join(['python', 'code/train/analyze_alstm_tune.py', \
-                                    'result/validation/alstm/'+ \
-                                    version+"_h"+step+"_tune.log", \
+                        ' '.join(['python', 'code/train/analyze_alstm.py', \
+                                    'result/validation/alstm '+ \
+                                    v+"_h"+step+"_tune.log", \
                                     '>', 'result/validation/alstm/'+ \
-                                    version+"_h"+step+"_para.txt", "para"]
+                                    v+"_h"+step+"_para.txt", "para"]
                                 )
                         )
-                filepath += 'result/validation/alstm/'+version+"_h"+step+"_para.txt,"
+                filepath += 'result/validation/alstm/'+v+"_h"+step+"_para.txt,"
 
-        #remove last comma
+        #remove last comma character
         filepath = filepath[:-1]
 
         #extract results and output commands
-        train_script = ' '.join(['python', 'code/utils/analze_alstm_tune.py', \
+        train_script = ' '.join(['python', 'code/utils/analyze_alstm_tune.py', \
                             '-gt', ground_truths_str, \
                             '-f', filepath, \
                             '-sou', sou, \
-                            '-p', './result/validation/'+model, \
                             '-o', 'train', \
+                            '-m', method, \
                             '-d', date]
                         )
+        print(train_script)
 
         os.system(train_script)
 
-        os.system('bash best_acc_train.sh')
-        os.system('bash best_loss_train.sh')
-        os.system('bash ave_acc_train.sh')
-        os.system('bash ave_loss_train.sh')
+        os.system('bash '+method+'_train.sh')
 
+
+#generation and processing of testing commands
 def run_test(ground_truths_str, steps, sou, versions, model, regression, dates):
 
     date = ','.join(dates[1:])
+
     # case if model is lr or xgboost
-    if model in ["lr","xgboost"]:
-        model_str = model if model != "lr" else "log_reg"
+    if model in ["logistic","xgboost"]:
 
         lag = '1,5,10' if model == "xgboost" else '1,5,10,20'
-        train_script = ' '.join(['python', 'code/utils/'+model_str+"_script.py", \
+        test_script = ' '.join(['python', 'code/utils/'+model+"_script.py", \
                             '-gt', ground_truths_str, \
                             '-s', steps, \
                             '-sou', sou, \
@@ -218,12 +208,13 @@ def run_test(ground_truths_str, steps, sou, versions, model, regression, dates):
                             '-v', versions, \
                             '-p', './result/validation/'+model, \
                             '-out', model+"_test.sh", \
-                            '-o', '"test commands"', \
+                            '-o', 'test', \
                             '-d', date]
                         )
 
+        print(test_script)
         # generate shell script for training commands
-        os.system(train_script)
+        os.system(test_script)
     
         os.system('bash '+model+"_test.sh")
 
@@ -233,29 +224,41 @@ def run_test(ground_truths_str, steps, sou, versions, model, regression, dates):
         #generate tuning results from log
         filepath = ''
         for version in versions.split(','):
+            v = version.split('_')[0]
+            method = '_'.join(version.split('_')[1:])
             for step in steps.split(','):
-                filepath += 'result/validation/alstm/'+version+"_h"+step+"_para.txt,"
+                filepath += 'result/validation/alstm/'+v+"_h"+step+"_para.txt,"
 
         #remove last comma
         filepath = filepath[:-1]
 
         #extract results and output commands
-        train_script = ' '.join(['python', 'code/utils/analze_alstm_tune.py', \
+        train_script = ' '.join(['python', 'code/utils/analyze_alstm_tune.py', \
                             '-gt', ground_truths_str, \
                             '-f', filepath, \
                             '-sou', sou, \
-                            '-p', './result/validation/'+model, \
                             '-o', 'test', \
+                            '-m', method, \
                             '-d', date]
                         )
 
+        print(train_script)
         os.system(train_script)
 
-        os.system('bash best_acc_test.sh')
-        os.system('bash best_loss_test.sh')
-        os.system('bash ave_acc_test.sh')
-        os.system('bash ave_loss_test.sh')
+        os.system('bash '+method+'_test.sh')
 
+#run analysis of predictions
+def run_analyze(ground_truths_str, steps, versions, model, regression, dates):
+    os.system(' '.join(['python', 'code/tuils/analyze_predictions.py', \
+                        '-gt', ground_truths_str, \
+                        '-s', steps, \
+                        '-m', model, \
+                        '-d', dates, \
+                        '-out', model+".csv"
+                        ]))
+
+
+#extract prediction of related dates
 def extract(ground_truth, step, sou, version, model, regression, dates):
     df = pd.DataFrame()
     for date in dates[1:]:
@@ -266,71 +269,24 @@ def extract(ground_truth, step, sou, version, model, regression, dates):
 def run(action, ground_truth, step, sou, version, model, regression, dates):
     if action == "tune":
         run_tune(ground_truth, step, sou, version, model, regression, dates)
+        return
+
     elif action == "train":
         run_train(ground_truth, step, sou, version, model, regression, dates)
+        return
+
     elif action == "test":
         run_test(ground_truth, step, sou, version, model, regression, dates)
+        return
+
+    elif action == "analyze":
+        run_analyze(ground_truth, step, version, model, regression, dates)
+
     elif action == "predict":
         run_test(ground_truth, step, sou, version, model, regression, dates)
-        print(extract(ground_truth, step, sou, version, model, regression, dates))
-
-    
-# def total_main_controller(data_preprocess, run_prediction, predict_period, predict_recent_days, predict_metal, run_mode, whether_return_df):
-#     '''
-#     :param data_preprocess: bool, whether to do the step 1 to step 3
-#     :param run_prediction: bool, whether to do the step 4
-#     :param predict_period: str, the date we need to predict
-#     :param predict_recent_days:, str, how many recent days we need to predict
-#     :param predict_metal: str, the certain metal we need to predict, when it is 'all', predict all the metal
-#     :param run_mode: str, whether to compare the results with the labels
-#     :param whether_return_df: bool, whether to give the output results
-#     '''
-
-#     if eval(data_preprocess) == True:
-        
-#         print('--------------------------data preprocessing-------------------')
-#         step1_path = '/mnt/gluster/Alphien/paperTrading/Team/NEXT/4EBaseMetal/code/new_Analyst_Report_Chinese/step1_crawler/'
-#         step1_code = 'python crawler.py run'
-#         print('------------------running step 1-------------------------------')
-#         os.system('cd {};{}'.format(step1_path, step1_code))
-        
-#         step2_path = '/mnt/gluster/Alphien/paperTrading/Team/NEXT/4EBaseMetal/code/new_Analyst_Report_Chinese/step2_extract_html/'
-#         step2_code = 'python step2_main_contraoller.py'
-#         print('------------------running step 2-------------------------------')
-#         os.system('cd {};{}'.format(step2_path, step2_code))
-        
-#         step3_path = '/mnt/gluster/Alphien/paperTrading/Team/NEXT/4EBaseMetal/code/new_Analyst_Report_Chinese/step3_extract_recommendation/'
-#         step3_code = 'python call_aip.py run'
-#         print('------------------running step 3-------------------------------')
-#         os.system('cd {};{}'.format(step3_path, step3_code))
-
-#     if eval(run_prediction) == True:
-        
-#         if predict_period == 'None':
-#             if int(predict_recent_days) >= 1:
-#                 end_date = datetime.datetime.now()
-#                 start_date = end_date- datetime.timedelta(days=int(predict_recent_days)-1)
-#                 use_prediction_period = [[datetime.datetime.strftime(start_date, '%Y-%m-%d'), datetime.datetime.strftime(end_date, '%Y-%m-%d')]]
-#             else:
-#                 return 'wrong input of the parameter recent days'
-#         else:
-#             use_prediction_period = get_half_date(predict_period)
-            
-#         step4_path = '/mnt/gluster/Alphien/paperTrading/Team/NEXT/4EBaseMetal/code/new_Analyst_Report_Chinese/step4_sentiment_analysis/'
-        
-#         for per in use_prediction_period:
-            
-#             os.system('cd {};python main_function.py {} {} {} {}'.format(step4_path, per[0], per[1], predict_metal, run_mode))
-    
-#     if eval(whether_return_df) == True:
-        
-#         total_df = []
-#         for per in use_prediction_period:
-#             total_df += get_return_df(per[0], per[1], run_mode, predict_metal)
-        
-#         res = pd.concat(total_df).reset_index(drop=True)
-#         res = res.sort_values(by=['date', 'metal'], ascending=[True, True]).reset_index(drop=True)
-#         return res
+        res = extract(ground_truth, step, sou, version, model, regression, dates)
+        print(res)
+        return res
     
 if __name__ ==  '__main__':        
     desc = 'controller for financial models'

@@ -276,6 +276,7 @@ if __name__ == '__main__':
     #not flexible, need to be updated
     error_path = './step3_data/error_recommend.json'
     recommend = pd.read_sql('select * from recommend', con=conn)
+    recommend = recommend.loc[recommend['published_date'].apply(lambda x: not isinstance(x,str))]
     
     #here we deal with the wrong date
     dat_type = [str(type(i)) for i in recommend['date']]

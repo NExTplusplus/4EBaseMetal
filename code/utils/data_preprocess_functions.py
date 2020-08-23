@@ -58,6 +58,10 @@ def deal_with_abnormal_value(time_series, toggle_dic):
     if toggle_dic['interpolate']:
         #missing value interpolate
         time_series = time_series.interpolate(axis = 0)
+    
+    if toggle_dic['ffill']:
+        #fill na values with closest previous indexed value where possible else fill with closest next value
+        time_series = time_series.fillna(method ='ffill', axis = 0).fillna(method ='bfill', axis = 0)
 
     return time_series
 
@@ -161,10 +165,32 @@ def labelling_v3(time_series,horizon, ground_truth_columns):
         labels.columns = ["Regression Label"]
         price_changes = labels.shift(-horizon) - labels
         labels['Label'] = price_changes.divide(labels)
+        ans.append(labels)
+
+    return ans
+
+def labelling_v4(time_series,horizon, ground_truth_columns, split_dates):
+    """
+    horizon: the time horizon
+    ground_truth_columns: the column we predict
+    """
+    assert ground_truth_columns != []
+    ans=[]
+    for ground in ground_truth_columns:
+        gt = copy(time_series[ground].to_frame())
+        labels = copy(time_series[ground[:-4]+"Close"].to_frame())
+        scaler = preprocessing.MinMaxScaler()
+        scaler.fit(labels.loc[:split_dates[1]].values.reshape(-1,1))
+        labels = pd.DataFrame(data = scaler.transform(labels), index = labels.index, columns = ["Label"]).shift(-horizon)
+        class_label = (gt.shift(-horizon) - gt) > 0
+        labels = pd.concat([labels,class_label], axis = 1)
+        labels.columns = ["Regression Label","Label"]
         print(labels)
         ans.append(labels)
 
     return ans
+
+
 
 #we use this function to make the data normalization
 def normalize_without_1d_return(time_series,train_end, params):
@@ -568,7 +594,20 @@ def scaling_v2(time_series,train_end, cat_cols):
     time_series[cols] = data
     return time_series
 
-#
+#scale all columns with minmaxscaler
+def scaling_v3(time_series,train_end):
+    """
+    train_end:string which we choose to define the time range
+    cat_cols:categorical columns that are not to be scaled
+    """
+    for col in time_series.columns.values.tolist():
+        scaler = preprocessing.MinMaxScaler()
+
+        scaler.fit(time_series.iloc[:train_end].loc[:,col].values.reshape(-1,1))
+        
+        time_series[col] = scaler.transform(time_series.loc[:,col].values.reshape(-1,1))
+    return time_series
+
 
 def construct(time_series, ground_truth, start_ind, end_ind, lags, h):
     num = 0

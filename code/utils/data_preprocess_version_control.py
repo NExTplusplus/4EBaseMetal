@@ -166,6 +166,13 @@ def generate_version_params(version):
                 "normalize_without_1d_return": "v1", "technical_indication":"v4", "supply_and_demand":None,
                 "remove_unused_columns":"v6", "price_normalization":"v3", "scaling":None,
                 "construct":"v4"}
+    
+    elif v == "c1":
+        ans = { "generate_norm_params":"v1","generate_tech_params":None,"generate_strat_params":None, "generate_SD_params":None,
+                "deal_with_abnormal_value":"v4", "labelling":"v4", "process_missing_value":"v1", "strategy_signal":None,
+                "normalize_without_1d_return": None, "technical_indication":None, "supply_and_demand":None,
+                "remove_unused_columns":"v7", "price_normalization":None, "scaling":"v3",
+                "construct":"v4"}
     print(ans)
     return ans
 
@@ -184,6 +191,8 @@ def generate_norm_params(version, date):
     elif version == "v3":
         # only used for STL decomposition experiment
         return {'vol_norm':'v1','ex_spread_norm':'v1','spot_spread_norm':'v1','len_ma':5,'len_update':30,'both':3,'strength':0.01,'date':date > 0, "STL":True}
+    else:
+        return None
         
 def generate_tech_params(version):
     '''
@@ -198,6 +207,8 @@ def generate_tech_params(version):
                                'acc_initial':0.02,'acc_maximum':0.2,'Win_CCI':[12,26,40,65,125],'Win_ADX':[14,26,40,54,125],'Win_RSI':[14,26,40,54,125]}
     elif version == "v3":
         return {'strength':0.01,'both':3,'Win_EMA':[12,26,40,65,125],'Win_Bollinger':[12,26,40,65,125]}
+    else:
+        return None
 
 def generate_SD_params(version):
     '''
@@ -206,6 +217,8 @@ def generate_SD_params(version):
     '''
     if version == "v1":
         return {"Spread":"v2"}
+    else:
+        return None
 
 def generate_strat_params(ground_truth,horizon,version):
     '''
@@ -277,13 +290,15 @@ def deal_with_abnormal_value(arguments, version):
         return time_series
     elif version == "v1":
         #process abnormally large and small values and interpolate existing data
-        toggle_dic = {'max':True,'3rd party':False, 'min':True, 'interpolate':True}
+        toggle_dic = {'max':True,'3rd party':False, 'min':True, 'interpolate':True, 'ffill':False}
     elif version == "v2":
         #process abnormally large values and interpolate existing data
-        toggle_dic = {'max':True,'3rd party':False, 'min':False, 'interpolate':True}
+        toggle_dic = {'max':True,'3rd party':False, 'min':False, 'interpolate':True, 'ffill':False}
     elif version == "v3":
         #process abnormally large values and interpolate existing data (3rd party predictions are filled with last known value)
-        toggle_dic = {'max':True,'3rd party':True, 'min':False, 'interpolate':True}
+        toggle_dic = {'max':True,'3rd party':True, 'min':False, 'interpolate':True, 'ffill':False}
+    elif version == "v4":
+        toggle_dic = {'max':False, '3rd party':False, 'min':False, 'interpolate':False, 'ffill':True}
     return dpf.deal_with_abnormal_value(time_series, toggle_dic)
 
 def labelling(arguments, version):
@@ -300,6 +315,12 @@ def labelling(arguments, version):
         #regression
         return dpf.labelling_v3(time_series, arguments['horizon'],
                                 arguments['ground_truth_columns'])
+    elif version == "v4":
+        #competition
+        return dpf.labelling_v4(time_series, arguments['horizon'],
+                                arguments['ground_truth_columns'], arguments['split_dates'])
+    else:
+        return None
     
 
 def process_missing_value(arguments, version):
@@ -307,6 +328,8 @@ def process_missing_value(arguments, version):
     if version == "v1":
         #drop NA rows from head
         return dpf.process_missing_value(time_series)
+    else:
+        return time_series
 
 def strategy_signal(arguments,version):
     time_series = arguments['time_series']
@@ -407,6 +430,11 @@ def remove_unused_columns(arguments, version):
         target = arguments['ground_truth_columns'][0][:-5]
         condition = lambda x : ((target not in x and len(x.split('_'))>2) or (target not in x and "LME" in x) or x==target+'_OI' or x==target+'_Volume' or x == target+"_Spot" or 'Spread' in x or 'CNYUSD' == x) and (x != "day" or x != "month")
     
+    elif version == "v7":
+        # remove all data columns not of LME and not of specified metal (ground truth) and raw Volume, OI and Spot Price
+        target = arguments['ground_truth_columns'][0][:-5]
+        condition = lambda x : ((target not in x and len(x.split('_'))>2) or (target not in x and "LME" in x) or x==target+'_OI' or x == target+"_Spot" or 'Spread' in x or 'CNYUSD' == x) and (x != "day" or x != "month")
+    
     return dpf.remove_unused_columns(time_series,arguments['org_cols'],condition)
     
 def price_normalization(arguments, version):
@@ -442,6 +470,9 @@ def scaling(arguments, version):
     if version == "v2":
         #scaling without affecting categorical variables
         return dpf.scaling_v2(time_series,time_series.index.get_loc(arguments['split_dates'][1]),arguments['cat_cols'])
+    if version == "v3":
+        #minmax scaler
+        return dpf.scaling_v3(time_series, time_series.index.get_loc(arguments['split_dates'][1]))
 
 
 def construct(ind, arguments, version):

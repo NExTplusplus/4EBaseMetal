@@ -47,8 +47,6 @@ def preprocess_data(time_series, LME_dates, horizon, ground_truth_columns, lags,
     
     #deal with the abnormal data such as outliers and missing data
     parameters['time_series'] = deal_with_abnormal_value(parameters,version_params["deal_with_abnormal_value"])
-    
-    print(parameters['time_series'].head(10))
 
     #Extract the rows with dates where LME has trading operations
     LME_dates = sorted(set(LME_dates).intersection(parameters['time_series'].index.values.tolist()))
@@ -60,8 +58,6 @@ def preprocess_data(time_series, LME_dates, horizon, ground_truth_columns, lags,
     parameters['labels'] = labelling(parameters, version_params['labelling'])
     parameters['time_series'] = process_missing_value(parameters,version_params['process_missing_value'])
     parameters['org_cols'] = time_series.columns.values.tolist()
-
-    print(parameters['time_series'].head(10))
 
     # we construct the signal strategy of LME
     parameters['time_series'] = strategy_signal(parameters,version_params['strategy_signal'])
@@ -76,17 +72,11 @@ def preprocess_data(time_series, LME_dates, horizon, ground_truth_columns, lags,
     #holder for special columns that are not to be scale
     parameters['cat_cols'] = []
 
-    print(parameters['time_series'].head(10))
-
     # normalize OI, volume and spread
     parameters['time_series'], parameters['norm_check'] = normalize_without_1d_return(parameters, version_params['normalize_without_1d_return'])
 
-    print(parameters['time_series'].head(10))
-
     # construct the techincal indicator of COMEX and LME.Because we use the LME dates so we will lose some comex's information
     parameters['time_series'] = technical_indication(parameters, version_params['technical_indication'])
-    
-    print(parameters['time_series'].head(10))
 
     if parameters['norm_params']['date']:
         print("date")
@@ -95,26 +85,18 @@ def preprocess_data(time_series, LME_dates, horizon, ground_truth_columns, lags,
 
     # generate supply and demand indicators
     parameters['time_series'] = supply_and_demand(parameters,version_params['supply_and_demand'])
-    
-    print(parameters['time_series'].head(10))
 
     # remove the data columns that are not required in the final result
     print("origin features",parameters['time_series'].columns.values.tolist())
     parameters['time_series'], parameters['org_cols'] = remove_unused_columns(parameters, version_params['remove_unused_columns'])
 
-    print(parameters['time_series'].head(10))
-
     # normalize the prices into returns when toggled
     parameters['time_series'] = price_normalization(parameters,version_params['price_normalization'])
-
-    print(parameters['time_series'].head(10))
 
     # remove missing values in data
     parameters['time_series'] = process_missing_value(parameters, version_params['process_missing_value'])
     split_dates = reset_split_dates(parameters['time_series'],split_dates)
     print("features",sorted(parameters['time_series'].columns.values.tolist()))
-
-    print(parameters['time_series'].head(10))
 
     # identify columns that are of form -1,0,1
     for col in parameters['time_series'].columns.values.tolist():
@@ -125,13 +107,9 @@ def preprocess_data(time_series, LME_dates, horizon, ground_truth_columns, lags,
     parameters['time_series'] = scaling(parameters,version_params['scaling'])
     complete_time_series = []
 
-    print(parameters['time_series'].head(10))
-
     # sort data columns according to alphabetical order 
     # when dealing with even versions, alphabetical order ensures that the data columns are similarly sorted
     parameters['time_series'] = parameters['time_series'][sorted(parameters['time_series'].columns)]
-    
-    print(parameters['time_series'].head(10))
 
     parameters['all_cols'] = []
     if len(ground_truth_columns) > 1:
@@ -155,6 +133,8 @@ def preprocess_data(time_series, LME_dates, horizon, ground_truth_columns, lags,
         if "live" in tech_params.keys():
             # if live testing is toggled, then we fill the results that we cannot acquire as 0
             parameters['time_series'][ind]["Label"][-horizon:] = [0]*horizon
+            if "Regression Label" in parameters['labels'][0].columns:
+                parameters['time_series'][ind]["Regression Label"][-horizon:] = [0]*horizon
         
         parameters['time_series'][ind] = pmv(parameters['time_series'][ind])
         split_dates = reset_split_dates(parameters['time_series'][ind],split_dates)

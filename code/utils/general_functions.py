@@ -58,6 +58,8 @@ def generate_config_path(version):
         return "exp/TP_v1.conf"
     elif version in ['r2']:
         return 'exp/regression_r2.conf'
+    elif version in ['c1']:
+        return 'exp/competition.conf'
     else:
         print("Version out of bounds!")
         os.exit()
@@ -169,7 +171,6 @@ def prepare_data(time_series,LME_dates,horizon,ground_truth_list,lag,split_date,
 
     #preprocess data
     for ground_truth in ground_truth_list:
-        print(norm_params)
         if live:
             X_tr, y_tr, X_va, y_va, norm_check,column_list,val_dates = preprocess_data(time_series,LME_dates,horizon,[ground_truth],lag,copy(split_date),copy(norm_params),copy(tech_params),version_params)
         else:

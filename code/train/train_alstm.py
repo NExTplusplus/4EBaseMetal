@@ -11,11 +11,9 @@ from sklearn.metrics import accuracy_score, f1_score
 from copy import copy
 import psutil
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
-from data.load_data import load_data
 from model.model_embedding import MultiHeadAttention, attention, bilstm
-from utils.construct_data import rolling_half_year
-from utils.version_control_functions import generate_version_params
-from utils.general_functions import *
+from utils.data_preprocess_version_control import generate_version_params
+import utils.general_functions as gn
 import numpy as np
 torch.manual_seed(1)
 np.random.seed(1)
@@ -46,23 +44,7 @@ class Trainer:
                  test_y_top_ind_case,
                  test_y_bot_ind_case
                  ):
-        # dataset
-        #self.dataset = Dataset(driving, target, time_step, split, 0, version)
-        #self.train_size, self.test_size = self.dataset.get_size()
-        #self.window_size = time_step
-        #self.feature_size = self.dataset.get_num_features()
-        #self.case_number = self.dataset.case_size
-        # Network
-        #self.split = split
-        #self.lr = lr
-        #self.hidden_state = hidden_state
-        #self.dropout = dropout
-        #self.loss_func = nn.MSELoss()
-        #self.embedding_size = embedding_size
-        # attention
-        #self.attention_size = attention_size
-        
-        #self.path_name = "../../../data/Pretrained/window_size-"+str(self.window_size)+"-hidden_size-"+str(self.hidden_state)+"-embed_size-"+str(embedding_size)
+
         self.window_size = time_step
         self.feature_size = input_dim
         #the case number is the number of the metal we want to predict
@@ -80,18 +62,6 @@ class Trainer:
         self.attention_size = attention_size
         
         # get the train data and test data
-        '''
-        old code from Jiangeng
-        self.train_X = train_X
-        self.train_y = train_y.values
-        self.test_X = test_X
-        self.test_y = test_y.values
-        self.val_X = val_X
-        self.val_y = val_y.values
-        self.train_embedding = final_train_X_embedding
-        self.test_embedding = final_test_X_embedding
-        self.val_embedding = final_val_X_embedding
-        '''
         self.train_X = train_X
         self.train_y = train_y
         self.test_X = test_X
@@ -161,140 +131,8 @@ class Trainer:
                 test_y_class.append(0)
         end = time.time()
         print("preparing training and testing date with time: {}".format(end-start))
-        '''
-        #train_day =  int(self.train_day*self.split)
-        #val_day = self.train_day-train_day
-        #train_X = self.train_X[:train_day*self.case_number]
-        #val_X = self.train_X[train_day*self.case_number:]
-        #train_embedding = self.train_embedding[:train_day*self.case_number]
-        #val_embedding = self.train_embedding[train_day*self.case_number:]
-        #start to prepare the train data
-        #train_y = self.train_y[:train_day*self.case_number]
-        #print('the length of the train is {}'.format(len(train_X)))
-        #print('the length of the train_y is {}'.format(len(train_y)))
-        #val_y = self.train_y[train_day*self.case_number:]
-        #new_train_X = []
-        #metal_length = 0
-        #train_y_class = []
-        #for i in range(len(train_y)):
-        #    if train_y[i]>=0.5:
-        #        train_y_class.append(1)
-        #    else:
-        #        train_y_class.append(0)
-        #val_y_class = []
-        #for i in range(len(val_y)):
-        #    if val_y[i]>=0.5:
-        #        val_y_class.append(1)
-        #    else:
-        #        val_y_class.append(0)
-        #for i in range(self.case_number):
-        #    while (metal_length+6)<=len(train_X):
-                #print("the length of the metal is {}".format(metal_length+i))
-        #        new_train_X.append(train_X[metal_length+i])
-        #        metal_length+=6
-                #print("")
-        #    metal_length = 0
-        #print("the length of the new_train_X is {}".format(len(new_train_X)))
-        #new_val_X = []
-        #metal_length = 0
-        #for i in range(6):
-        #    while (metal_length+6)<=len(val_X):
-                #print("the length of the metal is {}".format(metal_length+i))
-        #        new_val_X.append(val_X[metal_length+i])
-        #        metal_length+=6
-                #print("")
-        #    metal_length = 0
-        #new_train_y = []
-        #metal_length = 0
-        #for i in range(6):
-        #    while (metal_length+6)<=len(train_y):
-                #print("the length of the metal is {}".format(metal_length+i))
-        #        new_train_y.append(train_y[metal_length+i])
-        #        metal_length+=6
-                #print("")
-        #    metal_length = 0
-        #new_val_y = []
-        #metal_length = 0
-        #for i in range(6):
-        #    while (metal_length+6)<=len(val_y):
-                #print("the length of the metal is {}".format(metal_length+i))
-        #        new_val_y.append(val_y[metal_length+i])
-        #        metal_length+=6
-                #print("")
-        #    metal_length = 0
-        #test_y_class = []
-        #for item in self.test_y:
-        #    if item >0:
-        #        test_y_class.append(1)
-        #    else:
-        #        test_y_class.append(0)
-        #train_length = int(len(new_train_X)/self.case_number)
-        #val_length = int(len(new_val_X)/self.case_number)
-        #new_train_embedding = []
-        #metal_length = 0
-        #for i in range(6):
-        #    while (metal_length+6)<=len(train_embedding):
-                #print("the length of the metal is {}".format(metal_length+i))
-        #        new_train_embedding.append(i)
-        #        metal_length+=6
-                #print("")
-        #    metal_length = 0
-         
-        #new_val_embedding = []
-        #metal_length = 0
-        #for i in range(6):
-        #    while (metal_length+6)<=len(val_embedding):
-                #print("the length of the metal is {}".format(metal_length+i))
-        #        new_val_embedding.append(i)
-        #        metal_length+=6
-                #print("")
-        #    metal_length = 0
-        #metal_length = 0
-        #test_y_class = []
-        #for item in self.test_y:
-        #    if item >0:
-        #        test_y_class.append(1)
-        #    else:
-        #        test_y_class.append(0)
-        #new_test_X = []
-        #metal_length = 0
-        #for i in range(6):
-        #    while (metal_length+6)<=len(self.test_X):
-                #print("the length of the metal is {}".format(metal_length+i))
-        #        new_test_X.append(self.test_X[metal_length+i])
-        #        metal_length+=6
-                #print("")
-        #    metal_length = 0
-        #new_test_y = []
-        #metal_length = 0
-        #for i in range(6):
-        #    while (metal_length+6)<=len(self.test_y):
-                #print("the length of the metal is {}".format(metal_length+i))
-        #        new_test_y.append(self.test_y[metal_length+i])
-        #        metal_length+=6
-                #print("")
-        #    metal_length = 0
-        #new_test_embedding = []
-        #metal_length = 0
-        #for i in range(6):
-        #    while (metal_length+6)<=len(self.test_embedding):
-                #print("the length of the metal is {}".format(metal_length+i))
-        #        new_test_embedding.append(i)
-        #        metal_length+=6
-                #print("")
-        #    metal_length = 0
-        #end = time.time()
-        #print("preparing training and testing date with time: {}".format(end-start))
-        #end = time.time()
-        #print("preparing training and testing date with time: {}".format(end-start))
-        
-        #y_train = y_train.reshape(-1,1)
-        #y_test = y_test.reshape(-1,1)
-        '''
-        
         optimizer = torch.optim.Adam(net.parameters(), lr=self.lr)
         loss_func = self.loss_func   
-        #print("the new_embedding is {}".format(new_train_embedding))
         val_loss_list = []
         val_f1_list = []
         val_acc_list = []
@@ -309,38 +147,27 @@ class Trainer:
         train_size = len(self.train_X)
         val_size = len(self.val_X)
         test_size = len(self.test_X)
-        #print(len(new_val_X))
-        #print(len(new_val_embedding))
         for epoch in range(num_epochs):
             current_val_pred = []
             current_test_pred = []
 
             '''start train'''
             net.train()
-            # start = time.time()
             print('current epoch:', epoch+1)
             
             i = 0
             loss_sum = 0
 
-            ##########################
-            # TBD: add an offset (fuli)
-            ##########################
             while i < train_size:
                 batch_end = i + batch_size
                 if batch_end > train_size:
                     batch_end = train_size
-                #print("the length of the new_train_X is {}".format(len(new_train_X[i:batch_end])))
                 train_X_repredict=np.array(self.train_X[i:batch_end])
                 train_Y_repredict=np.array(self.train_y[i:batch_end])
                 train_X_tensor=torch.from_numpy(train_X_repredict).float()
                 train_Y_tensor=torch.from_numpy(train_Y_repredict).float()
                 var_x_train_id = torch.LongTensor(np.array(self.train_embedding[i:batch_end]))
-                #print(train_X_tensor.shape)
-                #print(var_x_train_id.shape)
                 output=net(train_X_tensor,var_x_train_id)
-                #print(output.shape, train_Y_tensor.shape)
-                #print("the length of the output is {}".format(len(output)))
                 loss = loss_func(output, train_Y_tensor)
                 
                 optimizer.zero_grad()
@@ -348,94 +175,34 @@ class Trainer:
                 optimizer.step()                
                 loss_sum += loss.detach()*(batch_end-i)
                 i = batch_end
-            # end = time.time()
             train_loss = loss_sum/train_size
             print("train loss is {:.6f}".format(train_loss))
-            #train_loss_list.append(float(train_loss))
-            #memory_usage()
-            
             if_eval_train = 1
 
             #start eval
-
-            # evaluate on validataion set
-            # start = time.time()
             net.eval()
             loss_sum = 0
             if if_eval_train:
-                '''
-                old code from Jiangeng
-                while i < val_size:
-                    batch_end = i + batch_size
-                    if batch_end > val_size:
-                        batch_end = val_size
-                    val_X_repredict=np.array(self.val_X[i:batch_end])
-                    val_Y_repredict=np.array(self.val_y[i:batch_end])
-                    val_X = torch.from_numpy(val_X_repredict).float()
-                    val_Y = torch.from_numpy(val_Y_repredict).float()
-                    var_x_val_id = torch.LongTensor(np.array(self.val_embedding[i:batch_end]))
-                    #print(val_X.shape)
-                    #print(var_x_val_id.shape)
-                    val_output = net(val_X,var_x_val_id)
-                    loss = loss_func(val_output, val_Y)
-                    loss_sum += loss.detach()*(batch_end-i)
-                    i = batch_end
-                    current_val_pred += list(val_output.detach().view(-1,))
-                '''
-
                 val_X = torch.from_numpy(self.val_X).float()
                 val_Y = torch.from_numpy(self.val_y).float()
                 var_x_val_id = torch.LongTensor(np.array(self.val_embedding))
-                # print(val_X.shape)
-                # print(var_x_val_id.shape)
                 val_output = net(val_X, var_x_val_id)
                 loss = loss_func(val_output, val_Y)
                 loss_sum = loss.detach()
                 current_val_pred = list(val_output.detach().view(-1, ))
-                # print(np.min(current_val_pred), np.max(current_val_pred))
-                ###############################
-                # to replace the old code (Fuli)
-                ###############################
 
                 current_val_class = [1 if ele>thresh else 0 for ele in current_val_pred]
 
                 val_loss = loss_sum
                 val_loss_list.append(float(val_loss))
 
-                # val_f1 = f1_score(val_y_class, current_val_class)
-                # val_f1_list.append(val_f1)
-
                 val_acc = accuracy_score(val_y_class, current_val_class)
                 val_acc_list.append(val_acc)
-                # end = time.time()
-            
-                # print('average val loss: {:.6f}, f1_score: {:.4f}, accuracy: {:.4f}'.format(val_loss, val_f1, val_acc))
+
                 print('average val loss: {:.6f}, accuracy: {:.4f}'.format(
                     val_loss, val_acc)
                 )
             
-            # start = time.time()
-
-            # evaluate on test set
-            # i = 0
-            # loss_sum = 0
-            '''
-            while i < test_size:
-                batch_end = i + batch_size
-                if batch_end > test_size:
-                    batch_end = test_size
-                test_X_repredict=np.array(self.test_X[i:batch_end])
-                test_Y_repredict=np.array(self.test_y[i:batch_end])
-                test_X = torch.from_numpy(test_X_repredict).float()
-                test_Y = torch.from_numpy(test_Y_repredict).float()
-                var_x_test_id = torch.LongTensor(np.array(self.test_embedding[i:batch_end]))
-
-                test_output = net(test_X,var_x_test_id)
-                loss = loss_func(test_output, test_Y)
-                loss_sum += loss.detach()*(batch_end-i)
-                i = batch_end
-                current_test_pred += list(test_output.detach().view(-1,))
-            '''
             test_X = torch.from_numpy(self.test_X).float()
             test_Y = torch.from_numpy(self.test_y).float()
             var_x_test_id = torch.LongTensor(np.array(self.test_embedding))
@@ -444,64 +211,21 @@ class Trainer:
             loss = loss_func(test_output, test_Y)
             loss_sum = loss.detach()
             current_test_pred = list(test_output.detach().view(-1,))
-            # print(np.min(current_test_pred), np.max(current_test_pred))
             
             current_test_class = [1 if ele>thresh else 0 for ele in current_test_pred]    
             
             test_loss = loss_sum
             test_loss_list.append(float(test_loss))
-            
-            # test_f1 = f1_score(test_y_class, current_test_class)
-            # test_f1_list.append(test_f1)
 
             test_acc = accuracy_score(test_y_class, current_test_class)
             test_acc_list.append(test_acc)
 
-            # end = time.time()
-
-            # print('average test loss: {:.6f}, f1_score: {:.4f}, accuracy: {:.4f}'.format(test_loss, test_f1, test_acc))
             print('average test loss: {:.6f}, accuracy: {:.4f}'.format(
                 test_loss, test_acc)
             )
 
             # evaluate by case
             self.evaluate_by_case(current_test_class)
-
-            '''
-            #if (epoch+1)%10 == 0:
-            #    current_val_pred = np.array(current_val_pred).reshape(self.case_number,-1)
-            #    current_test_pred = np.array(current_test_pred).reshape(self.case_number,-1)
-
-            #    val_prediction.append([list(ele) for ele in current_val_pred][:10])
-            #    test_prediction.append([list(ele) for ele in current_test_pred][:10])
-            
-            #if interval == -2:
-            #    if test_loss < lowest_loss:
-            #        torch.save(net.state_dict(),self.path_name)
-            #        lowest_loss = test_loss
-            
-        #out_loss = pd.DataFrame()
-        #out_loss['val_loss'] = val_loss_list
-        #out_loss['test_loss'] = test_loss_list
-        #out_loss['val_f1'] = val_f1_list
-        #out_loss['test_f1'] = test_f1_list
-        #out_loss['val_acc'] = val_acc_list
-        #out_loss['test_acc'] = test_acc_list
-        
-        #out_pred_val = pd.DataFrame()
-        #out_pred_test = pd.DataFrame()
-
-        #for epoch_index in range(int(num_epochs/10)):
-        #    epoch = (epoch_index+1)*10
-        #    out_pred_val[epoch] = val_prediction[epoch_index]
-        #    out_pred_test[epoch] = test_prediction[epoch_index]
-        
-        #out_pred_train=0
-        #out_pred_test=0
-        #out_loss=0
-        #return out_pred_val, out_pred_test, out_loss
-        '''
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Train the bi-LSTM + attention-based model on stock')
@@ -606,15 +330,15 @@ if __name__ == '__main__':
         n = 0
 
         #read the data from the 4E or NExT database
-        time_series,LME_dates,config_length = read_data_with_specified_columns(args.source,args.data_configure_file,"2003-11-12")
+        time_series,LME_dates,config_length = gn.read_data_with_specified_columns(args.source,args.data_configure_file,"2003-11-12")
 
         #generate list of list of dates to be used to roll over 5 half years
         today = args.date
         length = 5
-        if even_version(args.version) and time_horizon > 5:
+        if gn.even_version(args.version) and time_horizon > 5:
             length = 4
-        start_time,end_time = get_relevant_dates(today,length,"tune")
-        split_dates = rolling_half_year(start_time,end_time,length)
+        start_time,end_time = gn.get_relevant_dates(today,length,"tune")
+        split_dates = gn.rolling_half_year(start_time,end_time,length)
         split_dates  =  split_dates[:]
         
         importance_list = []
@@ -622,7 +346,7 @@ if __name__ == '__main__':
         version_params=generate_version_params(args.version)
 
 
-        for s, split_date in enumerate(split_dates[1:-1]):
+        for s, split_date in enumerate(split_dates):
             lag = args.lag
             horizon = args.steps
             norm_volume = "v1"
@@ -631,14 +355,6 @@ if __name__ == '__main__':
             len_ma = 5
             len_update = 30
             tol = 1e-7
-            """
-            if args.torch==1:
-                norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
-                            'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False, 'torch':True}
-            else:
-                norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
-                            'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False, 'torch':False}
-            """
             norm_params = {'vol_norm':norm_volume,'ex_spread_norm':norm_ex,'spot_spread_norm':norm_3m_spread,
                             'len_ma':len_ma,'len_update':len_update,'both':3,'strength':0.01,'xgboost':False}
             tech_params = {'strength':0.01,'both':3,'Win_VSD':[10,20,30,40,50,60],'Win_EMA':12,'Win_Bollinger':22,
@@ -658,10 +374,11 @@ if __name__ == '__main__':
             final_test_X_embedding = []
             final_val_X_embedding = []
             i = 0
+
             #toggle metal id
             metal_id = False
             ground_truth_list = [args.ground_truth]
-            if even_version(args.version):
+            if gn.even_version(args.version):
                 ground_truth_list = ["LME_Co_Spot","LME_Al_Spot","LME_Ni_Spot","LME_Ti_Spot","LME_Zi_Spot","LME_Le_Spot"]
 
             for ground_truth in ground_truth_list:
@@ -672,30 +389,12 @@ if __name__ == '__main__':
                 spot_list = np.array(new_time_series[ground_truth])
                 new_time_series['spot_price'] = spot_list
                 #extract copy of data to process
-                ts = new_time_series.loc[split_dates[s][0]:split_dates[s+2][2]]
+                ts = new_time_series.loc[split_date[0]:split_date[-1]]
+                tvt_date = split_date[1:-1]
 
                 #load data for use
-                X_tr, y_tr, X_va, y_va, val_dates, column_lag_list = prepare_data(ts,LME_dates,horizon,[ground_truth],lag,copy(split_date),version_params,metal_id_bool = metal_id,reshape = False)
+                X_tr, y_tr, X_va, y_va, val_dates, column_lag_list = gn.prepare_data(ts,LME_dates,horizon,[ground_truth],lag,copy(tvt_date),version_params,metal_id_bool = metal_id,reshape = False)
                 
-
-
-
-                '''
-                old code from Jiangeng
-                X_tr = np.concatenate(X_tr)
-
-                X_ta = X_tr.reshape(len(X_tr),lag*len(column_list[0]))[:int(len(X_tr)*split)].tolist()
-                y_ta = np.concatenate(y_tr)[:int(len(X_tr)*split)].tolist()
-                
-                X_te = np.concatenate(X_va)
-                X_te = X_te.reshape(len(X_te),lag*len(column_list[0])).tolist()
-                y_te = np.concatenate(y_va).tolist()
-
-                X_val = X_tr.reshape(len(X_tr),lag*len(column_list[0]))[int(len(X_tr)*split):].tolist()
-                y_val = np.concatenate(y_tr)[int(len(X_tr)*split):].tolist()
-                '''
-
-
                 # split validation
                 X_ta = X_tr[:int(len(X_tr) * split), :, :]
                 y_ta = y_tr[:int(len(y_tr) * split)]
@@ -706,26 +405,10 @@ if __name__ == '__main__':
                 X_te = X_va
                 y_te = y_va
 
-                ###############################
-                # to replace the old code (Fuli)
-                ###############################
-
                 # generate metal id for embedding lookup
                 train_X_id_embedding = [i]*len(X_ta)
                 val_X_id_embedding = [i]*len(X_val)
                 test_X_id_embedding = [i]*len(X_te)
-                #train_y_id_embedding = [i]*len(y_tr)
-                #test_y_id_embedding = [i]*len(y_va)
-
-                '''
-                old code from Jiangeng
-                final_X_tr+=X_ta
-                final_y_tr+=y_ta
-                final_X_te+=X_te
-                final_y_te+=y_te
-                final_X_val+=X_val
-                final_y_val+=y_val
-                '''
 
                 if len(final_X_tr) == 0:
                     final_X_tr = copy(X_ta)
@@ -761,8 +444,6 @@ if __name__ == '__main__':
                     y_te_class[y_te_rank[:split_position]])
                 final_y_te_class_top_list.append(
                     y_te_class[y_te_rank[-split_position:]])
-                # final_y_te_class_bot_list.append(y_te_class[y_te_rank[:split_position]])
-                # final_y_te_class_top_list.append(y_te_class[y_te_rank[-split_position:]])
 
                 if len(final_X_val) == 0:
                     final_X_val = copy(X_val)
@@ -772,9 +453,6 @@ if __name__ == '__main__':
                     final_y_val = copy(y_val)
                 else:
                     final_y_val = np.concatenate((final_y_val, y_val), axis=0)
-                ###############################
-                # to replace the old code (Fuli)
-                ###############################
 
                 final_train_X_embedding+=train_X_id_embedding
                 final_test_X_embedding+=test_X_id_embedding
@@ -782,86 +460,11 @@ if __name__ == '__main__':
 
                 # update metal index
                 i+=1
-            #final_X_tr = [np.transpose(arr) for arr in np.dstack(final_X_tr)]
-            #final_y_tr = [np.transpose(arr) for arr in np.dstack(final_y_tr)]
-            #final_X_tr = np.reshape(final_X_tr,[np.shape(final_X_tr)[0]*np.shape(final_X_tr)[1],np.shape(final_X_tr)[2]])
-            #final_y_tr = np.reshape(final_y_tr,[np.shape(final_y_tr)[0]*np.shape(final_y_tr)[1],np.shape(final_y_tr)[2]])
-            #print(final_X_tr)
             print('Dataset statistic: #examples')
             print('Train:', len(final_X_tr), len(final_y_tr), len(final_train_X_embedding))
             print(np.max(final_X_tr), np.min(final_X_tr), np.max(final_y_tr), np.min(final_y_tr))
             print('Validation:', len(final_X_val), len(final_y_val), len(final_val_X_embedding))
             print('Testing:', len(final_X_te), len(final_y_te), len(final_test_X_embedding))
-
-            # # scaling price features and labels
-            # y_scaler = np.nanstd(final_y_tr) * 3
-            # final_y_tr /= y_scaler
-            # final_y_val /= y_scaler
-            # final_y_te /= y_scaler
-            #
-            # temp_value = final_X_tr[:,-1,-1]
-            # x_scaler = np.nanstd(final_X_tr[:,-1,-1]) * 3
-            # final_X_tr[:, :, -1] = final_X_tr[:, :, -1] / x_scaler
-            # final_X_val[:, :, -1] = final_X_val[:, :, -1] / x_scaler
-            # final_X_te[:, :, -1] = final_X_te[:, :, -1] / x_scaler
-
-            '''
-            old code from Jiangeng
-            column_lag_list = []
-            column_name = []
-            #print(column_list)
-            for i in range(lag):
-                for item in column_list[0]:
-                    new_item = item+"_"+str(lag-i)
-                    column_lag_list.append(new_item)
-            # reshape the two dimensens data into three dimensons
-            #print(column_lag_list)
-            train_dataframe = pd.DataFrame(final_X_tr,columns=column_lag_list)
-            test_dataframe = pd.DataFrame(final_X_te,columns=column_lag_list)
-            val_dataframe = pd.DataFrame(final_X_val,columns=column_lag_list)
-            train_X = train_dataframe.loc[:,column_lag_list]
-            test_X = test_dataframe.loc[:,column_lag_list]
-            val_X = val_dataframe.loc[:,column_lag_list]
-            #train_X_array = np.array(train_X)
-            #train_X = np.reshape(train_X_array, (len(train_X_array), lag, input_dim))
-            #train_y = pd.DataFrame(final_y_tr,columns=['result'])
-            #print(train_y)
-            #os.exit(0)
-            #get the shape of the dimension
-            input_dim = int(len(column_lag_list)/lag)
-            train_X_array = np.array(train_X)
-            train_X = np.reshape(train_X_array, (len(train_X_array), lag, input_dim))
-            test_X_array = np.array(test_X)
-            test_X = np.reshape(test_X_array, (len(test_X_array), lag, input_dim))
-            val_X_array = np.array(val_X)
-            val_X = np.reshape(val_X_array, (len(val_X_array), lag, input_dim))
-            #print("the length of the train_X is {}".format(len(train_X_array)))
-            #train_X_column = train_X_array[:,:len(train_X_array[0])-5]
-            #train_X_Spot = train_X_array[:,len(train_X_array[0])-5:]
-            #train_X_column = np.reshape(train_X_array, (len(train_X_array), lag, input_dim-1))
-            #train_X_Spot = np.reshape(train_X_Spot, (len(train_X_Spot), lag, 1))
-            #train_X = np.concatenate((train_X_column,train_X_Spot), axis=2)
-            
-            #print("the new train data is {}".format(new_train_data))
-            #test_X_array = np.array(test_X)
-            #test_X_column = test_X_array[:,:len(test_X_array[0])-5]
-            #test_X_Spot = test_X_array[:,len(test_X_array[0])-5:]
-            #test_X = np.reshape(test_X_array, (len(test_X_column), lag, input_dim-1))
-            #test_X_Spot = np.reshape(test_X_Spot, (len(test_X_Spot), lag, 1))
-            #test_X = np.concatenate((test_X_column,test_X_Spot), axis=2)
-            
-            #train_embedding = train_dataframe.loc[:,id_column]
-            #test_embedding = test_dataframe.loc[:,id_column]
-            #print(final_train_X_embedding)
-            train_y = pd.DataFrame(final_y_tr,columns=['result'])
-            print(train_y)
-            test_y = pd.DataFrame(final_y_te,columns=['result'])
-            val_y = pd.DataFrame(final_y_val,columns=['result'])
-            window_size = lag
-            start = time.time()
-            trainer = Trainer(input_dim, hidden_state, window_size, lr, dropout, args.split, attention_size, embedding_size,train_X,train_y,test_X,test_y, val_X, val_y, final_train_X_embedding, final_test_X_embedding,final_val_X_embedding)
-            end = time.time()
-            '''
 
             input_dim = final_X_tr.shape[-1]
             window_size = lag
@@ -883,11 +486,7 @@ if __name__ == '__main__':
                                 final_y_te_bot_ind_list
                                 )
             end = time.time()
-            ###############################
-            # to replace the old code (Fuli)
-            ###############################
             print("pre-processing time: {}".format(end-start))
             print("the split date is {}".format(split_date[1]))
-            #out_val_pred, out_test_pred, out_loss = trainer.train_minibatch(num_epochs, batch_size, interval)
             trainer.train_minibatch(num_epochs, batch_size, interval)
 
