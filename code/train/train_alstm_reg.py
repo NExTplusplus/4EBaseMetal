@@ -1,5 +1,8 @@
 #encoding:utf-8
+import numpy as np
 import pandas as pd
+from copy import copy
+import psutil
 import os, sys, time, random
 import argparse
 import json
@@ -7,17 +10,13 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
-from sklearn.metrics import mean_absolute_error, f1_score
-from copy import copy
-import psutil
+from sklearn.metrics import mean_absolute_error
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
-from data.load_data import load_data
+main_dir = os.getcwd()
 from model.model_embedding import bilstm
-from model.model_embedding import bilstm as bilstm_mc
-from utils.construct_data import rolling_half_year
-from utils.version_control_functions import generate_version_params
-from utils.general_functions import *
-import numpy as np
+from model.model_embedding_mc import bilstm as bilstm_mc
+from utils.data_preprocess_version_control import generate_version_params
+import utils.general_functions as gn
 torch.manual_seed(1)
 np.random.seed(1)
 random.seed(1)
@@ -157,7 +156,7 @@ class Trainer:
             current_val_pred = []
             current_test_pred = []
 
-            '''start train'''
+            #start train
             net.train()
             if self.mc:
                 net.train_dropout()
@@ -185,8 +184,6 @@ class Trainer:
             train_loss = loss_sum/train_size
             print("train loss is {:.6f}".format(train_loss))
             if_eval_train = 1
-
-            #start eval
 
             # evaluate on validation set
             if self.mc:
@@ -225,7 +222,6 @@ class Trainer:
             var_x_test_id = torch.LongTensor(np.array(self.test_embedding))
             if self.mc:
                 for rep in range(self.repeat_mc):
-                    # print(rep)
                     if rep == 0:
                         test_output = net(test_X, var_x_test_id).detach()
                     else:
@@ -339,8 +335,7 @@ if __name__ == '__main__':
     if args.ground_truth =='None':
         args.ground_truth = None
 
-    os.chdir(os.path.abspath(sys.path[1]))
-    sys.path[0] = os.path.abspath(os.path.join(sys.path[0],"4EBaseMetal"))
+    sys.path[0] = os.path.abspath(main_dir)
     num_epochs = args.epoch
     batch_size = args.batch
     split = args.split
@@ -364,15 +359,15 @@ if __name__ == '__main__':
         n = 0
 
         #read the data from the 4E or NExT database
-        time_series,LME_dates,config_length = read_data_with_specified_columns(args.source,args.data_configure_file,"2003-11-12")
+        time_series,LME_dates,config_length = gn.read_data_with_specified_columns(args.source,args.data_configure_file,"2003-11-12")
 
         #generate list of list of dates to be used to roll over 5 half years
         today = args.date
         length = 5
-        if even_version(args.version) and time_horizon > 5:
+        if gn.even_version(args.version) and time_horizon > 5:
             length = 4
-        start_time,end_time = get_relevant_dates(today,length,"tune")
-        split_dates = rolling_half_year(start_time,end_time,length)
+        start_time,end_time = gn.get_relevant_dates(today,length,"tune")
+        split_dates = gn.rolling_half_year(start_time,end_time,length)
         split_dates  =  split_dates[:]
         
         importance_list = []
@@ -380,7 +375,7 @@ if __name__ == '__main__':
         version_params=generate_version_params(args.version)
 
 
-        for s, split_date in enumerate(split_dates[1:-1]):
+        for s, split_date in enumerate(split_dates):
             lag = args.lag
             horizon = args.steps
             norm_volume = "v1"
@@ -409,10 +404,11 @@ if __name__ == '__main__':
             final_test_X_embedding = []
             final_val_X_embedding = []
             i = 0
+
             #toggle metal id
             metal_id = False
             ground_truth_list = [args.ground_truth]
-            if even_version(args.version):
+            if gn.even_version(args.version):
                 ground_truth_list = ["LME_Co_Spot","LME_Al_Spot","LME_Ni_Spot","LME_Ti_Spot","LME_Zi_Spot","LME_Le_Spot"]
 
             for ground_truth in ground_truth_list:
@@ -420,10 +416,11 @@ if __name__ == '__main__':
                 print('Before Load Data')
                 print(split_date)
                 new_time_series = copy(time_series)
-                ts = new_time_series.loc[split_dates[s][0]:split_dates[s+2][2]]
+                ts = new_time_series.loc[split_date[0]:split_date[-1]]
+                tvt_date = split_date[1:-1]
 
                 #load data for use
-                X_tr, y_tr, X_va, y_va, val_dates, column_lag_list = prepare_data(ts,LME_dates,horizon,[ground_truth],lag,copy(split_date),version_params,metal_id_bool = metal_id,reshape = False)
+                X_tr, y_tr, X_va, y_va, val_dates, column_lag_list = gn.prepare_data(ts,LME_dates,horizon,[ground_truth],lag,copy(tvt_date),version_params,metal_id_bool = metal_id,reshape = False)
                 
                 # split validation
                 X_ta = X_tr[:int(len(X_tr) * split), :, :]

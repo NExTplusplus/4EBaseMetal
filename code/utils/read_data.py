@@ -20,7 +20,7 @@ def read_data_4E(config,start_date):
     import rpy2.robjects as robjects
 
     #load 4E code base to extract data
-    robjects.r('.sourceAlfunction()')
+    robjects.r('.sourceQlib()')
 
     #load LME data and generate column names
     LME = robjects.r('''merge(getSecurity(c("LMCADY Comdty","LMAHDY Comdty","LMPBDY Comdty","LMZSDY Comdty","LMNIDY Comdty","LMSNDY Comdty"), start = "'''+start_date+'''"), 

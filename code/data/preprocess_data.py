@@ -133,7 +133,7 @@ def preprocess_data(time_series, LME_dates, horizon, ground_truth_columns, lags,
         if "live" in tech_params.keys():
             # if live testing is toggled, then we fill the results that we cannot acquire as 0
             parameters['time_series'][ind]["Label"][-horizon:] = [0]*horizon
-            if "Regression Label" in parameters['labels'][0].columns:
+            if "Regression Label" in pd.DataFrame(parameters['labels'][0]).columns:
                 parameters['time_series'][ind]["Regression Label"][-horizon:] = [0]*horizon
         
         parameters['time_series'][ind] = pmv(parameters['time_series'][ind])

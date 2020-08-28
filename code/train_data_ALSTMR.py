@@ -7,13 +7,11 @@ import pandas as pd
 from copy import copy
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 import warnings
-from live.ALSTM_reg_live import ALSTM_reg_online
+from live.ALSTMR_live import ALSTMR_online
 
 if __name__ == '__main__':
   desc = 'the XGBoost model'
   parser = argparse.ArgumentParser(description=desc)
-  parser.add_argument('-c','--config',type=str,default="",
-            help='configuration file path')
   parser.add_argument('-s','--steps',type=int,default=5,
             help='steps in the future to be predicted')
   parser.add_argument('-gt', '--ground_truth', help='ground truth column',
@@ -95,9 +93,9 @@ if __name__ == '__main__':
   )
   args = parser.parse_args()
   args.mc = args.mc != 0
-  model = ALSTM_reg_online(lag = args.lag, horizon = args.steps, version = args.version, gt = args.ground_truth, date = args.date, source = args.source, path =args.config,mc = args.mc)
+  model = ALSTMR_online(lag = args.lag, horizon = args.steps, version = args.version, gt = args.ground_truth, date = args.date, source = args.source, mc = args.mc)
   if args.action=="tune":
-    model.choose_parameter(log = args.log, script = args.script, drop_out = args.drop_out, hidden = args.hidden_state, \
+    model.tune(log = args.log, script = args.script, drop_out = args.drop_out, hidden = args.hidden_state, \
                             embedding_size = args.embedding_size,batch = args.batch, drop_out_mc = args.drop_out_mc, \
                             repeat_mc = args.repeat_mc    
                             )

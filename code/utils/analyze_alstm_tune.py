@@ -33,7 +33,7 @@ if __name__ == '__main__':
     train = "train_data_ALSTM"
     full_str = ""
     if args.regression != 0:
-        train = "train_data_alstm_reg"
+        train = "train_data_ALSTMR"
     for f in files:
         step = f.split("_")[1]
         version = f.split("/")[-1].split("_")[0]
