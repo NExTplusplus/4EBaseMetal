@@ -92,7 +92,7 @@ class Logistic_online():
             for C in C_list:
                 if C not in ans['C']:
                     ans["C"].append(C)
-                if split_date[1]+"_acc" not in ans.keys():
+                if split_date[2]+"_acc" not in ans.keys():
                     ans[split_date[2]+"_acc"] = []
                     ans[split_date[2]+"_length"] = []
 
