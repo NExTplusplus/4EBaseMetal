@@ -1,0 +1,2 @@
+['code/train/analyze_alstm.py', 'result/validation/alstm', 'v26_ave_acc_h20_tune.log', 'para']
+fnames: ['result/validation/alstm/v26_ave_acc_h20_tune.log']

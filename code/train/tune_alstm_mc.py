@@ -33,8 +33,8 @@ if __name__ == '__main__':
 
     selected_parameters = ['drop_out_mc', 'repeat_mc']
     parameter_values = [
-        [0.05, 0.1, 0.15, 0.2],
-        [10, 20, 30]
+        [0.05, 0.1, 0.15],
+        [50]
     ]
     init_para = {
         'drop_out': args.drop_out,

@@ -1,0 +1,2 @@
+['code/train/analyze_alstm.py', 'result/validation/alstm', 'v26_best_loss_h5_tune.log', 'para']
+fnames: ['result/validation/alstm/v26_best_loss_h5_tune.log']

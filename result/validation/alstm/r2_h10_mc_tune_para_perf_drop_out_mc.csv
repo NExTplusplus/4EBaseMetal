@@ -1,0 +1,2 @@
+Parameter_Combination, 0.05_va_loss, 0.1_va_loss, 0.15, 0.05_va_acc, 0.1_va_acc, 0.15, 0.05_te_loss, 0.1_te_loss, 0.15, 0.05_te_acc, 0.1_te_acc, 0.15, 0.05_te_tp, 0.1_te_tp, 0.15
+{"drop_out": 0.6 "repeat_mc": 50 "hidden": 30 "embedding_size": 5 "batch": 512 "lag": 4}, 0.032849, 0.032849, 0.032849, 0.0326, 0.0326, 0.0326, 0.036584, 0.036584, 0.036584, 0.0363, 0.0363, 0.0363, 0.0462, 0.0462, 0.0462

@@ -356,6 +356,9 @@ class ALSTMR_online():
 
       #begin to split the train data
         for date in self.date.split(","):
+            torch.manual_seed(1)
+            np.random.seed(1)
+            random.seed(1)
             today = date
             length = 5
             if gn.even_version(self.version) and self.horizon > 5:
@@ -530,6 +533,9 @@ class ALSTMR_online():
 
         #begin to split the train data
         for date in self.date.split(","):
+            torch.manual_seed(1)
+            np.random.seed(1)
+            random.seed(1)
             today = date
             length = 5
             if gn.even_version(self.version) and self.horizon > 5:
