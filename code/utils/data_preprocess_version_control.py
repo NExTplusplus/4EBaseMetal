@@ -309,7 +309,7 @@ def labelling(arguments, version):
     
     elif version == "v2":
         #construct the torch version
-        return dpf.labelling_v2(time_series, arguments['horizon'], arguments['ground_truth_columns'])
+        return dpf.labelling_v2(time_series, arguments['horizon'], arguments['ground_truth_columns'],arguments['split_dates'])
 
     elif version == "v3":
         #regression

@@ -132,7 +132,7 @@ def labelling_v1(time_series,horizon, ground_truth_columns):
         ans.append(labels)
     return ans
 
-def labelling_v2(time_series,horizon, ground_truth_columns):
+def labelling_v2(time_series,horizon, ground_truth_columns,split_dates):
     """
     horizon: the time horizon
     ground_truth_columns: the column we predict
@@ -146,8 +146,8 @@ def labelling_v2(time_series,horizon, ground_truth_columns):
         labels = price_changes.divide(labels)
 
         # scaling the label with standard division
-        print(np.nanstd(labels.values))
-        labels = labels.div(3 * np.nanstd(labels.values))
+        print(np.nanstd(labels[:split_dates[1]].values[:-horizon]))
+        labels = labels.div(3 * np.nanstd(labels[:split_dates[1]].values[:-horizon]))
 
         labels = labels.rename("Label")
         ans.append(labels)
