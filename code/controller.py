@@ -94,6 +94,22 @@ def run_tune(ground_truth, step, sou, version, model, mc, date):
             if int(version[1:]) >= 23:
                 break
     
+    #generate tune command for post_process filter
+    elif model == "pp_filter":
+        train = "code/train_data_pp.py"
+        dates = ','.join(date[1:])
+        command += ' '.join(['python', train, \
+                                '-gt', ground_truth, \
+                                '-s', step, \
+                                '-sou', sou, \
+                                '-v', version, \
+                                '-d', dates, \
+                                '-o', "tune", \
+                                '-m', "Filter", \
+                                '>', \
+                                '/dev/null', \
+                                '2>&1', '&',"\n"])
+
     #generate tune command for ALSTM(classification)
     elif model == "alstm":
         train = "code/train_data_ALSTM.py"
@@ -106,55 +122,76 @@ def run_tune(ground_truth, step, sou, version, model, mc, date):
                             '-log', \
                             './result/validation/'+model+'/' \
                             +'_'.join([version, 'h'+step, "tune.log"]), \
+                            '>', '/dev/null', \
                             '2>&1', '&',"\n"])
 
-    
+    #generate tune command for ensemble
     elif model == "ensemble":
-        return
-    elif model == "alstmr":
-        train = "code/train_data_ALSTMR.py"
+        dates = ','.join(date[1:])
+        train = "code/train_data_ensemble.py"
         command += ' '.join(['python', train, \
                             '-s', step, \
-                            '-sou', sou, \
-                            '-v', version, \
-                            '-d', date, \
-                            '-o', "tune", \
-                            '-log', \
-                            './result/validation/alstm/' \
-                            +'_'.join([version, 'h'+step, "tune.log"]), \
-                            "\n"])
-
-        os.system(command)
-        #generate tuning results from log
-        filepath = ''
-        os.system(
-                ' '.join(['python', 'code/train/analyze_alstm.py', \
-                            'result/validation/alstm '+ \
-                            version+"_h"+step+"_tune.log", \
-                            '>', 'result/validation/alstm/'+ \
-                            version+"_h"+step+"_para.txt", "para"]
-                        )
-                )
-        filepath += 'result/validation/alstm/'+version+"_h"+step+"_para.txt,"
-
-        #remove last comma character
-        filepath = filepath[:-1]
-
-        #extract results and output commands
-        train_script = ' '.join(['python', 'code/utils/analyze_alstm_tune.py', \
                             '-gt', ground_truth, \
-                            '-f', filepath, \
-                            '-sou', sou, \
                             '-o', 'tune', \
-                            '-m', "best_loss", \
-                            '-r', '1', \
-                            '-mc', "1", \
-                            '-d', date]
-                        )
-        os.system(train_script)
-        os.system("bash best_loss_tune.sh")
+                            '-c', 'exp/ensemble_tune_all.conf', \
+                            '-d', dates+".", \
+                            '-t', "window\n" 
+                            ])
+        command += ' '.join(['python', train, \
+                            '-s', step, \
+                            '-gt', ground_truth, \
+                            '-o', 'tune', \
+                            '-c', 'exp/ensemble_tune_all.conf', \
+                            '-d', dates+".", \
+                            '-t', "fv\n" 
+                            ])
+                    
+    elif model == "alstmr":
+        if mc == "False":
+            train = "code/train_data_ALSTMR.py"
+            command += ' '.join(['python', train, \
+                                '-s', step, \
+                                '-sou', sou, \
+                                '-v', version, \
+                                '-d', date, \
+                                '-o', "tune", \
+                                '-log', \
+                                './result/validation/alstm/' \
+                                +'_'.join([version, 'h'+step, "tune.log"]), \
+                                '>', '/dev/null', \
+                                '2>&1', '&',"\n"])
 
-        return
+            os.system(command)
+        elif mc == "True":
+            #generate tuning results from log
+            filepath = ''
+            os.system(
+                    ' '.join(['python', 'code/train/analyze_alstm.py', \
+                                'result/validation/alstm '+ \
+                                version+"_h"+step+"_tune.log", \
+                                '>', 'result/validation/alstm/'+ \
+                                version+"_h"+step+"_para.txt", "para"]
+                            )
+                    )
+            filepath += 'result/validation/alstm/'+version+"_h"+step+"_para.txt,"
+
+            #remove last comma character
+            filepath = filepath[:-1]
+
+            #extract results and output commands
+            train_script = ' '.join(['python', 'code/utils/analyze_alstm_tune.py', \
+                                '-gt', ground_truth, \
+                                '-f', filepath, \
+                                '-sou', sou, \
+                                '-o', 'tune', \
+                                '-m', "best_loss", \
+                                '-r', '1', \
+                                '-mc', "1", \
+                                '-d', date]
+                            )
+            os.system(train_script)
+            os.system("bash best_loss_tune.sh")
+
     elif model == "pp":
         return
     print(command)
@@ -176,7 +213,9 @@ def run_train(ground_truths_str, steps, sou, versions, model, mc, dates):
                             '-l', lag, \
                             '-v', versions, \
                             '-p', './result/validation/'+model, \
-                            '-o', 'tune']
+                            '-o', 'tune', \
+                            '>','/dev/null',
+                            '2>&1','&\n'    ]
                         )
         train_script = ' '.join(['python', 'code/utils/'+model+"_script.py", \
                             '-gt', ground_truths_str, \
@@ -278,6 +317,8 @@ def run_train(ground_truths_str, steps, sou, versions, model, mc, dates):
 
         os.system('bash '+method+'_train.sh')
 
+
+
 #generation and processing of testing commands
 def run_test(ground_truths_str, steps, sou, versions, model, mc, dates):
 
@@ -320,7 +361,7 @@ def run_test(ground_truths_str, steps, sou, versions, model, mc, dates):
         filepath = filepath[:-1]
 
         #extract results and output commands
-        train_script = ' '.join(['python', 'code/utils/analyze_alstm_tune.py', \
+        test_script = ' '.join(['python', 'code/utils/analyze_alstm_tune.py', \
                             '-gt', ground_truths_str, \
                             '-f', filepath, \
                             '-sou', sou, \
@@ -329,8 +370,8 @@ def run_test(ground_truths_str, steps, sou, versions, model, mc, dates):
                             '-d', date]
                         )
 
-        print(train_script)
-        os.system(train_script)
+        print(test_script)
+        os.system(test_script)
 
         os.system('bash '+method+'_test.sh')
 
@@ -348,7 +389,7 @@ def run_test(ground_truths_str, steps, sou, versions, model, mc, dates):
         filepath = filepath[:-1]
 
         #extract results and output commands
-        train_script = ' '.join(['python', 'code/utils/analyze_alstm_tune.py', \
+        test_script = ' '.join(['python', 'code/utils/analyze_alstm_tune.py', \
                             '-gt', ground_truths_str, \
                             '-f', filepath, \
                             '-sou', sou, \
@@ -359,28 +400,104 @@ def run_test(ground_truths_str, steps, sou, versions, model, mc, dates):
                             '-d', date]
                         )
 
-        print(train_script)
-        os.system(train_script)
+        print(test_script)
+        os.system(test_script)
 
         os.system('bash '+method+'_test.sh')
 
+    elif model in ["ensemble"]:
+        test_script = ""
+        train = "code/train_data_ensemble.py"
+        for gt in ground_truths_str.split(','):
+            for step in steps.split(','):
+                test_script += ' '.join(['python', train, \
+                                    '-s', step, \
+                                    '-gt', gt, \
+                                    '-o', 'test', \
+                                    '-c', 'exp/ensemble_tune.conf', \
+                                    '-d', '.'+date, \
+                                    '-t', "window", \
+                                    '>', \
+                                    '/dev/null', \
+                                    '2>&1', '&',"\n"])
+                print(test_script)
+        os.system(test_script)
+    
+    #generate test command for post_process filter
+    elif model == "pp_filter":
+        train = "code/train_data_pp.py"
+        test_script += ' '.join(['python', train, \
+                                '-gt', ground_truths_str, \
+                                '-s', step, \
+                                '-sou', sou, \
+                                '-v', version, \
+                                '-d', date, \
+                                '-o', "tune", \
+                                '-m', "Filter", \
+                                '>', \
+                                '/dev/null', \
+                                '2>&1', '&',"\n"])
+        print(test_script)
+        os.system(test_script)
 
 #run analysis of predictions
-def run_analyze(ground_truths_str, steps, versions, model, regression, dates):
+def run_analyze(ground_truths_str, steps, versions, model, mc, dates):
 
     date = ','.join(dates[1:])
-    os.system(' '.join(['python', 'code/utils/analyze_predictions.py', \
-                        '-gt', ground_truths_str, \
-                        '-v', versions, \
-                        '-s', steps, \
-                        '-m', model, \
-                        '-d', date, \
-                        '-out', model+".csv"
-                        ]))
-
+    if mc == "False":
+        os.system(' '.join(['python', 'code/utils/analyze_predictions.py', \
+                            '-gt', ground_truths_str, \
+                            '-v', versions, \
+                            '-s', steps, \
+                            '-m', model, \
+                            '-d', date, \
+                            '-out', model+".csv"
+                            ]))
+        if model == "alstmr":
+            os.system(' '.join(['python', 'code/utils/analyze_predictions.py', \
+                                '-gt', ground_truths_str, \
+                                '-v', versions, \
+                                '-s', steps, \
+                                '-m', "alstm", \
+                                '-d', date, \
+                                '-r', 'ret', \
+                                '-mc', '0', \
+                                '-out', "alstmr_ret_T.csv"
+                                ]))
+            os.system(' '.join(['python', 'code/utils/analyze_predictions.py', \
+                                '-gt', ground_truths_str, \
+                                '-v', versions, \
+                                '-s', steps, \
+                                '-m', "alstm", \
+                                '-d', date, \
+                                '-r', 'price', \
+                                '-mc', '0', \
+                                '-out', "alstmr_ret_P.csv"
+                                ]))
+    elif mc == "True":
+        os.system(' '.join(['python', 'code/utils/analyze_predictions.py', \
+                            '-gt', ground_truths_str, \
+                            '-v', versions, \
+                            '-s', steps, \
+                            '-m', "alstm", \
+                            '-d', date, \
+                            '-r', 'ret', \
+                            '-mc', '1', \
+                            '-out', model+"_ret_T.csv"
+                            ]))
+        os.system(' '.join(['python', 'code/utils/analyze_predictions.py', \
+                            '-gt', ground_truths_str, \
+                            '-v', versions, \
+                            '-s', steps, \
+                            '-m', "alstm", \
+                            '-d', date, \
+                            '-r', 'price', \
+                            '-mc', '1', \
+                            '-out', model+"_ret_P.csv"
+                            ]))
 
 #extract prediction of related dates
-def extract(ground_truth, step, sou, version, model, regression, dates):
+def extract(ground_truth, step, sou, version, model, mc, dates):
     df = pd.DataFrame()
     for date in dates[1:]:
         df = pd.concat([df,pd.read_csv("result/prediction/"+model+"/"+ '_'.join([ground_truth,date,step,version+".csv"]), index_col = 0)],axis = 0)

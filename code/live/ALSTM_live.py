@@ -340,6 +340,9 @@ class ALSTM_online():
 
         for date in self.date.split(","):
 
+            torch.manual_seed(1)
+            np.random.seed(1)
+            random.seed(1)
             #generate list of dates for today's model training period
             today = date
             length = 5
@@ -516,6 +519,9 @@ class ALSTM_online():
         time_series,LME_dates,config_length = gn.read_data_with_specified_columns(self.source,self.path,"2003-11-12")
 
         for date in self.date.split(","):
+            torch.manual_seed(1)
+            np.random.seed(1)
+            random.seed(1)
 
             today = date
             length = 5

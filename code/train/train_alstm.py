@@ -347,6 +347,9 @@ if __name__ == '__main__':
 
 
         for s, split_date in enumerate(split_dates):
+            torch.manual_seed(1)
+            np.random.seed(1)
+            random.seed(1)
             lag = args.lag
             horizon = args.steps
             norm_volume = "v1"

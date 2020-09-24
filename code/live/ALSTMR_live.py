@@ -202,12 +202,27 @@ class Trainer:
                 val_Y = torch.from_numpy(self.val_y).float()
                 var_x_val_id = torch.LongTensor(np.array(self.val_embedding))
                 if self.mc:
-                    for rep in range(self.repeat_mc):
-                        if rep == 0:
-                            val_output = net(val_X, var_x_val_id).detach()
-                        else:
-                            val_output += net(val_X, var_x_val_id).detach()
-                    val_output /= self.repeat_mc
+
+                    final_val_output = [[],[],[],[],[],[]]
+                    for i in range(len(val_X)//6):
+                        clone_val_X = val_X.clone()[i::(len(val_X)//6)]
+                        clone_var_x_val_id = var_x_val_id.clone()[i::(len(val_X)//6)]
+
+                        for rep in range(self.repeat_mc):
+                            if rep == 0:
+                                val_output = net(clone_val_X, clone_var_x_val_id).detach().numpy()
+                            else:
+                                val_output = np.append(val_output,net(clone_val_X, clone_var_x_val_id).detach().numpy(),axis = 1)
+                        final_val_output[0].append(val_output[0].tolist())
+                        final_val_output[1].append(val_output[1].tolist())
+                        final_val_output[2].append(val_output[2].tolist())
+                        final_val_output[3].append(val_output[3].tolist())
+                        final_val_output[4].append(val_output[4].tolist())
+                        final_val_output[5].append(val_output[5].tolist())
+                    final_val_output = np.array(final_val_output[0] + final_val_output[1] + final_val_output[2] + final_val_output[3] + final_val_output[4] + final_val_output[5])
+                    standard_dev = final_val_output.std(axis = 1)
+                    val_output = final_val_output.sum(axis = 1)/self.repeat_mc
+
                 else:
                     val_output = net(val_X, var_x_val_id)
                 loss = loss_func(val_output, val_Y)
@@ -356,6 +371,9 @@ class ALSTMR_online():
 
       #begin to split the train data
         for date in self.date.split(","):
+            torch.manual_seed(1)
+            np.random.seed(1)
+            random.seed(1)
             today = date
             length = 5
             if gn.even_version(self.version) and self.horizon > 5:
@@ -530,6 +548,9 @@ class ALSTMR_online():
 
         #begin to split the train data
         for date in self.date.split(","):
+            torch.manual_seed(1)
+            np.random.seed(1)
+            random.seed(1)
             today = date
             length = 5
             if gn.even_version(self.version) and self.horizon > 5:
@@ -657,13 +678,25 @@ class ALSTMR_online():
 
             if self.mc:
                 net = torch.load(os.path.join('result','model','alstm',self.version+"_"+method,split_dates[1]+"_"+str(self.horizon)+"_"+str(drop_out)+"_"+str(hidden_state)+"_"+str(embedding_size)+"_"+str(self.lag)+"_"+str(drop_out_mc)+"_"+str(repeat_mc)+"_"+self.version+"_"+'alstm.pkl'))
-                for rep in range(repeat_mc):
-                    if rep == 0:
-                        test_output = net(test_X, var_x_test_id).detach().numpy()
-                    else:
-                        test_output = np.append(test_output,net(test_X, var_x_test_id).detach().numpy(),axis = 1)
-                standard_dev = test_output.std(axis = 1)
-                test_output = test_output.sum(axis = 1)/repeat_mc
+                final_test_output = [[],[],[],[],[],[]]
+                for i in range(len(test_X)//6):
+                    clone_test_X = test_X.clone()[i::(len(test_X)//6)]
+                    clone_var_x_test_id = var_x_test_id.clone()[i::(len(test_X)//6)]
+
+                    for rep in range(repeat_mc):
+                        if rep == 0:
+                            test_output = net(clone_test_X, clone_var_x_test_id).detach().numpy()
+                        else:
+                            test_output = np.append(test_output,net(clone_test_X, clone_var_x_test_id).detach().numpy(),axis = 1)
+                    final_test_output[0].append(test_output[0].tolist())
+                    final_test_output[1].append(test_output[1].tolist())
+                    final_test_output[2].append(test_output[2].tolist())
+                    final_test_output[3].append(test_output[3].tolist())
+                    final_test_output[4].append(test_output[4].tolist())
+                    final_test_output[5].append(test_output[5].tolist())
+                final_test_output = np.array(final_test_output[0] + final_test_output[1] + final_test_output[2] + final_test_output[3] + final_test_output[4] + final_test_output[5])
+                standard_dev = final_test_output.std(axis = 1)
+                test_output = final_test_output.sum(axis = 1)/repeat_mc
                 print(len(standard_dev),len(test_output))
             else:
                 net = torch.load(os.path.join('result','model','alstm',self.version+"_"+method,split_dates[1]+"_"+str(self.horizon)+"_"+str(drop_out)+"_"+str(hidden_state)+"_"+str(embedding_size)+"_"+str(self.lag)+"_"+self.version+"_"+'alstm.pkl'))
@@ -680,6 +713,6 @@ class ALSTMR_online():
                     sd_list.to_csv(sd_path)
                 else:
                     pred_path = os.path.join(os.getcwd(),"result","prediction","alstm",self.version+"_"+method,"_".join([gt,date,str(self.horizon),self.version])+".csv")
-            final_list.to_csv(pred_path)
+                final_list.to_csv(pred_path)
             end = time.time()
             print("predict time: {}".format(end-start))
