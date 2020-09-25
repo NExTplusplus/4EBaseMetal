@@ -89,7 +89,7 @@ if __name__ == '__main__':
                     out.write("python "+train+" "+" ".join(["-sou",args.source,"-v",version,"-s",h,"-l",str(ans.iloc[0,0]),"-C",str(ans.iloc[0,2]),"-gt",gt,"-o",args.action,'-d',args.dates,">","/dev/null", "2>&1", "&"]))
                     out.write("\n")
                     i+=1
-                    if i%9 == 0 and args.source == "4E":
+                    if i%6 == 0 and args.source == "4E":
                         out.write("sleep 10m\n")
-                    elif args.source == "NExT" and i %20 == 0:
-                        out.write("sleep 3m\n")
+                    elif args.source == "NExT" and i %6 == 0:
+                        out.write("sleep 5m\n")

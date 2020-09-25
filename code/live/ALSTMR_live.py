@@ -202,26 +202,12 @@ class Trainer:
                 val_Y = torch.from_numpy(self.val_y).float()
                 var_x_val_id = torch.LongTensor(np.array(self.val_embedding))
                 if self.mc:
-
-                    final_val_output = [[],[],[],[],[],[]]
-                    for i in range(len(val_X)//6):
-                        clone_val_X = val_X.clone()[i::(len(val_X)//6)]
-                        clone_var_x_val_id = var_x_val_id.clone()[i::(len(val_X)//6)]
-
-                        for rep in range(self.repeat_mc):
-                            if rep == 0:
-                                val_output = net(clone_val_X, clone_var_x_val_id).detach().numpy()
-                            else:
-                                val_output = np.append(val_output,net(clone_val_X, clone_var_x_val_id).detach().numpy(),axis = 1)
-                        final_val_output[0].append(val_output[0].tolist())
-                        final_val_output[1].append(val_output[1].tolist())
-                        final_val_output[2].append(val_output[2].tolist())
-                        final_val_output[3].append(val_output[3].tolist())
-                        final_val_output[4].append(val_output[4].tolist())
-                        final_val_output[5].append(val_output[5].tolist())
-                    final_val_output = np.array(final_val_output[0] + final_val_output[1] + final_val_output[2] + final_val_output[3] + final_val_output[4] + final_val_output[5])
-                    standard_dev = final_val_output.std(axis = 1)
-                    val_output = final_val_output.sum(axis = 1)/self.repeat_mc
+                    for rep in range(self.repeat_mc):
+                        if rep == 0:
+                            val_output = net(val_X, var_x_val_id).detach()
+                        else:
+                            val_output += net(val_X, var_x_val_id).detach()
+                    val_output /= self.repeat_mc
 
                 else:
                     val_output = net(val_X, var_x_val_id)

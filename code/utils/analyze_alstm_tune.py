@@ -34,6 +34,8 @@ if __name__ == '__main__':
     full_str = ""
     if args.regression != 0:
         train = "train_data_ALSTMR"
+
+    #iterate through files
     for f in files:
         step = f.split("_")[1]
         version = f.split("/")[-1].split("_")[0]
@@ -41,6 +43,8 @@ if __name__ == '__main__':
         val_acc = 0
         curr = ""
         print(f)
+
+        #analyze file with give nstructure
         with open(f) as fl:
             lines = fl.readlines()
             for l,line in enumerate(lines):
@@ -70,6 +74,7 @@ if __name__ == '__main__':
                     average_acc_parameters[curr]=param_combination[va_acc]
                     average_loss_parameters[curr]=param_combination[va_loss]
 
+            #choose method of choosing hpyerparameter
             if args.method == "best_loss":
                 dc = best_loss_parameters
             elif args.method == "best_acc":
@@ -81,6 +86,7 @@ if __name__ == '__main__':
             else:
                 dc = None
 
+            #generate tuning commands for alstmr with monte carlo
             if args.action == "tune":
                 assert args.mc, "tune is only for monte carlo"
                 full_str += ' '.join(["python code/"+train+".py","-a 2","-b",str(dc["batch"]), \
@@ -91,6 +97,7 @@ if __name__ == '__main__':
                                     "./result/validation/alstm/"+version+"_h"+step[1:]+"_mc_tune.log",'>',"/dev/null",'2>&1 &']) \
                                     +"\n"
             else:
+                #genreate commands with action for alstm with monte carlo
                 if args.mc:
                     if "drop_out_mc" not in dc.keys():
                         dc["drop_out_mc"] = 0.0
@@ -103,6 +110,7 @@ if __name__ == '__main__':
                                         '-lambd 0','-lrate 0.001','-savel 0','-savep 0', '-split 0.9','-s', step[1:],'-v',version,'--mc', str(args.mc*1), \
                                         '-sou '+args.source,'-o '+args.action,'-d '+args.date,'-method '+args.method,'>',"/dev/null",'2>&1 &']) \
                                         +"\n"
+                #genreate commands with action for alstm without monte carlo
                 else:
                     full_str += ' '.join(["python code/"+train+".py","-a 2","-b",str(dc["batch"]), \
                                         '-drop',str(dc["drop_out"]),'-embed',str(dc["embedding_size"]), \

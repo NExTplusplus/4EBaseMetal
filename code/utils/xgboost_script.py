@@ -207,7 +207,7 @@ if __name__ == '__main__':
                         "-subsample",str(total.iloc[0,5]),"-o train",
                         ">","/dev/null","2>&1 &"])+"\n")
                         i+=1
-                        if i%9 == 0 and args.source == "4E":
+                        if i%6 == 0 and args.source == "4E":
                             out.write("sleep 10m\n")
                         elif args.source == "NExT" and i %20 == 0:
                             out.write("sleep 5m\n")
@@ -254,8 +254,8 @@ if __name__ == '__main__':
                             "-subsample",str(total.iloc[0,5]),"-o test",
                             "> /dev/null 2>&1 &"])+"\n")
                         i+=1
-                        if i%9 == 0 and args.source == "4E":
+                        if i%6 == 0 and args.source == "4E":
                             out.write("sleep 10m\n")
-                        elif args.source == "NExT" and i %10 == 0:
-                            out.write("sleep 2m\n")
+                        elif args.source == "NExT" and i %6 == 0:
+                            out.write("sleep 5m\n")
 

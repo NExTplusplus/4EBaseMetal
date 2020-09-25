@@ -45,7 +45,7 @@ if __name__ == '__main__':
     if args.action == "tune":
         for horizon in [int(step) for step in args.steps]:
             for ground_truth in args.ground_truth:
-                ensemble = Ensemble_online(horizon=horizon,gt = ground_truth,dates = args.dates, window = args.window, feature_version = args.config)
+                ensemble = Ensemble_online(horizon=horizon,gt = ground_truth,dates = args.dates, feature_version = args.config)
                 ensemble.tune(args.target)
                 if args.target == "fv":
                     break
