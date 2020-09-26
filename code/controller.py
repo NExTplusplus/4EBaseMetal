@@ -165,15 +165,7 @@ def run_tune(ground_truth, step, sou, version, model, mc, date):
                             '-o', 'tune', \
                             '-c', 'exp/ensemble_tune_all.conf', \
                             '-d', dates+".", \
-                            '-t', "window\n" 
-                            ])
-        command += ' '.join(['python', train, \
-                            '-s', step, \
-                            '-gt', ground_truth, \
-                            '-o', 'tune', \
-                            '-c', 'exp/ensemble_tune_all.conf', \
-                            '-d', dates+".", \
-                            '-t', "fv\n" 
+                            '-t', version+"\n" 
                             ])
     
     #generate tune command for post_process filter
@@ -406,32 +398,33 @@ def run_test(ground_truths_str, steps, sou, versions, model, mc, dates):
     
     #generate test command for post_process filter
     elif model in ["pp_filter"]:
-        reversed_version = ','.join([version.split(',')[::-1]])
-        for gt in ground_truths_str.split(','):
-            for step in steps.split(','):
-                command += ' '.join(['python code/utils/post_process_script.py', \
-                                    '-gt', gt, \
-                                    '-s', step, \
-                                    '-o', 'simple', \
-                                    '-m', "Filter", \
-                                    '-v', reversed_version, \
-                                    '-p', './result/validation/post_process/Filter','\n'
-                                    ])
+        reversed_version = ','.join(versions.split(',')[::-1])
         command += ' '.join(['python code/utils/post_process_script.py', \
                             '-gt', ground_truths_str, \
                             '-s', steps, \
-                            '-o', 'complex', \
+                            '-sou', sou, \
+                            '-o', 'simple', \
                             '-m', "Filter", \
                             '-v', reversed_version, \
-                            '-p', './result/validation/post_process/Filter','\n'
+                            '-p', 'result/validation/post_process/Filter','\n'
                             ])
         command += ' '.join(['python code/utils/post_process_script.py', \
                             '-gt', ground_truths_str, \
                             '-s', steps, \
-                            '-o', 'commands', \
+                            '-sou', sou, \
+                            '-o', 'complex', \
                             '-m', "Filter", \
                             '-v', reversed_version, \
-                            '-p', './result/validation/post_process/Filter',\
+                            '-p', 'result/validation/post_process/Filter','\n'
+                            ])
+        command += ' '.join(['python code/utils/post_process_script.py', \
+                            '-gt', ground_truths_str, \
+                            '-s', steps, \
+                            '-sou', sou, \
+                            '-o', 'commands', \
+                            '-m', "Filter", \
+                            '-v', versions, \
+                            '-p', 'result/validation/post_process/Filter',\
                             '-out', model+'_test.sh', '\n'
                             ])
         command+= "bash "+model+"_test.sh" 

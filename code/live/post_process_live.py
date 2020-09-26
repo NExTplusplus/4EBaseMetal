@@ -165,6 +165,6 @@ class Post_process_live():
                 model = Post_process_filter()
                 X["Prediction"] = read_regression(spot_price, self.ground_truth, self.horizon, date, self.version[1])
                 X["Filter"] = generate_final_signal(spot_price,self.ground_truth, self.horizon, date, self.version[0], self.version[1], inputs["class_threshold"], inputs["reg_threshold"], inputs["reg_window"])
-            
+                print(X["Filter"])
             prediction = model.predict(X)
             prediction.to_csv(os.path.join('result','prediction','post_process',self.model,'_'.join([self.ground_truth,date,str(self.horizon),self.model+".csv"])))

@@ -157,7 +157,10 @@ if __name__ == '__main__':
                         else:
                             mae = mean_absolute_error(label.loc[temp.index,:],temp)
                             mse = mean_squared_error(label.loc[temp.index,:],temp)
-                            acc = accuracy_score(class_label.loc[temp.index,:], (np.sign(temp)+1)/2)
+                            if args.regression == "ret":
+                                acc = accuracy_score(class_label.loc[temp.index,:], (np.sign(temp)+1)/2)
+                            else:
+                                acc = accuracy_score(class_label.loc[temp.index,:], np.array(temp.loc[temp.index,:]) > np.array(spot.loc[temp.index,:]))
                         ans[validation_dates[i]+"_mae"].append(mae)
                         ans[validation_dates[i]+"_mse"].append(mse)
                         ans[validation_dates[i]+"_acc"].append(acc)

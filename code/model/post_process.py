@@ -33,9 +33,11 @@ class Post_process_filter(Post_process):
     def predict(self, parameters):
         X = parameters["Prediction"]
         X_filter = parameters["Filter"]
-        ans = pd.DataFrame(columns=X.columns)
+        ans = {"date":[],"Prediction":[]}
         for date in X.index:
             if X_filter.loc[date,"Filter"] == 1:
-                ans.append(X.loc[date,:].to_frame()) 
-        print(ans)
+                ans['date'].append(date)
+                ans['Prediction'].append(X.loc[date,"Prediction"])
+        ans = pd.DataFrame(ans)
+        ans.set_index("date",inplace = True)
         return ans
