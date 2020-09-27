@@ -31,8 +31,9 @@ if __name__ == '__main__':
     if args.source == "NExT":
         ts, dates, length = read_data_with_specified_columns("NExT","exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf","2003-11-12")        
     else:
+        start_date = "2003-11-12"
         import rpy2.robjects as robjects
-        robjects.r('.sourceAlfunction()')    
+        robjects.r('.sourceQlib()')    
         ts = robjects.r('''merge(getSecurity(c("LMCADY Comdty","LMAHDY Comdty","LMPBDY Comdty","LMZSDY Comdty","LMNIDY Comdty","LMSNDY Comdty"), start = "'''+start_date+'''"), 
                         getSecurityOHLCV(c("LMCADS03 Comdty","LMPBDS03 Comdty","LMNIDS03 Comdty","LMSNDS03 Comdty","LMZSDS03 Comdty","LMAHDS03 Comdty"), start = "'''+start_date+'''")
                         )
@@ -46,6 +47,7 @@ if __name__ == '__main__':
                         ,"LME_Al_Open","LME_Al_High","LME_Al_Low","LME_Al_Close","LME_Al_Volume","LME_Al_OI"
                         ])
         ts = m2ar(ts)
+        os.chdir("NEXT/4EBaseMetal")
 
     for gt in args.ground_truth:
         if args.source == "NExT":
