@@ -8,13 +8,11 @@ from copy import copy
 sys.path.insert(0,os.path.abspath(os.path.join(sys.path[0],"..")))
 from live.linear_live import Linear_online
 from utils.transform_data import flatten
-from utils.construct_data import rolling_half_year
 import warnings
 from matplotlib import pyplot
 from xgboost import plot_importance
 from sklearn import metrics
 from sklearn.model_selection import KFold
-from utils.version_control_functions import generate_version_params
 
 from live.Logistic_live import Logistic_online
 

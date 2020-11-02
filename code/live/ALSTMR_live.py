@@ -25,6 +25,13 @@ random.seed(1)
 
 thresh = 0
 
+class LogCoshLoss(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, y_t, y_prime_t):
+        ey_t = y_t - y_prime_t
+        return torch.mean(torch.log(torch.cosh(ey_t + 1e-12))) 
 
 def memory_usage():
     pid = os.getpid()
@@ -138,7 +145,7 @@ class Trainer:
         end = time.time()
         print("preparing training and testing date with time: {}".format(end-start))
         optimizer = torch.optim.Adam(net.parameters(), lr=self.lr)
-        loss_func = self.loss_func   
+        loss_func = self.loss_func if horizon != 60 else LogCoshLoss()   
         val_loss_list = []
         val_f1_list = []
         val_acc_list = []

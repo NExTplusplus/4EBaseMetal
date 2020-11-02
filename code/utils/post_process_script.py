@@ -27,6 +27,7 @@ if __name__ == '__main__':
     parser.add_argument('-p','--path',type =str, help='path to 4EBaseMetal folder',default ='/NEXT/4EBaseMetal')
 
     args = parser.parse_args()
+    args.path = args.path.split(',')
     args.step_list = args.step_list.split(",")
     args.ground_truth_list = args.ground_truth_list.split(",")
     dates_list = args.dates.split(",")
@@ -54,8 +55,10 @@ if __name__ == '__main__':
                     temp_reg = pd.concat([temp_reg,regression],axis = 1)
                 classification = temp_class
                 regression = temp_reg.sort_values(by = "rank")
+                print(pd.concat([pd.Series([ground_truth]*len(regression.index)),pd.Series([step]*len(regression.index)),regression],axis = 1))
                 classification = pd.concat([pd.Series([ground_truth]*len(classification.index)),pd.Series([step]*len(classification.index)),classification],axis = 1).sort_values(by = "rank").reset_index(drop = True)
                 regression = pd.concat([pd.Series([ground_truth]*len(regression.index)),pd.Series([step]*len(regression.index)),regression],axis = 1).sort_values(by = "rank").reset_index(drop = True)
+                print(regression)
                 total_classification = pd.concat([total_classification,classification], axis = 0, sort = False)
                 total_regression = pd.concat([total_regression,regression], axis = 0, sort = False)
         total_classification.to_csv('classification.csv')
@@ -110,15 +113,17 @@ if __name__ == '__main__':
                     # print(temp_class,temp_class.loc[classification['1'] == int(h)])
                     temp_reg = regression.loc[regression['0'] == gt].loc[regression['1'] == int(h)]
                     temp_reg = temp_reg[temp_reg.loc[:,"mae"] != 0]
-                    temp_reg = temp_reg.sort_values(by= "rank").reset_index()
+                    temp_reg = temp_reg.sort_values(by= ["rank","coverage","threshold"],ascending = [True,False,True]).reset_index()
                     temp_class = temp_class.sort_values(by= "rank").reset_index()
                     out.write("python "+train+" "+ \
                                 " ".join(["-sou",args.source,
                                         "-v",args.version_list,
                                         "-m", args.model,
                                         "-w", "60",
-                                        "-ct", temp_class.loc[:,"threshold"].values[0].strip("(").split(",")[0],
+#                                         "-ct", temp_class.loc[:,"threshold"].values[0].strip("(").split(",")[0],
+                                        "-ct", "0.5",
                                         "-rt",temp_reg.loc[:,"threshold"].values[0].strip("(").split(",")[0],
+#                                         "-rt","10",
                                         "-s",h,
                                         "-gt",gt,
                                         "-o","test",

@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 from copy import copy
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
-from utils.construct_data import rolling_half_year
+from utils.general_functions import rolling_half_year
 from utils.read_data import m2ar
 from utils.general_functions import read_data_with_specified_columns
 
@@ -54,18 +54,33 @@ if __name__ == '__main__':
             spot = copy(ts).loc[:,gt]
         else:
             spot = copy(ts[gt]).to_frame()
-        split_dates = rolling_half_year("2009-07-01",spot.index[-1],5)
+        split_dates = rolling_half_year("2014-01-01",spot.index[-1],5)
+        print(split_dates)
         for step in args.steps:
-            class_label = ((copy(spot.shift(-step)) - spot > 0)*1).to_frame()
-            reg_label = (copy(spot.shift(-step))).to_frame()
+            class_label = ((copy(spot.shift(-step)) - spot > 0)*1)
+            reg_label = (copy(spot.shift(-step)))
             class_label.columns = ["Label"]
             reg_label.columns = ["Label"]
             class_label.dropna(inplace = True)
             reg_label.dropna(inplace = True)
             for split_date in split_dates:
-                class_label.loc[split_date[1]:split_date[2]].to_csv(os.path.join(os.getcwd(),'data','Label',"_".join([gt,'h'+str(step),split_date[1],"label.csv"])))
-                reg_label.loc[split_date[1]:split_date[2]].to_csv(os.path.join(os.getcwd(),'data','Label',"_".join([gt,'h'+str(step),split_date[1],"reg_label.csv"])))
-
+                temp_class_label = class_label.loc[split_date[2]:split_date[3]]
+                temp_reg_label = reg_label.loc[split_date[2]:split_date[3]]
+                print(split_date,temp_class_label)
+                temp_class_label = temp_class_label if temp_class_label.index.values[-1] != split_date[3] else temp_class_label[:-1]
+                temp_reg_label = temp_reg_label if temp_reg_label.index.values[-1] != split_date[3] else temp_reg_label[:-1]
+                temp_class_label.to_frame("Label").to_csv(os.path.join(os.getcwd(),'data','Label',"_".join([gt,'h'+str(step),split_date[2],"label.csv"])))
+                temp_reg_label.to_frame("Label").to_csv(os.path.join(os.getcwd(),'data','Label',"_".join([gt,'h'+str(step),split_date[2],"reg_label.csv"])))
+            temp_class_label = class_label.loc[split_date[3]:split_date[4]]
+            temp_reg_label = reg_label.loc[split_date[3]:split_date[4]]
+            print(split_date,temp_class_label)
+            temp_class_label = temp_class_label if temp_class_label.index.values[-1] != split_date[3] else temp_class_label[:-1]
+            temp_reg_label = temp_reg_label if temp_reg_label.index.values[-1] != split_date[3] else temp_reg_label[:-1]
+            temp_class_label.to_frame("Label").to_csv(os.path.join(os.getcwd(),'data','Label',"_".join([gt,'h'+str(step),split_date[3],"label.csv"])))
+            temp_reg_label.to_frame("Label").to_csv(os.path.join(os.getcwd(),'data','Label',"_".join([gt,'h'+str(step),split_date[3],"reg_label.csv"])))
+            
+            
+            
                 
                 
 

@@ -7,14 +7,11 @@ import json
 import sys
 sys.path.insert(0,os.path.abspath(os.path.join(sys.path[0],'..')))
 from utils.general_functions import read_data_with_specified_columns
-from sklearn.metrics import accuracy_score,mean_absolute_error,mean_squared_error
+from sklearn.metrics import accuracy_score,mean_absolute_error,mean_squared_error,f1_score
 
 if __name__ == '__main__':
     desc = 'the script for analyze predictions'
     parser = argparse.ArgumentParser(description=desc)
-    parser.add_argument('-c','--config',type = str,default = 'exp/classification_post_process.conf',
-                        help = 'configuration file for post process'
-    )
     parser.add_argument('-sou','--source',type = str, default = "NExT")
     parser.add_argument('-s','--step_list',type=str,default="1,3,5,10,20,60",
                         help='list of horizons to be calculated, separated by ","')
@@ -38,23 +35,26 @@ if __name__ == '__main__':
     args.ground_truth_list = args.ground_truth_list.split(",")
     args.dates = args.dates.split(",")
     args.monte_carlo = args.monte_carlo == "True"
-    with open(os.path.join(os.getcwd(),args.config)) as f:
-        config = json.load(f)
-
     args.version_list = args.version_list.split(",")
     ans = {"version":[],"horizon":[],"ground_truth":[]}
+    
     validation_dates = [d.split("-")[0]+"-01-01" if d[5:7] <= "06" else d.split("-")[0]+"-07-01" for d in args.dates]
     if args.regression  == "off":
         for d in validation_dates:
             ans[d+"_acc"] = []
+            ans[d+"_pos_f1_score"] = []
+            ans[d+"_neg_f1_score"] = []
+            ans[d+"_f1_score"] = []
             ans[d+"_length"] = []
+
+#             ans[d+"_tp"] = []
+#             ans[d+"_fn"] = []
+#             ans[d+"_tn"] = []
+#             ans[d+"_fp"] = []
+
+#             ans[d+"_ratio"] = []
         for version in args.version_list:
             v = version.split('_')[0]
-            dc = None
-            if args.model == 'post_process':
-                for key in config.keys():
-                    if version.split('_')[1] in config[key].keys():
-                        dc = config[key][version.split('_')[1]][version.split('_')[0]] 
             for h in args.step_list:
                 for gt in args.ground_truth_list:
                     ans["version"].append(version)
@@ -64,41 +64,93 @@ if __name__ == '__main__':
                         print(version,h,gt,date)
                         filepath = os.path.join("result","prediction",args.model)
                         f = "_".join([gt,date,h,version])+".csv"
-                        if args.model in ['alstm']:
+                        if args.model in ['alstm',"post_process"]:
                             filepath = os.path.join("result","prediction",args.model,version)
                             f = "_".join([gt,date,h,v])+".csv"
+                        print(filepath,f)
                         if args.model not in ['post_process']:
-                            if f not in os.listdir(filepath):
+                            if not os.path.exists(os.path.join(filepath,f)):
                                 ans[validation_dates[i]+"_acc"].append(0)
+                                ans[validation_dates[i]+"_pos_f1_score"].append(0)
+                                ans[validation_dates[i]+"_neg_f1_score"].append(0)
+                                ans[validation_dates[i]+"_f1_score"].append(0)
                                 ans[validation_dates[i]+"_length"].append(0)
+
+#                                 ans[validation_dates[i]+"_tp"].append(0)
+#                                 ans[validation_dates[i]+"_fn"].append(0)
+#                                 ans[validation_dates[i]+"_tn"].append(0)
+#                                 ans[validation_dates[i]+"_fp"].append(0)
+#                                 ans[validation_dates[i]+"_ratio"].append(0)
                                 continue
                         else:
-                            if int(h) not in dc[gt]:
-                                f = "_".join([gt,date,h,v])+".csv"
-                            elif f not in os.listdir(filepath):
+                            if not os.path.exists(os.path.join(filepath,f)):
                                 ans[validation_dates[i]+"_acc"].append(0)
+                                ans[validation_dates[i]+"_pos_f1_score"].append(0)
+                                ans[validation_dates[i]+"_neg_f1_score"].append(0)
+                                ans[validation_dates[i]+"_f1_score"].append(0)
                                 ans[validation_dates[i]+"_length"].append(0)
+
+#                                 ans[validation_dates[i]+"_tp"].append(0)
+#                                 ans[validation_dates[i]+"_fn"].append(0)
+#                                 ans[validation_dates[i]+"_tn"].append(0)
+#                                 ans[validation_dates[i]+"_fp"].append(0)
+#                                 ans[validation_dates[i]+"_ratio"].append(0)
                                 continue
                         temp = pd.read_csv(os.path.join(filepath, f),index_col = 0)
                         label = pd.read_csv(os.path.join("data","Label","_".join([gt,"h"+str(h),validation_dates[i],"label.csv"])),index_col = 0)
                         if label.index[-1] > date:
                             label = label.iloc[:-1,:]
                         accuracy = accuracy_score(label[:len(temp)],temp)
+                        f1 = f1_score(label[:len(temp)],temp)
+                        inverse_label = 1*(label[:len(temp)] == 0)
+                        inverse_temp = 1*(temp == 0)
+                        inverse_f1 = f1_score(inverse_label,inverse_temp)
                         ans[validation_dates[i]+"_acc"].append(accuracy)
+                        ans[validation_dates[i]+"_pos_f1_score"].append(f1)
+                        ans[validation_dates[i]+"_neg_f1_score"].append(inverse_f1)
+                        ans[validation_dates[i]+"_f1_score"].append((f1+inverse_f1)/2)
                         ans[validation_dates[i]+"_length"].append(len(temp))
+
+#                         pos_label = label.loc[label["Label"] == 1].index
+#                         neg_label = label.loc[label["Label"] == 0].index
+#                         tp = sum(1*(temp.loc[pos_label] == 1).values)
+#                         fn = len(pos_label) - tp
+#                         tn = sum(1*(temp.loc[neg_label] == 0).values)
+#                         fp = len(neg_label) - tn
+#                         ans[validation_dates[i]+"_tp"].append(tp)
+#                         ans[validation_dates[i]+"_fn"].append(fn)
+#                         ans[validation_dates[i]+"_tn"].append(tn)
+#                         ans[validation_dates[i]+"_fp"].append(fp)
+
+#                         pos = sum(1*(temp == 1).values)[0]
+#                         neg = len(temp) - pos
+#                         ans[validation_dates[i]+"_ratio"].append(pos/neg)
                 ans["version"].append(version)
                 ans["horizon"].append(h)
                 ans["ground_truth"].append("average")
                 for val_date in validation_dates:
                     ans[val_date+"_acc"].append(np.average(ans[val_date+"_acc"][-6:]))
+                    ans[val_date+"_pos_f1_score"].append(np.average(ans[val_date+"_pos_f1_score"][-6:]))
+                    ans[val_date+"_neg_f1_score"].append(np.average(ans[val_date+"_neg_f1_score"][-6:]))
+                    ans[val_date+"_f1_score"].append(np.average(ans[val_date+"_f1_score"][-6:]))
                     ans[val_date+"_length"].append(np.average(ans[val_date+"_length"][-6:]))
         ans = pd.DataFrame(ans)
         total_acc = 0.0
+        total_pos_f1 = 0.0
+        total_neg_f1 = 0.0
+        total_f1 = 0.0
         total_length = 0
         for date in validation_dates:
             total_acc = total_acc + ans[date+"_acc"]*ans[date+"_length"]
+            total_pos_f1 = total_pos_f1 + ans[date+"_pos_f1_score"]*ans[date+"_length"]
+            total_neg_f1 = total_neg_f1 + ans[date+"_neg_f1_score"]*ans[date+"_length"]
+            total_f1 = total_f1 + ans[date+"_f1_score"]*ans[date+"_length"]
             total_length = total_length+ans[date+"_length"]
         ans["final average"] = total_acc/total_length
+        ans["final pos f1"] = total_pos_f1/total_length
+        ans["final neg f1"] = total_neg_f1/total_length
+        ans["final f1"] = total_f1/total_length
+        
         ans.to_csv(args.output)
     else:        
         for d in validation_dates:
@@ -110,7 +162,6 @@ if __name__ == '__main__':
                 ans[d+"_coverage"] = []
         for version in args.version_list:
             v = version.split('_')[0]
-            dc = None
             for h in args.step_list:
                 for gt in args.ground_truth_list:
                     ans["version"].append(version)
@@ -128,14 +179,14 @@ if __name__ == '__main__':
                             else:
                                 f = "_".join([gt,date,h,v])+".csv"
                         if args.model not in ['post_process']:
-                            if f not in os.listdir(filepath):
+                            if not os.path.exists(os.path.join(filepath,f)):
                                 ans[validation_dates[i]+"_mae"].append(0)
                                 ans[validation_dates[i]+"_mse"].append(0)
                                 ans[validation_dates[i]+"_length"].append(0)
                                 ans[validation_dates[i]+"_acc"].append(0)
                                 continue
                         else:
-                            if f not in os.listdir(filepath):
+                            if not os.path.exists(os.path.join(filepath,f)):
                                 ans[validation_dates[i]+"_mae"].append(0)
                                 ans[validation_dates[i]+"_mse"].append(0)
                                 ans[validation_dates[i]+"_acc"].append(0)
@@ -160,6 +211,7 @@ if __name__ == '__main__':
                             if args.regression == "ret":
                                 acc = accuracy_score(class_label.loc[temp.index,:], (np.sign(temp)+1)/2)
                             else:
+                                print(class_label.loc[temp.index,:],temp.loc[temp.index,:],spot.loc[temp.index,:])
                                 acc = accuracy_score(class_label.loc[temp.index,:], np.array(temp.loc[temp.index,:]) > np.array(spot.loc[temp.index,:]))
                         ans[validation_dates[i]+"_mae"].append(mae)
                         ans[validation_dates[i]+"_mse"].append(mse)

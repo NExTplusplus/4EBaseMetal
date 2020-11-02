@@ -21,10 +21,13 @@ class Post_process_substitution(Post_process):
     def predict(self, parameters):
         X = parameters["Prediction"]
         X_sub = parameters["Substitute"]
+        X_unc = parameters["Uncertainty"]
         for date in X.index:
             if date in X_sub.index:
-                X.loc[date,:] = 1 if X_sub.loc[date,:] == 1 else 0
-        return X
+                print(date)
+                X.loc[date,"result"] = 1 if X_sub.loc[date,"discrete_score"] == 1 else 0
+                X_unc.loc[date,"uncertainty"] = 0.5
+        return X,X_unc
         
 class Post_process_filter(Post_process):
     def __init__(self):

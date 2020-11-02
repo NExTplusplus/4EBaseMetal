@@ -8,10 +8,11 @@ from copy import copy
 import multiprocessing
 from multiprocessing import Pool as pl
 from utils.general_functions import read_data_with_specified_columns
-from utils.post_process import read_regression, read_classification, read_substitution_analyst, generate_final_signal, generate_class_signal, generate_reg_signal
+from utils.post_process import read_regression, read_classification, read_substitution_analyst, generate_final_signal, generate_class_signal, generate_reg_signal,read_uncertainty
 from model.post_process import Post_process, Post_process_substitution, Post_process_filter
 from itertools import product
-        
+import json
+
 class Post_process_live():
     def __init__(self,
                 ground_truth,
@@ -58,7 +59,7 @@ class Post_process_live():
 
                 #begin analysis of classification results
                 for c, col in enumerate(class_signal.columns):
-                    class_pred = (read_classification(self.ground_truth, self.horizon, date, self.version[0])*2 - 1).multiply(class_signal[col]*1, axis = 0)
+                    class_pred = (read_classification(self.ground_truth, self.horizon, date, self.version[0],"ensemble")*2 - 1).multiply(class_signal[col]*1, axis = 0)
                     class_pred = class_pred.loc[class_pred['result'] != 0]
                     class_label = pd.read_csv(os.path.join("data","Label",'_'.join([self.ground_truth,"h"+str(self.horizon),validation_date,"label.csv"])),index_col = 0)*2 - 1
                     class_label = class_label.loc[class_pred.index,:]
@@ -83,6 +84,7 @@ class Post_process_live():
                     reg_thresh = np.arange(1.01, step = 0.1)
                 else:
                     reg_thresh = np.arange(0.51, step = 0.05)
+                reg_thresh = np.arange(0.05,0.31, step = 0.025)
                 reg_window = [60]
                 reg_combination = product([spot_price], [self.ground_truth], [self.horizon], [date], [self.version[1]], reg_thresh, reg_window)
                 p = pl(multiprocessing.cpu_count())
@@ -135,6 +137,7 @@ class Post_process_live():
             reg_dict['coverage'][i] = reg_dict['coverage'][i]/reg_dict['total_len'][i]
         class_df = pd.DataFrame(class_dict)
         reg_df = pd.DataFrame(reg_dict)
+        reg_df = reg_df.loc[reg_df["coverage"] != 0].reset_index(drop = True)
 
         #generate ranking 
         class_df['acc_rank'] = class_df['acc'].rank(method = 'min', ascending = False)
@@ -150,21 +153,37 @@ class Post_process_live():
     def test(self, inputs):
         spot_price = read_data_with_specified_columns(inputs['source'],'exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf','2003-11-12')[0].loc[:,self.ground_truth].to_frame()
         for date in self.dates.split(','):
-            X = { 'Prediction' : read_classification(self.ground_truth,self.horizon,date,self.version[0]) }
 
             #generate model specific arguments
             if self.model is None:
                 model = Post_process()
 
             elif self.model == "Substitution":
-                model = Post_process_substitution()
+                X = { 'Prediction' : read_classification(self.ground_truth,self.horizon,date,self.version[0],"ensemble") }
                 if inputs['substitution'] == "analyst":
-                    X["Substitute"] = read_substitution_analyst(self.ground_truth, self.horizon, date)
+                    validation_date = date.split("-")[0]+"-01-01" if date[5:7] <= "06" else date.split("-")[0]+"-07-01"
+                    
+                    with open("exp/substitution.conf","r") as f:
+                        config = json.load(f)
+
+                    if self.ground_truth not in config.keys() or self.horizon not in config[self.ground_truth]:
+                        model = Post_process()
+                        X["Uncertainty"] = read_uncertainty(self.ground_truth,self.horizon,date,"ensemble","classification") 
+                        prediction = model.predict(X)
+                        X["Uncertainty"].to_csv(os.path.join("result","uncertainty","classification",'_'.join([self.ground_truth,validation_date,str(self.horizon),"substitution.csv"])))
+                    else:
+                        model = Post_process_substitution()
+                        validation_date = date.split("-")[0]+"-01-01" if date[5:7] <= "06" else date.split("-")[0]+"-07-01" 
+                        X["Substitute"] = read_substitution_analyst(self.ground_truth, self.horizon, date)
+                        X["Uncertainty"] = read_uncertainty(self.ground_truth,self.horizon,date,"ensemble","classification")
+                        prediction, uncertainty = model.predict(X)
+                        uncertainty.to_csv(os.path.join("result","uncertainty","classification",'_'.join([self.ground_truth,validation_date,str(self.horizon),"substitution.csv"])))
 
             elif self.model == "Filter":
+                X = { 'Prediction' : read_classification(self.ground_truth,self.horizon,date,self.version[0],"Substitution") }
                 model = Post_process_filter()
                 X["Prediction"] = read_regression(spot_price, self.ground_truth, self.horizon, date, self.version[1])
                 X["Filter"] = generate_final_signal(spot_price,self.ground_truth, self.horizon, date, self.version[0], self.version[1], inputs["class_threshold"], inputs["reg_threshold"], inputs["reg_window"])
                 print(X["Filter"])
-            prediction = model.predict(X)
+                prediction = model.predict(X)
             prediction.to_csv(os.path.join('result','prediction','post_process',self.model,'_'.join([self.ground_truth,date,str(self.horizon),self.model+".csv"])))

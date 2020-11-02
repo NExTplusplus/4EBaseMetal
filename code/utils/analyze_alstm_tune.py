@@ -102,7 +102,7 @@ if __name__ == '__main__':
                     if "drop_out_mc" not in dc.keys():
                         dc["drop_out_mc"] = 0.0
                         dc["repeat_mc"] = 10
-                    full_str += ' '.join(["python code/"+train+".py","-a 2","-b",str(dc["batch"]), \
+                    full_str += ' '.join(["python code/"+train+".py","-a 2","-b",str(dc["batch"]), '-gt', "LME_All_Spot",\
                                         '-drop',str(dc["drop_out"]),'-embed',str(dc["embedding_size"]), \
                                         '-e 50','-hidden', str(dc['hidden']),'-i 1','-l',str(dc["lag"]), \
                                         '--drop_out_mc',str(dc["drop_out_mc"]), \
@@ -112,7 +112,7 @@ if __name__ == '__main__':
                                         +"\n"
                 #genreate commands with action for alstm without monte carlo
                 else:
-                    full_str += ' '.join(["python code/"+train+".py","-a 2","-b",str(dc["batch"]), \
+                    full_str += ' '.join(["python code/"+train+".py","-a 2","-b",str(dc["batch"]), '-gt', "LME_All_Spot", \
                                         '-drop',str(dc["drop_out"]),'-embed',str(dc["embedding_size"]), \
                                         '-e 50','-hidden', str(dc['hidden']),'-i 1','-l',str(dc["lag"]), \
                                         '-lambd 0','-lrate 0.001','-savel 0','-savep 0', '-split 0.9','-s', step[1:],'-v',version, \
@@ -121,6 +121,5 @@ if __name__ == '__main__':
             
 
     with open(args.method +"_"+args.action+".sh","w") as bl:
-        bl.write("#!/bin/bash\n")
         bl.write(full_str)
         bl.close()

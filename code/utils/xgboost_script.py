@@ -29,17 +29,17 @@ def retrieve_top(path):
                 file.append(float(line.strip("\n").split(" ")[-1]))
 
                 #extract information regarding model hyperparameters and accuracy
-                for new_line in lines[i+1:i+10]:
+                for new_line in lines[i+1:i+13]:
                     file.append(float(new_line.strip("\n").split(" ")[-1]))
                 sub_file.append(file)
 
                 #extract information regarding time period
-                if lag_Str.lower() in lines[i+10].lower():
+                if lag_Str.lower() in lines[i+13].lower():
                     for result in sub_file:
-                        result.append(lines[i+10].strip("\n").split(" ")[-1])
-                        result.append(lines[i+11].strip("\n").split(" ")[-1])
-                        result.append(lines[i+12].strip("\n").split(" ")[-1])
                         result.append(lines[i+13].strip("\n").split(" ")[-1])
+                        result.append(lines[i+14].strip("\n").split(" ")[-1])
+                        result.append(lines[i+15].strip("\n").split(" ")[-1])
+                        result.append(lines[i+16].strip("\n").split(" ")[-1])
                     all_file+=sub_file
                     sub_file = []
 
@@ -49,7 +49,7 @@ def retrieve_top(path):
     directory = os.path.join(*(parts[:-1]))
     
     #generate data frame to congregrate data
-    file_dataframe = pd.DataFrame(all_file,columns=['all_voting',
+    file_dataframe = pd.DataFrame(all_file,columns=['all_voting','all_pos_f1','all_neg_f1','all_f1',
     'near_voting','far_voting','same_voting','reverse_voting',
     'max_depth','learning_rate','gamma','min_child_weight','subsample','lag','train_date','test_date','length'
     ])
@@ -163,7 +163,7 @@ if __name__ == '__main__':
         combinations = product(args.ground_truth_list,args.lag_list,args.step_list,args.version_list)
         for c in combinations:
             
-            if "_".join([c[0].split("_")[1],"xgboost","l"+c[1],"h"+c[2],c[3]])+".txt" in os.listdir(os.path.join(os.getcwd(),"result","validation","xgboost")):
+            if os.path.exists(os.path.join(os.getcwd(),"result","validation","xgboost","_".join([c[0].split("_")[1],"xgboost","l"+c[1],"h"+c[2],c[3]])+".txt")):
                 path_list.append([os.path.join(args.path,"_".join([c[0].split("_")[1],"xgboost","l"+c[1],"h"+c[2],c[3]])+".txt"),validation_dates])
         print(path_list)
 
@@ -207,10 +207,10 @@ if __name__ == '__main__':
                         "-subsample",str(total.iloc[0,5]),"-o train",
                         ">","/dev/null","2>&1 &"])+"\n")
                         i+=1
-                        if i%6 == 0 and args.source == "4E":
+                        if i%12 == 0 and args.source == "4E":
                             out.write("sleep 10m\n")
-                        elif args.source == "NExT" and i %20 == 0:
-                            out.write("sleep 5m\n")
+                        elif args.source == "NExT" and i %12 == 0:
+                            out.write("sleep 2m\n")
 
     #generates the command line to be used for online testing
     if args.action == "test":
@@ -254,8 +254,8 @@ if __name__ == '__main__':
                             "-subsample",str(total.iloc[0,5]),"-o test",
                             "> /dev/null 2>&1 &"])+"\n")
                         i+=1
-                        if i%6 == 0 and args.source == "4E":
+                        if i%12 == 0 and args.source == "4E":
                             out.write("sleep 10m\n")
-                        elif args.source == "NExT" and i %6 == 0:
-                            out.write("sleep 5m\n")
+                        elif args.source == "NExT" and i %12 == 0:
+                            out.write("sleep 2m\n")
 

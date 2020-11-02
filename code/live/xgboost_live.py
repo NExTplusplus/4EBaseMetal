@@ -351,6 +351,7 @@ class XGBoost_online():
             test_dataframe = pd.DataFrame(final_X_va,columns=column_lag_list)
             test_X = test_dataframe.loc[:,column_lag_list] 
             n_splits=10
+            pos = sum(train_y.values)[0]
             from sklearn.metrics import accuracy_score
             model = xgb.XGBClassifier(max_depth=max_depth,
                         learning_rate = learning_rate,
@@ -364,7 +365,7 @@ class XGBoost_online():
                         colsample_bylevel=1,
                         reg_alpha=0.0001,
                         reg_lambda=1,
-                        scale_pos_weight=1,
+                        scale_pos_weight= (len(train_y.values) - pos) /pos,
                         seed=1440,
                         missing=None)
             folds = KFold(n_splits=n_splits)
@@ -455,6 +456,7 @@ class XGBoost_online():
             test_dataframe = pd.DataFrame(final_X_va,columns=column_lag_list)
             test_X = test_dataframe.loc[:,column_lag_list] 
             n_splits=10
+            pos = sum(train_y.values)[0]
             from sklearn.metrics import accuracy_score
             model = xgb.XGBClassifier(
                         n_estimators=500,
@@ -464,7 +466,7 @@ class XGBoost_online():
                         colsample_bylevel=1,
                         reg_alpha=0.0001,
                         reg_lambda=1,
-                        scale_pos_weight=1,
+                        scale_pos_weight= (len(train_y.values) - pos) /pos,
                         seed=1440,
                         missing=None)
             folds = KFold(n_splits=n_splits)

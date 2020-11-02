@@ -7,7 +7,7 @@ import pandas as pd
 from copy import copy
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '..')))
 import warnings
-from live.Ensemble_live import Ensemble_online
+from live.ensemble_live import Ensemble_online
 from sklearn import metrics
 
 
@@ -36,27 +36,33 @@ if __name__ == '__main__':
     args.steps = args.steps.split(",")
     args.ground_truth = args.ground_truth.split(",")
 
+    #read ensemble configuration
     with open(args.config) as f:
         args.config = json.load(f)
     
-    for key in args.config.keys():
-        args.config[key] = args.config[key].split(',')
+    #process the configuration to generate from comma-sepearated string
+    for horizon in args.config.keys():
+        for key in args.config[horizon].keys():
+            args.config[horizon][key] = args.config[horizon][key].split(',')
     
+    #case if tune
     if args.action == "tune":
         for horizon in [int(step) for step in args.steps]:
             for ground_truth in args.ground_truth:
                 ensemble = Ensemble_online(horizon=horizon,gt = ground_truth,dates = args.dates, feature_version = args.config)
                 ensemble.tune(args.target)
+                
+                #if tuning for delete feature versions, don't need to loop
                 if args.target == "fv":
                     break
             
             if args.target == "fv":
                 break
 
+    #case if test (ie making predictions)
     elif args.action == "test":
         for horizon in [int(step) for step in args.steps]:
             for ground_truth in args.ground_truth:
                 for date in args.dates.split(","):
-                    print(ground_truth,horizon,date)
                     ensemble = Ensemble_online(horizon=horizon,gt = ground_truth,dates = args.dates, feature_version = args.config)
                     prediction = ensemble.test()

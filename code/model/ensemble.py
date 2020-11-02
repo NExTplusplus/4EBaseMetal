@@ -29,6 +29,7 @@ class Ensemble():
         window: window is the window size that we calculate errors with
         horizon:horizon is the amount of days we are predicting ahead of
         '''
+        print(df,label)
         error = df.ne(label.to_numpy(),axis = 0)*1.0
         cum_error = error.rolling(window = window,min_periods = 1).sum()
         cum_error = cum_error.shift(horizon).fillna(0) + 1e-6

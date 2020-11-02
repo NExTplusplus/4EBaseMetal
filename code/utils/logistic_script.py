@@ -25,6 +25,7 @@ if __name__ == '__main__':
                         help='commands, testing')
     parser.add_argument('-d','--dates',type = str, help = "dates", default = "2014-12-31,2015-06-30,2015-12-31,2016-06-30,2016-12-31,2017-06-30,2017-12-31,2018-06-30,2018-12-31")
     parser.add_argument('-p','--path',type =str, help='path to 4EBaseMetal folder',default ='/NEXT/4EBaseMetal')
+    parser.add_argument('-t','--target',type =str, help='target for validation',default ='acc')
 
     # initialize parameters
     args = parser.parse_args()
@@ -61,7 +62,8 @@ if __name__ == '__main__':
 
                     for lag in args.lag_list:
                         # if file not in folder, skip
-                        if '_'.join(['log_reg',fname,version,lag,h])+".csv" not in os.listdir(args.path):
+                        if not os.path.exists(os.path.abspath(os.path.join(args.path,'_'.join(['log_reg',fname,version,lag,h])+".csv"))):
+                            print(os.path.abspath(os.path.join(args.path,'_'.join(['log_reg',fname,version,lag,h])+".csv")))
                             continue
 
                         #read file and add lag column
@@ -73,17 +75,24 @@ if __name__ == '__main__':
 
                     #identify best hyperparameter combination with weighted average
                     total.reset_index(inplace =True,drop = True)
-                    temp_arr = {"average":[0]*len(f)*len(args.lag_list), "length":[0]*len(f)*len(args.lag_list)}
+                    temp_arr = {"average_acc":[0]*len(f)*len(args.lag_list), "average_f1":[0]*len(f)*len(args.lag_list), "length":[0]*len(f)*len(args.lag_list)}
                     for col in total.columns.values.tolist():
                         if "_length" in col:
                             split_date = col[:-7]
-                            curr_ave = list(total[split_date+"_acc"]*total[col])
-                            temp_arr['average'] = [sum(x) for x in zip(temp_arr['average'],list(curr_ave))]
+                            curr_acc = list(total[split_date+"_acc"]*total[col])
+                            curr_f1 = list(total[split_date+"_f1_score"]*total[col])
+                            temp_arr['average_acc'] = [sum(x) for x in zip(temp_arr['average_acc'],list(curr_acc))]
+                            temp_arr['average_f1'] = [sum(x) for x in zip(temp_arr['average_f1'],list(curr_f1))]
                             temp_arr['length'] = [sum(x) for x in zip(temp_arr['length'],list(total[col]))]
 
-                    temp = pd.DataFrame({"true_average":np.true_divide(temp_arr['average'],temp_arr['length'])})
-                
-                    ans = pd.concat([total,temp],axis = 1).sort_values(by = ["true_average","lag","C"], ascending = [False,True,True])
+                    temp = pd.DataFrame({"true_acc":np.true_divide(temp_arr['average_acc'],temp_arr['length']),"true_f1":np.true_divide(temp_arr['average_f1'],temp_arr['length'])})
+                    if args.target == "acc":
+
+                        ans = pd.concat([total,temp],axis = 1).sort_values(by = ["true_acc","lag","C"], ascending = [False,True,True])
+                    
+                    else:
+                        
+                        ans = pd.concat([total,temp],axis = 1).sort_values(by = ["true_f1","lag","C"], ascending = [False,True,True])
                     
                     #write to output file
                     out.write("python "+train+" "+" ".join(["-sou",args.source,"-v",version,"-s",h,"-l",str(ans.iloc[0,0]),"-C",str(ans.iloc[0,2]),"-gt",gt,"-o",args.action,'-d',args.dates,">","/dev/null", "2>&1", "&"]))
@@ -91,5 +100,5 @@ if __name__ == '__main__':
                     i+=1
                     if i%6 == 0 and args.source == "4E":
                         out.write("sleep 10m\n")
-                    elif args.source == "NExT" and i %6 == 0:
-                        out.write("sleep 5m\n")
+                    elif args.source == "NExT" and i %12 == 0:
+                        out.write("sleep 3m\n") 
