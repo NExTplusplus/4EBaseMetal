@@ -5,7 +5,7 @@ import argparse
 import numpy as np
 import pandas as pd
 import time
-import psutil
+# import psutil
 from copy import copy
 import random
 import torch
@@ -33,11 +33,11 @@ class LogCoshLoss(nn.Module):
         ey_t = y_t - y_prime_t
         return torch.mean(torch.log(torch.cosh(ey_t + 1e-12))) 
 
-def memory_usage():
-    pid = os.getpid()
-    py = psutil.Process(pid=pid)
-    memory_use = py.memory_info()[0]/2.**30
-    print('memory useage:', memory_use)
+# def memory_usage():
+#     pid = os.getpid()
+#     py = psutil.Process(pid=pid)
+#     memory_use = py.memory_info()[0]/2.**30
+#     print('memory useage:', memory_use)
 
 class Trainer:
     def __init__(self, input_dim, hidden_state, time_step, lr, dropout,
