@@ -1,12 +1,10 @@
 This folder contains the code for each machine learning model, each model per file. Note that the different version of one model (e.g., LSTM and AttLSTM) could be in different files.
 
 Files:
-ALstm_pytorch_model.py  The implementation of the Attention Long-Short Term Memory Model using pytorch, the documentation can be found in https://wiki.alphien.com/ALwiki/LSTM.
-arma_garch.py           The implementation of the ARMA_GARCH model, the documentation could be found in: https://wiki.alphien.com/ALwiki/ARMA_GARCH_Documentation 
 base_predictor.py       This is the base class for a prediction model that implement the basic inferface of a predictor. 
-cnn_lstm_keras.py       The implementation of a hybrid neural network with CNN + LSTM architecture.
 logistic_regression.py  The implementation of LR, documentation: https://wiki.alphien.com/ALwiki/Logistic_Regression_Documentation
-lstm.py                 The implementation of LSTM, documentation: https://wiki.alphien.com/ALwiki/LSTM
 model_embedding.py      The implementation of the ALSTM model with an extension of metal id.
 model_embedding_mc.py   The implementation of the ALSTM model with an extension of metal id and monte carlo.
+ensemble.py             The implementation of ensemble methods
+post_process.py         The implementation of post process methods
 model_id_embedding.py   An exact copy of model_embedding.py
