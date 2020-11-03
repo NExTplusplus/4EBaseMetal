@@ -203,6 +203,7 @@ if __name__ == '__main__':
                         folder_10=folder_10.reshape(len(folder_10),1) 
                 
                 #calculate the all folder voting
+                print(y_va[-10:])
                 if args.voting=='all':
                     result = np.concatenate((folder_1,folder_2,folder_3,folder_4,folder_5,folder_6,folder_7,folder_8,folder_9,folder_10),axis=1)
                     np.savetxt(args.ground_truth[0]+"_h"+str(args.steps)+"_"+split_date[1]+"_xgboost_"+args.version+".txt",result)
