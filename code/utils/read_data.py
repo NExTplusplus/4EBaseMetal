@@ -52,7 +52,6 @@ def read_data_NExT(config,start_date):
             LME_dates = LME_dates.union(date)
     time_series = pd.concat(time_series, axis = 1, sort = True)
     time_series.columns = colnames
-    time_series.to_csv("ts.csv")
     return time_series, LME_dates.tolist()
 
 #formatting of names of data column to be unified as (exchange)_(metal)_(feature)
