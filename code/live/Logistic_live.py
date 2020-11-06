@@ -6,6 +6,7 @@ from copy import copy
 from model.logistic_regression import LogReg
 import utils.general_functions as gn
 from utils.data_preprocess_version_control import generate_version_params
+from sklearn.metrics import accuracy_score,f1_score
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '4EBaseMetal')))
 
 
@@ -77,16 +78,28 @@ class Logistic_online():
             final_X_tr, final_y_tr, final_X_va, final_y_va, val_dates, column_lag_list = gn.prepare_data(ts,LME_dates,self.horizon,ground_truth_list,self.lag,copy(tvt_date),version_params,metal_id_bool = metal_id)
                 
             #generate hyperparameters instances
-            if self.horizon <=5:
-                if self.version == "v23":
-                    C_list = [0.01,0.1,1.0,10.0,100.0,1000.0]
-                else:
-                    C_list = [0.001,0.01,0.1,1.0,10.0,100.0] 
-            else:
-                if self.version == "v24":
-                    C_list = [0.1,1.0,10.0,100.0,1000.0,10000.0]
-                else:
-                    C_list = [1e-5,0.0001,0.001,0.01,0.1,1.0,10.0]
+            if self.horizon == 1:
+                C_list = [0.01,0.1,1.0,10.0,100.0]
+            elif self.horizon == 3:
+                C_list = [0.001,0.01,0.1,1.0,10.0,100.0]
+            elif self.horizon == 5:
+                C_list = [0.001,0.01,0.1,1.0,10.0,100.0]
+            elif self.horizon == 10:
+                C_list = [0.001,0.01,0.1,1.0,10.0]
+            elif self.horizon == 20:
+                C_list = [0.001,0.01,0.1,1.0,10.0]
+            elif self.horizon == 60:
+                C_list = [1.0,10.0,100.0,1000.0]
+            # if self.horizon <=5:
+            #     if self.version == "v23":
+            #         C_list = [0.01,0.1,1.0,10.0,100.0,1000.0]
+            #     else:
+            #         C_list = [0.001,0.01,0.1,1.0,10.0,100.0] 
+            # else:
+            #     if self.version == "v24":
+            #         C_list = [0.1,1.0,10.0,100.0,1000.0,10000.0]
+            #     else:
+            #         C_list = [1e-5,0.0001,0.001,0.01,0.1,1.0,10.0]
 
             #generate model results for each hyperparameter instance for each half year
             for C in C_list:
@@ -94,31 +107,48 @@ class Logistic_online():
                     ans["C"].append(C)
                 if split_date[2]+"_acc" not in ans.keys():
                     ans[split_date[2]+"_acc"] = []
+                    ans[split_date[2]+"_pos_f1_score"]= []
+                    ans[split_date[2]+"_neg_f1_score"]= []
+                    ans[split_date[2]+"_f1_score"]= []
                     ans[split_date[2]+"_length"] = []
 
                 pure_LogReg = LogReg(parameters={})
                 max_iter = max_iter
                 parameters = {"penalty":"l2", "C":C, "solver":"lbfgs", "tol":1e-7,"max_iter":6*4*config_length*max_iter, "verbose" : 0,"warm_start": False, "n_jobs": -1}
                 pure_LogReg.train(final_X_tr,final_y_tr.flatten(), parameters)
-                acc = pure_LogReg.test(final_X_va,final_y_va.flatten())
+                pred = pure_LogReg.predict(final_X_va)
+                y_label = pd.DataFrame(final_y_va.flatten(),columns = ["prediction"], index = val_dates)
+                y_pred = pd.DataFrame(pred,columns = ["prediction"], index = val_dates)
+                acc = accuracy_score(y_label,y_pred)
+                pos_f1 = f1_score(y_label,y_pred)
+                y_label = 1*(y_label == 0.0)
+                y_pred = 1*(y_pred == 0.0)
+                neg_f1 = f1_score(y_label,y_pred)
+                f1 = (pos_f1+neg_f1)/2
                 ans[split_date[2]+"_acc"].append(acc)
+                ans[split_date[2]+"_pos_f1_score"].append(pos_f1)
+                ans[split_date[2]+"_neg_f1_score"].append(neg_f1)
+                ans[split_date[2]+"_f1_score"].append(f1)
                 ans[split_date[2]+"_length"].append(len(final_y_va.flatten()))
 
         ans = pd.DataFrame(ans)
-        ave = None
+        ave_acc = None
         length = None
 
         #generate total average across all half years
         for col in ans.columns.values.tolist():
             if "_acc" in col:
-                if ave is None:
-                    ave = ans.loc[:,col]*ans.loc[:,col[:-3]+"length"]
+                if ave_acc is None:
+                    ave_acc = ans.loc[:,col]*ans.loc[:,col[:-3]+"length"]
+                    ave_f1 = ans.loc[:,col[:-3+"f1_score"]]*ans.loc[:,col[:-3]+"length"]
                     length = ans.loc[:,col[:-3]+"length"]
                 else:
-                    ave = ave + ans.loc[:,col]*ans.loc[:,col[:-3]+"length"]
+                    ave_acc = ave_acc + ans.loc[:,col]*ans.loc[:,col[:-3]+"length"]
+                    ave_f1 = ave_f1 + ans.loc[:,col[:-3+"f1_score"]]*ans.loc[:,col[:-3]+"length"]
                     length = length + ans.loc[:,col[:-3]+"length"]
-        ave = ave/length
-        ans = pd.concat([ans,pd.DataFrame({"average": ave})],axis = 1)
+        ave_acc = ave_acc/length
+        ave_f1 = ave_f1/length
+        ans = pd.concat([ans,pd.DataFrame({"average accuracy": ave_acc, "average_f1": ave_f1})],axis = 1)
         
         #store results in csv
         pd.DataFrame(ans).to_csv(os.path.join(os.getcwd(),'result','validation','logistic',\
