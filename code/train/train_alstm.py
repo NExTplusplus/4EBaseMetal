@@ -382,7 +382,7 @@ if __name__ == '__main__':
             metal_id = False
             ground_truth_list = [args.ground_truth]
             if gn.even_version(args.version):
-                ground_truth_list = ["LME_Co_Spot","LME_Al_Spot","LME_Ni_Spot","LME_Ti_Spot","LME_Zi_Spot","LME_Le_Spot"]
+                ground_truth_list = ["LME_Cu_Spot","LME_Al_Spot","LME_Ni_Spot","LME_Xi_Spot","LME_Zn_Spot","LME_Pb_Spot"]
 
             for ground_truth in ground_truth_list:
                 print(ground_truth)

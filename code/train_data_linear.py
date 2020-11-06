@@ -7,7 +7,6 @@ import pandas as pd
 from copy import copy
 sys.path.insert(0,os.path.abspath(os.path.join(sys.path[0],"..")))
 from live.linear_live import Linear_online
-from utils.transform_data import flatten
 import warnings
 from matplotlib import pyplot
 from xgboost import plot_importance

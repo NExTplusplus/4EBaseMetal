@@ -4,8 +4,6 @@ import pandas as pd
 import numpy as np
 from utils.seasonal_decomp import custom_seasonal_decomp
 from statsmodels.tsa.seasonal import seasonal_decompose
-import numpy as np
-import pandas as pd
 from pandas.core.nanops import nanmean as pd_nanmean
 from statsmodels.tsa._stl import STL
 from utils.fracdiff import frac_diff_ffd

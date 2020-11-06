@@ -12,15 +12,15 @@ import datetime
 def get_ind_metal(string):
     if 'Al' in string:
         return 'Al'
-    elif 'Co' in string:
+    elif 'Cu' in string:
         return 'Cu'
     elif 'Ni' in string:
         return 'Ni'
-    elif 'Le' in string:
+    elif 'Pb' in string:
         return 'Pb'
-    elif 'Ti' in string:
+    elif 'Xi' in string:
         return 'Xi'
-    elif 'Zi' in string:
+    elif 'Zn' in string:
         return 'Zn'
 
 #read classification predictions that are pre-generated
