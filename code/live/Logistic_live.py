@@ -67,7 +67,7 @@ class Logistic_online():
             ground_truth_list = [self.gt]
             if gn.even_version(self.version):
                 metal_id = True
-                ground_truth_list = ["LME_Co_Spot","LME_Al_Spot","LME_Ni_Spot","LME_Ti_Spot","LME_Zi_Spot","LME_Le_Spot"]
+                ground_truth_list = ["LME_Cu_Spot","LME_Al_Spot","LME_Ni_Spot","LME_Xi_Spot","LME_Zn_Spot","LME_Pb_Spot"]
 
             #extract copy of data to process
             ts = copy(time_series.loc[split_date[0]:split_date[-1]])
@@ -156,7 +156,7 @@ class Logistic_online():
             ground_truth_list = [self.gt]
             if gn.even_version(self.version):
                 metal_id = True
-                ground_truth_list = ["LME_Co_Spot","LME_Al_Spot","LME_Ni_Spot","LME_Ti_Spot","LME_Zi_Spot","LME_Le_Spot"]
+                ground_truth_list = ["LME_Cu_Spot","LME_Al_Spot","LME_Ni_Spot","LME_Xi_Spot","LME_Zn_Spot","LME_Pb_Spot"]
 
             #extract copy of data to process
             ts = copy(time_series.loc[start_time:split_dates[2]])

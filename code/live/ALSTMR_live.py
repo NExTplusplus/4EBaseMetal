@@ -408,7 +408,7 @@ class ALSTMR_online():
             i = 0
             #toggle metal id
             metal_id = False
-            ground_truths_list = ['LME_Co_Spot','LME_Al_Spot','LME_Le_Spot','LME_Ni_Spot','LME_Zi_Spot','LME_Ti_Spot']
+            ground_truths_list = ["LME_Cu_Spot","LME_Al_Spot","LME_Ni_Spot","LME_Xi_Spot","LME_Zn_Spot","LME_Pb_Spot"]
             for ground_truth in ground_truths_list:
                 print(ground_truth)
                 new_time_series = copy(time_series)
@@ -584,7 +584,7 @@ class ALSTMR_online():
             i = 0
             #toggle metal id
             metal_id = False
-            ground_truths_list = ['LME_Co_Spot','LME_Al_Spot','LME_Le_Spot','LME_Ni_Spot','LME_Zi_Spot','LME_Ti_Spot']
+            ground_truths_list = ["LME_Cu_Spot","LME_Al_Spot","LME_Ni_Spot","LME_Xi_Spot","LME_Zn_Spot","LME_Pb_Spot"]
             for ground_truth in ground_truths_list:
                 print(ground_truth)
                 new_time_series = copy(time_series)
