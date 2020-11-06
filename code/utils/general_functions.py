@@ -47,9 +47,9 @@ def generate_config_path(version):
     '''
     if version in ["v5","v7"]:
         #requires global data
-        return "exp/3d/Co/logistic_regression/v5/LMCADY_v5.conf"
+        return "exp/LMCADY_v5.conf"
     elif version in ["v3","v23","v24","v28","v30","v37","v39","v41","v43"]:
-        return "exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf"
+        return "exp/LMCADY_v3.conf"
     elif version in ["v9","v10","v12","v16","v26"]:
         return "exp/online_v10.conf"
     elif version in ["v31","v32"]:
@@ -216,17 +216,17 @@ def prepare_data(time_series,LME_dates,horizon,ground_truth_list,lag,split_date,
     #if live version needs metal_id
     if metal_id_bool and live:
         metal_id = [0,0,0,0,0,0]
-        if ground_truth == "LME_Co_Spot":
+        if ground_truth == "LME_Cu_Spot":
             metal_id[0] = 1
         elif ground_truth == "LME_Al_Spot":
             metal_id[1] = 1
         elif ground_truth == "LME_Ni_Spot":
             metal_id[2] = 1
-        elif ground_truth == "LME_Ti_Spot":
+        elif ground_truth == "LME_Xi_Spot":
             metal_id[3] = 1
-        elif ground_truth == "LME_Zi_Spot":
+        elif ground_truth == "LME_Zn_Spot":
             metal_id[4] = 1
-        elif ground_truth == "LME_Le_Spot":
+        elif ground_truth == "LME_Pb_Spot":
             metal_id[5] = 1
         
         final_X_tr = np.append(X_tr,[metal_id]*len(X_tr),axis = 1)
@@ -238,19 +238,19 @@ def prepare_data(time_series,LME_dates,horizon,ground_truth_list,lag,split_date,
     for i in range(lag):
         for item in column_list[0]:
             if metal_id_bool:
-                new_item = item.replace(ground_truth[:6],"LME_Le")+"_"+str(lag-i)
+                new_item = item.replace(ground_truth[:6],"LME_Pb")+"_"+str(lag-i)
             else:
                 new_item = item+"_"+str(lag-i)
             column_lag_list.append(new_item)
 
     #add metal id to column lag list
     if metal_id_bool:
-        column_lag_list.append("Co")
+        column_lag_list.append("Cu")
         column_lag_list.append("Al")
         column_lag_list.append("Ni")
-        column_lag_list.append("Ti")
-        column_lag_list.append("Zi")
-        column_lag_list.append("Le")
+        column_lag_list.append("Xi")
+        column_lag_list.append("Zn")
+        column_lag_list.append("Pb")
     
     return final_X_tr,final_y_tr,final_X_va,final_y_va,val_dates,column_lag_list
 

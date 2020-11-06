@@ -64,16 +64,17 @@ def generate_required_columns(config):
     for fname in config:
         #identify exchange from filepath
         exchange = identify_exchange(fname)
-
+        print(fname)
         #identify metal from filepath
         metal = identify_metal(fname)
-
+        print(metal)
         #identify feature
         for col in config[fname]:
             if col[0:2] == "LM" and col[4:6] == "DY":
                 col_name = str.strip('_'.join((exchange,metal,"Spot"))).strip("_")
             else:
                 col_name = str.strip('_'.join((exchange,metal,identify_feature(col)))).strip("_")
+            print(col_name)
             colnames.append(col_name)
     
     return colnames
@@ -144,28 +145,26 @@ def identify_metal(fpath):
     folders = fpath.split("/")
     f = folders[-1].strip(".csv")
     # consider special case of LME
-    if f[0:3] == "LME":
-        return f[3:5]
-    if f[0:2] == "LM":
+    if f[0:2] == "LM" and f[0:3] != "LME":
         f = f[2:4]
     # Aluminium case
-    if f in ["AA","AH","LSAH","LEAH"]:
+    if f in ["LMEAluminium3M","AA","AH","LSAH","LEAH"]:
         return "Al"
     # Copper
-    elif f in ["HG_lag1","CU","CA","LECA","LSCA"]:
-        return "Co"
+    elif f in ["LMECopper3M_longer","HG_lag1","CU","CA","LECA","LSCA"]:
+        return "Cu"
     # Nickel
-    elif f in ["XII","NI","LENI","LSNI"]:
+    elif f in ["LMENickel3M","XII","NI","LENI","LSNI"]:
         return "Ni"
     #Zinc
-    elif f in ["ZNA","ZS","LEZS","LSZS"]:
-        return "Zi"
+    elif f in ["LMEZinc3M","ZNA","ZS","LEZS","LSZS"]:
+        return "Zn"
     #Tin
-    elif f in ["XOO","SN","LESN","LSSN"]:
-        return "Ti"
+    elif f in ["LMETin3M","XOO","SN","LESN","LSSN"]:
+        return "Xi"
     #Lead
-    elif f in ["PBL","PB","LEPB","LSPB"]:
-        return "Le"
+    elif f in ["LMELead3M","PBL","PB","LEPB","LSPB"]:
+        return "Pb"
     elif " Index" in f or " Curncy" in f:
         return "" 
     elif "METF" in f:

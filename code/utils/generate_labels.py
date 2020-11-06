@@ -16,7 +16,7 @@ if __name__ == '__main__':
     parser.add_argument('-s','--steps',type=str,default='1,3,5,10,20,60',
                         help='steps in the future to be predicted')
     parser.add_argument('-gt', '--ground_truth', help='ground truth column',
-                        type=str, default="LME_Al_Spot,LME_Co_Spot,LME_Le_Spot,LME_Ni_Spot,LME_Ti_Spot,LME_Zi_Spot")
+                        type=str, default="LME_Al_Spot,LME_Cu_Spot,LME_Pb_Spot,LME_Ni_Spot,LME_Xi_Spot,LME_Zn_Spot")
     parser.add_argument(
         '-sou','--source', help='source of data', type = str, default = "NExT"
     )
@@ -38,17 +38,17 @@ if __name__ == '__main__':
                         getSecurityOHLCV(c("LMCADS03 Comdty","LMPBDS03 Comdty","LMNIDS03 Comdty","LMSNDS03 Comdty","LMZSDS03 Comdty","LMAHDS03 Comdty"), start = "'''+start_date+'''")
                         )
                     ''')
-        ts.colnames = robjects.vectors.StrVector(["LME_Co_Spot","LME_Al_Spot","LME_Le_Spot","LME_Zi_Spot","LME_Ni_Spot","LME_Ti_Spot"
-                        ,"LME_Co_Open","LME_Co_High","LME_Co_Low","LME_Co_Close","LME_Co_Volume","LME_Co_OI"
-                        ,"LME_Le_Open","LME_Le_High","LME_Le_Low","LME_Le_Close","LME_Le_Volume","LME_Le_OI"
+        ts.colnames = robjects.vectors.StrVector(["LME_Cu_Spot","LME_Al_Spot","LME_Pb_Spot","LME_Zn_Spot","LME_Ni_Spot","LME_Xi_Spot"
+                        ,"LME_Cu_Open","LME_Cu_High","LME_Cu_Low","LME_Cu_Close","LME_Cu_Volume","LME_Cu_OI"
+                        ,"LME_Pb_Open","LME_Pb_High","LME_Pb_Low","LME_Pb_Close","LME_Pb_Volume","LME_Pb_OI"
                         ,"LME_Ni_Open","LME_Ni_High","LME_Ni_Low","LME_Ni_Close","LME_Ni_Volume","LME_Ni_OI"
-                        ,"LME_Ti_Open","LME_Ti_High","LME_Ti_Low","LME_Ti_Close","LME_Ti_Volume","LME_Ti_OI"
-                        ,"LME_Zi_Open","LME_Zi_High","LME_Zi_Low","LME_Zi_Close","LME_Zi_Volume","LME_Zi_OI"
+                        ,"LME_Xi_Open","LME_Xi_High","LME_Xi_Low","LME_Xi_Close","LME_Xi_Volume","LME_Xi_OI"
+                        ,"LME_Zn_Open","LME_Zn_High","LME_Zn_Low","LME_Zn_Close","LME_Zn_Volume","LME_Zn_OI"
                         ,"LME_Al_Open","LME_Al_High","LME_Al_Low","LME_Al_Close","LME_Al_Volume","LME_Al_OI"
                         ])
         ts = m2ar(ts)
         os.chdir("NEXT/4EBaseMetal")
-
+    print(ts)
     for gt in args.ground_truth:
         if args.source == "NExT":
             spot = copy(ts).loc[:,gt]
