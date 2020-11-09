@@ -25,6 +25,7 @@ random.seed(1)
 
 thresh = 0
 
+#Implementation of Log Cosh Loss
 class LogCoshLoss(nn.Module):
     def __init__(self):
         super().__init__()
@@ -39,6 +40,7 @@ class LogCoshLoss(nn.Module):
 #     memory_use = py.memory_info()[0]/2.**30
 #     print('memory useage:', memory_use)
 
+#Implementation of training the ALSTM model
 class Trainer:
     def __init__(self, input_dim, hidden_state, time_step, lr, dropout,
                  case_number, attention_size, embedding_size,

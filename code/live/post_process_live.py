@@ -158,19 +158,25 @@ class Post_process_live():
             if self.model is None:
                 model = Post_process()
 
+            #case if we are running a substitution post process
             elif self.model == "Substitution":
                 X = { 'Prediction' : read_classification(self.ground_truth,self.horizon,date,self.version[0],"ensemble") }
+                #case if we are substituting with analyst report
                 if inputs['substitution'] == "analyst":
                     validation_date = date.split("-")[0]+"-01-01" if date[5:7] <= "06" else date.split("-")[0]+"-07-01"
                     
+                    #read substitution configuration which details the metal and horizon combinations that are eligible for substitution
                     with open("exp/substitution.conf","r") as f:
                         config = json.load(f)
 
+                    #case if they are not to be substituted
                     if self.ground_truth not in config.keys() or self.horizon not in config[self.ground_truth]:
                         model = Post_process()
                         X["Uncertainty"] = read_uncertainty(self.ground_truth,self.horizon,date,"ensemble","classification") 
                         prediction = model.predict(X)
                         X["Uncertainty"].to_csv(os.path.join("result","uncertainty","classification",'_'.join([self.ground_truth,validation_date,str(self.horizon),"substitution.csv"])))
+                    
+                    #case if they are to be substituted
                     else:
                         model = Post_process_substitution()
                         validation_date = date.split("-")[0]+"-01-01" if date[5:7] <= "06" else date.split("-")[0]+"-07-01" 
@@ -179,6 +185,7 @@ class Post_process_live():
                         prediction, uncertainty = model.predict(X)
                         uncertainty.to_csv(os.path.join("result","uncertainty","classification",'_'.join([self.ground_truth,validation_date,str(self.horizon),"substitution.csv"])))
 
+            #case if we are running a filter post process
             elif self.model == "Filter":
                 X = { 'Prediction' : read_classification(self.ground_truth,self.horizon,date,self.version[0],"Substitution") }
                 model = Post_process_filter()

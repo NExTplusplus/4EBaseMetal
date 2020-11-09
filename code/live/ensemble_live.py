@@ -194,9 +194,35 @@ class Ensemble_online():
         
         return final_ans
     
+    #generate live prediction and uncertainty
+    def test(self):
+        dates  = self.val_dates + "," + self.test_dates if self.val_dates != "" else self.test_dates
+        validation_dates = [date.split("-")[0]+"-01-01" if date[5:7] <= "06" else date.split("-")[0]+"-07-01"  for date in dates.split(',')]
+
+        for i, date in enumerate(dates.split(',')):
+            #read validation for best window
+            validation = pd.read_csv(os.path.join("result","validation","ensemble",self.gt+"_"+str(self.horizon)+".csv"), index_col = 0)
+            method = validation.iloc[0,1].split(',')
+            best_window = [int(i) for i in validation.iloc[0,0].split(',')]
+            best_window = [best_window[:-1],[best_window[-1]]]
+            label = pd.read_csv("data/Label/"+self.gt+"_h"+str(self.horizon)+"_"+validation_dates[i]+"_label.csv",index_col = 0)
+            print(method,best_window)
+
+            #generate predictions and uncertainties
+            predictions,uncertainty = self.predict(date, self.feature_version[str(self.horizon)], method, label, best_window, uncertainty = True)
+            predictions = pd.DataFrame(predictions,columns = ["result"])
+            uncertainty = pd.DataFrame(uncertainty,columns = ["uncertainty"])
+            predictions.to_csv(os.path.join("result","prediction","ensemble","_".join([self.gt,date,str(self.horizon),"ensemble.csv"])))
+            uncertainty.to_csv(os.path.join("result","uncertainty","classification","_".join([self.gt,validation_dates[i],str(self.horizon),"ensemble.csv"])))
+
+
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#                                                       No longer in use
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------
     #tune for feature versions that should be included in final ensemble
     def tune_dm(self):
 
+        #read all viable feature versions
         with open(os.path.join("exp","ensemble_tune_all.conf")) as f:
             fv_all = json.load(f)
 
@@ -255,7 +281,7 @@ class Ensemble_online():
         return record
         
 
-
+    #Implementation of deletion of feature version based on validation results
     def delete_model(self):
 
         validation_dates = [date.split("-")[0]+"-01-01" if date[5:7] <= "06" else date.split("-")[0]+"-07-01"  for date in self.val_dates.split(',')]
@@ -265,6 +291,7 @@ class Ensemble_online():
         total_list = []
         
         fv_list = []
+
 
         ans = {'horizon':[],"ground_truth":[],"version":[]}
         for model, fv in self.feature_version[str(self.horizon)].items():
@@ -306,25 +333,6 @@ class Ensemble_online():
         
         ans = pd.DataFrame(ans)
         return name_list, ans
-
-    #generate live prediction and uncertainty
-    def test(self):
-        dates  = self.val_dates + "," + self.test_dates if self.val_dates != "" else self.test_dates
-        validation_dates = [date.split("-")[0]+"-01-01" if date[5:7] <= "06" else date.split("-")[0]+"-07-01"  for date in dates.split(',')]
-
-        for i, date in enumerate(dates.split(',')):
-            validation = pd.read_csv(os.path.join("result","validation","ensemble",self.gt+"_"+str(self.horizon)+".csv"), index_col = 0)
-            method = validation.iloc[0,1].split(',')
-            best_window = [int(i) for i in validation.iloc[0,0].split(',')]
-            best_window = [best_window[:-1],[best_window[-1]]]
-            label = pd.read_csv("data/Label/"+self.gt+"_h"+str(self.horizon)+"_"+validation_dates[i]+"_label.csv",index_col = 0)
-            print(method,best_window)
-            predictions,uncertainty = self.predict(date, self.feature_version[str(self.horizon)], method, label, best_window, uncertainty = True)
-            predictions = pd.DataFrame(predictions,columns = ["result"])
-            uncertainty = pd.DataFrame(uncertainty,columns = ["uncertainty"])
-            predictions.to_csv(os.path.join("result","prediction","ensemble","_".join([self.gt,date,str(self.horizon),"ensemble.csv"])))
-            uncertainty.to_csv(os.path.join("result","uncertainty","classification","_".join([self.gt,validation_dates[i],str(self.horizon),"ensemble.csv"])))
-
 
 
 
