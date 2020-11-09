@@ -12,30 +12,56 @@ from live.xgboost_live import XGBoost_online
 if __name__ == '__main__':
     desc = 'the XGBoost model'
     parser = argparse.ArgumentParser(description=desc)
-    parser.add_argument('-s','--steps',type=int,default=5,
-                        help='steps in the future to be predicted')
-    parser.add_argument('-gt', '--ground_truth', help='ground truth column',
-                        type=str, default="LME_Co_Spot")
-    parser.add_argument('-max_iter','--max_iter',type=int,default=100,
-                        help='max number of iterations')
-    parser.add_argument(
-            '-sou','--source', help='source of data', type = str, default = "NExT")
-    parser.add_argument(
-            '-l','--lag', type=int, default = 5, help='lag')
-    parser.add_argument('-v','--version', help='version', type = str, default = 'v10')
-    parser.add_argument('-o', '--action', type=str, default='train',
-                        help='train, test, tune')
-    parser.add_argument('-d', '--date', help = "the date is the final data's date which you want to use for testing",type=str)	
+
+    #script parameter
+    parser.add_argument('-o', '--action', type=str, 
+                        help='action that we wish to take, has potential values of : train, test, tune',
+                        default='train'
+                        )
+
+    #result parameter
+    parser.add_argument('-s','--horizon',type=int,
+                        help='the prediction horizon',
+                        default=5
+                        )
+    parser.add_argument('-gt', '--ground_truth', type=str, 
+                        help='the name of the column that we are predicting either value or direction',
+                        default="LME_Cu_Spot"
+                        )
+    parser.add_argument('-sou','--source', type = str, 
+                        help='source of data', 
+                        default = "NExT"
+                        )
+    parser.add_argument('-v','--version',  type = str, 
+                        help='feature version for data',
+                        default = 'v10'
+                        )
+    parser.add_argument('-d', '--date', type=str, 
+                        help = "string of comma-separated dates which identify the total period of deployment by half-years"
+                        )
+
+    #hyperparameters
+    parser.add_argument('-l','--lag', type=int, 
+                        help='lag', 
+                        default = 5
+                        )
     parser.add_argument('-max_depth', '--max_depth', type=int)
     parser.add_argument('-learning_rate', '--learning_rate', type=float)
     parser.add_argument('-gamma', '--gamma', type=float)
     parser.add_argument('-min_child', '--min_child', type=int)
     parser.add_argument('-subsample', '--subsample', type=float)
     args = parser.parse_args()
-    model = XGBoost_online(lag = args.lag, horizon = args.steps, version = args.version, gt = args.ground_truth, date = args.date, source = args.source)
+    #initialize model
+    model = XGBoost_online(lag = args.lag, horizon = args.horizon, version = args.version, gt = args.ground_truth, date = args.date, source = args.source)
+    
+    #case if action is tune
     if args.action=="tune":
         model.tune()
+    
+    #case if action is train
     elif args.action=='train':
         model.train(max_depth = args.max_depth,learning_rate = args.learning_rate, gamma = args.gamma, min_child_weight = args.min_child, subsample = args.subsample)
+    
+    #csae if action is test
     else:
         final = model.test()

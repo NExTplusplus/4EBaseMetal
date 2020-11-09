@@ -8,7 +8,47 @@ import multiprocessing as mp
 import subprocess
 import logging
 
-#subprocess_run with stdout and stderror
+'''
+    This file is the controller to run each individual model (logistic regression, xgboost, alstm, etc)
+    It has 9 functions which can be roughly categorized by level
+
+    run:    High level function which chooses the action that is to be taken
+
+    run_tune:       Medium level function which generates the tuning log for a specific model
+    run_train:      Medium level function which generates the model instances for a specific model
+    run_test:       Medium level function which generates the predictions for a specific model 
+    extract:        Medium level function which extracts the predictions of a list of specified dates, metals and horizons
+    run_analyze:    Medium level function which breaks down the predictions into metrics of performance (accuracy, f1_score, mae, rmse)
+
+    analyze_zoom:   Low level function which breaks down dates into half years
+    run_bash:       Low level function that implements controlled parallel processing for bash scripts
+    subprocess_run: Low level function that automates the logging of standard output and error
+
+    There are some universally defined parameters that will be stated here:
+    ground_truth_str:   string which specifies the metals. It is comma-separated.
+        values:         Al/Cu/Pb/Ni/Xi/Zn
+    dates:               string which specifies range of dates to deploy framework on, is of format start_date::end_date, where start_date and end_date
+                        are of format YYYY-mm-dd
+        values:         2014-07-01::2018-12-31
+    horizon_str:        string which specifies the prediction horizon. It is comma-separated.
+        values:         1/3/5/10/20/60
+    sou:                string which controls the method to read data. Is a reference to the source of the data.
+        values:         NExT/4E
+    version_str:        string which specifies feature version. It is comma-separated.
+        values:         v3/v5/v7/v9/v10.......
+    model:              string which specifies the model to be deployed.
+        values:         logistic/xgboost/alstm/alstmr/ensemble/pp_sub/pp_filter
+                        *pp_sub refers to Substitution, whereas pp_filter refers to Filter
+    mc:                 string which identifies whether monte-carlo simulation is triggered.
+        values:         True/False
+
+    ground_truth:       string which specify a single metal. Cannot allow for multiple metals
+    horizon:            string which specify a single horizon. Cannot allow for multiple horizons
+    version:            stirng which specifies a single feature version. Cannot allow for multiple feature versions
+
+
+'''
+
 def subprocess_run(line):
     '''
         Input
@@ -34,21 +74,24 @@ def subprocess_run(line):
     ind = line.index('-d')
     dates = line[ind+1]
     
+    #get method
     method = "train" if "train" in line else "test"
+
+    #get model
     model = line[1].split('_')[-1][:-3]
     
+    #generate filepaths for logs for standard output and error
     out = open("log/"+method+"/out/"+'_'.join([model,gt,horizon,version,dates+".txt"]),"w")
     error = open("log/"+method+"/err/"+'_'.join([model,gt,horizon,version,dates+".txt"]),"w")
     
     proc = subprocess.run(line,stdout = out, stderr = error)
+
+    # if there is an error then return the command that has failed
     if proc.returncode != 0:
         return ' '.join(line)
     else:
         return None
     
-
-
-#runs bash script parallelly
 def run_bash(filename, processes = 12):
     '''
     Input
@@ -76,14 +119,15 @@ def run_bash(filename, processes = 12):
     if results is None:
         return
     results = [res for res in results if res is not None]
+
+    # if there is an error, log the command that generates the error
     if len(results) > 0:
-        with open("log/error_log_"+lines[0][1].split("_")[-1][:-3]+"_"+ datetime.datetime.strftime(datetime.datetime.now(),"%Y%m%d;%H:%M:%S")+".txt","w") as out:
+        with open("log/"+filename.strip('.sh').split('_')[-1]+"error_log_"+lines[0][1].split("_")[-1][:-3]+"_"+ datetime.datetime.strftime(datetime.datetime.now(),"%Y%m%d;%H:%M:%S")+".txt","w") as out:
             for res in results:
                 out.write(res+"\n")
             out.close()
                 
                 
-
 def analyze_zoom(zoom):
     '''
     Input
@@ -131,8 +175,7 @@ def analyze_zoom(zoom):
 
     return output
 
-#generate and process tuning commands
-def run_tune(ground_truth, step, sou, version, model, mc, date):
+def run_tune(ground_truth, horizon, sou, version, model, mc, date):
     train = "code/train_data_"+model+".py"
     command = ""
 
@@ -142,7 +185,7 @@ def run_tune(ground_truth, step, sou, version, model, mc, date):
         for l in lag.split(','):
             command += ' '.join(['python', train, \
                                     '-gt', ground_truth, \
-                                    '-s', step, \
+                                    '-s', horizon, \
                                     '-sou', sou, \
                                     '-l', l, \
                                     '-v', version, \
@@ -160,7 +203,7 @@ def run_tune(ground_truth, step, sou, version, model, mc, date):
         for l in lag.split(','):
             command += ' '.join(['python', train, \
                                     '-gt', ground_truth, \
-                                    '-s', step, \
+                                    '-s', horizon, \
                                     '-sou', sou, \
                                     '-l', l, \
                                     '-v', version, \
@@ -168,7 +211,7 @@ def run_tune(ground_truth, step, sou, version, model, mc, date):
                                     '-o', "tune", \
                                     '>', \
                                     'result/validation/'+model+'/' \
-                                    +'_'.join([ground_truth.split("_")[1], 'xgboost', 'l'+lag, 'h'+step, version+".txt"]), \
+                                    +'_'.join([ground_truth.split("_")[1], 'xgboost', 'l'+lag, 'h'+horizon, version+".txt"]), \
                                     '2>&1', '&',"\n"])
             if int(version[1:]) >= 23:
                 break
@@ -177,14 +220,14 @@ def run_tune(ground_truth, step, sou, version, model, mc, date):
     elif model in ["alstm"]:
         train = "code/train_data_ALSTM.py"
         command += ' '.join(['python', train, \
-                            '-s', step, \
+                            '-s', horizon, \
                             '-sou', sou, \
                             '-v', version, \
                             '-d', date, \
                             '-o', "tune", \
                             '-log', \
                             './result/validation/'+model+'/' \
-                            +'_'.join([version, 'h'+step, "tune.log"]), \
+                            +'_'.join([version, 'h'+horizon, "tune.log"]), \
                             '>', '/dev/null', \
                             '2>&1', '&',"\n"])
 
@@ -194,14 +237,14 @@ def run_tune(ground_truth, step, sou, version, model, mc, date):
         if mc == "False":
             train = "code/train_data_ALSTMR.py"
             command += ' '.join(['python', train, \
-                                '-s', step, \
+                                '-s', horizon, \
                                 '-sou', sou, \
                                 '-v', version, \
                                 '-d', date, \
                                 '-o', "tune", \
                                 '-log', \
                                 './result/validation/alstm/' \
-                                +'_'.join([version, 'h'+step, "tune.log"]), \
+                                +'_'.join([version, 'h'+horizon, "tune.log"]), \
                                 '>', '/dev/null', \
                                 '2>&1', '&',"\n"])
             
@@ -212,11 +255,11 @@ def run_tune(ground_truth, step, sou, version, model, mc, date):
 
             command +=        ' '.join(['python', 'code/train/analyze_alstm.py', \
                                 'result/validation/alstm '+ \
-                                version+"_h"+step+"_tune.log", \
+                                version+"_h"+horizon+"_tune.log", \
                                 '>', 'result/validation/alstm/'+ \
-                                version+"_h"+step+"_para.txt", "para","\n"]
+                                version+"_h"+horizon+"_para.txt", "para","\n"]
                             )
-            filepath += 'result/validation/alstm/'+version+"_h"+step+"_para.txt,"
+            filepath += 'result/validation/alstm/'+version+"_h"+horizon+"_para.txt,"
 
             #remove last comma character
             filepath = filepath[:-1]
@@ -239,7 +282,7 @@ def run_tune(ground_truth, step, sou, version, model, mc, date):
         dates = ','.join(date[1:])
         train = "code/train_data_ensemble.py"
         command += ' '.join(['python', train, \
-                            '-s', step, \
+                            '-s', horizon, \
                             '-gt', ground_truth, \
                             '-o', 'tune', \
                             '-c', 'exp/ensemble_tune_all.conf', \
@@ -252,10 +295,10 @@ def run_tune(ground_truth, step, sou, version, model, mc, date):
         train = "code/train_data_pp.py"
         dates = ','.join(date[1:])
         for gt in ground_truth.split(','):
-            for s in step.split(','):
+            for s in horizon.split(','):
                 command += ' '.join(['python', train, \
                                         '-gt', ground_truth, \
-                                        '-s', step, \
+                                        '-s', horizon, \
                                         '-sou', "NExT", \
                                         '-v', version, \
                                         '-d', dates, \
@@ -269,8 +312,7 @@ def run_tune(ground_truth, step, sou, version, model, mc, date):
     print(command)
     os.system(command)
 
-#extraction of tuning results and generation and processing of training commands
-def run_train(ground_truths_str, steps, sou, versions, model, mc, dates):
+def run_train(ground_truth_str, horizon_str, sou, version_str, model, mc, dates):
 
     command = ""
     date = ','.join(dates[1:])
@@ -284,11 +326,11 @@ def run_train(ground_truths_str, steps, sou, versions, model, mc, dates):
         lag = '1,5,10,20'
 
         train_script = ' '.join(['python', 'code/utils/'+model+"_script.py", \
-                            '-gt', ground_truths_str, \
-                            '-s', steps, \
+                            '-gt', ground_truth_str, \
+                            '-s', horizon_str, \
                             '-sou', sou, \
                             '-l', lag, \
-                            '-v', versions, \
+                            '-v', version_str, \
                             '-p', './result/validation/'+model, \
                             '-out', model+"_train.sh", \
                             '-o', 'train', \
@@ -304,22 +346,22 @@ def run_train(ground_truths_str, steps, sou, versions, model, mc, dates):
         
         #generate commands to call script
         command += ' '.join(['python', 'code/utils/'+model+"_script.py", \
-                            '-gt', ground_truths_str, \
-                            '-s', steps, \
+                            '-gt', ground_truth_str, \
+                            '-s', horizon_str, \
                             '-sou', sou, \
                             '-l', lag, \
-                            '-v', versions, \
+                            '-v', version_str, \
                             '-p', './result/validation/'+model, \
                             '-o', 'tune', \
                             '>','/dev/null',
                             '2>&1','&\n'    ]
                         )
         command += ' '.join(['python', 'code/utils/'+model+"_script.py", \
-                            '-gt', ground_truths_str, \
-                            '-s', steps, \
+                            '-gt', ground_truth_str, \
+                            '-s', horizon_str, \
                             '-sou', sou, \
                             '-l', lag, \
-                            '-v', versions, \
+                            '-v', version_str, \
                             '-p', './result/validation/'+model, \
                             '-out', model+"_train.sh", \
                             '-o', 'train', \
@@ -332,10 +374,10 @@ def run_train(ground_truths_str, steps, sou, versions, model, mc, dates):
 
         #generate tuning results from log
         filepath = ''
-        for version in versions.split(','):
+        for version in version_str.split(','):
             v = version.split('_')[0]
             method = '_'.join(version.split('_')[1:])
-            for step in steps.split(','):
+            for step in horizon_str.split(','):
                 command += ' '.join(['python', 'code/train/analyze_alstm.py', \
                                     'result/validation/alstm '+ \
                                     v+"_h"+step+"_tune.log", \
@@ -349,7 +391,7 @@ def run_train(ground_truths_str, steps, sou, versions, model, mc, dates):
 
         #extract results and output commands
         command += ' '.join(['python', 'code/utils/analyze_alstm_tune.py', \
-                            '-gt', ground_truths_str, \
+                            '-gt', ground_truth_str, \
                             '-f', filepath, \
                             '-sou', sou, \
                             '-o', 'train', \
@@ -363,10 +405,10 @@ def run_train(ground_truths_str, steps, sou, versions, model, mc, dates):
 
         #generate tuning results from log
         filepath = ''
-        for version in versions.split(','):
+        for version in version_str.split(','):
             v = version.split('_')[0]
             method = '_'.join(version.split('_')[1:])
-            for step in steps.split(','):
+            for step in horizon_str.split(','):
                 command += ' '.join(['python', 'code/train/analyze_alstm.py', \
                                     'result/validation/alstm '+ \
                                     v+"_h"+step+"_mc_tune.log", \
@@ -380,7 +422,7 @@ def run_train(ground_truths_str, steps, sou, versions, model, mc, dates):
 
         #extract results and output commands
         command += ' '.join(['python', 'code/utils/analyze_alstm_tune.py', \
-                            '-gt', ground_truths_str, \
+                            '-gt', ground_truth_str, \
                             '-f', filepath, \
                             '-sou', sou, \
                             '-r', '1', \
@@ -402,11 +444,8 @@ def run_train(ground_truths_str, steps, sou, versions, model, mc, dates):
     elif model in ["alstm","alstmr"]:
         run_bash(method+"_train.sh",3)
     
-    
 
-
-#generation and processing of testing commands
-def run_test(ground_truths_str, steps, sou, versions, model, mc, dates):
+def run_test(ground_truth_str, horizon_str, sou, version_str, model, mc, dates):
     command = ""
     date = ','.join(dates[1:])
 
@@ -415,11 +454,11 @@ def run_test(ground_truths_str, steps, sou, versions, model, mc, dates):
         lag = '1,5,10,20'
 
         train_script = ' '.join(['python', 'code/utils/'+model+"_script.py", \
-                            '-gt', ground_truths_str, \
-                            '-s', steps, \
+                            '-gt', ground_truth_str, \
+                            '-s', horizon_str, \
                             '-sou', sou, \
                             '-l', lag, \
-                            '-v', versions, \
+                            '-v', version_str, \
                             '-p', './result/validation/'+model, \
                             '-out', model+"_test.sh", \
                             '-o', 'test', \
@@ -436,22 +475,22 @@ def run_test(ground_truths_str, steps, sou, versions, model, mc, dates):
         
         #generate commands to call script
         command += ' '.join(['python', 'code/utils/'+model+"_script.py", \
-                            '-gt', ground_truths_str, \
-                            '-s', steps, \
+                            '-gt', ground_truth_str, \
+                            '-s', horizon_str, \
                             '-sou', sou, \
                             '-l', lag, \
-                            '-v', versions, \
+                            '-v', version_str, \
                             '-p', './result/validation/'+model, \
                             '-o', 'tune', \
                             '>','/dev/null',
                             '2>&1','&\n'    ]
                         )
         command += ' '.join(['python', 'code/utils/'+model+"_script.py", \
-                            '-gt', ground_truths_str, \
-                            '-s', steps, \
+                            '-gt', ground_truth_str, \
+                            '-s', horizon_str, \
                             '-sou', sou, \
                             '-l', lag, \
-                            '-v', versions, \
+                            '-v', version_str, \
                             '-p', './result/validation/'+model, \
                             '-out', model+"_test.sh", \
                             '-o', 'test', \
@@ -465,18 +504,18 @@ def run_test(ground_truths_str, steps, sou, versions, model, mc, dates):
 
         #generate tuning results from log
         filepath = ''
-        for version in versions.split(','):
+        for version in version_str.split(','):
             v = version.split('_')[0]
             method = '_'.join(version.split('_')[1:])
-            for step in steps.split(','):
-                filepath += 'result/validation/alstm/'+v+"_h"+step+"_para.txt,"
+            for horizon in horizon_str.split(','):
+                filepath += 'result/validation/alstm/'+v+"_h"+horizon+"_para.txt,"
 
         #remove last comma
         filepath = filepath[:-1]
 
         #extract results and output commands
         command += ' '.join(['python', 'code/utils/analyze_alstm_tune.py', \
-                            '-gt', ground_truths_str, \
+                            '-gt', ground_truth_str, \
                             '-f', filepath, \
                             '-sou', sou, \
                             '-o', 'test', \
@@ -488,18 +527,18 @@ def run_test(ground_truths_str, steps, sou, versions, model, mc, dates):
 
         #generate tuning results from log
         filepath = ''
-        for version in versions.split(','):
+        for version in version_str.split(','):
             v = version.split('_')[0]
             method = '_'.join(version.split('_')[1:])
-            for step in steps.split(','):
-                filepath += 'result/validation/alstm/'+v+"_h"+step+"_mc_para.txt,"
+            for horizon in horizon_str.split(','):
+                filepath += 'result/validation/alstm/'+v+"_h"+horizon+"_mc_para.txt,"
 
         #remove last comma
         filepath = filepath[:-1]
 
         #extract results and output commands
         command += ' '.join(['python', 'code/utils/analyze_alstm_tune.py', \
-                            '-gt', ground_truths_str, \
+                            '-gt', ground_truth_str, \
                             '-f', filepath, \
                             '-sou', sou, \
                             '-r', '1', \
@@ -513,10 +552,10 @@ def run_test(ground_truths_str, steps, sou, versions, model, mc, dates):
     elif model in ["ensemble"]:
         train = "code/train_data_ensemble.py"
         with open("ensemble_test.sh","w") as out:
-            for gt in ground_truths_str.split(','):
-                for step in steps.split(','):
+            for gt in ground_truth_str.split(','):
+                for horizon in horizon_str.split(','):
                     out.write(' '.join(['python', train, \
-                                        '-s', step, \
+                                        '-s', horizon, \
                                         '-gt', gt, \
                                         '-o', 'test', \
                                         '-c', 'exp/ensemble_tune_all.conf', \
@@ -527,11 +566,11 @@ def run_test(ground_truths_str, steps, sou, versions, model, mc, dates):
     #case if model is post process substitution          
     elif model in ["pp_sub"]:
         with open("pp_sub_test.sh","w") as out:
-            for gt in ground_truths_str.split(','):
-                for step in steps.split(','):
+            for gt in ground_truth_str.split(','):
+                for horizon in horizon_str.split(','):
                     out.write(' '.join(['python code/train_data_pp.py',\
                                         '-gt', gt,\
-                                        '-s', step, \
+                                        '-s', horizon, \
                                         '-sou', sou, \
                                          '-v',"ensemble,ensemble",\
                                         '-m', "Substitution,analyst", \
@@ -541,10 +580,10 @@ def run_test(ground_truths_str, steps, sou, versions, model, mc, dates):
     
     #generate test command for post_process filter
     elif model in ["pp_filter"]:
-        reversed_version = ','.join(versions.split(',')[::-1])
+        reversed_version = ','.join(version_str.split(',')[::-1])
         command += ' '.join(['python code/utils/post_process_script.py', \
-                            '-gt', ground_truths_str, \
-                            '-s', steps, \
+                            '-gt', ground_truth_str, \
+                            '-s', horizon_str, \
                             '-sou', sou, \
                             '-o', 'simple', \
                             '-m', "Filter", \
@@ -553,13 +592,13 @@ def run_test(ground_truths_str, steps, sou, versions, model, mc, dates):
                             '-p', 'result/validation/post_process/Filter','\n'
                             ])
         command += ' '.join(['python code/utils/post_process_script.py', \
-                            '-gt', ground_truths_str, \
-                            '-s', steps, \
+                            '-gt', ground_truth_str, \
+                            '-s', horizon_str, \
                             '-sou', sou, \
                              '-d', date, \
                             '-o', 'commands', \
                             '-m', "Filter", \
-                            '-v', versions, \
+                            '-v', version_str, \
                             '-p', 'result/validation/post_process/Filter',\
                             '-out', model+'_test.sh', '\n'
                             ])
@@ -571,77 +610,85 @@ def run_test(ground_truths_str, steps, sou, versions, model, mc, dates):
     elif model in ["alstm","alstmr"]:
         run_bash(method+"_test.sh",6)
 
-#extract prediction of related dates
-def extract(ground_truth, step, sou, version, model, mc, dates):
+
+def extract(ground_truth, horizon, sou, version, model, mc, dates):
     df = pd.DataFrame()
     for date in dates[1:]:
-        if date == dates[-1] and not os.path.exists("result/prediction/"+model+"/"+ '_'.join([ground_truth,date,step,version+".csv"])):
+        if date == dates[-1] and not os.path.exists("result/prediction/"+model+"/"+ '_'.join([ground_truth,date,horizon,version+".csv"])):
             date = '-'.join([date.split('-')[0],"06-30" if date.split('-')[1] <= "06" else "12-31"]) 
         print(date)
-        if not os.path.exists("result/prediction/"+model+"/"+ '_'.join([ground_truth,date,step,version+".csv"])):
-            print("Missing prediction in "+ '_'.join([ground_truth,date,step,version+".csv"]))
+        if not os.path.exists("result/prediction/"+model+"/"+ '_'.join([ground_truth,date,horizon,version+".csv"])):
+            print("Missing prediction in "+ '_'.join([ground_truth,date,horizon,version+".csv"]))
             continue
             
-        df = pd.concat([df,pd.read_csv("result/prediction/"+model+"/"+ '_'.join([ground_truth,date,step,version+".csv"]), index_col = 0)],axis = 0)
+        df = pd.concat([df,pd.read_csv("result/prediction/"+model+"/"+ '_'.join([ground_truth,date,horizon,version+".csv"]), index_col = 0)],axis = 0)
     return df.loc[dates[0]:dates[-1],:]
     
     
-#extract prediction of related dates
-def run_analyze(ground_truth, step, version, model, mc, dates):
+
+def run_analyze(ground_truth_str, horizon_str, version_str, model, mc, dates):
+    
+    #remove the first date
     dates = ','.join(dates[1:])
+
+    #if monte_carlo is true then it must be a regression model, thus we can infer that we are interested in both normalized and regular metrics
     if mc == "True":
-        os.system(' '.join(["python code/utils/analyze_predictions.py","-gt",ground_truth,"-d", dates, "-m", model, "-s", step, "-v", version,"-r", "price","-mc", "True","-out",model+"p_"+version+".csv"]))
-        os.system(' '.join(["python code/utils/analyze_predictions.py","-gt",ground_truth,"-d", dates, "-m", model, "-s", step, "-v", version,"-r", "ret","-mc", "True","-out",model+"r_"+version+".csv"]))
+        #outputs file with extra "p" behind model, denotes regular metrics
+        os.system(' '.join(["python code/utils/analyze_predictions.py","-gt",ground_truth_str,"-d", dates, "-m", model, "-s", horizon_str, "-v", version_str,"-r", "price","-mc", "True","-out",model+"p_"+version_str+".csv"]))
+        #outputs file with extra "r" behind model, denotes normalized metrics
+        os.system(' '.join(["python code/utils/analyze_predictions.py","-gt",ground_truth_str,"-d", dates, "-m", model, "-s", horizon_str, "-v", version_str,"-r", "ret","-mc", "True","-out",model+"r_"+version_str+".csv"]))
+    
+    #considered a classification problem, and thus will output classification metrics
     else:
-        os.system(' '.join(["python code/utils/analyze_predictions.py","-gt", ground_truth,"-d", dates, "-m", model, "-s", step, "-v", version, "-out", model+"_"+version+".csv"]))
+        os.system(' '.join(["python code/utils/analyze_predictions.py","-gt", ground_truth_str,"-d", dates, "-m", model, "-s", horizon_str, "-v", version_str, "-out", model+"_"+version_str+".csv"]))
     
     
-def run(action, ground_truth, step, sou, version, model, mc, dates):
-    ground_truth = ','.join(["LME_"+gt+"_Spot" for gt in ground_truth.split(',')])
+def run(action, ground_truth_str, horizon_str, sou, version_str, model, mc, dates):
+    ground_truth_str = ','.join(["LME_"+gt+"_Spot" for gt in ground_truth_str.split(',')])
     dates = analyze_zoom(dates)
     print(dates)
     if action == "tune":
-        run_tune(ground_truth, step, sou, version, model, mc, dates)
+        run_tune(ground_truth_str, horizon_str, sou, version_str, model, mc, dates)
         return
 
     elif action == "train":
-        run_train(ground_truth, step, sou, version, model, mc, dates)
+        run_train(ground_truth_str, horizon_str, sou, version_str, model, mc, dates)
         return
 
     elif action == "test":
-        run_test(ground_truth, step, sou, version, model, mc, dates)
+        run_test(ground_truth_str, horizon_str, sou, version_str, model, mc, dates)
         return
 
     elif action == "analyze":
-        run_analyze(ground_truth, step, version, model, mc, dates)
+        run_analyze(ground_truth_str, horizon_str, version_str, model, mc, dates)
 
     elif action == "predict":
-        res = extract(ground_truth, step, sou, version, model, mc, dates)
+        res = extract(ground_truth_str, horizon_str, sou, version_str, model, mc, dates)
         return res
     
 if __name__ ==  '__main__':        
-    desc = 'controller for financial models'
+    desc = 'controller for components in machine learning framework'
     parser = argparse.ArgumentParser(description=desc)
-    parser.add_argument('-gt', '--ground_truth_list', help='list of ground truths, separated by ","',
-                        type=str, default="Co,Al,Ni,Ti,Zi,Le"
+    parser.add_argument('-gt', '--ground_truth_str',
+                        type=str, default="Cu,Al,Ni,Xi,Zn,Pb"
                         )
-    parser.add_argument('-s', '--steps', help='list of horizons, separated by ","',
+    parser.add_argument('-s', '--horizon_str',
                         type=str, default="1,3,5,10,20,60"
                         )
     parser.add_argument(
-        '-sou','--source', help='source of data to be inserted into commands', type = str, default = "4E"
+        '-sou','--source', type = str, default = "NExT"
     )
     parser.add_argument(
-        '-v','--version',help='version',type = str
+        '-v','--version_str',help='version_str',type = str
     )
     parser.add_argument('-o','--action', default = 'train', type = str)
-    parser.add_argument('-m','--model',type =str, default = 'lr')
+    parser.add_argument('-m','--model',type =str, default = 'logistic')
     parser.add_argument('-mc','--mc',type = str, default = "True")
     parser.add_argument('-z','--zoom',type = str, help = "period of dates", default = "2014-07-01::2018-12-31")
 
     args = parser.parse_args()
 
-    run(args.action,args.ground_truth_list, args.steps,args.source, args.version, args.model, args.mc, args.zoom)
+    run(args.action,args.ground_truth_str, args.horizon_str,args.source, args.version_str, args.model, args.mc, args.zoom)
 
 
         
