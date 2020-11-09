@@ -6,6 +6,10 @@ import pandas as pd
 from utils.data_preprocess_version_control import *
 from utils.data_preprocess_functions import reset_split_dates, process_missing_value as pmv
 
+'''
+    This file contains the function that details the process to preprocess data.
+'''
+
 def preprocess_data(time_series, LME_dates, horizon, ground_truth_columns, lags,  split_dates, norm_params, tech_params, version_params):
     """
     input: time_series: A dataframe that holds the data.
