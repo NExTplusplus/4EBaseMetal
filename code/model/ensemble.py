@@ -1,6 +1,10 @@
 import numpy as np
 import pandas as pd
 
+'''
+    This file contains the class which implements the ensembling methods
+'''
+
 class Ensemble():
 
     def __init__(self, version):
@@ -11,6 +15,7 @@ class Ensemble():
     def voting(df, uncertainty):
         '''
         df: dataframe which holds the predictions across all combinations
+        uncertainty: boolean to decide whether to return uncertainty
         '''
         threshold = np.ceil(len(df.columns)/2)
         votes = df.sum(axis = 1)
@@ -28,6 +33,7 @@ class Ensemble():
         label:  label is the true value of the dates
         window: window is the window size that we calculate errors with
         horizon:horizon is the amount of days we are predicting ahead of
+        uncertainty: boolean to decide whether to return uncertainty
         '''
         print(df,label)
         error = df.ne(label.to_numpy(),axis = 0)*1.0
@@ -42,6 +48,13 @@ class Ensemble():
     
     # generate prediction
     def predict(self, df, label = None, window = None, horizon = None, uncertainty = False):
+        '''
+        df:     dataframe which holds the predictions
+        label:  label is the true value of the dates
+        window: window is the window size that we calculate errors with
+        horizon:horizon is the amount of days we are predicting ahead of
+        uncertainty: boolean to decide whether to return uncertainty
+        '''
         temp = df
         if self.version == "vote":
             temp = self.voting(df, uncertainty)

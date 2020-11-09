@@ -5,6 +5,10 @@ from joblib import dump
 from sklearn.externals import joblib
 import numpy as np
 import os 
+
+'''
+  This file contains the Logistic Regression model implementation
+'''
 class LogReg(BasePredictor):
   def __init__(self,parameters):
     BasePredictor.__init__(self,parameters)
