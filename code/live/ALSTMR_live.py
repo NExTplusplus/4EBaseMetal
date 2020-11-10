@@ -252,6 +252,7 @@ class ALSTMR_online():
     gt: the ground_truth metal name
     date: the last date of the prediction
     source: the data source
+    mc: boolean which refers to the triggering monte carlo
     """
     def __init__(self,
         lag,
