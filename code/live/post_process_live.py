@@ -13,7 +13,18 @@ from model.post_process import Post_process, Post_process_substitution, Post_pro
 from itertools import product
 import json
 
+'''
+    This file contains the class for deployment of post process. This includes Substitution and Filter.
+'''
+
 class Post_process_live():
+    """
+    horizon: the time horizon of the predict target
+    version: the version of the feature
+    ground_truth: the ground_truth metal name
+    dates: the comma-separated dates to be predicted
+    model: It refers to the method of Post processing. can be Substitution or Filter
+    """
     def __init__(self,
                 ground_truth,
                 horizon,
