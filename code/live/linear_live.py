@@ -13,6 +13,10 @@ from utils.data_preprocess_version_control import generate_version_params
 from sklearn.externals import joblib
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '4EBaseMetal')))
 
+'''
+    This file is the live deployment of linear regression. It has 1 class.
+    Linear_online: Has two functions: train and test.
+'''
 
 class Linear_online():
     """
