@@ -95,7 +95,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     #initiliaze model
-    model = ALSTM_online(lag = args.lag, horizon = args.steps, version = args.version, gt = args.ground_truth, date = args.date, source = args.source)
+    model = ALSTM_online(lag = args.lag, horizon = args.horizon, version = args.version, gt = args.ground_truth, date = args.date, source = args.source)
     
     #case if action is tune
     if args.action=="tune":
