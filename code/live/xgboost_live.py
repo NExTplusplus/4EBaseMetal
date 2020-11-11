@@ -13,6 +13,10 @@ from utils.data_preprocess_version_control import generate_version_params
 import pickle
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '4EBaseMetal')))
 
+'''
+    This file contains the live deployment for XGBoost. It has 1 class
+    XGBoost_online: This class has 3 functions: tune, train and test.
+'''
 
 class XGBoost_online():
     """

@@ -31,6 +31,15 @@ thresh = 0
 #     memory_use = py.memory_info()[0]/2.**30
 #     print('memory useage:', memory_use)
 
+'''
+    This file contains the implementation of live deployment of ALSTM classification. It has 2 classes
+    Trainer: This class is used to implement the training of the ALSTM classification model.
+             It is responsible for feeding inputs into the model by batches and logging their errors per epoch
+    ALSTM_online: This class is the live deployment of the ALSTM classification model.
+                  It includes the tune, train and test functions.
+'''
+
+
 #Implementation of training the ALSTM model
 class Trainer:
     def __init__(self, input_dim, hidden_state, time_step, lr, dropout,
@@ -351,7 +360,7 @@ class ALSTM_online():
             start_time,train_time,evalidate_date = gn.get_relevant_dates(today,length,"train")
             split_dates  =  [train_time,evalidate_date,str(today)]
         
-        #generate the version
+            #generate the version
             version_params=generate_version_params(self.version)
             print("the train date is {}".format(split_dates[0]))
             print("the test date is {}".format(split_dates[1]))
@@ -632,7 +641,7 @@ class ALSTM_online():
                     final_y_val = copy(y_val)
                 else:
                     final_y_val = np.concatenate((final_y_val, y_val), axis=0)
-
+                
                 final_train_X_embedding+=train_X_id_embedding
                 final_test_X_embedding+=test_X_id_embedding
                 final_val_X_embedding+=val_X_id_embedding

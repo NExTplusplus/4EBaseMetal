@@ -25,6 +25,19 @@ random.seed(1)
 
 thresh = 0
 
+
+'''
+    This file contains the implementation of live deployment of ALSTM regression. It has 3 classes
+    LogCoshLoss: This is an implementation of the log cosh loss calculation to be used in the ALSTM regression.
+    Trainer: This class is used to implement the training of the ALSTM regression model.
+             It is responsible for feeding inputs into the model by batches and logging their errors per epoch
+    ALSTM_online: This class is the live deployment of the ALSTM regression model.
+                  It includes the tune, train and test functions.
+'''
+
+
+
+
 #Implementation of Log Cosh Loss
 class LogCoshLoss(nn.Module):
     def __init__(self):

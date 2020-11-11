@@ -13,6 +13,11 @@ import multiprocessing
 from multiprocessing import Pool as pl
 from itertools import combinations,product
 
+'''
+    This file contains the code that implements live deployment of ensemble. It has only 1 class
+    Ensemble_online: It includes a tune and test function.
+'''
+
 class Ensemble_online():
     """
     horizon: the time horizon of the predict target
@@ -98,8 +103,12 @@ class Ensemble_online():
             ans[date+"_len"] = []
 
         if target == "window":
+
+            #get the best window for each individual model over feature versions (logistic regression, xgboost, alstm)
             best_window = self.tune_sm(deepcopy(ans))
             self.window[0] = best_window
+
+            #get overall best method and window to ensemble all feature versions and models
             self.tune_mm(deepcopy(ans), best_window).to_csv(os.path.join("result","validation","ensemble","_".join([self.gt,str(self.horizon)+".csv"])))
         
         elif target == "fv":
@@ -110,10 +119,17 @@ class Ensemble_online():
 
         validation_dates = [date.split("-")[0]+"-01-01" if date[5:7] <= "06" else date.split("-")[0]+"-07-01" for date in self.val_dates.split(",")]
         print("single model tuning")
+
+        #iterate over different methods of ensemble
         for method in ["vote","weight"]:
+
+            #iterate over each model (logistic regression,xgboost, alstm)
             for model, fv in self.feature_version[str(self.horizon)].items():
+
+                #iterate over hyperparameter
                 for window in range(10,26,5):
                     ans["window"].append(window)
+
                     ans["model"].append(model+" "+method)
                     for i,date in enumerate(self.val_dates.split(",")):
 #                         full_label = pd.DataFrame()
@@ -156,7 +172,11 @@ class Ensemble_online():
 
         validation_dates = [date.split("-")[0]+"-01-01" if date[5:7] <= "06" else date.split("-")[0]+"-07-01" for date in self.val_dates.split(",")]
         print("multi model tuning")
+
+        #iterate over methods of ensemble
         for method in [["vote"],["weight"],["vote","vote"],["vote","weight"],["weight","vote"],["weight","weight"]]:
+            
+            #iterate over hyperparameters
             for window in range(10,26,5):
                 ans["model"].append(','.join(method))
                 ans["window"].append(','.join([str(i) for i in best_window])+','+str(window))

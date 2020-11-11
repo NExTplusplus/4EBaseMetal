@@ -9,6 +9,10 @@ from utils.data_preprocess_version_control import generate_version_params
 from sklearn.metrics import accuracy_score,f1_score
 sys.path.insert(0, os.path.abspath(os.path.join(sys.path[0], '4EBaseMetal')))
 
+'''
+    This file contains the live deployment of logistic regression. It contains one class:
+    Logistic_online: It contains 3 functions: tune, train and test.
+'''
 
 class Logistic_online():
     """
