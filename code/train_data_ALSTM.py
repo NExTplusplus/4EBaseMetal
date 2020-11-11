@@ -133,4 +133,4 @@ if __name__ == '__main__':
             save_loss=args.save_loss, 
             save_prediction=args.save_prediction, 
             method = args.method)
-    print("the result of the test is {}".format(final))
+        print("the result of the test is {}".format(final))
