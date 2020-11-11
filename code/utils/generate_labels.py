@@ -11,10 +11,10 @@ from utils.read_data import m2ar
 from utils.general_functions import read_data_with_specified_columns
 
 if __name__ == '__main__':
-    desc = 'label generation'
+    desc = 'script to generate labels'
     parser = argparse.ArgumentParser(description=desc)
-    parser.add_argument('-s','--steps',type=str,default='1,3,5,10,20,60',
-                        help='steps in the future to be predicted')
+    parser.add_argument('-s','--horizon',type=str,default='1,3,5,10,20,60',
+                        help='horizon in the future to be predicted')
     parser.add_argument('-gt', '--ground_truth', help='ground truth column',
                         type=str, default="LME_Al_Spot,LME_Cu_Spot,LME_Pb_Spot,LME_Ni_Spot,LME_Xi_Spot,LME_Zn_Spot")
     parser.add_argument(
@@ -26,10 +26,11 @@ if __name__ == '__main__':
     os.chdir(os.path.abspath(sys.path[0]))
     
     args.ground_truth = args.ground_truth.split(",")
-    args.steps = [int(i) for i in args.steps.split(",")]
+    args.horizon = [int(i) for i in args.horizon.split(",")]
 
+    #read data from specified source
     if args.source == "NExT":
-        ts, dates, length = read_data_with_specified_columns("NExT","exp/3d/Co/logistic_regression/v3/LMCADY_v3.conf","2003-11-12")        
+        ts, dates, length = read_data_with_specified_columns("NExT","exp/LMCADY_v3.conf","2003-11-12")        
     else:
         start_date = "2003-11-12"
         import rpy2.robjects as robjects
@@ -49,20 +50,29 @@ if __name__ == '__main__':
         ts = m2ar(ts)
         os.chdir("NEXT/4EBaseMetal")
     print(ts)
+    #iterate over ground truth
     for gt in args.ground_truth:
+
+        #case if the source of data is csv files
         if args.source == "NExT":
             spot = copy(ts).loc[:,gt]
         else:
             spot = copy(ts[gt]).to_frame()
+
+        #tentatively set the begining of label generation to 2014-01-01
         split_dates = rolling_half_year("2014-01-01",spot.index[-1],5)
         print(split_dates)
-        for step in args.steps:
+
+        #iterate over horizon
+        for step in args.horizon:
             class_label = ((copy(spot.shift(-step)) - spot > 0)*1)
             reg_label = (copy(spot.shift(-step)))
             class_label.columns = ["Label"]
             reg_label.columns = ["Label"]
             class_label.dropna(inplace = True)
             reg_label.dropna(inplace = True)
+
+            #for each half-year
             for split_date in split_dates:
                 temp_class_label = class_label.loc[split_date[2]:split_date[3]]
                 temp_reg_label = reg_label.loc[split_date[2]:split_date[3]]
@@ -71,6 +81,8 @@ if __name__ == '__main__':
                 temp_reg_label = temp_reg_label if temp_reg_label.index.values[-1] != split_date[3] else temp_reg_label[:-1]
                 temp_class_label.to_frame("Label").to_csv(os.path.join(os.getcwd(),'data','Label',"_".join([gt,'h'+str(step),split_date[2],"label.csv"])))
                 temp_reg_label.to_frame("Label").to_csv(os.path.join(os.getcwd(),'data','Label',"_".join([gt,'h'+str(step),split_date[2],"reg_label.csv"])))
+
+            #for the final half year that the last day is in
             temp_class_label = class_label.loc[split_date[3]:split_date[4]]
             temp_reg_label = reg_label.loc[split_date[3]:split_date[4]]
             print(split_date,temp_class_label)

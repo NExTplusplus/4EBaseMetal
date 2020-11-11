@@ -14,6 +14,10 @@ from utils.Technical_indicator import *
 from itertools import permutations, product
 from copy import copy,deepcopy
 
+'''
+    This file implements the generation of strategy signals based on activation paramas
+'''
+
 def strategy_testing(X,ground_truth,strategy_params,activation_params,cov = ""):
     '''
     input:  X                   : timeseries

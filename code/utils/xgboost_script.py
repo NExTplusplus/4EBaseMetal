@@ -7,9 +7,8 @@ from pathlib import Path
 import argparse
 import os
 
-'''
-    This function is used to extract the top 5 combinations of hyperparameters in terms of weighted accuracy for each voting method
-'''
+
+#This function is used to extract the top 5 combinations of hyperparameters in terms of weighted accuracy for each voting method
 def retrieve_top(path):
     validation_dates = path[1]
     path = path[0]

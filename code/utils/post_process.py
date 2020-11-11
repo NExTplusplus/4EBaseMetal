@@ -8,6 +8,17 @@ from copy import deepcopy
 from itertools import combinations
 import datetime 
 
+'''
+    This includes the functions that are used in post process to read files or generate signals
+    parameters:
+        ground_truth: column to predict
+        horizon: prediction horizon
+        date: the date of prediction
+        version: feature version
+        model: machine learning model
+
+'''
+
 #Return metal name reference under Analyst Report framework
 def get_ind_metal(string):
     if 'Al' in string:

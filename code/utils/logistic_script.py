@@ -7,7 +7,7 @@ import os
 if __name__ == '__main__':
     desc = 'the script for Logistic Regression to generate train and test commands'
     parser = argparse.ArgumentParser(description=desc)
-    parser.add_argument('-s','--step_list',type=str,default="1,3,5,10,20,60",
+    parser.add_argument('-s','--horizon_list',type=str,default="1,3,5,10,20,60",
                         help='list of horizons to be calculated, separated by ","')
     parser.add_argument('-gt', '--ground_truth_list', help='list of ground truths, separated by ","',
                         type=str, default="LME_Co_Spot,LME_Al_Spot,LME_Ni_Spot,LME_Ti_Spot,LME_Zi_Spot,LME_Le_Spot")
@@ -18,18 +18,18 @@ if __name__ == '__main__':
         '-l','--lag_list', type=str, default = "1,5,10,20", help='list of lags, separated by ","'
     )
     parser.add_argument(
-        '-v','--version_list', help='list of versions, separated by ","', type = str, default = 'v10'
+        '-v','--version_list', help='list of feature versions, separated by ","', type = str, default = 'v10'
     )
     parser.add_argument ('-out','--output',type = str, help='output file', default ="test.sh")
-    parser.add_argument('-o', '--action', type=str, default='commands',
-                        help='commands, testing')
-    parser.add_argument('-d','--dates',type = str, help = "dates", default = "2014-12-31,2015-06-30,2015-12-31,2016-06-30,2016-12-31,2017-06-30,2017-12-31,2018-06-30,2018-12-31")
-    parser.add_argument('-p','--path',type =str, help='path to 4EBaseMetal folder',default ='/NEXT/4EBaseMetal')
-    parser.add_argument('-t','--target',type =str, help='target for validation',default ='acc')
+    parser.add_argument('-o', '--action', type=str, default='train',
+                        help='decides what action should the live deployment act with the hyperparameters, can take values of train or test')
+    parser.add_argument('-d','--dates',type = str, help = "string of comma-separated dates which identify the total period of deployment by half-years", default = "2014-12-31,2015-06-30,2015-12-31,2016-06-30,2016-12-31,2017-06-30,2017-12-31,2018-06-30,2018-12-31")
+    parser.add_argument('-p','--path',type =str, help='path to validation folder',default ='/NEXT/4EBaseMetal')
+    parser.add_argument('-t','--target',type =str, help='target metric for validation',default ='acc')
 
     # initialize parameters
     args = parser.parse_args()
-    args.step_list = args.step_list.split(",")
+    args.horizon_list = args.horizon_list.split(",")
     args.ground_truth_list = args.ground_truth_list.split(",")
     args.lag_list = args.lag_list.split(",")
     args.version_list = args.version_list.split(",")
@@ -57,7 +57,7 @@ if __name__ == '__main__':
                 else:
                     fname = gt
                 
-                for h in args.step_list:
+                for h in args.horizon_list:
                     total = pd.DataFrame()
 
                     for lag in args.lag_list:

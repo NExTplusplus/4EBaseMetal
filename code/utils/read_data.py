@@ -2,6 +2,9 @@ import pandas as pd
 from copy import copy
 import numpy as np
 
+'''
+    This file controls the loading of data from csv or from the 4E database
+'''
 
 def read_single_csv(fname, sel_col_names = None):
     '''

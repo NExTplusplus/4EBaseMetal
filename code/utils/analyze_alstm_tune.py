@@ -5,23 +5,23 @@ import ast
 import argparse
 
 if __name__ == '__main__':
-    desc = 'the script for ALSTM tuning'
+    desc = 'the script to choose the best hyperparameters for ALSTM'
     parser = argparse.ArgumentParser(description=desc)
     parser.add_argument('-gt', '--ground_truth_list', help='list of ground truths, separated by ","',
                         type=str, default="LME_Co_Spot,LME_Al_Spot,LME_Ni_Spot,LME_Ti_Spot,LME_Zi_Spot,LME_Le_Spot")
     parser.add_argument(
-        '-sou','--source', help='source of data to be inserted into commands', type = str, default = "4E"
+        '-sou','--source', help='source of data to be inserted into commands', type = str, default = "NExT"
     )
     parser.add_argument(
-        '-f','--files', help='comma-separated files', type = str, 
+        '-f','--files', help='comma-separated analyzed logs (ouput of analyze_alstm.py)', type = str, 
         default = 'v16_h1_para.txt,v16_h3_para.txt,v16_h5_para.txt,v16_h10_para.txt,v16_h20_para.txt,v16_h60_para.txt,v26_h1_para.txt,v26_h3_para.txt,v26_h5_para.txt,v26_h10_para.txt,v26_h20_para.txt,v26_h60_para.txt'
     )
-    parser.add_argument('-r','--regression', default = 0, type = int)
+    parser.add_argument('-r','--regression', help = 'trigger for regression', default = 0, type = int)
     
     parser.add_argument('-o','--action', default = 'train', type = str)
-    parser.add_argument('-mc','--mc',type =int, default = 0)
+    parser.add_argument('-mc','--mc', help = 'trigger for monte carlo', type =int, default = 0)
     parser.add_argument('-d','--date',type = str, help = "dates", default = "2014-12-31,2015-06-30,2015-12-31,2016-06-30,2016-12-31,2017-06-30,2017-12-31,2018-06-30,2018-12-31")
-    parser.add_argument('-m','--method',type = str, help = "method of extraction", default = "best_loss")
+    parser.add_argument('-m','--method',type = str, help = "method of extracting best hyperparameters", default = "best_loss")
 
     args = parser.parse_args()
     args.mc = args.mc != 0

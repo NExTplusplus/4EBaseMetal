@@ -7,7 +7,7 @@ import os
 if __name__ == '__main__':
     desc = 'the script for Post Process'
     parser = argparse.ArgumentParser(description=desc)
-    parser.add_argument('-s','--step_list',type=str,default="1,3,5,10,20,60",
+    parser.add_argument('-s','--horizon_list',type=str,default="1,3,5,10,20,60",
                         help='list of horizons to be calculated, separated by ","')
     parser.add_argument('-gt', '--ground_truth_list', help='list of ground truths, separated by ","',
                         type=str, default="LME_Co_Spot,LME_Al_Spot,LME_Ni_Spot,LME_Ti_Spot,LME_Zi_Spot,LME_Le_Spot")
@@ -28,7 +28,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     args.path = args.path.split(',')
-    args.step_list = args.step_list.split(",")
+    args.horizon_list = args.horizon_list.split(",")
     args.ground_truth_list = args.ground_truth_list.split(",")
     dates_list = args.dates.split(",")
     total_classification = pd.DataFrame()
@@ -37,33 +37,76 @@ if __name__ == '__main__':
     #simple analysis (single metal, single horizon)
     if args.action == "simple":
         args.version_list = args.version_list.split(',')
+
+        #iterate over ground truth
         for ground_truth in args.ground_truth_list:
-            for step in args.step_list:
-                print(ground_truth,step)
+
+            #
+            for horizon in args.horizon_list:
+                print(ground_truth,horizon)
                 temp_class = pd.DataFrame()
                 temp_reg = pd.DataFrame()
 
-                #files
+                #iterate over path
                 for p,path in enumerate(args.path):
-                    classification = pd.read_csv(os.path.join(path,'_'.join([ground_truth,args.version_list[0],step,"classification.csv"])), index_col = 0)
-                    regression = pd.read_csv(os.path.join(path,'_'.join([ground_truth,args.version_list[1],step,"regression.csv"])), index_col = 0)
+                    classification = pd.read_csv(os.path.join(path,'_'.join([ground_truth,args.version_list[0],horizon,"classification.csv"])), index_col = 0)
+                    regression = pd.read_csv(os.path.join(path,'_'.join([ground_truth,args.version_list[1],horizon,"regression.csv"])), index_col = 0)
                     regression['rank'] = (regression['mae_rank']+regression['coverage_rank'])/2
                     if p == 1:
                         classification = classification.rename(lambda x : x+str(1), axis = 'columns')
                         regression = regression.rename(lambda x : x+str(1), axis = 'columns')
                     temp_class = pd.concat([temp_class,classification],axis = 1)
                     temp_reg = pd.concat([temp_reg,regression],axis = 1)
+                
+
                 classification = temp_class
-                regression = temp_reg.sort_values(by = "rank")
-                print(pd.concat([pd.Series([ground_truth]*len(regression.index)),pd.Series([step]*len(regression.index)),regression],axis = 1))
-                classification = pd.concat([pd.Series([ground_truth]*len(classification.index)),pd.Series([step]*len(classification.index)),classification],axis = 1).sort_values(by = "rank").reset_index(drop = True)
-                regression = pd.concat([pd.Series([ground_truth]*len(regression.index)),pd.Series([step]*len(regression.index)),regression],axis = 1).sort_values(by = "rank").reset_index(drop = True)
-                print(regression)
+                regression = temp_reg
+
+                #concatenate ground truth, horizons to dataframe
+                classification = pd.concat([pd.Series([ground_truth]*len(classification.index)),pd.Series([horizon]*len(classification.index)),classification],axis = 1).sort_values(by = "rank").reset_index(drop = True)
+                regression = pd.concat([pd.Series([ground_truth]*len(regression.index)),pd.Series([horizon]*len(regression.index)),regression],axis = 1).sort_values(by = "rank").reset_index(drop = True)
+                
+                #append final results to main dataframe
                 total_classification = pd.concat([total_classification,classification], axis = 0, sort = False)
                 total_regression = pd.concat([total_regression,regression], axis = 0, sort = False)
         total_classification.to_csv('classification.csv')
         total_regression.to_csv('regression.csv')
 
+    #extraction of best hyperparameters based on simple analysis
+    elif args.action == "commands":
+        validation_dates = [d.split("-")[0]+"-01-01" if d[5:7] <= "06" else d.split("-")[0]+"-07-01" for d in args.dates]
+        classification = pd.read_csv('classification.csv')
+        regression = pd.read_csv("regression.csv")
+        with open(args.output,"w") as out:
+            train = "code/train_data_pp.py"
+            for gt in args.ground_truth_list:
+                for h in args.horizon_list:
+                    temp_class = classification.loc[classification['0'] == gt].loc[classification['1'] == int(h)]
+                    # print(temp_class,temp_class.loc[classification['1'] == int(h)])
+                    temp_reg = regression.loc[regression['0'] == gt].loc[regression['1'] == int(h)]
+                    temp_reg = temp_reg[temp_reg.loc[:,"mae"] != 0]
+                    temp_reg = temp_reg.sort_values(by= ["rank","coverage","threshold"],ascending = [True,False,True]).reset_index()
+                    temp_class = temp_class.sort_values(by= "rank").reset_index()
+                    out.write("python "+train+" "+ \
+                                " ".join(["-sou",args.source,
+                                        "-v",args.version_list,
+                                        "-m", args.model,
+                                        "-w", "60",
+#                                         "-ct", temp_class.loc[:,"threshold"].values[0].strip("(").split(",")[0],
+                                        "-ct", "0.5",
+                                        "-rt",temp_reg.loc[:,"threshold"].values[0].strip("(").split(",")[0],
+#                                         "-rt","10",
+                                        "-s",h,
+                                        "-gt",gt,
+                                        "-o","test",
+                                        '-d',args.dates,
+                                        ">","/dev/null", "2>&1", "&"]))
+                    out.write("\n")
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------------
+#                                                                 No longer in use
+#------------------------------------------------------------------------------------------------------------------------------------------------------
     #complex analysis (average over all metals and horizons)
     elif args.action =="complex":
         args.path = args.path.split(',')
@@ -71,9 +114,9 @@ if __name__ == '__main__':
         ave_reg = pd.DataFrame()
         classification = pd.read_csv('classification.csv')
         regression = pd.read_csv("regression.csv")
-        classification = classification[(classification['0'].isin(args.ground_truth_list))& (classification['1'].isin([int(i) for i in args.step_list]))]
+        classification = classification[(classification['0'].isin(args.ground_truth_list))& (classification['1'].isin([int(i) for i in args.horizon_list]))]
 
-        regression = regression[(regression['0'].isin(args.ground_truth_list))& (regression['1'].isin([int(i) for i in args.step_list]))]
+        regression = regression[(regression['0'].isin(args.ground_truth_list))& (regression['1'].isin([int(i) for i in args.horizon_list]))]
         for threshold in sorted(classification['threshold'].unique()):
             temp_class = classification[classification['threshold'] == threshold]
             val_coverage = temp_class['coverage']*temp_class['total_len']
@@ -101,36 +144,6 @@ if __name__ == '__main__':
         ave_class.to_csv("ave_class.csv")
         ave_reg.to_csv("ave_reg.csv")
 
-    elif args.action == "commands":
-        validation_dates = [d.split("-")[0]+"-01-01" if d[5:7] <= "06" else d.split("-")[0]+"-07-01" for d in args.dates]
-        classification = pd.read_csv('classification.csv')
-        regression = pd.read_csv("regression.csv")
-        with open(args.output,"w") as out:
-            train = "code/train_data_pp.py"
-            for gt in args.ground_truth_list:
-                for h in args.step_list:
-                    temp_class = classification.loc[classification['0'] == gt].loc[classification['1'] == int(h)]
-                    # print(temp_class,temp_class.loc[classification['1'] == int(h)])
-                    temp_reg = regression.loc[regression['0'] == gt].loc[regression['1'] == int(h)]
-                    temp_reg = temp_reg[temp_reg.loc[:,"mae"] != 0]
-                    temp_reg = temp_reg.sort_values(by= ["rank","coverage","threshold"],ascending = [True,False,True]).reset_index()
-                    temp_class = temp_class.sort_values(by= "rank").reset_index()
-                    out.write("python "+train+" "+ \
-                                " ".join(["-sou",args.source,
-                                        "-v",args.version_list,
-                                        "-m", args.model,
-                                        "-w", "60",
-#                                         "-ct", temp_class.loc[:,"threshold"].values[0].strip("(").split(",")[0],
-                                        "-ct", "0.5",
-                                        "-rt",temp_reg.loc[:,"threshold"].values[0].strip("(").split(",")[0],
-#                                         "-rt","10",
-                                        "-s",h,
-                                        "-gt",gt,
-                                        "-o","test",
-                                        '-d',args.dates,
-                                        ">","/dev/null", "2>&1", "&"]))
-                    out.write("\n")
-
     #generate commands for every metal and horizon with an overaching threshold
     elif args.action == "average commands":
         validation_dates = [d.split("-")[0]+"-01-01" if d[5:7] <= "06" else d.split("-")[0]+"-07-01" for d in args.dates]
@@ -155,7 +168,7 @@ if __name__ == '__main__':
             train = "code/train_data_pp.py"
 
             for gt in args.ground_truth_list:
-                for h in args.step_list:
+                for h in args.horizon_list:
                     out.write("python "+train+" "+ \
                                 " ".join(["-sou",args.source,
                                         "-v",args.version_list,

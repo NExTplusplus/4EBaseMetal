@@ -9,6 +9,10 @@ import utils.data_preprocess_functions as dpf
 from utils.normalize_feature import log_1d_return, fractional_diff, rel_to_open
 from copy import copy
 
+'''
+    This file contains the functions which identify the versions of preprocess subfunctions that are to be used for a particular feature version
+'''
+
 
 #Generates the corresponding version of each step based on the feature version
 def generate_version_params(version):

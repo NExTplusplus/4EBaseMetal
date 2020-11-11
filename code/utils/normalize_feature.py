@@ -2,11 +2,10 @@ from copy import copy
 import statsmodels.api as sm
 import pandas as pd
 import numpy as np
-from utils.seasonal_decomp import custom_seasonal_decomp
-from statsmodels.tsa.seasonal import seasonal_decompose
-from pandas.core.nanops import nanmean as pd_nanmean
-from statsmodels.tsa._stl import STL
-from utils.fracdiff import frac_diff_ffd
+
+'''
+    This file contains the functions to normalize the raw financial data
+'''
 
 
 '''
@@ -194,24 +193,24 @@ def normalize_prediction(spot,prediction,version="v1"):
         spread = spread/spread.shift(1) - 1
         return spread, 1*(prediction > spot)
 
-#this function will fractionally difference the selected columns
-def fractional_diff(X,cols):
-    for col in cols:
-        X[col] = frac_diff_ffd(X[col].to_frame(),0.3,0.01)
-    return X
+# #this function will fractionally difference the selected columns
+# def fractional_diff(X,cols):
+#     for col in cols:
+#         X[col] = frac_diff_ffd(X[col].to_frame(),0.3,0.01)
+#     return X
 
-#this function will return the log return of the STL decomposition trend of column
-def STL_decomposition_trend(col):
-    res = seasonal_decompose(col, freq = 5, two_sided= False)
-    trend = np.log(res.trend) - np.log(res.trend.shift(1))
-    return res.trend
+# #this function will return the log return of the STL decomposition trend of column
+# def STL_decomposition_trend(col):
+#     res = seasonal_decompose(col, freq = 5, two_sided= False)
+#     trend = np.log(res.trend) - np.log(res.trend.shift(1))
+#     return res.trend
 
-#this function will return the log return of the STL decomposition seasonal component of column
-def STL_decomposition_seasonal(col):
-    res = seasonal_decompose(col, freq = 5, two_sided= False)
-    return res.seasonal
+# #this function will return the log return of the STL decomposition seasonal component of column
+# def STL_decomposition_seasonal(col):
+#     res = seasonal_decompose(col, freq = 5, two_sided= False)
+#     return res.seasonal
 
 
-def custom_seasonal_decompose(col,train_end):
-    res = custom_seasonal_decomp(col,train_end, period = 5,two_sided= False)
-    return res.seasonal
+# def custom_seasonal_decompose(col,train_end):
+#     res = custom_seasonal_decomp(col,train_end, period = 5,two_sided= False)
+#     return res.seasonal

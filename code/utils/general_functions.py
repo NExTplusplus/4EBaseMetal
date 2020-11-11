@@ -5,6 +5,10 @@ import pandas as pd
 import numpy as np
 from copy import copy
 
+'''
+    This file contains the functions that are used universally in the live deployments, usually for the generation of processed data.
+'''
+
 #creates the split dates array which rolls forward every 6 months
 #[[2009-01-01,2009-07-01,2014-07-01,2015-01-01,2015-07-01],...]
 def rolling_half_year(start_date,end_date,length):

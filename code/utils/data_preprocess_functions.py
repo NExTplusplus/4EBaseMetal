@@ -10,10 +10,13 @@ sys.path.insert(0,os.path.abspath(os.path.join(sys.path[0],"..")))
 from utils.normalize_feature import * 
 from utils.Technical_indicator import *
 from utils.process_strategy import *
-from utils.supply_and_demand import *
 from sklearn import preprocessing
 import json
 import scipy.stats as sct
+
+'''
+    This file contains all the variations of the functions that can be implemented in data/preprocess_data.py
+'''
 
 
 #the function is to deal with the abnormal time_series
