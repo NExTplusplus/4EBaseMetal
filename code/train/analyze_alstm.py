@@ -4,6 +4,9 @@ import os
 import numpy as np
 import sys
 
+'''
+    This file is used to analyze the raw logs of the ALSTM tuning process.
+'''
 
 def _check_para_order(par1, par2):
     if not par1['lag'] == par2['lag']:

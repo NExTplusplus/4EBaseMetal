@@ -229,6 +229,10 @@ class Trainer:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Train the bi-LSTM + attention-based model on stock')
+    '''
+        please refer to description in train_data_ALSTM to understand the parameters entered
+    '''
+    
     parser.add_argument(
         '-e', '--epoch', type=int, default=50,
         help='the number of epochs')
@@ -286,8 +290,8 @@ if __name__ == '__main__':
     )
     parser.add_argument('-gt', '--ground_truth', help='ground truth column',
                         type=str, default="LME_Co_Spot")
-    parser.add_argument('-s','--steps',type=int,default=5,
-                        help='steps in the future to be predicted')
+    parser.add_argument('-s','--horizon',type=int,default=5,
+                        help='horizon in the future to be predicted')
     parser.add_argument(
         '-sou','--source', help='source of data', type = str, default = "NExT"
     )
@@ -324,7 +328,7 @@ if __name__ == '__main__':
     save_prediction = args.save_prediction
 
     # prepare for the data
-    time_horizon = args.steps
+    time_horizon = args.horizon
     if args.action == 'train':
         comparison = None
         n = 0
@@ -351,7 +355,7 @@ if __name__ == '__main__':
             np.random.seed(1)
             random.seed(1)
             lag = args.lag
-            horizon = args.steps
+            horizon = args.horizon
             norm_volume = "v1"
             norm_3m_spread = "v1"
             norm_ex = "v1"

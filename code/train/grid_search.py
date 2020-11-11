@@ -3,6 +3,21 @@ import json
 import numpy as np
 import subprocess
 
+'''
+    This file implements the grid search for ALSTM with and without monte-carlo.
+
+    sel_paras: name of selected parameters
+    cand_values: candidate values of the selected parameters
+    init_params: initial values of the parameters
+    script: script to run the training and testing of a single hyperparameter combination
+    log_file: filepath to store logs of the tuning process
+    horizon: prediction horizon
+    version: feature version
+    date: date which identifies the half years that are to be used to run validation results (does not include the half year that it is in)
+    gt: column that we are trying to predict in advance
+    source: source of data
+'''
+
 def _gen_grid_search_all_para(parameter_combinations, paras, para_values,
                               selected_paras, para_index):
     if len(selected_paras) == 0:
@@ -22,7 +37,7 @@ def _gen_grid_search_all_para(parameter_combinations, paras, para_values,
 
 
 def grid_search_alstm(sel_paras, cand_values, init_paras, script='code/train/train_alstm.py',
-                      log_file='./tune.log', steps=5, version='v16', date = "2017-06-30",
+                      log_file='./tune.log', horizon=5, version='v16', date = "2017-06-30",
                          gt = "LME_Co_Spot",source = "NExT"):
     # init_paras = model_paras
     print('selected parameters:', sel_paras)
@@ -41,7 +56,7 @@ def grid_search_alstm(sel_paras, cand_values, init_paras, script='code/train/tra
              '--drop_out', str(cur_paras['drop_out']),
              '--hidden', str(cur_paras['hidden']),
              '--embedding_size', str(cur_paras['embedding_size']),
-             '--steps', str(steps),
+             '--horizon', str(horizon),
              '--version', str(version),
              '--ground_truth', gt,
              '--source', source,
@@ -56,7 +71,7 @@ def grid_search_alstm(sel_paras, cand_values, init_paras, script='code/train/tra
 
 def grid_search_alstm_mc(sel_paras, cand_values, init_paras,
                          script='code/train/train_alstm_mc.py',
-                         log_file='./tune.log', steps=5, version ="v16", date = "2017-06-30",
+                         log_file='./tune.log', horizon=5, version ="v16", date = "2017-06-30",
                          gt = "LME_Co_Spot",source = "NExT"):
     # init_paras = model_paras
     print('selected parameters:', sel_paras)
@@ -77,7 +92,7 @@ def grid_search_alstm_mc(sel_paras, cand_values, init_paras,
              '--repeat_mc', str(cur_paras['repeat_mc']),
              '--hidden', str(cur_paras['hidden']),
              '--embedding_size', str(cur_paras['embedding_size']),
-             '--steps', str(steps),
+             '--horizon', str(horizon),
              '--version',version,
              '--ground_truth', gt,
              '--source', source,
