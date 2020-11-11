@@ -6,7 +6,7 @@ import os
 import sys
 import json
 import utils.data_preprocess_functions as dpf
-from utils.normalize_feature import log_1d_return, fractional_diff, rel_to_open
+from utils.normalize_feature import log_1d_return, rel_to_open
 from copy import copy
 
 '''
@@ -445,13 +445,10 @@ def price_normalization(arguments, version):
     time_series = arguments['time_series']
     if version is None:
         return time_series
-    if version == "v1":
+    elif version == "v1":
         #daily log returns
         return log_1d_return(time_series,arguments['org_cols'])
-    if version == "v2":
-        # fractional difference
-        return fractional_diff(time_series,arguments['org_cols'])
-    if version == "v3":
+    elif version == "v3":
         #log difference between Close,High,Low to Open
         return rel_to_open(time_series,arguments['org_cols'])
 
